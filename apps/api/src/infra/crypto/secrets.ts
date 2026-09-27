@@ -39,6 +39,8 @@ export class SecretHasher {
  * AES-256-GCM for fields that must be decrypted later (TOTP secrets; certificate numbers in M2).
  * Format: "<keyId>.<iv>.<ciphertext>.<tag>" (base64url parts), so keys can be rotated.
  */
+const GCM_TAG_BYTES = 16;
+
 @Injectable()
 export class FieldCipher {
   constructor(@Inject(APP_CONFIG) private readonly env: Env) {}
@@ -46,7 +48,9 @@ export class FieldCipher {
   encrypt(plaintext: string): string {
     const keyId = this.env.FIELD_ENCRYPTION_KEY_ID;
     const iv = randomBytes(12);
-    const cipher = createCipheriv('aes-256-gcm', this.key(keyId), iv);
+    const cipher = createCipheriv('aes-256-gcm', this.key(keyId), iv, {
+      authTagLength: GCM_TAG_BYTES,
+    });
     cipher.setAAD(Buffer.from(keyId));
     const ciphertext = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
     return [keyId, iv, ciphertext, cipher.getAuthTag()]
@@ -57,9 +61,17 @@ export class FieldCipher {
   decrypt(payload: string): string {
     const [keyId, iv, ciphertext, tag] = payload.split('.');
     if (!keyId || !iv || !ciphertext || !tag) throw new Error('Malformed encrypted field');
-    const decipher = createDecipheriv('aes-256-gcm', this.key(keyId), Buffer.from(iv, 'base64url'));
+    const authTag = Buffer.from(tag, 'base64url');
+    // A shortened tag would weaken forgery protection; accept only the full 16 bytes.
+    if (authTag.length !== GCM_TAG_BYTES) throw new Error('Malformed encrypted field');
+    const decipher = createDecipheriv(
+      'aes-256-gcm',
+      this.key(keyId),
+      Buffer.from(iv, 'base64url'),
+      { authTagLength: GCM_TAG_BYTES },
+    );
     decipher.setAAD(Buffer.from(keyId));
-    decipher.setAuthTag(Buffer.from(tag, 'base64url'));
+    decipher.setAuthTag(authTag);
     return Buffer.concat([
       decipher.update(Buffer.from(ciphertext, 'base64url')),
       decipher.final(),

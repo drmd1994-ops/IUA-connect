@@ -62,6 +62,12 @@ describe('FieldCipher', () => {
     ).toThrow();
   });
 
+  it('rejects a truncated authentication tag', () => {
+    const [keyId, iv, ct, tag] = cipher.encrypt('secret').split('.');
+    const short = Buffer.from(tag!, 'base64url').subarray(0, 4).toString('base64url');
+    expect(() => cipher.decrypt([keyId, iv, ct, short].join('.'))).toThrow();
+  });
+
   it('decrypts with an older key after rotation', () => {
     const oldEnv = testEnv();
     const encrypted = new FieldCipher(oldEnv).encrypt('secret');
