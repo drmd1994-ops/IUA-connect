@@ -1,5 +1,7 @@
 import { type INestApplication, RequestMethod } from '@nestjs/common';
 import { DocumentBuilder, type OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
+import { type Application } from 'express';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
@@ -10,6 +12,10 @@ export const API_PREFIX = 'api/v1';
 /** Applies the HTTP pipeline shared by the server, the tests and the OpenAPI export. */
 export function configureApp(app: INestApplication, env: Env): void {
   app.useLogger(app.get(Logger));
+  // The web app proxies /api/v1 to this server (same-origin cookies); trust X-Forwarded-For only
+  // from loopback, so req.ip is the browser's address and can't be spoofed by remote clients.
+  (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 'loopback');
+  app.use(cookieParser());
   app.use(
     helmet({
       // Swagger UI (development only) needs inline scripts; production keeps helmet's strict CSP.
@@ -32,6 +38,7 @@ export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
     .setDescription('REST API for IUA Connect. Conventions: API_DESIGN.md.')
     .setVersion('v1')
     .setOpenAPIVersion('3.1.0')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   return cleanupOpenApiDoc(SwaggerModule.createDocument(app, config));
 }

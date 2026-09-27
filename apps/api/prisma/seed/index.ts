@@ -6,9 +6,9 @@
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  */
 import path from 'node:path';
-import { PrismaPg } from '@prisma/adapter-pg';
 import { config as loadEnv } from 'dotenv';
 import { PrismaClient } from '../../src/generated/prisma/client';
+import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedReference } from './reference';
 
 interface SeedLayer {
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error('DATABASE_URL is not set. Run `pnpm setup:dev`.');
 
-  const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
+  const prisma = new PrismaClient({ adapter: createPgAdapter(connectionString) });
   try {
     for (const layer of LAYERS) {
       if (!layer.run) {

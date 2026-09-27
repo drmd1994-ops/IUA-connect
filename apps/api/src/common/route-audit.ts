@@ -1,6 +1,10 @@
 import { PATH_METADATA } from '@nestjs/common/constants';
 import { type DiscoveryService, type MetadataScanner, type Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY, PERMISSIONS_KEY } from './decorators/access.decorators';
+import {
+  IS_AUTHENTICATED_KEY,
+  IS_PUBLIC_KEY,
+  PERMISSIONS_KEY,
+} from './decorators/access.decorators';
 
 export interface RouteDeclaration {
   controller: string;
@@ -8,8 +12,8 @@ export interface RouteDeclaration {
 }
 
 /**
- * Lists every controller route that declares neither @Public() nor @RequirePermission().
- * The route-declaration test fails the build when this list is not empty.
+ * Lists every controller route without an access declaration (@Public, @Authenticated or
+ * @RequirePermission). The route-declaration test fails the build when this list is not empty.
  */
 export function findUndeclaredRoutes(
   discovery: DiscoveryService,
@@ -30,8 +34,9 @@ export function findUndeclaredRoutes(
 
       const targets = [handler, metatype];
       const isPublic = reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, targets);
+      const isAuthenticated = reflector.getAllAndOverride<boolean>(IS_AUTHENTICATED_KEY, targets);
       const permissions = reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets);
-      if (!isPublic && !permissions?.length) {
+      if (!isPublic && !isAuthenticated && !permissions?.length) {
         undeclared.push({ controller: metatype.name, handler: methodName });
       }
     }

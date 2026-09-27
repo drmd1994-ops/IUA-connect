@@ -55,6 +55,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@iua/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@iua/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -128,9 +131,6 @@ importers:
       '@iua/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@iua/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
       '@iua/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig

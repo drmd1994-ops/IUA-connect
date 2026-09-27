@@ -1,4 +1,6 @@
 import { Client } from 'pg';
+import { PrismaClient } from '../src/generated/prisma/client';
+import { createPgAdapter } from '../src/infra/prisma/pg-adapter';
 import { testAppUrl } from './test-db';
 
 describe('database baseline', () => {
@@ -35,6 +37,25 @@ describe('database baseline', () => {
     it('returns NULL for NULL', async () => {
       const { rows } = await db.query('SELECT normalize_he(NULL) AS out');
       expect(rows[0].out).toBeNull();
+    });
+  });
+
+  describe('time zones (regression: timestamps were stored shifted by the server offset)', () => {
+    it('uses UTC as the database default', async () => {
+      const { rows } = await db.query<{ TimeZone: string }>('SHOW timezone');
+      expect(rows[0]!.TimeZone).toBe('UTC');
+    });
+
+    it('stores the exact instant written through Prisma', async () => {
+      const prisma = new PrismaClient({ adapter: createPgAdapter(testAppUrl()) });
+      try {
+        const instant = new Date('2026-01-01T12:00:00.000Z'); // winter: Israel is UTC+2
+        const rows = await prisma.$queryRaw<{ same: boolean }[]>`
+          SELECT ${instant}::timestamptz = '2026-01-01T12:00:00Z'::timestamptz AS same`;
+        expect(rows[0]!.same).toBe(true);
+      } finally {
+        await prisma.$disconnect();
+      }
     });
   });
 

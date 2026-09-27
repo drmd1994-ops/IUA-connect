@@ -19,6 +19,7 @@
     "openapi:export": "node dist/openapi-export.js ../../packages/api-client/openapi.json"
   },
   "dependencies": {
+    "@iua/i18n": "workspace:*",
     "@iua/shared": "workspace:*",
     "@nestjs/common": "11.2.5",
     "@nestjs/core": "11.2.5",
@@ -45,7 +46,6 @@
   },
   "devDependencies": {
     "@iua/eslint-config": "workspace:*",
-    "@iua/i18n": "workspace:*",
     "@iua/tsconfig": "workspace:*",
     "@nestjs/cli": "11.0.24",
     "@nestjs/testing": "11.2.5",

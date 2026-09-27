@@ -5,9 +5,12 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { ConfigModule } from './config/config.module';
 import { type Env } from './config/env.schema';
+import { CryptoModule } from './infra/crypto/crypto.module';
 import { LoggerModule } from './infra/logger/logger.module';
+import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { AuditModule } from './modules/audit';
+import { AuthModule } from './modules/auth';
 import { HealthModule } from './modules/health';
 
 /**
@@ -29,8 +32,11 @@ export class AppModule {
         ConfigModule.forRoot(env),
         LoggerModule.forRoot(env),
         PrismaModule,
+        CryptoModule,
+        MailerModule,
         AuditModule,
         HealthModule,
+        AuthModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

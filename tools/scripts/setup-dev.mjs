@@ -1,9 +1,9 @@
 // `pnpm setup:dev`: prepares a native Windows (or any) development machine. Idempotent.
 //   1. checks prerequisites (Node 24, pnpm, PostgreSQL reachable)
-//   2. creates .env from .env.example with random local passwords (never printed)
+//   2. creates .env from .env.example with random local passwords and keys (never printed)
 //   3. provisions roles and databases
 //   4. generates the Prisma client, migrates the dev and test databases, seeds
-import { randomBytes } from 'node:crypto';
+import { generateKeyPairSync, randomBytes } from 'node:crypto';
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import pg from 'pg';
 import { provision } from './db-provision.mjs';
@@ -39,6 +39,30 @@ function checkPnpm() {
   ok(agent.split(' ')[0]);
 }
 
+// Same format as apps/api/src/config/dev-secrets.ts (keys with a "dev-" ID, refused in production).
+const IDENTITY_KEY_FORMAT = {
+  JWT_PRIVATE_KEY: 'base64 PKCS#8 PEM',
+  JWT_PUBLIC_KEY: 'base64 SPKI PEM',
+  JWT_KEY_ID: 'key ID',
+  TOKEN_HASH_KEY: 'base64 32 bytes',
+  FIELD_ENCRYPTION_KEYS: 'keyId:base64 32 bytes',
+  FIELD_ENCRYPTION_KEY_ID: 'key ID',
+};
+
+function generateIdentityKeys() {
+  const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+  const pem = (value) => Buffer.from(value).toString('base64');
+  const keyId = `dev-${randomBytes(4).toString('hex')}`;
+  return {
+    JWT_PRIVATE_KEY: pem(privateKey.export({ type: 'pkcs8', format: 'pem' }).toString()),
+    JWT_PUBLIC_KEY: pem(publicKey.export({ type: 'spki', format: 'pem' }).toString()),
+    JWT_KEY_ID: keyId,
+    TOKEN_HASH_KEY: randomBytes(32).toString('base64'),
+    FIELD_ENCRYPTION_KEYS: `${keyId}:${randomBytes(32).toString('base64')}`,
+    FIELD_ENCRYPTION_KEY_ID: keyId,
+  };
+}
+
 function readEnvFile() {
   return readFileSync(ENV_FILE, 'utf8');
 }
@@ -66,13 +90,28 @@ function prepareEnvFile() {
   }
 
   let content = readEnvFile();
-  for (const key of ['DB_OWNER_PASSWORD', 'DB_APP_PASSWORD']) {
+  const missing = (key) => {
     const current = getEnvValue(content, key);
-    if (!current || current === '__GENERATED__') {
+    return !current || current === '__GENERATED__';
+  };
+  for (const key of ['DB_OWNER_PASSWORD', 'DB_APP_PASSWORD']) {
+    if (missing(key)) {
       content = setEnvValue(content, key, randomBytes(24).toString('hex'));
       ok(`${key} generated`);
     }
   }
+  // Identity keys are generated as one set, and only if any is missing: existing keys are never
+  // rotated, so sessions and encrypted TOTP secrets stay valid across re-runs.
+  const identityKeys = Object.keys(IDENTITY_KEY_FORMAT);
+  if (identityKeys.some(missing)) {
+    for (const [key, value] of Object.entries(generateIdentityKeys())) {
+      content = setEnvValue(content, key, value);
+    }
+    ok('identity keys generated (JWT signing, token hashing, field encryption)');
+  }
+  if (missing('APP_BASE_URL'))
+    content = setEnvValue(content, 'APP_BASE_URL', 'http://localhost:3001');
+  if (missing('MAIL_OUTBOX_DIR')) content = setEnvValue(content, 'MAIL_OUTBOX_DIR', 'outbox');
   writeFileSync(ENV_FILE, content);
   loadRootEnv();
 
