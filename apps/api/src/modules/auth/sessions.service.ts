@@ -77,6 +77,8 @@ export class SessionsService extends PrincipalResolver {
         ip: input.meta.ip,
         userAgent: input.meta.userAgent,
         mfaCompletedAt: input.mfa ? now : null,
+        // Signing in counts as a fresh authentication for sensitive changes (REAUTH_WINDOW_SEC).
+        reauthenticatedAt: now,
         lastSeenAt: now,
         idleTimeoutSec: policy.idleSec,
         expiresAt: new Date(now.getTime() + policy.absoluteSec * 1000),

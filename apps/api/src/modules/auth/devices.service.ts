@@ -75,4 +75,14 @@ export class DevicesService {
     });
     return { deviceId: device.id, newCookieToken: token, isNewForUser: knownDevices > 0 };
   }
+
+  /** The device ID behind a device cookie, if it belongs to this user. */
+  async findForUser(userId: string, cookieToken: string | undefined): Promise<string | null> {
+    if (!cookieToken) return null;
+    const device = await this.prisma.device.findUnique({
+      where: { tokenHash: this.hasher.hash(cookieToken) },
+      select: { id: true, userId: true },
+    });
+    return device?.userId === userId ? device.id : null;
+  }
 }

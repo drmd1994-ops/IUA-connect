@@ -15,7 +15,10 @@ import {
   AcceptedDto,
   LoginDto,
   LoginResultDto,
+  MfaVerifyDto,
   OkDto,
+  PasswordForgotDto,
+  PasswordResetDto,
   RegisterDto,
   ResendVerificationDto,
   TokenDto,
@@ -30,6 +33,7 @@ import {
   setDeviceCookie,
   setSessionCookies,
 } from './auth.cookies';
+import { AccountSecurityService } from './account-security.service';
 import { AuthService } from './auth.service';
 import { SessionsService } from './sessions.service';
 
@@ -40,6 +44,7 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly sessions: SessionsService,
+    private readonly security: AccountSecurityService,
   ) {}
 
   /** Always 202, whether or not the address is already registered. */
@@ -93,6 +98,53 @@ export class AuthController {
       accessToken: outcome.tokens.accessToken,
       expiresIn: outcome.tokens.expiresIn,
     };
+  }
+
+  /** Second sign-in step: the challenge from /auth/login plus an authenticator or recovery code. */
+  @Post('mfa/verify')
+  @Public()
+  @RateLimit(RATE_LIMITS.signInPerAccount, RATE_LIMITS.signInPerIp)
+  @HttpCode(200)
+  @ApiOkResponse({ type: TokenDto })
+  async verifyMfa(
+    @Body() body: MfaVerifyDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Meta() meta: RequestMeta,
+  ): Promise<TokenDto> {
+    const tokens = await this.security.completeMfaLogin(
+      body.mfaToken,
+      body.code,
+      readCookie(req, DEVICE_COOKIE),
+      meta,
+    );
+    setSessionCookies(res, tokens.refreshToken, tokens.sessionExpiresAt);
+    return { accessToken: tokens.accessToken, expiresIn: tokens.expiresIn };
+  }
+
+  /** Always 202, whether or not the address is registered. */
+  @Post('password/forgot')
+  @Public()
+  @RateLimit(RATE_LIMITS.accountCreationPerIp)
+  @HttpCode(202)
+  @ApiAcceptedResponse({ type: AcceptedDto })
+  async forgotPassword(
+    @Body() body: PasswordForgotDto,
+    @Meta() meta: RequestMeta,
+  ): Promise<AcceptedDto> {
+    await this.security.forgotPassword(body.email, meta);
+    return { status: 'accepted' };
+  }
+
+  /** Sets a new password from the emailed link; signs out every session. */
+  @Post('password/reset')
+  @Public()
+  @RateLimit(RATE_LIMITS.signInPerIp)
+  @HttpCode(200)
+  @ApiOkResponse({ type: OkDto })
+  async resetPassword(@Body() body: PasswordResetDto, @Meta() meta: RequestMeta): Promise<OkDto> {
+    await this.security.resetPassword(body.token, body.newPassword, meta);
+    return { status: 'ok' };
   }
 
   /** Rotates the refresh cookie and returns a new access token. Needs the CSRF header. */

@@ -59,3 +59,78 @@ export class MeDto extends createZodDto(
     session: z.strictObject({ id: z.uuid(), mfa: z.boolean() }),
   }),
 ) {}
+
+// --- MFA, re-authentication, passwords, sessions (checkpoint 4) ---------------
+
+/** A 6-digit authenticator code, or a recovery code (xxxxx-xxxxx). */
+const mfaCode = z.string().trim().min(6).max(20);
+
+export class MfaVerifyDto extends createZodDto(
+  z.strictObject({ mfaToken: opaqueToken, code: mfaCode }),
+) {}
+
+export class MfaStatusDto extends createZodDto(
+  z.strictObject({
+    enabled: z.boolean(),
+    factorId: z.uuid().optional(),
+    recoveryCodesRemaining: z.number().int(),
+    /** The user holds a role that requires MFA, so it can't be turned off. */
+    requiredByRole: z.boolean(),
+  }),
+) {}
+
+export class TotpSetupDto extends createZodDto(
+  z.strictObject({
+    factorId: z.uuid(),
+    secret: z.string(),
+    otpauthUri: z.string(),
+    qrCode: z.string(),
+  }),
+) {}
+
+export class TotpConfirmDto extends createZodDto(
+  z.strictObject({
+    factorId: z.uuid(),
+    code: z
+      .string()
+      .trim()
+      .regex(/^\d{6}$/),
+  }),
+) {}
+
+export class RecoveryCodesDto extends createZodDto(
+  z.strictObject({ recoveryCodes: z.array(z.string()) }),
+) {}
+
+export class ReauthenticateDto extends createZodDto(
+  z.strictObject({ password: anyPassword, code: mfaCode.optional() }),
+) {}
+
+export class PasswordChangeDto extends createZodDto(
+  z.strictObject({ currentPassword: anyPassword, newPassword: anyPassword }),
+) {}
+
+export class PasswordForgotDto extends createZodDto(z.strictObject({ email })) {}
+
+export class PasswordResetDto extends createZodDto(
+  z.strictObject({ token: opaqueToken, newPassword: anyPassword }),
+) {}
+
+export class SessionListDto extends createZodDto(
+  z.strictObject({
+    sessions: z.array(
+      z.strictObject({
+        id: z.uuid(),
+        /** e.g. "Chrome on Windows" */
+        device: z.string(),
+        ip: z.string().nullable(),
+        createdAt: z.iso.datetime(),
+        lastSeenAt: z.iso.datetime(),
+        expiresAt: z.iso.datetime(),
+        current: z.boolean(),
+      }),
+    ),
+  }),
+) {}
+
+export class RevokedCountDto extends createZodDto(z.strictObject({ revoked: z.number().int() })) {}
