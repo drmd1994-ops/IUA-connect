@@ -1,34 +1,47 @@
 /**
  * Seed runner (DATABASE_DESIGN.md §6). Layers run in order and must be idempotent:
- *   1. reference: roles, permissions, membership types, subspecialties   (added in M1/M2)
+ *   1. reference: roles, permissions (M1); membership types, subspecialties (M2)
  *   2. demo:      fictional people, hospitals, departments, memberships   (added in M2)
  *   3. import:    curated IUA website sample from fixtures/iua-import/    (added in M4)
- * No layer has content yet in M0; the runner reports that instead of pretending to seed.
- * Seeds refuse to run in production.
+ * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  */
+import path from 'node:path';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { config as loadEnv } from 'dotenv';
+import { PrismaClient } from '../../src/generated/prisma/client';
+import { seedReference } from './reference';
+
 interface SeedLayer {
   name: string;
   milestone: string;
-  run?: () => Promise<void>;
+  run?: (prisma: PrismaClient) => Promise<void>;
 }
 
 const LAYERS: SeedLayer[] = [
-  { name: 'reference', milestone: 'M1' },
+  { name: 'reference', milestone: 'M1', run: seedReference },
   { name: 'demo', milestone: 'M2' },
   { name: 'import', milestone: 'M4' },
 ];
 
 async function main(): Promise<void> {
+  loadEnv({ path: path.resolve(__dirname, '../../../../.env'), quiet: true });
   if (process.env.NODE_ENV === 'production') {
     throw new Error('Seeding is disabled when NODE_ENV=production.');
   }
-  for (const layer of LAYERS) {
-    if (!layer.run) {
-      console.log(`seed: ${layer.name} layer has no data yet (arrives in ${layer.milestone})`);
-      continue;
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) throw new Error('DATABASE_URL is not set. Run `pnpm setup:dev`.');
+
+  const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
+  try {
+    for (const layer of LAYERS) {
+      if (!layer.run) {
+        console.log(`seed: ${layer.name} layer has no data yet (arrives in ${layer.milestone})`);
+        continue;
+      }
+      await layer.run(prisma);
     }
-    console.log(`seed: ${layer.name} layer...`);
-    await layer.run();
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
