@@ -6,7 +6,7 @@ _Last updated: 2026-09-27_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M0 Foundations: built and verified locally.** `pnpm setup:dev` verified with the installed Node 24. One exit check remains: the owner pushes so CI can go green (see "M0 Foundations" below). Planning documents approved 2026-09-27. |
+| Phase                     | **M0 Foundations: complete (2026-09-27).** All exit criteria met: `pnpm setup:dev` works with the installed Node 24, CI is green (run 36321842174 on `e7e5087`), and the deny-by-default test passes. Next: M1 Identity, pending plan approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -44,7 +44,7 @@ _Last updated: 2026-09-27_
 | #   | Item                                                                                                                                                                                                                                  | Needed by            |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | O1  | ~~Approval of these planning documents~~ **Resolved 2026-09-27:** approved by the owner.                                                                                                                                             | —                    |
-| O2  | ~~Git setup~~ **Resolved 2026-09-27:** `git init` done, remote added, owner pushes manually. Remaining: first push, then confirm CI is green.                                                                                          | End of M0            |
+| O2  | ~~Git setup~~ **Resolved 2026-09-27:** `git init` done, remote added, pushed to `main` with a personal access token (Git Credential Manager). CI green.                                                                               | —                    |
 | O3  | Specialist certificate number: confirm the format rules (digits only? length?). **Residents have no specialist certificate yet**: which identifier do they provide (medical license number?), and do students need director approval? | M2                   |
 | O4  | Permission from IUA/IMA before showing imported content in a pitch (recommended)                                                                                                                                                      | Before the pitch     |
 | O5  | Video hosting choice                                                                                                                                                                                                                  | Video milestone      |
@@ -71,12 +71,19 @@ _Last updated: 2026-09-27_
 - Lint, typecheck, format check, full build, `pnpm audit --audit-level=high` (after overriding two transitive Prisma CLI dependencies): all clean. No drift between migrations and the Prisma schema.
 - Live smoke test: API health and envelope; web `/` → `/he`, `lang="he" dir="rtl"`, `/en` LTR, 404 page, every script tag carries the CSP nonce.
 
-### Not yet verified / remaining for the owner
+- CI on GitHub: the first run (`fdc0598`) failed only in the security job (25 Semgrep findings: unpinned actions, missing pnpm/npm supply-chain settings, `shell: true` and a dynamic regex in the setup scripts). Fixed in `e7e5087`; run 36321842174 green on all six jobs.
+
+### Not yet verified
 
 | Item | Why |
 | --- | --- |
-| Push to GitHub and confirm CI is green | Exit criterion. Semgrep and gitleaks need Docker/Linux and have not run locally |
-| Browser visual check of `/he` and `/en` | The Chrome extension wasn't connected; checked via HTTP only |
+| Visual check of `/he` and `/en` by Claude | The Chrome extension wasn't connected; checked via HTTP only. The demo was opened in the owner's browser at http://localhost:3001 for review |
+
+### Supply-chain policy (added in `e7e5087`)
+
+- pnpm: `minimumReleaseAge` 7 days, `blockExoticSubdeps`, `trustPolicy: no-downgrade` (one reviewed exception: `semver@6.3.1`). npm: `min-release-age=7`.
+- Consequence: newly released versions (including security patches) can't be installed for 7 days. For an urgent patch, add a reviewed entry to `minimumReleaseAgeExclude` or an override in `pnpm-workspace.yaml`, as done for `multer`.
+- Peers that pnpm auto-installs (`@types/node`, `prettier`, `vite`) are pinned via overrides; bump them together with the declared versions.
 
 ### Notes and deviations
 
