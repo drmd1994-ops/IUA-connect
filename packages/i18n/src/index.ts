@@ -1,6 +1,8 @@
+import enAuth from './messages/en/auth.json';
 import enCommon from './messages/en/common.json';
 import enEmails from './messages/en/emails.json';
 import enErrors from './messages/en/errors.json';
+import heAuth from './messages/he/auth.json';
 import heCommon from './messages/he/common.json';
 import heEmails from './messages/he/emails.json';
 import heErrors from './messages/he/errors.json';
@@ -27,13 +29,14 @@ export function isLocale(value: unknown): value is Locale {
 
 export type Messages = {
   common: typeof heCommon;
+  auth: typeof heAuth;
   errors: typeof heErrors;
   emails: typeof heEmails;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
-  he: { common: heCommon, errors: heErrors, emails: heEmails },
-  en: { common: enCommon, errors: enErrors, emails: enEmails },
+  he: { common: heCommon, auth: heAuth, errors: heErrors, emails: heEmails },
+  en: { common: enCommon, auth: enAuth, errors: enErrors, emails: enEmails },
 };
 
 export function getMessages(locale: Locale): Messages {

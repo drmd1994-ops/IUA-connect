@@ -4,7 +4,7 @@ import '@fontsource/ibm-plex-sans-hebrew/400.css';
 import '@fontsource/ibm-plex-sans-hebrew/600.css';
 import '../globals.css';
 
-import { directionOf, isLocale } from '@iua/i18n';
+import { directionOf, getMessages, isLocale } from '@iua/i18n';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -12,6 +12,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { DemoBanner } from '@/components/demo-banner';
+import { AuthProvider } from '@/features/auth/auth-context';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { routing } from '@/i18n/routing';
@@ -42,6 +43,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   // (a statically rendered page would carry a stale nonce and its scripts would be blocked).
   await headers();
   const t = await getTranslations('common.a11y');
+  // The browser needs UI text only; email templates stay on the server.
+  const { common, auth, errors } = getMessages(locale);
 
   return (
     <html lang={locale} dir={directionOf(locale)}>
@@ -52,13 +55,15 @@ export default async function LocaleLayout({ children, params }: Props) {
         >
           {t('skipToContent')}
         </a>
-        <NextIntlClientProvider>
-          <DemoBanner />
-          <SiteHeader />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
+        <NextIntlClientProvider messages={{ common, auth, errors }}>
+          <AuthProvider>
+            <DemoBanner />
+            <SiteHeader />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <SiteFooter />
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
