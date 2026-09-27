@@ -39,7 +39,7 @@ export function AccountMenu() {
         type="button"
         aria-expanded={open}
         aria-controls="account-menu"
-        aria-label={t('accountMenu')}
+        aria-label={`${t('accountMenu')}: ${me.email}`}
         onClick={() => setOpen((value) => !value)}
         className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-surface-muted"
       >

@@ -8,8 +8,9 @@
     "build": "next build",
     "start": "next start --port 3001",
     "typecheck": "next typegen && tsc --noEmit",
-    "lint": "eslint --max-warnings=0 src",
-    "test": "vitest run"
+    "lint": "eslint --max-warnings=0 src e2e playwright.config.ts",
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource/ibm-plex-sans": "5.3.0",
@@ -24,13 +25,16 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@iua/eslint-config": "workspace:*",
     "@iua/tsconfig": "workspace:*",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "24.13.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "eslint": "9.39.5",
+    "otpauth": "9.5.2",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
     "vite": "8.3.0",
