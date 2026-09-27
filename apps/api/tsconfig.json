@@ -1,0 +1,8 @@
+{
+  "extends": "@iua/tsconfig/nest.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["src", "test", "prisma"]
+}

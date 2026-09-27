@@ -1,0 +1,54 @@
+{
+  "app": {
+    "name": "IUA Connect",
+    "shortName": "IUA",
+    "tagline": "The digital home of Israeli urology",
+    "description": "A professional platform for members of the Israeli Urological Association: news, events, education and membership."
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainNavigation": "Main navigation",
+    "languageSwitcher": "Choose language"
+  },
+  "locales": {
+    "he": "עברית",
+    "en": "English"
+  },
+  "demo": {
+    "banner": "Demo version: all people and data shown are fictional.",
+    "disclaimer": "IUA Connect is an independent application presented as a proposal. It is not affiliated with or endorsed by the Israeli Urological Association or the Israeli Medical Association."
+  },
+  "home": {
+    "heroTitle": "The digital home of Israeli urology",
+    "heroBody": "One place for association news, conferences and events, educational content and membership, in Hebrew and English.",
+    "sectionsTitle": "On the way",
+    "comingSoon": "Coming soon",
+    "sections": {
+      "news": {
+        "title": "News",
+        "body": "Association updates and announcements."
+      },
+      "events": {
+        "title": "Events & conferences",
+        "body": "Event calendar, registration and a personal schedule."
+      },
+      "education": {
+        "title": "Education",
+        "body": "Lectures, articles and presentations by subspecialty and level."
+      },
+      "guidelines": {
+        "title": "Guidelines",
+        "body": "Links to the current official guidelines."
+      },
+      "membership": {
+        "title": "Membership",
+        "body": "Registration, verification by your department director, and a digital membership card."
+      }
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The link may be wrong, or the page may have been removed.",
+    "backHome": "Back to the home page"
+  }
+}

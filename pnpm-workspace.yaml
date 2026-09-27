@@ -1,0 +1,24 @@
+packages:
+  - apps/*
+  - packages/*
+
+# pnpm 10 blocks dependency lifecycle scripts by default. Only these are allowed to build.
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - '@swc/core'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - prisma
+  - sharp
+  - unrs-resolver
+
+# Reviewed and intentionally not run: telemetry (scarf) and an optional native file watcher.
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - '@scarf/scarf'
+
+# Security overrides for transitive dependencies of the Prisma CLI (dev tooling only).
+# Remove when Prisma ships patched versions. Reviewed 2026-09-27.
+overrides:
+  mysql2: '>=3.23.1 <4'
+  deepmerge-ts: '>=8.0.0 <9'

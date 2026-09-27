@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+.turbo/
+
+# Generated code
+apps/api/src/generated/
+apps/web/next-env.d.ts
+
+# Environment and secrets (never commit real values; .env.example holds placeholders)
+.env
+.env.*
+!.env.example
+
+# Local runtime data
+storage/
+outbox/
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/

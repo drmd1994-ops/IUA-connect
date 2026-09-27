@@ -1,0 +1,8 @@
+pnpm exec lint-staged
+
+# Secret scanning. CI always runs gitleaks; locally it runs when the binary is installed.
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --staged --redact --no-banner
+else
+  echo "warning: gitleaks is not installed; skipping local secret scan (CI still runs it). See README." >&2
+fi

@@ -1,0 +1,9 @@
+{
+  "extends": "@iua/tsconfig/library.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": ["es2023", "dom"]
+  },
+  "include": ["src"]
+}

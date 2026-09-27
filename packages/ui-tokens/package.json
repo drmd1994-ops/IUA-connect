@@ -1,0 +1,32 @@
+{
+  "name": "@iua/ui-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design tokens (colors, spacing, radii, type scale). Single source for web (CSS) and, later, mobile (TS).",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/build-css.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint --max-warnings=0 src scripts",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@iua/eslint-config": "workspace:*",
+    "@iua/tsconfig": "workspace:*",
+    "@types/node": "24.19.0",
+    "eslint": "9.39.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

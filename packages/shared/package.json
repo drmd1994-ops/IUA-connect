@@ -1,0 +1,34 @@
+{
+  "name": "@iua/shared",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Schemas, error codes, permission keys and helpers shared by the API and the web app",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint --max-warnings=0 src",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@iua/eslint-config": "workspace:*",
+    "@iua/tsconfig": "workspace:*",
+    "@types/node": "24.19.0",
+    "eslint": "9.39.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

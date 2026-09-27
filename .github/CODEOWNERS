@@ -1,0 +1,9 @@
+# Code owners. Currently one developer owns everything; assign per-module owners as the team
+# grows (DEVELOPMENT_ROADMAP.md §4). Security-sensitive paths should always keep a named owner.
+*                                  @drmd1994-ops
+
+/apps/api/src/common/              @drmd1994-ops
+/apps/api/src/modules/audit/       @drmd1994-ops
+/apps/api/prisma/migrations/       @drmd1994-ops
+/.github/                          @drmd1994-ops
+/SECURITY_MODEL.md                 @drmd1994-ops

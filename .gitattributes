@@ -1,0 +1,22 @@
+# Normalize all text files to LF in the repository and in the working tree,
+# so Windows and Linux (CI) produce identical files.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+
+# Lockfile: treat as generated in diffs
+pnpm-lock.yaml linguist-generated=true -diff

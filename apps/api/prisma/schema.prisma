@@ -1,0 +1,34 @@
+// IUA Connect database schema. Design and conventions: DATABASE_DESIGN.md.
+// - Primary keys are UUID v7, generated in the application (@iua/shared uuidv7).
+// - snake_case in the database via @map / @@map.
+// - Extensions, SQL functions, triggers and grants live in raw SQL inside the migrations.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Append-only audit trail (SECURITY_MODEL.md §3). UPDATE, DELETE and TRUNCATE are rejected by
+/// triggers, and the application role only holds SELECT and INSERT on this table.
+/// actor_user_id gets its foreign key to users when the users table is created (M1).
+model AuditLog {
+  id            String   @id @db.Uuid
+  at            DateTime @default(now()) @db.Timestamptz(6)
+  actorUserId   String?  @map("actor_user_id") @db.Uuid
+  actorIp       String?  @map("actor_ip") @db.Inet
+  action        String   @db.VarChar(100)
+  entityType    String?  @map("entity_type") @db.VarChar(100)
+  entityId      String?  @map("entity_id") @db.VarChar(100)
+  /// Redacted before insert. Never contains secrets or certificate numbers.
+  changes       Json?
+  correlationId String   @map("correlation_id") @db.VarChar(64)
+
+  @@index([entityType, entityId, at(sort: Desc)])
+  @@index([actorUserId, at(sort: Desc)])
+  @@map("audit_logs")
+}

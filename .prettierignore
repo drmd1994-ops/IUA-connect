@@ -1,0 +1,26 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+pnpm-lock.yaml
+apps/api/src/generated
+apps/api/prisma/migrations/**/*.sql
+packages/api-client/openapi.json
+packages/api-client/src/schema.ts
+docs/product/MASTER_SPEC.md
+
+# Owner-authored planning documents: edited by hand, never auto-formatted.
+/HANDOFF.md
+/CLAUDE.md
+/PROJECT_STATUS.md
+/ARCHITECTURE.md
+/PRODUCT_REQUIREMENTS.md
+/DATABASE_DESIGN.md
+/API_DESIGN.md
+/SECURITY_MODEL.md
+/DEVELOPMENT_ROADMAP.md
+
+# Written by `next dev`
+apps/web/AGENTS.md
+apps/web/CLAUDE.md
