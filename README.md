@@ -92,8 +92,18 @@ powershell -ExecutionPolicy Bypass -File tools\scripts\setup-dev.ps1
 pnpm dev
 ```
 
-- Web: <http://localhost:3001> (redirects to `/he`; English at `/en`)
+- Web: <http://localhost:3001> (redirects to `/he`; English at `/en`). The web app proxies `/api/v1` to the API, so the browser only talks to port 3001.
 - API: <http://localhost:4000> · health: `/health/live`, `/health/ready` · Swagger UI (development only): `/api/docs`
+
+### 5. Accounts in the demo
+
+- **Sign up** at `/he/register`. Emails aren't sent: each one is written as an HTML file to the `outbox/` folder at the repository root. Open the newest file and click its link to verify the address or reset a password.
+- **First administrator** (fictional, reserved domains only):
+  ```powershell
+  pnpm admin:create --email admin@example.test
+  ```
+  The password is printed once. At first sign-in the account is sent to **Account security** to set up two-step verification (an authenticator app such as Google or Microsoft Authenticator); every administrative role requires it. Options: `--role IUA_ADMIN`, `--locale en`, `--reset-password`.
+- **Account security** (`/he/account/security`): two-step verification with recovery codes, password change, and active sessions.
 
 ### Troubleshooting
 
@@ -113,6 +123,8 @@ pnpm dev
 | `pnpm dev`                                     | API + web in watch mode                                                   |
 | `pnpm test`                                    | Unit tests (all packages), including the deny-by-default route gate       |
 | `pnpm test:integration`                        | API integration tests against `iua_connect_test`                          |
+| `pnpm --filter @iua/web e2e`                   | Playwright end-to-end + accessibility tests (see TESTING.md)              |
+| `pnpm admin:create --email <address>`          | Development only: create a fictional administrator                        |
 | `pnpm lint` · `pnpm typecheck` · `pnpm format` | Quality checks                                                            |
 | `pnpm build`                                   | Production build of everything                                            |
 | `pnpm db:migrate`                              | Create/apply a migration in development (`prisma migrate dev`)            |
@@ -121,4 +133,4 @@ pnpm dev
 
 ## Git
 
-The local repository's remote is `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`. The owner pushes manually. Commits follow [Conventional Commits](https://www.conventionalcommits.org) (enforced by commitlint).
+The local repository's remote is `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`. Work happens on `feat/...` branches merged into `main` through pull requests (CONTRIBUTING.md). Commits follow [Conventional Commits](https://www.conventionalcommits.org) (enforced by commitlint).

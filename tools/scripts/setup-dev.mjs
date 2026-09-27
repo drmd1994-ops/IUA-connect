@@ -168,6 +168,11 @@ async function main() {
 
   await provision();
 
+  // The seed and the dev tools import compiled workspace packages (@iua/shared, @iua/i18n); on a
+  // fresh clone nothing is built yet.
+  step('Building the shared workspace packages');
+  pnpm(['exec', 'turbo', 'run', 'build', '--filter=@iua/api^...']);
+
   step('Generating the Prisma client');
   pnpm(['--filter', '@iua/api', 'db:generate']);
 

@@ -1,6 +1,6 @@
 # M1 — Identity: plan
 
-- Status: **Proposed — awaiting owner approval** (no code is written before approval)
+- Status: **Approved by the owner 2026-09-27; implemented** on branch `feat/auth-identity` (pull request #1). Deviations are recorded in `PROJECT_STATUS.md` (M1 section).
 - Date: 2026-09-27
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M1. Design sources: `ARCHITECTURE.md` §3, §6, §9; `API_DESIGN.md` §3–5; `SECURITY_MODEL.md` §3; `DATABASE_DESIGN.md` §3 (identity tables); ADR 0002.
 
