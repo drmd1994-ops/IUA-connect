@@ -6,6 +6,7 @@ import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/app.setup';
 import { type EmailMessage, type EmailTemplate, Mailer } from '../src/infra/mailer/mailer';
+import { type RateLimitHit, RateLimitStore } from '../src/infra/rate-limit/rate-limit.store';
 import { testEnv } from '../src/testing/test-env';
 import { testAppUrl } from './test-db';
 
@@ -31,6 +32,13 @@ export class CapturingMailer extends Mailer {
     const link = (message?.params as { link?: string } | undefined)?.link;
     if (!link) throw new Error(`No ${template} email to ${to}`);
     return new URL(link).searchParams.get('token')!;
+  }
+}
+
+/** Counts nothing: most suites sign in far more often than the real limits allow from one IP. */
+class UnlimitedRateLimitStore extends RateLimitStore {
+  async hit(): Promise<RateLimitHit> {
+    return { count: 1, resetInSec: 60 };
   }
 }
 
@@ -72,13 +80,17 @@ export interface Harness {
   close: () => Promise<void>;
 }
 
-export async function startHarness(): Promise<Harness> {
+/** Starts the full app against the test database. Real rate limits only when asked for. */
+export async function startHarness(options: { rateLimits?: boolean } = {}): Promise<Harness> {
   const mailer = new CapturingMailer();
   const env = testEnv({ DATABASE_URL: testAppUrl() });
-  const moduleRef = await Test.createTestingModule({ imports: [AppModule.forRoot(env)] })
+  let builder = Test.createTestingModule({ imports: [AppModule.forRoot(env)] })
     .overrideProvider(Mailer)
-    .useValue(mailer)
-    .compile();
+    .useValue(mailer);
+  if (!options.rateLimits) {
+    builder = builder.overrideProvider(RateLimitStore).useValue(new UnlimitedRateLimitStore());
+  }
+  const moduleRef = await builder.compile();
   const app = moduleRef.createNestApplication();
   configureApp(app, env);
   await app.init();

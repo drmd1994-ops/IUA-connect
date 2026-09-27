@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { type Request, type Response } from 'express';
 import { Public } from '../../common/decorators/access.decorators';
+import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import { AppException } from '../../common/errors/app.exception';
 import {
@@ -44,6 +45,7 @@ export class AuthController {
   /** Always 202, whether or not the address is already registered. */
   @Post('register')
   @Public()
+  @RateLimit(RATE_LIMITS.accountCreationPerIp)
   @HttpCode(202)
   @ApiAcceptedResponse({ type: AcceptedDto })
   async register(@Body() body: RegisterDto, @Meta() meta: RequestMeta): Promise<AcceptedDto> {
@@ -63,6 +65,7 @@ export class AuthController {
   /** Always 202. */
   @Post('verify-email/resend')
   @Public()
+  @RateLimit(RATE_LIMITS.accountCreationPerIp)
   @HttpCode(202)
   @ApiAcceptedResponse({ type: AcceptedDto })
   async resendVerification(@Body() body: ResendVerificationDto): Promise<AcceptedDto> {
@@ -72,6 +75,7 @@ export class AuthController {
 
   @Post('login')
   @Public()
+  @RateLimit(RATE_LIMITS.signInPerAccount, RATE_LIMITS.signInPerIp)
   @HttpCode(200)
   @ApiOkResponse({ type: LoginResultDto })
   async login(
