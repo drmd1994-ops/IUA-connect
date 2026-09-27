@@ -82,7 +82,7 @@ _Last updated: 2026-09-27_
 
 - Versions: NestJS 11 as planned (NestJS 12 is ESM-only and unsupported by `nestjs-zod`), TypeScript 6.0 (TypeScript 7 isn't supported by ts-jest/typescript-eslint yet), Prisma 7.10 (8.x is a release candidate), pnpm 10, ESLint 9.
 - Playwright E2E is set up with the first user flows (M1/M2), not in M0.
-- Port 3000 was in use by another local app during verification; README covers running the web app on another port.
+- The web app runs on port **3001** (owner request, 2026-09-27); port 3000 is used by another local app.
 - `C:\Users\PC` (the home folder) is itself an empty git repository, created outside this project. It was left untouched; the owner may want to remove `C:\Users\PC\.git`.
 - Prettier briefly reformatted the planning documents (whitespace and table padding only; content verified unchanged). They are now excluded from formatting.
 

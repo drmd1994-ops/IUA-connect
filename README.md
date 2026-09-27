@@ -92,7 +92,7 @@ powershell -ExecutionPolicy Bypass -File tools\scripts\setup-dev.ps1
 pnpm dev
 ```
 
-- Web: <http://localhost:3000> (redirects to `/he`; English at `/en`)
+- Web: <http://localhost:3001> (redirects to `/he`; English at `/en`)
 - API: <http://localhost:4000> · health: `/health/live`, `/health/ready` · Swagger UI (development only): `/api/docs`
 
 ### Troubleshooting
@@ -100,7 +100,7 @@ pnpm dev
 | Symptom                                                 | Fix                                                                                                                                                                                   |
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `running scripts is disabled on this system` (pnpm.ps1) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or run `pnpm.cmd` instead of `pnpm`                                                                                            |
-| `EADDRINUSE :::3000`                                    | Another app uses port 3000. Stop it, or run the web app on another port: `pnpm --filter @iua/web exec next dev --port 3001` and add `http://localhost:3001` to `WEB_ORIGIN` in `.env` |
+| `EADDRINUSE :::3001`                                    | Another app uses port 3001. Stop it, or run the web app on another port: `pnpm --filter @iua/web exec next dev --port 3002` and add `http://localhost:3002` to `WEB_ORIGIN` in `.env` |
 | `setup:dev` can't connect to PostgreSQL                 | Server not running (see step 2), or wrong password in `PG_SUPERUSER_URL`                                                                                                              |
 | `Node.js 24 LTS is required`                            | See step 1; open a new terminal after installing                                                                                                                                      |
 | Files show as modified with only line-ending changes    | The repo uses LF (`.gitattributes`). Recommended: `git config --global core.autocrlf input`                                                                                           |

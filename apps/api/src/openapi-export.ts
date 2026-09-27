@@ -17,7 +17,7 @@ async function exportOpenApi(): Promise<void> {
   const env = parseEnv({
     NODE_ENV: 'test',
     LOG_LEVEL: 'silent',
-    WEB_ORIGIN: 'http://localhost:3000',
+    WEB_ORIGIN: 'http://localhost:3001',
     DATABASE_URL: 'postgresql://unused@localhost:5432/unused',
   });
   const app = await NestFactory.create(AppModule.forRoot(env), { logger: false });

@@ -22,3 +22,23 @@ ignoredBuiltDependencies:
 overrides:
   mysql2: '>=3.23.1 <4'
   deepmerge-ts: '>=8.0.0 <9'
+  # Security fix (GHSA advisories on multer <2.3.0) for @nestjs/platform-express 11.2.5.
+  multer: '>=2.3.0 <3'
+  # Peers that pnpm auto-installs at the newest release, ignoring minimumReleaseAge.
+  # Keep these in step with the versions the workspace declares.
+  '@types/node': 24.13.6
+  prettier: 3.9.8
+  vite: 8.3.0
+
+# Supply-chain protections (flagged by Semgrep):
+# - wait 7 days before installing a newly published version (most malicious releases are pulled sooner)
+# - transitive dependencies may only come from the registry (no git/tarball URLs)
+# - refuse a version whose publishing trust level is lower than earlier versions
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+
+# semver 6.3.1 is npm's 2023 security backport to the v6 line, published after provenance-signed
+# v7 releases, so the date-based trust check flags it. Reviewed 2026-09-27: legitimate.
+trustPolicyExclude:
+  - 'semver@6.3.1'

@@ -40,15 +40,22 @@ export const step = (message) => console.log(`\n▶ ${message}`);
 export const ok = (message) => console.log(`  ✔ ${message}`);
 export const warn = (message) => console.warn(`  ! ${message}`);
 
-/** Runs a command through the shell (needed for pnpm.cmd on Windows) and fails loudly. */
-export function run(command, { env, cwd = ROOT } = {}) {
-  const result = spawnSync(command, {
+/**
+ * Runs `pnpm <args>` and fails loudly. No shell is involved: the pnpm entry point that launched
+ * this script (npm_execpath) is run with the current Node binary, which also avoids the
+ * pnpm.cmd / pnpm.ps1 wrappers on Windows.
+ */
+export function pnpm(args, { env, cwd = ROOT } = {}) {
+  const pnpmEntry = process.env.npm_execpath;
+  if (!pnpmEntry) throw new Error('Run this script through pnpm (e.g. `pnpm setup:dev`).');
+  const result = spawnSync(process.execPath, [pnpmEntry, ...args], {
     cwd,
     env: { ...process.env, ...env },
     stdio: 'inherit',
-    shell: true,
   });
   if (result.status !== 0) {
-    throw new Error(`Command failed (${result.status}): ${command}`);
+    throw new Error(
+      `Command failed (${result.status ?? result.error?.message}): pnpm ${args.join(' ')}`,
+    );
   }
 }

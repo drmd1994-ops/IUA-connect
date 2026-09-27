@@ -13,8 +13,8 @@ import {
   databaseUrl,
   loadRootEnv,
   ok,
+  pnpm,
   requireEnv,
-  run,
   step,
   warn,
 } from './lib.mjs';
@@ -43,11 +43,18 @@ function readEnvFile() {
   return readFileSync(ENV_FILE, 'utf8');
 }
 
+// .env editing is line-based string handling (no dynamic regular expressions).
+function getEnvValue(content, key) {
+  const line = content.split('\n').find((l) => l.startsWith(`${key}=`));
+  return line === undefined ? undefined : line.slice(key.length + 1).trim();
+}
+
 function setEnvValue(content, key, value) {
-  const line = new RegExp(`^${key}=.*$`, 'm');
-  return line.test(content)
-    ? content.replace(line, `${key}=${value}`)
-    : `${content}\n${key}=${value}\n`;
+  const lines = content.split('\n');
+  const index = lines.findIndex((l) => l.startsWith(`${key}=`));
+  if (index === -1) return `${content.replace(/\n*$/, '')}\n${key}=${value}\n`;
+  lines[index] = `${key}=${value}`;
+  return lines.join('\n');
 }
 
 function prepareEnvFile() {
@@ -60,7 +67,8 @@ function prepareEnvFile() {
 
   let content = readEnvFile();
   for (const key of ['DB_OWNER_PASSWORD', 'DB_APP_PASSWORD']) {
-    if (new RegExp(`^${key}=(__GENERATED__)?\\s*$`, 'm').test(content)) {
+    const current = getEnvValue(content, key);
+    if (!current || current === '__GENERATED__') {
       content = setEnvValue(content, key, randomBytes(24).toString('hex'));
       ok(`${key} generated`);
     }
@@ -122,21 +130,21 @@ async function main() {
   await provision();
 
   step('Generating the Prisma client');
-  run('pnpm --filter @iua/api db:generate');
+  pnpm(['--filter', '@iua/api', 'db:generate']);
 
   step('Migrating the development database');
-  run('pnpm --filter @iua/api db:deploy');
+  pnpm(['--filter', '@iua/api', 'db:deploy']);
 
   step('Migrating the test database');
-  run('pnpm --filter @iua/api db:deploy', {
+  pnpm(['--filter', '@iua/api', 'db:deploy'], {
     env: { MIGRATION_DATABASE_URL: requireEnv('TEST_MIGRATION_DATABASE_URL') },
   });
 
   step('Seeding the development database');
-  run('pnpm --filter @iua/api db:seed');
+  pnpm(['--filter', '@iua/api', 'db:seed']);
 
   console.log(
-    '\n✔ Development environment ready.\n  Next: `pnpm dev`, then open http://localhost:3000\n',
+    '\n✔ Development environment ready.\n  Next: `pnpm dev`, then open http://localhost:3001\n',
   );
 }
 
