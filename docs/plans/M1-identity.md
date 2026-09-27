@@ -43,13 +43,13 @@ These follow the approved design documents. Items marked **(new)** are details t
 
 - Argon2id via `@node-rs/argon2` (prebuilt Windows binaries, no compiler needed). Parameters m = 19 456 KiB, t = 2, p = 1 (SECURITY_MODEL minimum); hashes are upgraded on login if parameters change later.
 - Policy (NIST 800-63B style): **12–128 characters**, no composition rules, rejected if it appears in a bundled list of common/breached passwords or contains the email's local part.
-- **(new)** Breached list: the 100 000 most common passwords from the SecLists project (MIT licence), bundled in the repo, checked offline. _Alternative:_ the Have I Been Pwned range API (k-anonymity, sends only a 5-character hash prefix) — better coverage but a network call to a third party. **Default: bundled list.**
+- Breached list: the 100 000 most common passwords from the SecLists project (MIT licence), bundled in the repo, checked offline. **Owner decision 2026-09-27: bundled list** (not the Have I Been Pwned API).
 
 ### Tokens and sessions
 
 - Access token: JWT signed with **EdDSA (Ed25519)** via `jose`, **10 minutes**, claims `sub`, `sid`, `mfa`, `iat`, `exp`, key ID in the header. Roles/permissions are **not** in the token; they are resolved per request (cached per session), so revocation is immediate.
 - Refresh token: opaque 256-bit random value, only its SHA-256 hash stored, **rotated on every use**; using an already-used token revokes the **whole family** and the session, and is logged as a security event.
-- **(new)** Lifetimes: member sessions **30 days absolute, 14 days idle**; sessions holding an admin/director role **8 hours absolute, 30 minutes idle** (ARCHITECTURE §9 "shorter sessions").
+- Lifetimes (**owner decision 2026-09-27: shorter for everyone**): member sessions **7 days absolute, 3 days idle**; sessions holding an admin/director role **4 hours absolute, 15 minutes idle** (ARCHITECTURE §9 "shorter sessions").
 - Web storage: access token in memory only; refresh token in an `HttpOnly; Secure; SameSite=Strict` cookie scoped to `/api/v1/auth`; CSRF double-submit (cookie + `X-CSRF-Token` header) on refresh and logout.
 - **(new)** Same origin: the web app proxies `/api/v1/*` to the API (Next.js rewrite), so the browser only talks to `localhost:3001`. Cookies and CSP stay simple and CORS remains locked down.
 - Keys: `pnpm setup:dev` generates the Ed25519 key pair, the field-encryption key and the token-hashing key into `.env` (never committed). In production they must come from a secret manager; the API refuses to start in production with development keys.
@@ -125,9 +125,9 @@ New tables (DATABASE_DESIGN §3): `users` (citext email, status, failed-login co
 | New dependencies vs. the 7-day release rule        | All proposed versions are already older than 7 days                                                                                                 |
 | Scope is large                                     | Checkpoints above; each is usable and tested on its own                                                                                             |
 
-## 10. Questions for the owner
+## 10. Owner decisions (2026-09-27)
 
-1. **Web screens in M1** (recommended), or API only with screens later?
-2. **Breached-password check:** bundled offline list (default) or the Have I Been Pwned API?
-3. **Session lifetimes:** members 30 days / 14 days idle; admins 8 hours / 30 minutes idle — OK?
-4. **Git workflow:** a branch `feat/auth-identity` with a pull request into `main` (CONTRIBUTING.md), or commit directly to `main` while you are the only developer? And may Claude push and open the PR?
+1. **Web screens:** included in M1.
+2. **Breached-password check:** bundled offline list.
+3. **Session lifetimes:** shorter for everyone — members 7 days / 3 days idle; admins 4 hours / 15 minutes idle.
+4. **Git workflow:** branch `feat/auth-identity`; Claude pushes it and opens a pull request into `main`; the owner reviews and merges.
