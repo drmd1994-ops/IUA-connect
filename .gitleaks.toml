@@ -1,0 +1,14 @@
+# gitleaks configuration: all default rules, plus narrowly scoped exceptions.
+# Every exception must name one file and say why it holds no secrets.
+title = "IUA Connect"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known non-secrets"
+paths = [
+  # Public list of common/breached passwords (SecLists, MIT) used to REJECT weak passwords at
+  # sign-up. Its entries look like API keys to the generic rule but are published data.
+  '''apps/api/src/modules/auth/password/common-passwords\.json''',
+]
