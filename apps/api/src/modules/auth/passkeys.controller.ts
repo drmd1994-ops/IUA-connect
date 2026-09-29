@@ -131,10 +131,13 @@ export class PasskeysController {
 
   // --- signing in with a passkey ---------------------------------------------------------
 
-  /** A challenge for signing in (or re-authenticating) with a passkey. */
+  /**
+   * A challenge for signing in (or re-authenticating) with a passkey. The sign-in page requests
+   * one on every load (for passkey autofill), so only the global per-IP limit applies here; the
+   * verify step carries the strict sign-in limit.
+   */
   @Post('authentication/options')
   @Public()
-  @RateLimit(RATE_LIMITS.signInPerIp)
   @HttpCode(200)
   @ApiOkResponse({ type: WebAuthnOptionsDto })
   async authenticationOptions(): Promise<WebAuthnOptionsDto> {

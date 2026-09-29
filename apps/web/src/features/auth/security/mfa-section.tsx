@@ -16,7 +16,8 @@ type Setup = components['schemas']['TotpSetupDto'];
 
 type Pending = null | 'setup' | 'disable' | 'regenerate';
 
-export function MfaSection() {
+/** Authenticator app (TOTP). `refreshKey` changes when passkeys change (they affect canDisable). */
+export function MfaSection({ refreshKey = 0 }: { refreshKey?: number }) {
   const t = useTranslations();
   const { api, call, reloadMe } = useAuth();
   const [status, setStatus] = useState<Status | null>(null);
@@ -38,7 +39,7 @@ export function MfaSection() {
     return () => {
       active = false;
     };
-  }, [api, call, version]);
+  }, [api, call, version, refreshKey]);
 
   /** Runs an action; if it needs re-authentication, asks for it and remembers the action. */
   async function run(action: Exclude<Pending, null>) {
@@ -170,7 +171,7 @@ export function MfaSection() {
             <Button type="button" variant="secondary" onClick={() => void run('regenerate')}>
               {t('auth.security.regenerate')}
             </Button>
-            {status.requiredByRole ? (
+            {!status.canDisable ? (
               <p className="text-sm text-text-muted">{t('auth.security.disableRequiredByRole')}</p>
             ) : (
               <Button type="button" variant="danger" onClick={() => void run('disable')}>
