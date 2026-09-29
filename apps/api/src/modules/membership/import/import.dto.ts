@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../../common/dto/nullable-string';
 
 /** The file's text (the browser reads it); at most MAX_ROWS rows. */
 const csv = z.string().min(1).max(1_000_000);
@@ -21,7 +22,7 @@ export const IMPORT_ACTIONS = [
 
 const reportRow = z.strictObject({
   line: z.number().int(),
-  email: z.string().nullable(),
+  email: nullableString(),
   action: z.enum(IMPORT_ACTIONS),
   /** Why a row is skipped (i18n codes). */
   reasons: z.array(z.string()),

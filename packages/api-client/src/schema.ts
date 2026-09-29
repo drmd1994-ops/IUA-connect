@@ -1191,21 +1191,21 @@ export interface components {
             email: string;
         };
         ProfileDto: {
-            firstName: string[];
-            lastName: string[];
-            nameHe: string[];
-            nameEn: string[];
-            title: string[];
-            position: string[];
+            firstName: string | null;
+            lastName: string | null;
+            nameHe: string | null;
+            nameEn: string | null;
+            title: string | null;
+            position: string | null;
             hospitalId: string | null;
             departmentId: string | null;
             subspecialtyIds: string[];
-            bio: string[];
-            researchInterests: string[];
-            orcid: string[];
+            bio: string | null;
+            researchInterests: string | null;
+            orcid: string | null;
             languages: string[];
-            contactEmail: string[];
-            contactPhone: string[];
+            contactEmail: string | null;
+            contactPhone: string | null;
             visibility: {
                 /** @enum {string} */
                 NAME: "PRIVATE" | "MEMBERS" | "PUBLIC";
@@ -1247,7 +1247,7 @@ export interface components {
             subspecialtyIds?: string[];
             bio?: string | null;
             researchInterests?: string | null;
-            orcid?: string[];
+            orcid?: string | null;
             languages?: string[];
             contactEmail?: string | null;
             contactPhone?: string | null;
@@ -1637,7 +1637,7 @@ export interface components {
         };
         CardVerificationDto: {
             valid: boolean;
-            name: string[];
+            name: string | null;
             type: {
                 key: string;
                 nameHe: string;

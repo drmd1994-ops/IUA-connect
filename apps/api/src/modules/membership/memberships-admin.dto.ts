@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../common/dto/nullable-string';
 import { PAYMENT_STATUSES, historyView, membershipView } from './membership.dto';
 
 const reason = z.string().trim().max(1000);
@@ -19,10 +20,10 @@ export class MembershipListQueryDto extends createZodDto(
 const member = z.strictObject({
   userId: z.uuid(),
   email: z.string(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  nameHe: z.string().nullable(),
-  nameEn: z.string().nullable(),
+  firstName: nullableString(),
+  lastName: nullableString(),
+  nameHe: nullableString(),
+  nameEn: nullableString(),
 });
 
 export class AdminMembershipDto extends createZodDto(

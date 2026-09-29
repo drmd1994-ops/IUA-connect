@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../common/dto/nullable-string';
 import { isValidOrcid } from './orcid';
 
 /** Profile fields with their own visibility (D9). First and last name share NAME. */
@@ -36,6 +37,7 @@ const orcid = z
   .string()
   .trim()
   .toUpperCase()
+  .max(19)
   .refine(isValidOrcid, { message: 'Not a valid ORCID iD' })
   .nullable();
 
@@ -58,21 +60,21 @@ const visibilityMap = z.strictObject(
 
 export class ProfileDto extends createZodDto(
   z.strictObject({
-    firstName: z.string().nullable(),
-    lastName: z.string().nullable(),
-    nameHe: z.string().nullable(),
-    nameEn: z.string().nullable(),
-    title: z.string().nullable(),
-    position: z.string().nullable(),
+    firstName: nullableString(),
+    lastName: nullableString(),
+    nameHe: nullableString(),
+    nameEn: nullableString(),
+    title: nullableString(),
+    position: nullableString(),
     hospitalId: z.uuid().nullable(),
     departmentId: z.uuid().nullable(),
     subspecialtyIds: z.array(z.uuid()),
-    bio: z.string().nullable(),
-    researchInterests: z.string().nullable(),
-    orcid: z.string().nullable(),
+    bio: nullableString(),
+    researchInterests: nullableString(),
+    orcid: nullableString(),
     languages: z.array(z.string()),
-    contactEmail: z.string().nullable(),
-    contactPhone: z.string().nullable(),
+    contactEmail: nullableString(),
+    contactPhone: nullableString(),
     /** Every field, PRIVATE unless the member chose otherwise. */
     visibility: visibilityMap,
   }),

@@ -1,6 +1,7 @@
 import { LOCALES } from '@iua/i18n';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../common/dto/nullable-string';
 
 const email = z.email().max(254).trim().toLowerCase();
 /** Login accepts any length the policy might once have allowed; bounded to keep hashing cheap. */
@@ -185,7 +186,7 @@ export class SessionListDto extends createZodDto(
         id: z.uuid(),
         /** e.g. "Chrome on Windows" */
         device: z.string(),
-        ip: z.string().nullable(),
+        ip: nullableString(),
         createdAt: z.iso.datetime(),
         lastSeenAt: z.iso.datetime(),
         expiresAt: z.iso.datetime(),

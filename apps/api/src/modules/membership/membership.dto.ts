@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../common/dto/nullable-string';
 
 const named = z.strictObject({ id: z.uuid(), nameHe: z.string(), nameEn: z.string() });
 const typeRef = named.extend({ key: z.string() });
@@ -28,7 +29,7 @@ export class ApplyDto extends createZodDto(
 const decisionView = z.strictObject({
   stage: z.enum(STAGES),
   decision: z.enum(OUTCOMES),
-  reason: z.string().nullable(),
+  reason: nullableString(),
   at: z.iso.datetime(),
 });
 
@@ -58,10 +59,10 @@ export class ReviewApplicationDto extends createZodDto(
     applicant: z.strictObject({
       userId: z.uuid(),
       email: z.string(),
-      firstName: z.string().nullable(),
-      lastName: z.string().nullable(),
-      nameHe: z.string().nullable(),
-      nameEn: z.string().nullable(),
+      firstName: nullableString(),
+      lastName: nullableString(),
+      nameHe: nullableString(),
+      nameEn: nullableString(),
     }),
     flags: z.array(z.enum(FLAGS)),
   }),
@@ -114,10 +115,10 @@ export const membershipView = z.strictObject({
 
 export const historyView = z.strictObject({
   event: z.enum(MEMBERSHIP_EVENTS),
-  fromStatus: z.string().nullable(),
-  toStatus: z.string().nullable(),
+  fromStatus: nullableString(),
+  toStatus: nullableString(),
   details: z.record(z.string(), z.unknown()).nullable(),
-  reason: z.string().nullable(),
+  reason: nullableString(),
   at: z.iso.datetime(),
 });
 

@@ -2,6 +2,7 @@ import { Controller, Get, Header, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../common/dto/nullable-string';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import { Authenticated, Public } from '../../common/decorators/access.decorators';
 import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
@@ -19,7 +20,7 @@ export class CardVerifyQueryDto extends createZodDto(
 export class CardVerificationDto extends createZodDto(
   z.strictObject({
     valid: z.boolean(),
-    name: z.string().nullable(),
+    name: nullableString(),
     type: z.strictObject({ key: z.string(), nameHe: z.string(), nameEn: z.string() }).nullable(),
   }),
 ) {}
