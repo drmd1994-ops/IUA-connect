@@ -1,7 +1,9 @@
 // IUA Connect database schema. Design and conventions: DATABASE_DESIGN.md.
 // - Primary keys are UUID v7, generated in the application (@iua/shared uuidv7).
 // - snake_case in the database via @map / @@map.
-// - Extensions, SQL functions, triggers and grants live in raw SQL inside the migrations.
+// - Extensions, SQL functions, triggers, grants, CHECK constraints, partial indexes and composite
+//   foreign keys live in raw SQL inside the migrations. Prisma does not model some of them, so a
+//   generated migration may try to drop them: remove those DROP statements before applying.
 
 generator client {
   provider     = "prisma-client"
@@ -64,14 +66,16 @@ model User {
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles         UserRole[]     @relation("UserRoles")
-  rolesGranted  UserRole[]     @relation("RolesGrantedBy")
+  roles         UserRole[]            @relation("UserRoles")
+  rolesGranted  UserRole[]            @relation("RolesGrantedBy")
   sessions      Session[]
   devices       Device[]
   mfaFactors    MfaFactor[]
   recoveryCodes RecoveryCode[]
   authTokens    AuthToken[]
   profile       Profile?
+  membership    Membership?
+  applications  VerificationRequest[]
 
   @@map("users")
 }
@@ -301,8 +305,9 @@ model Hospital {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  departments Department[]
-  profiles    Profile[]
+  departments  Department[]
+  profiles     Profile[]
+  applications VerificationRequest[]
 
   @@map("hospitals")
 }
@@ -319,10 +324,14 @@ model Department {
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  hospital Hospital  @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
-  profiles Profile[]
+  hospital     Hospital              @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  profiles     Profile[]
+  applications VerificationRequest[]
 
   @@unique([hospitalId, code])
+  /// Target of the composite foreign keys that keep a profile's or application's department
+  /// inside its hospital (raw SQL in the migrations).
+  @@unique([id, hospitalId], map: "departments_id_hospital_id_key")
   @@map("departments")
 }
 
@@ -368,6 +377,9 @@ model MembershipType {
   active           Boolean              @default(true)
   createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  memberships  Membership[]
+  applications VerificationRequest[]
 
   @@map("membership_types")
 }
@@ -452,4 +464,159 @@ model ProfileFieldVisibility {
 
   @@id([userId, field])
   @@map("profile_field_visibility")
+}
+
+// ---------------------------------------------------------------------------
+// Membership and verification (M2). DATABASE_DESIGN.md §3 "Membership and verification".
+// ---------------------------------------------------------------------------
+
+/// Stored status. "Expired" is never stored: it is computed from end_date (DATABASE_DESIGN §1).
+enum MembershipStatus {
+  ACTIVE
+  SUSPENDED
+
+  @@map("membership_status")
+}
+
+enum PaymentStatus {
+  NOT_REQUIRED
+  UNPAID
+  PAID
+  WAIVED
+
+  @@map("payment_status")
+}
+
+enum MembershipSource {
+  MANUAL
+  IMPORT
+  IMA
+
+  @@map("membership_source")
+}
+
+/// A member's current membership (one per user). Renewals extend it; every change is in
+/// membership_history. Periods run by calendar year and end on 31 December (owner, 2026-09-29).
+model Membership {
+  id             String           @id @db.Uuid
+  userId         String           @unique @map("user_id") @db.Uuid
+  typeId         String           @map("type_id") @db.Uuid
+  status         MembershipStatus @default(ACTIVE)
+  startDate      DateTime         @map("start_date") @db.Date
+  endDate        DateTime         @map("end_date") @db.Date
+  paymentStatus  PaymentStatus    @default(NOT_REQUIRED) @map("payment_status")
+  source         MembershipSource @default(MANUAL)
+  /// Specialist certificate or medical licence number: AES-256-GCM ciphertext. Never shown or logged.
+  identifierEnc  String?          @map("identifier_enc")
+  /// Keyed hash of the same number, so one number can't hold two memberships.
+  identifierHash String?          @unique @map("identifier_hash") @db.VarChar(128)
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type    MembershipType      @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  history MembershipHistory[]
+
+  @@index([status, endDate])
+  @@map("memberships")
+}
+
+enum MembershipEvent {
+  CREATED
+  RENEWED
+  SUSPENDED
+  REINSTATED
+  EXPIRED
+  TYPE_CHANGED
+  PAYMENT_STATUS_CHANGED
+
+  @@map("membership_event")
+}
+
+/// Append-only (UPDATE, DELETE and TRUNCATE are rejected by triggers, like audit_logs).
+/// changed_by has no foreign key for the same reason as audit_logs.actor_user_id.
+model MembershipHistory {
+  id           String          @id @db.Uuid
+  membershipId String          @map("membership_id") @db.Uuid
+  event        MembershipEvent
+  fromStatus   String?         @map("from_status") @db.VarChar(32)
+  toStatus     String?         @map("to_status") @db.VarChar(32)
+  /// Type key, end date or payment status after the change, as relevant to the event.
+  details      Json?
+  changedBy    String?         @map("changed_by") @db.Uuid
+  reason       String?         @db.VarChar(1000)
+  at           DateTime        @default(now()) @db.Timestamptz(6)
+
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId, at])
+  @@map("membership_history")
+}
+
+/// ARCHITECTURE.md §7: PENDING_DIRECTOR → PENDING_ADMIN → APPROVED, or REJECTED / WITHDRAWN.
+enum VerificationState {
+  PENDING_DIRECTOR
+  PENDING_ADMIN
+  APPROVED
+  REJECTED
+  WITHDRAWN
+
+  @@map("verification_state")
+}
+
+/// A membership application. One open application per user (partial unique index).
+model VerificationRequest {
+  id             String            @id @db.Uuid
+  userId         String            @map("user_id") @db.Uuid
+  typeId         String            @map("type_id") @db.Uuid
+  hospitalId     String?           @map("hospital_id") @db.Uuid
+  departmentId   String?           @map("department_id") @db.Uuid
+  state          VerificationState
+  /// NO_DIRECTOR: the department has no director. APPLICANT_IS_DIRECTOR: its only director applied.
+  flags          String[]          @default([])
+  identifierEnc  String?           @map("identifier_enc")
+  identifierHash String?           @map("identifier_hash") @db.VarChar(128)
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  closedAt       DateTime?         @map("closed_at") @db.Timestamptz(6)
+
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       MembershipType         @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  hospital   Hospital?              @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  department Department?            @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  decisions  VerificationDecision[]
+
+  @@index([state, departmentId])
+  @@index([userId])
+  @@map("verification_requests")
+}
+
+enum VerificationStage {
+  DIRECTOR
+  ADMIN
+
+  @@map("verification_stage")
+}
+
+enum VerificationOutcome {
+  APPROVE
+  REJECT
+
+  @@map("verification_outcome")
+}
+
+/// Append-only, like membership_history.
+model VerificationDecision {
+  id        String              @id @db.Uuid
+  requestId String              @map("request_id") @db.Uuid
+  stage     VerificationStage
+  decision  VerificationOutcome
+  decidedBy String?             @map("decided_by") @db.Uuid
+  reason    String?             @db.VarChar(1000)
+  at        DateTime            @default(now()) @db.Timestamptz(6)
+
+  request VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([requestId, at])
+  @@map("verification_decisions")
 }

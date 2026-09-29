@@ -15,6 +15,7 @@ import { AuditModule } from './modules/audit';
 import { AuthModule } from './modules/auth';
 import { HealthModule } from './modules/health';
 import { InstitutionsModule } from './modules/institutions';
+import { MembershipModule } from './modules/membership';
 import { ProfilesModule } from './modules/profiles';
 
 /**
@@ -46,6 +47,7 @@ export class AppModule {
         AuthModule,
         InstitutionsModule,
         ProfilesModule,
+        MembershipModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

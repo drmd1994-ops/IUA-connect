@@ -612,6 +612,86 @@ export interface paths {
         patch: operations["ProfilesController_update"];
         trace?: never;
     };
+    "/api/v1/me/membership": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyMembershipController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/verification-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ApplicationsController_queue"];
+        put?: never;
+        post: operations["ApplicationsController_apply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/verification-requests/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ApplicationsController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/verification-requests/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ApplicationsController_withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/verification-requests/{id}/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ApplicationsController_decide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1023,6 +1103,229 @@ export interface components {
                 /** @enum {string} */
                 CONTACT_PHONE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
+        };
+        MyMembershipDto: {
+            membership: {
+                /** Format: uuid */
+                id: string;
+                type: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                status: "ACTIVE" | "SUSPENDED" | "EXPIRED";
+                /** Format: date */
+                startDate: string;
+                /** Format: date */
+                endDate: string;
+                /** @enum {string} */
+                paymentStatus: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+            } | null;
+            history: {
+                /** @enum {string} */
+                event: "CREATED" | "RENEWED" | "SUSPENDED" | "REINSTATED" | "EXPIRED" | "TYPE_CHANGED" | "PAYMENT_STATUS_CHANGED";
+                fromStatus: string | null;
+                toStatus: string | null;
+                details: {
+                    [key: string]: unknown;
+                } | null;
+                reason: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        ApplyDto: {
+            /** Format: uuid */
+            typeId: string;
+            /** Format: uuid */
+            hospitalId?: string;
+            /** Format: uuid */
+            departmentId?: string;
+            identifier?: string;
+        };
+        ApplicationDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
+            type: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            };
+            hospital: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            department: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            identifierProvided: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            closedAt: string | null;
+            decisions: {
+                /** @enum {string} */
+                stage: "DIRECTOR" | "ADMIN";
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT";
+                reason: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        ApplicationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
+                type: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                identifierProvided: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                closedAt: string | null;
+                decisions: {
+                    /** @enum {string} */
+                    stage: "DIRECTOR" | "ADMIN";
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                }[];
+            }[];
+        };
+        ReviewApplicationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
+                type: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                identifierProvided: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                closedAt: string | null;
+                decisions: {
+                    /** @enum {string} */
+                    stage: "DIRECTOR" | "ADMIN";
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                }[];
+                applicant: {
+                    /** Format: uuid */
+                    userId: string;
+                    email: string;
+                    firstName: string | null;
+                    lastName: string | null;
+                    nameHe: string | null;
+                    nameEn: string | null;
+                };
+                flags: ("NO_DIRECTOR" | "APPLICANT_IS_DIRECTOR")[];
+            }[];
+        };
+        DecisionDto: {
+            /** @enum {string} */
+            decision: "APPROVE" | "REJECT";
+            reason?: string;
+        };
+        ReviewApplicationDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
+            type: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            };
+            hospital: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            department: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            identifierProvided: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            closedAt: string | null;
+            decisions: {
+                /** @enum {string} */
+                stage: "DIRECTOR" | "ADMIN";
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT";
+                reason: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+            applicant: {
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                firstName: string | null;
+                lastName: string | null;
+                nameHe: string | null;
+                nameEn: string | null;
+            };
+            flags: ("NO_DIRECTOR" | "APPLICANT_IS_DIRECTOR")[];
         };
     };
     responses: never;
@@ -1963,6 +2266,134 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileDto"];
+                };
+            };
+        };
+    };
+    MyMembershipController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMembershipDto"];
+                };
+            };
+        };
+    };
+    ApplicationsController_queue: {
+        parameters: {
+            query: {
+                stage: "director" | "admin";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewApplicationListDto"];
+                };
+            };
+        };
+    };
+    ApplicationsController_apply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplyDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationDto"];
+                };
+            };
+        };
+    };
+    ApplicationsController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationListDto"];
+                };
+            };
+        };
+    };
+    ApplicationsController_withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationDto"];
+                };
+            };
+        };
+    };
+    ApplicationsController_decide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewApplicationDto"];
                 };
             };
         };
