@@ -1,6 +1,6 @@
 # M1b — Passkeys: plan
 
-- Status: **Proposed — awaiting owner approval** (no code is written before approval)
+- Status: **Approved by the owner 2026-09-29** (decisions in §10)
 - Date: 2026-09-29
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M1b ("WebAuthn registration and login — works in Chrome and Edge on Windows"). Builds on M1 (`docs/plans/M1-identity.md`); design sources: `SECURITY_MODEL.md` §3 ("Passkeys in M1b"), `DATABASE_DESIGN.md` §3 (`mfa_factors` already has a WEBAUTHN type and a public-key column), ADR 0002.
 
@@ -89,8 +89,8 @@ Re-authentication (`POST /auth/reauthenticate`) also accepts a passkey instead o
 
 Git: branch `feat/auth-passkeys`, pull request into `main` as in M1 (Claude pushes and opens it; you review, and merge or ask Claude to).
 
-## 10. Questions for the owner
+## 10. Owner decisions (2026-09-29)
 
-1. **Passwordless sign-in:** may a passkey alone sign someone in (no password), counting as two-step verification because the device checks fingerprint, face or PIN? _Recommended: yes — that's the main benefit of passkeys._ The alternative is to use a passkey only as the second step after the password.
-2. **Administrators:** may a passkey satisfy the "administrators must use two-step verification" rule, instead of an authenticator app? _Recommended: yes._
-3. **Synced passkeys:** allow passkeys that sync across a person's devices (Windows Hello, iCloud Keychain, Google Password Manager), or only device-bound hardware keys? _Recommended: allow synced passkeys — hardware-only would exclude most phones and laptops._
+1. **Passwordless sign-in: yes.** A passkey alone signs someone in, and the session counts as MFA-verified (user verification is required on every ceremony).
+2. **Administrators: yes.** A passkey satisfies the mandatory two-step verification for administrative roles; an authenticator app isn't also required.
+3. **Passkey types: synced and device-bound.** Windows Hello, iCloud Keychain, Google Password Manager and hardware keys are all accepted (attestation "none").
