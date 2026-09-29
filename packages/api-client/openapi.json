@@ -1913,6 +1913,64 @@
           "admin"
         ]
       }
+    },
+    "/api/v1/me/membership/card-token": {
+      "get": {
+        "operationId": "CardTokenController_issue",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardTokenDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "membership"
+        ]
+      }
+    },
+    "/api/v1/card/verify": {
+      "get": {
+        "operationId": "CardVerifyController_verify",
+        "parameters": [
+          {
+            "name": "t",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardVerificationDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "membership"
+        ]
+      }
     }
   },
   "info": {
@@ -5215,6 +5273,71 @@
         },
         "required": [
           "paymentStatus"
+        ],
+        "additionalProperties": false
+      },
+      "CardTokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "token",
+          "expiresAt"
+        ],
+        "additionalProperties": false
+      },
+      "CardVerificationDto": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "valid",
+          "name",
+          "type"
         ],
         "additionalProperties": false
       }

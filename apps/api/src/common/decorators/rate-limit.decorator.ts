@@ -22,4 +22,5 @@ export const RATE_LIMITS = {
   signInPerAccount: { name: 'signin-account', limit: 5, windowSec: 60, by: 'account' },
   signInPerIp: { name: 'signin-ip', limit: 20, windowSec: 60, by: 'ip' },
   accountCreationPerIp: { name: 'account-email-ip', limit: 5, windowSec: 3600, by: 'ip' },
+  cardVerifyPerIp: { name: 'card-verify-ip', limit: 60, windowSec: 60, by: 'ip' },
 } as const satisfies Record<string, RateLimitRule>;
