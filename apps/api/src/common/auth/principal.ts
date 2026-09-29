@@ -1,4 +1,5 @@
 import { type PermissionKey } from '@iua/shared';
+import { AppException } from '../errors/app.exception';
 
 /**
  * The authenticated caller, resolved from the access token and its session on every request.
@@ -26,4 +27,10 @@ export interface RequestWithPrincipal {
  */
 export abstract class PrincipalResolver {
   abstract resolve(request: object): Promise<Principal | null>;
+}
+
+/** The principal on an @Authenticated or @RequirePermission route (the guard guarantees it). */
+export function principalOf(req: RequestWithPrincipal): Principal {
+  if (!req.principal) throw new AppException('UNAUTHENTICATED');
+  return req.principal;
 }

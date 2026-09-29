@@ -17,7 +17,7 @@ import {
   type RegistrationResponseJSON,
 } from '@simplewebauthn/server';
 import { type Request, type Response } from 'express';
-import { type RequestWithPrincipal } from '../../common/auth/principal';
+import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import { Authenticated, Public } from '../../common/decorators/access.decorators';
 import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { AppException } from '../../common/errors/app.exception';
@@ -35,7 +35,6 @@ import {
 } from './auth.dto';
 import { DEVICE_COOKIE, readCookie, setDeviceCookie, setSessionCookies } from './auth.cookies';
 import { AuthService } from './auth.service';
-import { principalOf } from './me.controller';
 import { PasskeysService } from './passkeys.service';
 import { SessionsService } from './sessions.service';
 

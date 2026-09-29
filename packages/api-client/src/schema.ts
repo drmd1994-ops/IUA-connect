@@ -436,6 +436,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/hospitals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReferenceController_hospitals"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/hospitals/{id}/departments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReferenceController_departments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subspecialties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReferenceController_subspecialties"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/membership-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReferenceController_membershipTypes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/institutions/hospitals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InstitutionsAdminController_hospitals"];
+        put?: never;
+        post: operations["InstitutionsAdminController_createHospital"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/institutions/hospitals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["InstitutionsAdminController_updateHospital"];
+        trace?: never;
+    };
+    "/api/v1/admin/institutions/hospitals/{id}/departments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["InstitutionsAdminController_createDepartment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/institutions/departments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["InstitutionsAdminController_updateDepartment"];
+        trace?: never;
+    };
+    "/api/v1/admin/institutions/departments/{id}/directors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InstitutionsAdminController_directors"];
+        put?: never;
+        post: operations["InstitutionsAdminController_assignDirector"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/institutions/departments/{id}/directors/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["InstitutionsAdminController_removeDirector"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -653,6 +813,110 @@ export interface components {
             } & {
                 [key: string]: unknown;
             };
+        };
+        HospitalListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                cityHe: string;
+                cityEn: string;
+            }[];
+        };
+        DepartmentListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+        };
+        SubspecialtyListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+        };
+        MembershipTypeListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+                /** @enum {string} */
+                identifier: "NONE" | "SPECIALIST_CERTIFICATE" | "MEDICAL_LICENCE";
+                selfApply: boolean;
+                directorApproval: boolean;
+            }[];
+        };
+        AdminHospitalListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                cityHe: string;
+                cityEn: string;
+                active: boolean;
+                departments: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    active: boolean;
+                    directors: {
+                        /** Format: uuid */
+                        userId: string;
+                        email: string;
+                        /** Format: date-time */
+                        grantedAt: string;
+                    }[];
+                }[];
+            }[];
+        };
+        CreateHospitalDto: {
+            nameHe: string;
+            nameEn: string;
+            cityHe: string;
+            cityEn: string;
+        };
+        IdDto: {
+            /** Format: uuid */
+            id: string;
+        };
+        UpdateHospitalDto: {
+            nameHe?: string;
+            nameEn?: string;
+            cityHe?: string;
+            cityEn?: string;
+            active?: boolean;
+        };
+        CreateDepartmentDto: {
+            nameHe: string;
+            nameEn: string;
+        };
+        UpdateDepartmentDto: {
+            nameHe?: string;
+            nameEn?: string;
+            active?: boolean;
+        };
+        DirectorListDto: {
+            items: {
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                /** Format: date-time */
+                grantedAt: string;
+            }[];
+        };
+        AssignDirectorDto: {
+            /** Format: email */
+            email: string;
         };
     };
     responses: never;
@@ -1295,6 +1559,263 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["TokenDto"];
                 };
+            };
+        };
+    };
+    ReferenceController_hospitals: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HospitalListDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_departments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DepartmentListDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_subspecialties: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubspecialtyListDto"];
+                };
+            };
+        };
+    };
+    ReferenceController_membershipTypes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MembershipTypeListDto"];
+                };
+            };
+        };
+    };
+    InstitutionsAdminController_hospitals: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHospitalListDto"];
+                };
+            };
+        };
+    };
+    InstitutionsAdminController_createHospital: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateHospitalDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdDto"];
+                };
+            };
+        };
+    };
+    InstitutionsAdminController_updateHospital: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateHospitalDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InstitutionsAdminController_createDepartment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDepartmentDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdDto"];
+                };
+            };
+        };
+    };
+    InstitutionsAdminController_updateDepartment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDepartmentDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InstitutionsAdminController_directors: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectorListDto"];
+                };
+            };
+        };
+    };
+    InstitutionsAdminController_assignDirector: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignDirectorDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectorListDto"];
+                };
+            };
+        };
+    };
+    InstitutionsAdminController_removeDirector: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

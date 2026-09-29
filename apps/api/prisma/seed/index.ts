@@ -1,6 +1,6 @@
 /**
  * Seed runner (DATABASE_DESIGN.md §6). Layers run in order and must be idempotent:
- *   1. reference: roles, permissions (M1); membership types, subspecialties (M2)
+ *   1. reference: roles, permissions (M1); membership types, subspecialties, hospitals (M2)
  *   2. demo:      fictional people, hospitals, departments, memberships   (added in M2)
  *   3. import:    curated IUA website sample from fixtures/iua-import/    (added in M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.

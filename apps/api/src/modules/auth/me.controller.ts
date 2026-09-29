@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Patch, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { type Principal, type RequestWithPrincipal } from '../../common/auth/principal';
+import {
+  type Principal,
+  type RequestWithPrincipal,
+  principalOf,
+} from '../../common/auth/principal';
 import { Authenticated } from '../../common/decorators/access.decorators';
 import { AppException } from '../../common/errors/app.exception';
 import { PrismaService } from '../../infra/prisma/prisma.service';
@@ -51,10 +55,4 @@ export class MeController {
       session: { id: principal.sessionId, mfa: principal.mfa },
     };
   }
-}
-
-/** The principal on an @Authenticated route (the guard guarantees it exists). */
-export function principalOf(req: RequestWithPrincipal): Principal {
-  if (!req.principal) throw new AppException('UNAUTHENTICATED');
-  return req.principal;
 }

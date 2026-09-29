@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { type AuthenticationResponseJSON } from '@simplewebauthn/server';
-import { type RequestWithPrincipal } from '../../common/auth/principal';
+import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import { Authenticated } from '../../common/decorators/access.decorators';
 import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { AppException } from '../../common/errors/app.exception';
@@ -29,7 +29,6 @@ import {
   TotpSetupDto,
 } from './auth.dto';
 import { describeUserAgent } from './devices.service';
-import { principalOf } from './me.controller';
 import { SessionsService } from './sessions.service';
 
 /** The signed-in user's own security settings: MFA, password, sessions (API_DESIGN.md §4). */

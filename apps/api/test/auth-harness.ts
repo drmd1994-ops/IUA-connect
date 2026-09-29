@@ -1,6 +1,7 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { uuidv7 } from '@iua/shared';
+import { Secret, TOTP } from 'otpauth';
 import { Client } from 'pg';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
@@ -149,4 +150,90 @@ export async function grantRole(h: Harness, email: string, roleKey: string): Pro
      SELECT $1, u.id, r.id, 'NONE' FROM users u, roles r WHERE u.email = $2 AND r.key = $3`,
     [uuidv7(), email, roleKey],
   );
+}
+
+export const bearer = (token: string) => ({ Authorization: `Bearer ${token}` });
+
+/** A current TOTP code for a base32 secret. */
+export const totpCode = (secret: string) =>
+  new TOTP({
+    algorithm: 'SHA1',
+    digits: 6,
+    period: 30,
+    secret: Secret.fromBase32(secret),
+  }).generate();
+
+/** Grants a role scoped to a department (e.g. DEPARTMENT_DIRECTOR). */
+export async function grantDepartmentRole(
+  h: Harness,
+  email: string,
+  roleKey: string,
+  departmentId: string,
+): Promise<void> {
+  await h.db.query(
+    `INSERT INTO user_roles (id, user_id, role_id, scope_type, scope_id)
+     SELECT $1, u.id, r.id, 'DEPARTMENT', $4 FROM users u, roles r WHERE u.email = $2 AND r.key = $3`,
+    [uuidv7(), email, roleKey, departmentId],
+  );
+}
+
+/**
+ * A verified account signed in with a session that completed MFA (enrolling an authenticator
+ * app counts), holding the given roles. Permissions are read per request, so granting after
+ * sign-in takes effect at once.
+ */
+export async function signInWithMfa(
+  h: Harness,
+  label: string,
+  grant: (email: string) => Promise<void>,
+): Promise<{ email: string; accessToken: string; userId: string }> {
+  const email = await createVerifiedUser(h, label);
+  const { accessToken } = await signIn(h, email);
+  const setup = await h
+    .http()
+    .post('/api/v1/auth/mfa/totp/setup')
+    .set(bearer(accessToken))
+    .expect(200);
+  await h
+    .http()
+    .post('/api/v1/auth/mfa/totp/confirm')
+    .set(bearer(accessToken))
+    .send({ factorId: setup.body.factorId, code: totpCode(setup.body.secret) })
+    .expect(200);
+  await grant(email);
+  const { rows } = await h.db.query<{ id: string }>('SELECT id FROM users WHERE email = $1', [
+    email,
+  ]);
+  return { email, accessToken, userId: rows[0]!.id };
+}
+
+/** An IUA admin in an MFA session. */
+export const signInAdmin = (h: Harness, label = 'admin') =>
+  signInWithMfa(h, label, (email) => grantRole(h, email, 'IUA_ADMIN'));
+
+type Method = 'get' | 'post' | 'patch' | 'put' | 'delete';
+
+/**
+ * The standard access pattern for admin routes (SECURITY_MODEL.md §5): anonymous → 401,
+ * a member → 403, an admin whose session skipped MFA → 403. The 2xx case is each test's own.
+ */
+export async function expectAdminOnly(
+  h: Harness,
+  method: Method,
+  path: string,
+  body?: object,
+): Promise<void> {
+  const call = (token?: string) => {
+    let req = h.http()[method](path);
+    if (token) req = req.set(bearer(token));
+    return body ? req.send(body) : req;
+  };
+  await call().expect(401);
+
+  const member = await createVerifiedUser(h, 'member');
+  await call((await signIn(h, member)).accessToken).expect(403);
+
+  const noMfa = await createVerifiedUser(h, 'admin-no-mfa');
+  await grantRole(h, noMfa, 'IUA_ADMIN');
+  await call((await signIn(h, noMfa)).accessToken).expect(403);
 }

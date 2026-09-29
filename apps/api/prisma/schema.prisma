@@ -282,3 +282,87 @@ model AuthToken {
   @@index([userId, purpose])
   @@map("auth_tokens")
 }
+
+// ---------------------------------------------------------------------------
+// People and institutions (M2). DATABASE_DESIGN.md §3 "People and institutions".
+// Lookup tables admins can edit. Rows are deactivated, never deleted, once referenced.
+// ---------------------------------------------------------------------------
+
+model Hospital {
+  id        String   @id @db.Uuid
+  /// Stable key the reference seed matches on (e.g. "rambam"); admin-created rows get a generated one.
+  code      String   @unique @db.VarChar(64)
+  nameHe    String   @map("name_he") @db.VarChar(200)
+  nameEn    String   @map("name_en") @db.VarChar(200)
+  cityHe    String   @map("city_he") @db.VarChar(100)
+  cityEn    String   @map("city_en") @db.VarChar(100)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  departments Department[]
+
+  @@map("hospitals")
+}
+
+/// A hospital department. Its directors are DEPARTMENT_DIRECTOR grants scoped to it (user_roles).
+model Department {
+  id         String   @id @db.Uuid
+  hospitalId String   @map("hospital_id") @db.Uuid
+  /// Stable key within the hospital (e.g. "urology").
+  code       String   @db.VarChar(64)
+  nameHe     String   @map("name_he") @db.VarChar(200)
+  nameEn     String   @map("name_en") @db.VarChar(200)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  hospital Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+
+  @@unique([hospitalId, code])
+  @@map("departments")
+}
+
+model Subspecialty {
+  id        String   @id @db.Uuid
+  key       String   @unique @db.VarChar(64)
+  nameHe    String   @map("name_he") @db.VarChar(200)
+  nameEn    String   @map("name_en") @db.VarChar(200)
+  sortOrder Int      @default(0) @map("sort_order")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("subspecialties")
+}
+
+/// What an applicant proves when applying for a membership type (M2 plan §2, §11).
+enum MembershipIdentifier {
+  NONE
+  SPECIALIST_CERTIFICATE
+  MEDICAL_LICENCE
+
+  @@map("membership_identifier")
+}
+
+/// FULL_MEMBER, NON_FULL_MEMBER, RESIDENT, STUDENT, HONORARY_MEMBER (ADR 0004).
+model MembershipType {
+  id               String               @id @db.Uuid
+  key              String               @unique @db.VarChar(64)
+  nameHe           String               @map("name_he") @db.VarChar(200)
+  nameEn           String               @map("name_en") @db.VarChar(200)
+  identifier       MembershipIdentifier @default(NONE)
+  /// Members can apply for it themselves (HONORARY_MEMBER is granted by admins only).
+  selfApply        Boolean              @default(true) @map("self_apply")
+  /// Applications go to the department director before the IUA admin (students skip it).
+  directorApproval Boolean              @default(true) @map("director_approval")
+  /// Informational until payments exist (D4).
+  annualFee        Decimal?             @map("annual_fee") @db.Decimal(12, 2)
+  currency         String?              @db.Char(3)
+  sortOrder        Int                  @default(0) @map("sort_order")
+  active           Boolean              @default(true)
+  createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("membership_types")
+}
