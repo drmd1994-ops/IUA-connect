@@ -6,7 +6,7 @@ _Last updated: 2026-09-27_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M1b Passkeys: implemented (2026-09-29), in review** as pull request #2 on `feat/auth-passkeys`; automated checks pass in Chromium and Edge; the manual Windows Hello check is the owner's, at the demo. M1 Identity merged 2026-09-29 (PR #1). M0 Foundations complete. |
+| Phase                     | **M1b Passkeys: merged 2026-09-29** (pull request #2); automated checks pass in Chromium and Edge; the manual Windows Hello check is deferred by the owner until the mobile app exists. M1 Identity merged 2026-09-29 (PR #1). M0 Foundations complete. Next: M2, after O3. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -124,7 +124,7 @@ Plan: [`docs/plans/M1-identity.md`](docs/plans/M1-identity.md), approved by the 
 
 ## M1b Passkeys (2026-09-29)
 
-Plan: [`docs/plans/M1b-passkeys.md`](docs/plans/M1b-passkeys.md), approved by the owner with three decisions: a passkey alone signs in (passwordless); a passkey satisfies the MFA requirement of administrative roles; synced and device-bound passkeys are both allowed. Branch `feat/auth-passkeys`, **pull request #2**.
+Plan: [`docs/plans/M1b-passkeys.md`](docs/plans/M1b-passkeys.md), approved by the owner with three decisions: a passkey alone signs in (passwordless); a passkey satisfies the MFA requirement of administrative roles; synced and device-bound passkeys are both allowed. **Merged** into `main` on 2026-09-29 at the owner's request (pull request #2).
 
 ### Delivered
 
@@ -147,8 +147,7 @@ Plan: [`docs/plans/M1b-passkeys.md`](docs/plans/M1b-passkeys.md), approved by th
 
 ### Open for the owner
 
-- **Manual check (roadmap exit criterion):** add a passkey with a real **Windows Hello** prompt and sign in with it, in Chrome and in Edge.
-- Review and merge pull request #2.
+- **Manual Windows Hello check — deferred by the owner (2026-09-29)** until the mobile app exists: add a passkey with a real Windows Hello prompt and sign in with it, in Chrome and in Edge. Until then, M1b's exit criterion is met by the automated tests only (virtual authenticator in Chromium and Edge).
 - O3 (certificate number format, resident identifiers) is needed for M2.
 
 ## Next step
