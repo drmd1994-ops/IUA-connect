@@ -32,14 +32,7 @@ export class MembershipsService {
     if (!membership) return { membership: null, history: [] };
     return {
       membership: describe(membership),
-      history: membership.history.map((row) => ({
-        event: row.event,
-        fromStatus: row.fromStatus,
-        toStatus: row.toStatus,
-        details: (row.details as Record<string, unknown> | null) ?? null,
-        reason: row.reason,
-        at: row.at.toISOString(),
-      })),
+      history: membership.history.map(historyEntry),
     };
   }
 
@@ -111,9 +104,33 @@ export class MembershipsService {
   }
 }
 
-function effectiveStatus(membership: { status: string; endDate: Date }, today: Date): string {
+export type EffectiveStatus = 'ACTIVE' | 'SUSPENDED' | 'EXPIRED';
+
+/** SUSPENDED wins; otherwise EXPIRED once the end date has passed (never stored). */
+export function effectiveStatus(
+  membership: { status: string; endDate: Date },
+  today: Date,
+): EffectiveStatus {
   if (membership.status === 'SUSPENDED') return 'SUSPENDED';
-  return isExpired(membership.endDate, today) ? 'EXPIRED' : membership.status;
+  return isExpired(membership.endDate, today) ? 'EXPIRED' : 'ACTIVE';
+}
+
+export function historyEntry(row: {
+  event: HistoryEvent;
+  fromStatus: string | null;
+  toStatus: string | null;
+  details: unknown;
+  reason: string | null;
+  at: Date;
+}): MyMembershipDto['history'][number] {
+  return {
+    event: row.event,
+    fromStatus: row.fromStatus,
+    toStatus: row.toStatus,
+    details: (row.details as Record<string, unknown> | null) ?? null,
+    reason: row.reason,
+    at: row.at.toISOString(),
+  };
 }
 
 export function describe(
@@ -128,32 +145,56 @@ export function describe(
       nameHe: membership.type.nameHe,
       nameEn: membership.type.nameEn,
     },
-    status: effectiveStatus(membership, today) as 'ACTIVE' | 'SUSPENDED' | 'EXPIRED',
+    status: effectiveStatus(membership, today),
     startDate: isoDate(membership.startDate),
     endDate: isoDate(membership.endDate),
     paymentStatus: membership.paymentStatus,
   };
 }
 
-async function history(
-  tx: Tx,
-  membershipId: string,
-  event: 'CREATED' | 'TYPE_CHANGED',
-  fromStatus: string | null,
-  toStatus: string,
-  input: Grant,
-  details: Record<string, string>,
-): Promise<void> {
+export type HistoryEvent = MyMembershipDto['history'][number]['event'];
+
+export interface HistoryInput {
+  membershipId: string;
+  event: HistoryEvent;
+  fromStatus: string | null;
+  toStatus: string | null;
+  details?: Record<string, string>;
+  changedBy: string | null;
+  reason?: string | null;
+}
+
+/** Appends to membership_history (the table rejects updates and deletes). */
+export async function recordHistory(tx: Tx, input: HistoryInput): Promise<void> {
   await tx.membershipHistory.create({
     data: {
       id: uuidv7(),
-      membershipId,
-      event,
-      fromStatus,
-      toStatus,
-      details,
+      membershipId: input.membershipId,
+      event: input.event,
+      fromStatus: input.fromStatus,
+      toStatus: input.toStatus,
+      ...(input.details ? { details: input.details } : {}),
       changedBy: input.changedBy,
       reason: input.reason ?? null,
     },
   });
 }
+
+const history = (
+  tx: Tx,
+  membershipId: string,
+  event: HistoryEvent,
+  fromStatus: string | null,
+  toStatus: string,
+  input: Grant,
+  details: Record<string, string>,
+) =>
+  recordHistory(tx, {
+    membershipId,
+    event,
+    fromStatus,
+    toStatus,
+    details,
+    changedBy: input.changedBy,
+    reason: input.reason,
+  });

@@ -692,6 +692,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/memberships": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MembershipsAdminController_list"];
+        put?: never;
+        post: operations["MembershipsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MembershipsAdminController_detail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/{id}/renew": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MembershipsAdminController_renew"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/{id}/suspend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MembershipsAdminController_suspend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/{id}/reinstate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MembershipsAdminController_reinstate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/{id}/expire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MembershipsAdminController_expire"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/{id}/payment-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["MembershipsAdminController_paymentStatus"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1326,6 +1438,106 @@ export interface components {
                 nameEn: string | null;
             };
             flags: ("NO_DIRECTOR" | "APPLICANT_IS_DIRECTOR")[];
+        };
+        AdminMembershipListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                type: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                status: "ACTIVE" | "SUSPENDED" | "EXPIRED";
+                /** Format: date */
+                startDate: string;
+                /** Format: date */
+                endDate: string;
+                /** @enum {string} */
+                paymentStatus: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+                member: {
+                    /** Format: uuid */
+                    userId: string;
+                    email: string;
+                    firstName: string | null;
+                    lastName: string | null;
+                    nameHe: string | null;
+                    nameEn: string | null;
+                };
+                /** @enum {string} */
+                source: "MANUAL" | "IMPORT" | "IMA";
+                identifierOnFile: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        AdminMembershipDetailDto: {
+            membership: {
+                /** Format: uuid */
+                id: string;
+                type: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                status: "ACTIVE" | "SUSPENDED" | "EXPIRED";
+                /** Format: date */
+                startDate: string;
+                /** Format: date */
+                endDate: string;
+                /** @enum {string} */
+                paymentStatus: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+                member: {
+                    /** Format: uuid */
+                    userId: string;
+                    email: string;
+                    firstName: string | null;
+                    lastName: string | null;
+                    nameHe: string | null;
+                    nameEn: string | null;
+                };
+                /** @enum {string} */
+                source: "MANUAL" | "IMPORT" | "IMA";
+                identifierOnFile: boolean;
+            };
+            history: {
+                /** @enum {string} */
+                event: "CREATED" | "RENEWED" | "SUSPENDED" | "REINSTATED" | "EXPIRED" | "TYPE_CHANGED" | "PAYMENT_STATUS_CHANGED";
+                fromStatus: string | null;
+                toStatus: string | null;
+                details: {
+                    [key: string]: unknown;
+                } | null;
+                reason: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        CreateMembershipDto: {
+            /** Format: email */
+            email: string;
+            /** Format: uuid */
+            typeId: string;
+            identifier?: string;
+            reason?: string;
+        };
+        MembershipActionDto: {
+            reason?: string;
+        };
+        SuspendMembershipDto: {
+            reason: string;
+        };
+        PaymentStatusDto: {
+            /** @enum {string} */
+            paymentStatus: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+            reason?: string;
         };
     };
     responses: never;
@@ -2394,6 +2606,201 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReviewApplicationDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "ACTIVE" | "SUSPENDED" | "EXPIRED";
+                type?: string;
+                paymentStatus?: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipListDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMembershipDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_detail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_renew: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MembershipActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_suspend: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuspendMembershipDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_reinstate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MembershipActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_expire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MembershipActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
+                };
+            };
+        };
+    };
+    MembershipsAdminController_paymentStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentStatusDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminMembershipDetailDto"];
                 };
             };
         };
