@@ -2,7 +2,7 @@ import createClient, { type Client } from 'openapi-fetch';
 import { CORRELATION_ID_HEADER, type ErrorEnvelope, errorEnvelopeSchema } from '@iua/shared';
 import { type paths } from './schema';
 
-export type { paths } from './schema';
+export type { components, paths } from './schema';
 
 export interface ApiClientOptions {
   /** Origin of the API, e.g. http://localhost:4000 */

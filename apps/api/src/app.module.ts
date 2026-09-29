@@ -3,11 +3,16 @@ import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { PermissionGuard } from './common/guards/permission.guard';
+import { RateLimitGuard } from './common/guards/rate-limit.guard';
 import { ConfigModule } from './config/config.module';
 import { type Env } from './config/env.schema';
+import { CryptoModule } from './infra/crypto/crypto.module';
 import { LoggerModule } from './infra/logger/logger.module';
+import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
+import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
 import { AuditModule } from './modules/audit';
+import { AuthModule } from './modules/auth';
 import { HealthModule } from './modules/health';
 
 /**
@@ -15,6 +20,8 @@ import { HealthModule } from './modules/health';
  * Exported so tests can build small apps with exactly the same pipeline.
  */
 export const PIPELINE_PROVIDERS: Provider[] = [
+  // Guards run in this order: rate limit (step 3), then authentication/authorization (4–5).
+  { provide: APP_GUARD, useClass: RateLimitGuard },
   { provide: APP_GUARD, useClass: PermissionGuard },
   { provide: APP_PIPE, useClass: ZodValidationPipe },
   { provide: APP_FILTER, useClass: AllExceptionsFilter },
@@ -29,8 +36,12 @@ export class AppModule {
         ConfigModule.forRoot(env),
         LoggerModule.forRoot(env),
         PrismaModule,
+        CryptoModule,
+        MailerModule,
+        RateLimitModule,
         AuditModule,
         HealthModule,
+        AuthModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

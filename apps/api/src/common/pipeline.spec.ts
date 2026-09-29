@@ -19,7 +19,7 @@ import { ConfigModule } from '../config/config.module';
 import { LoggerModule } from '../infra/logger/logger.module';
 import { testEnv } from '../testing/test-env';
 import { type RequestWithPrincipal } from './auth/principal';
-import { Public, RequirePermission } from './decorators/access.decorators';
+import { Authenticated, Public, RequirePermission } from './decorators/access.decorators';
 
 class EchoDto extends createZodDto(z.strictObject({ name: z.string().min(2) })) {}
 
@@ -34,6 +34,12 @@ class FixtureController {
   @Get('audit')
   @RequirePermission('audit.read')
   guarded() {
+    return { ok: true };
+  }
+
+  @Get('me')
+  @Authenticated()
+  me() {
     return { ok: true };
   }
 
@@ -72,6 +78,8 @@ class FixtureModule implements NestModule {
               userId: '0199a000-0000-7000-8000-000000000001',
               sessionId: '0199a000-0000-7000-8000-000000000002',
               mfa: true,
+              roles: [],
+              mfaEnrollmentRequired: false,
               permissions: new Set(header.split(',').filter(Boolean) as PermissionKey[]),
             };
           }
@@ -110,6 +118,18 @@ describe('HTTP pipeline', () => {
   describe('deny by default', () => {
     it('allows @Public() routes anonymously', async () => {
       await request(app.getHttpServer()).get('/api/v1/fixture/public').expect(200, { ok: true });
+    });
+
+    it('returns 401 for an @Authenticated route without a principal', async () => {
+      const res = await request(app.getHttpServer()).get('/api/v1/fixture/me').expect(401);
+      expectEnvelope(res.body, 'UNAUTHENTICATED');
+    });
+
+    it('allows any principal on an @Authenticated route, even without permissions', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/fixture/me')
+        .set('x-test-permissions', '')
+        .expect(200);
     });
 
     it('returns 401 for a permission route without a principal', async () => {

@@ -1,7 +1,6 @@
 /**
  * Permission keys (ARCHITECTURE.md §6). Routes declare them with `@RequirePermission(...)`.
- * The mapping from roles to permissions is seeded from code in M1 (Identity); until then no
- * principal holds any permission, so every non-public route is denied.
+ * Roles map to permissions in `roles.ts`; the reference seed writes that mapping to the database.
  */
 export const PERMISSIONS = [
   'users.read',

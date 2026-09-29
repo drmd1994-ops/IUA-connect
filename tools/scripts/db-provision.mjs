@@ -63,6 +63,8 @@ async function configureDatabase(superuserUrl, database, owner, app) {
     await client.query(
       `ALTER DEFAULT PRIVILEGES FOR ROLE ${o} IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO ${a}`,
     );
+    // Store and compare timestamps in UTC for every client (see apps/api/src/infra/prisma/pg-adapter.ts).
+    await client.query(`ALTER DATABASE ${db} SET timezone TO 'UTC'`);
     // Read by migrations that grant or revoke per-table privileges (see the baseline migration).
     await client.query(`ALTER DATABASE ${db} SET iua.app_role = ${client.escapeLiteral(app)}`);
     ok(`database ${database}: privileges configured`);

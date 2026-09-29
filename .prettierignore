@@ -24,3 +24,6 @@ docs/product/MASTER_SPEC.md
 # Written by `next dev`
 apps/web/AGENTS.md
 apps/web/CLAUDE.md
+
+# Bundled breached-password list (data, one line)
+apps/api/src/modules/auth/password/common-passwords.json

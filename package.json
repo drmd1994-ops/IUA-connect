@@ -22,6 +22,7 @@
     "db:deploy": "pnpm --filter @iua/api db:deploy",
     "db:reset": "pnpm --filter @iua/api db:reset",
     "db:seed": "pnpm --filter @iua/api db:seed",
+    "admin:create": "pnpm --filter @iua/api admin:create",
     "openapi:generate": "turbo run build --filter=@iua/api && pnpm --filter @iua/api openapi:export && pnpm --filter @iua/api-client generate",
     "prepare": "husky"
   },

@@ -3,12 +3,12 @@ import { DiscoveryModule, DiscoveryService, MetadataScanner, Reflector } from '@
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../app.module';
 import { testEnv } from '../testing/test-env';
-import { Public, RequirePermission } from './decorators/access.decorators';
+import { Authenticated, Public, RequirePermission } from './decorators/access.decorators';
 import { findUndeclaredRoutes } from './route-audit';
 
 /**
  * Deny-by-default build gate (SECURITY_MODEL.md §3): every route of the real application must
- * declare @Public() or @RequirePermission(). If this test fails, a route was added without an
+ * declare @Public(), @Authenticated() or @RequirePermission(). If this test fails, a route was added without an
  * access declaration; add one rather than weakening this test.
  */
 async function undeclaredRoutesOf(rootModule: Parameters<typeof Test.createTestingModule>[0]) {
@@ -42,6 +42,12 @@ describe('route access declarations', () => {
       @Get('guarded')
       @RequirePermission('audit.read')
       guarded() {
+        return 'ok';
+      }
+
+      @Get('mine')
+      @Authenticated()
+      mine() {
         return 'ok';
       }
 

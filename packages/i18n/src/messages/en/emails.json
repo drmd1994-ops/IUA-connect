@@ -1,0 +1,46 @@
+{
+  "layout": {
+    "signature": "The IUA Connect team",
+    "demoNotice": "This message was sent by a demo version of IUA Connect. All people and data in it are fictional.",
+    "ignore": "If you didn’t request this, you can ignore this message."
+  },
+  "verifyEmail": {
+    "subject": "Verify your email address for IUA Connect",
+    "heading": "Welcome to IUA Connect",
+    "body": "To finish signing up, please verify your email address.",
+    "action": "Verify email address",
+    "expiry": "This link is valid for 24 hours."
+  },
+  "accountExists": {
+    "subject": "Sign-up attempt with your email address",
+    "heading": "You already have an account",
+    "body": "Someone tried to sign up for IUA Connect with this email address, but an account already exists for it.",
+    "action": "Sign in",
+    "resetHint": "Forgot your password? You can reset it from the sign-in page."
+  },
+  "passwordReset": {
+    "subject": "Reset your IUA Connect password",
+    "heading": "Password reset",
+    "body": "We received a request to reset the password for your account.",
+    "action": "Choose a new password",
+    "expiry": "This link is valid for one hour and can be used once."
+  },
+  "passwordChanged": {
+    "subject": "Your password was changed",
+    "heading": "Password changed",
+    "body": "The password for your IUA Connect account was changed, and all other sessions were signed out.",
+    "notYou": "If you didn’t make this change, reset your password immediately and contact the association administrators."
+  },
+  "accountLocked": {
+    "subject": "Your account is temporarily locked",
+    "heading": "Account temporarily locked",
+    "body": "There were several failed sign-in attempts on your account, so it is locked for {minutes} minutes.",
+    "notYou": "If this wasn’t you, we recommend resetting your password."
+  },
+  "newDevice": {
+    "subject": "New sign-in to your account",
+    "heading": "New device sign-in",
+    "body": "Your account was signed in from {device} at {time}.",
+    "notYou": "If this wasn’t you, reset your password and sign out that session from the account security page."
+  }
+}

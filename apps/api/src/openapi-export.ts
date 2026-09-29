@@ -4,6 +4,7 @@ import path from 'node:path';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { buildOpenApiDocument, configureApp } from './app.setup';
+import { generateDevSecrets } from './config/dev-secrets';
 import { parseEnv } from './config/env.schema';
 
 /**
@@ -19,6 +20,7 @@ async function exportOpenApi(): Promise<void> {
     LOG_LEVEL: 'silent',
     WEB_ORIGIN: 'http://localhost:3001',
     DATABASE_URL: 'postgresql://unused@localhost:5432/unused',
+    ...generateDevSecrets(),
   });
   const app = await NestFactory.create(AppModule.forRoot(env), { logger: false });
   configureApp(app, env);

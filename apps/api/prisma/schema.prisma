@@ -15,7 +15,9 @@ datasource db {
 
 /// Append-only audit trail (SECURITY_MODEL.md §3). UPDATE, DELETE and TRUNCATE are rejected by
 /// triggers, and the application role only holds SELECT and INSERT on this table.
-/// actor_user_id gets its foreign key to users when the users table is created (M1).
+/// actor_user_id deliberately has no foreign key: accounts are hard-deleted after the grace
+/// period while their audit rows keep the pseudonymous ID (DATABASE_DESIGN.md §7), and the
+/// append-only trigger forbids the ON DELETE SET NULL a foreign key would need.
 model AuditLog {
   id            String   @id @db.Uuid
   at            DateTime @default(now()) @db.Timestamptz(6)
@@ -31,4 +33,238 @@ model AuditLog {
   @@index([entityType, entityId, at(sort: Desc)])
   @@index([actorUserId, at(sort: Desc)])
   @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Identity and access (M1). DATABASE_DESIGN.md §3 "Identity and access".
+// ---------------------------------------------------------------------------
+
+enum UserStatus {
+  ACTIVE
+  /// Locked by an administrator. Automatic lockouts after failed sign-ins use users.locked_until.
+  LOCKED
+  DISABLED
+
+  @@map("user_status")
+}
+
+model User {
+  id               String     @id @db.Uuid
+  email            String     @unique @db.Citext
+  emailVerifiedAt  DateTime?  @map("email_verified_at") @db.Timestamptz(6)
+  passwordHash     String     @map("password_hash")
+  status           UserStatus @default(ACTIVE)
+  /// Consecutive failed sign-ins since the last success or lock.
+  failedLoginCount Int        @default(0) @map("failed_login_count")
+  /// Number of automatic lockouts since the last successful sign-in (drives the backoff).
+  lockoutCount     Int        @default(0) @map("lockout_count")
+  lockedUntil      DateTime?  @map("locked_until") @db.Timestamptz(6)
+  locale           String     @default("he") @db.VarChar(8)
+  lastLoginAt      DateTime?  @map("last_login_at") @db.Timestamptz(6)
+  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  roles         UserRole[]      @relation("UserRoles")
+  rolesGranted  UserRole[]      @relation("RolesGrantedBy")
+  sessions      Session[]
+  devices       Device[]
+  mfaFactors    MfaFactor[]
+  recoveryCodes RecoveryCode[]
+  authTokens    AuthToken[]
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @db.Uuid
+  key         String   @unique @db.VarChar(64)
+  /// i18n key for the display name, e.g. "roles.SUPER_ADMIN".
+  nameKey     String   @map("name_key") @db.VarChar(100)
+  requiresMfa Boolean  @default(true) @map("requires_mfa")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id        String   @id @db.Uuid
+  key       String   @unique @db.VarChar(100)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String @map("role_id") @db.Uuid
+  permissionId String @map("permission_id") @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+enum RoleScopeType {
+  NONE
+  DEPARTMENT
+  SUBSPECIALTY
+
+  @@map("role_scope_type")
+}
+
+/// A role granted to a user, optionally scoped (e.g. DEPARTMENT_DIRECTOR of one department).
+/// scope_id gets its foreign key when departments/subspecialties exist (M2).
+model UserRole {
+  id        String        @id @db.Uuid
+  userId    String        @map("user_id") @db.Uuid
+  roleId    String        @map("role_id") @db.Uuid
+  scopeType RoleScopeType @default(NONE) @map("scope_type")
+  scopeId   String?       @map("scope_id") @db.Uuid
+  grantedBy String?       @map("granted_by") @db.Uuid
+  grantedAt DateTime      @default(now()) @map("granted_at") @db.Timestamptz(6)
+
+  user          User  @relation("UserRoles", fields: [userId], references: [id], onDelete: Cascade)
+  role          Role  @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  grantedByUser User? @relation("RolesGrantedBy", fields: [grantedBy], references: [id], onDelete: SetNull)
+
+  /// Uniqueness treats NULL scope_id as equal (NULLS NOT DISTINCT), set in the migration.
+  @@unique([userId, roleId, scopeType, scopeId])
+  @@map("user_roles")
+}
+
+/// A browser or app instance, identified by a random device cookie (only its hash is stored).
+model Device {
+  id          String   @id @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  tokenHash   String   @unique @map("token_hash") @db.VarChar(128)
+  userAgent   String?  @map("user_agent") @db.VarChar(512)
+  firstSeenAt DateTime @default(now()) @map("first_seen_at") @db.Timestamptz(6)
+  lastSeenAt  DateTime @default(now()) @map("last_seen_at") @db.Timestamptz(6)
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions Session[]
+
+  @@index([userId])
+  @@map("devices")
+}
+
+model Session {
+  id                String    @id @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  deviceId          String?   @map("device_id") @db.Uuid
+  ip                String?   @db.Inet
+  userAgent         String?   @map("user_agent") @db.VarChar(512)
+  /// Set when MFA was completed in this session (TOTP challenge, or MFA enrolment).
+  mfaCompletedAt    DateTime? @map("mfa_completed_at") @db.Timestamptz(6)
+  /// Last time the user re-entered their password (and code) in this session.
+  reauthenticatedAt DateTime? @map("reauthenticated_at") @db.Timestamptz(6)
+  lastSeenAt        DateTime  @default(now()) @map("last_seen_at") @db.Timestamptz(6)
+  /// Idle limit in seconds, fixed when the session is created (shorter for admin roles).
+  idleTimeoutSec    Int       @map("idle_timeout_sec")
+  expiresAt         DateTime  @map("expires_at") @db.Timestamptz(6)
+  revokedAt         DateTime? @map("revoked_at") @db.Timestamptz(6)
+  revokedReason     String?   @map("revoked_reason") @db.VarChar(64)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device        Device?        @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  refreshTokens RefreshToken[]
+
+  @@index([userId, revokedAt])
+  @@map("sessions")
+}
+
+/// Rotating refresh tokens. Only a keyed hash is stored. All tokens of a session form one family:
+/// presenting an already-used token revokes the session (reuse detection).
+model RefreshToken {
+  id         String    @id @db.Uuid
+  sessionId  String    @map("session_id") @db.Uuid
+  familyId   String    @map("family_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash") @db.VarChar(128)
+  usedAt     DateTime? @map("used_at") @db.Timestamptz(6)
+  replacedBy String?   @map("replaced_by") @db.Uuid
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([familyId])
+  @@map("refresh_tokens")
+}
+
+enum MfaFactorType {
+  TOTP
+  WEBAUTHN
+
+  @@map("mfa_factor_type")
+}
+
+model MfaFactor {
+  id                  String        @id @db.Uuid
+  userId              String        @map("user_id") @db.Uuid
+  type                MfaFactorType
+  /// AES-256-GCM ciphertext with key ID (TOTP only).
+  secretEncrypted     String?       @map("secret_encrypted")
+  /// WebAuthn public key (M1b).
+  credentialPublicKey Bytes?        @map("credential_public_key")
+  label               String?       @db.VarChar(100)
+  /// Null until the user proves possession with a first valid code.
+  confirmedAt         DateTime?     @map("confirmed_at") @db.Timestamptz(6)
+  /// Highest TOTP time-step accepted so far; codes at or below it are replays.
+  lastUsedStep        BigInt?       @map("last_used_step")
+  lastUsedAt          DateTime?     @map("last_used_at") @db.Timestamptz(6)
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("mfa_factors")
+}
+
+model RecoveryCode {
+  id        String    @id @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  codeHash  String    @unique @map("code_hash") @db.VarChar(128)
+  usedAt    DateTime? @map("used_at") @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("recovery_codes")
+}
+
+enum AuthTokenPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  /// Issued after a correct password when MFA is enabled; exchanged for a session with a code.
+  MFA_CHALLENGE
+
+  @@map("auth_token_purpose")
+}
+
+/// Single-use, expiring tokens sent by email or used between sign-in steps. Only a keyed hash is stored.
+model AuthToken {
+  id        String           @id @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  purpose   AuthTokenPurpose
+  tokenHash String           @unique @map("token_hash") @db.VarChar(128)
+  /// Failed attempts against this token (MFA challenge).
+  attempts  Int              @default(0)
+  expiresAt DateTime         @map("expires_at") @db.Timestamptz(6)
+  usedAt    DateTime?        @map("used_at") @db.Timestamptz(6)
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+  @@map("auth_tokens")
 }

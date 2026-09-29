@@ -16,6 +16,17 @@ export const ERROR_DEFINITIONS = {
   RATE_LIMITED: { status: 429, message: 'errors.rateLimited' },
   INTERNAL_ERROR: { status: 500, message: 'errors.internal' },
   SERVICE_UNAVAILABLE: { status: 503, message: 'errors.serviceUnavailable' },
+  // Identity (M1). Listed after the generic codes, which errorCodeForStatus prefers.
+  INVALID_CREDENTIALS: { status: 401, message: 'errors.auth.invalidCredentials' },
+  MFA_INVALID_CODE: { status: 401, message: 'errors.auth.mfaInvalidCode' },
+  SESSION_EXPIRED: { status: 401, message: 'errors.auth.sessionExpired' },
+  EMAIL_NOT_VERIFIED: { status: 403, message: 'errors.auth.emailNotVerified' },
+  ACCOUNT_DISABLED: { status: 403, message: 'errors.auth.accountDisabled' },
+  CSRF_INVALID: { status: 403, message: 'errors.auth.csrfInvalid' },
+  REAUTHENTICATION_REQUIRED: { status: 403, message: 'errors.auth.reauthenticationRequired' },
+  INVALID_TOKEN: { status: 400, message: 'errors.auth.invalidToken' },
+  MFA_ALREADY_ENABLED: { status: 409, message: 'errors.auth.mfaAlreadyEnabled' },
+  MFA_REQUIRED_BY_ROLE: { status: 422, message: 'errors.auth.mfaRequiredByRole' },
 } as const satisfies Record<string, { status: number; message: string }>;
 
 export type ErrorCode = keyof typeof ERROR_DEFINITIONS;

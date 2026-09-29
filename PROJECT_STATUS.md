@@ -6,7 +6,7 @@ _Last updated: 2026-09-27_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M0 Foundations: complete (2026-09-27).** All exit criteria met: `pnpm setup:dev` works with the installed Node 24, CI is green (run 36321842174 on `e7e5087`), and the deny-by-default test passes. Next: M1 Identity, pending plan approval. |
+| Phase                     | **M1 Identity: implemented (2026-09-27), in review** as pull request #1 on `feat/auth-identity`; exit criteria met (auth suite incl. reuse-detection and lockout tests passes; CI green). M0 Foundations complete (2026-09-27). Next: M1b Passkeys, after PR #1 is merged and its plan is approved. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -88,11 +88,45 @@ _Last updated: 2026-09-27_
 ### Notes and deviations
 
 - Versions: NestJS 11 as planned (NestJS 12 is ESM-only and unsupported by `nestjs-zod`), TypeScript 6.0 (TypeScript 7 isn't supported by ts-jest/typescript-eslint yet), Prisma 7.10 (8.x is a release candidate), pnpm 10, ESLint 9.
-- Playwright E2E is set up with the first user flows (M1/M2), not in M0.
+- Playwright E2E is set up with the first user flows (done in M1), not in M0.
 - The web app runs on port **3001** (owner request, 2026-09-27); port 3000 is used by another local app.
 - `C:\Users\PC` (the home folder) is itself an empty git repository, created outside this project. It was left untouched; the owner may want to remove `C:\Users\PC\.git`.
 - Prettier briefly reformatted the planning documents (whitespace and table padding only; content verified unchanged). They are now excluded from formatting.
 
+## M1 Identity (2026-09-27)
+
+Plan: [`docs/plans/M1-identity.md`](docs/plans/M1-identity.md), approved by the owner with four decisions (web screens included; bundled breached-password list; shorter sessions: members 7 d / 3 d idle, admins 4 h / 15 min idle; branch + pull request). Branch `feat/auth-identity`, **pull request #1** (the owner reviews and merges).
+
+### Delivered
+
+- **Schema:** users, roles, permissions, scoped role grants, devices, sessions, refresh tokens, MFA factors, recovery codes, single-use tokens; role catalogue in `@iua/shared`, seeded idempotently.
+- **API:** register, email verification (+ resend), sign-in with lockout and new-device email, MFA sign-in step, refresh with rotation and reuse detection, sign-out, `/me`, re-authentication, TOTP setup/confirm/disable, recovery codes, password change/forgot/reset, sessions list/revoke. Every route declares `@Public()`, `@Authenticated()` (new) or `@RequirePermission()`.
+- **Security:** Argon2id; 72 000-entry breached-password list; EdDSA access tokens; keyed-hash storage of tokens and codes; AES-256-GCM for TOTP secrets; rate limits behind `RateLimitStore`; admin permissions only in MFA sessions. See SECURITY.md.
+- **Web (he/en):** sign-in (with MFA step), sign-up, verify email, forgot/reset password, account security (MFA with QR and recovery codes, password, sessions); header account menu; `/api/v1` proxied through the web origin.
+- **Tooling:** `pnpm admin:create` (development only, fictional domains); console mailer writing to `outbox/`; Playwright + axe; CI e2e job.
+
+### Verified
+
+- API: 80 unit and 66 integration tests (PostgreSQL), including reuse detection, lockout, replay protection and rate limits (TESTING.md lists what each proves).
+- Web and packages: unit tests; **32 Playwright tests** locally in Chromium and Microsoft Edge: member journey (Hebrew), password reset (English), administrator MFA enrolment, and **no WCAG 2.2 AA violations (axe) on every auth page in both languages**.
+- gitleaks, Semgrep and `pnpm audit` clean in CI.
+
+### Deviations from the plan and findings
+
+- `audit_logs.actor_user_id` has **no foreign key** to `users` (the plan said it would): hard-deleted accounts keep pseudonymous audit rows, and the append-only trigger forbids `ON DELETE SET NULL`.
+- **Bug found and fixed:** Prisma's pg adapter stored timestamps shifted by the server's UTC offset. Connections and databases now use UTC; regression tests added. Dev-only audit rows written during M0 are shifted and can't be corrected (append-only).
+- **Semgrep finding fixed:** AES-GCM decryption didn't enforce the full 16-byte tag.
+- Rate limits are a custom guard over `RateLimitStore` rather than `@nestjs/throttler`: per-account limits needed the request body, and the store interface is the one in ARCHITECTURE §5.
+- Sign-in and the MFA code step are one page (`/login`) with two steps, not two routes.
+- `pnpm admin:create` accepts only reserved example domains (`example.test` etc.), enforcing "fictional people only".
+- Local end-to-end runs share one IP, so the registration limit (5/hour) allows two or three full runs per hour; restarting the API resets it (TESTING.md). Edge skips the account-creating journeys for this reason.
+- 17 dependency versions were stepped back to releases at least 7 days old (supply-chain rule); `multer` forced to 2.4.0.
+
+### Open for the owner
+
+- Review and merge pull request #1.
+- O3 (certificate number format, resident identifiers) is needed for M2.
+
 ## Next step
 
-**M1 Identity** (DEVELOPMENT_ROADMAP.md §3): register, email verification (console mailer), login, TOTP MFA, recovery codes, refresh rotation with reuse detection, sessions and devices, lockout, password reset, roles and permissions seed. Starts with a plan for the owner's approval.
+After PR #1 is merged: **M1b Passkeys** (WebAuthn registration and sign-in, working in Chrome and Edge on Windows). It starts with a written plan in `docs/plans/` for the owner's approval.
