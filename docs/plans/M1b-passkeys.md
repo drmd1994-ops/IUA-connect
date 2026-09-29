@@ -1,6 +1,6 @@
 # M1b — Passkeys: plan
 
-- Status: **Approved by the owner 2026-09-29** (decisions in §10)
+- Status: **Approved by the owner 2026-09-29; implemented** on branch `feat/auth-passkeys` (pull request #2). Decisions in §10; notes in `PROJECT_STATUS.md` (M1b section).
 - Date: 2026-09-29
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M1b ("WebAuthn registration and login — works in Chrome and Edge on Windows"). Builds on M1 (`docs/plans/M1-identity.md`); design sources: `SECURITY_MODEL.md` §3 ("Passkeys in M1b"), `DATABASE_DESIGN.md` §3 (`mfa_factors` already has a WEBAUTHN type and a public-key column), ADR 0002.
 

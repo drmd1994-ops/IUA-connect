@@ -35,3 +35,13 @@ Please report suspected vulnerabilities privately to the repository owner (GitHu
 - **Notifications:** emails for new-device sign-ins, lockouts and password changes.
 - **Audit:** every sign-in, failure, lockout, MFA change, password change, session revocation and refresh-token reuse.
 - **Development-only admin creation** (`pnpm admin:create`): fictional reserved domains only; refuses production.
+
+## Controls added in M1b (Passkeys)
+
+- **WebAuthn passkeys** (`@simplewebauthn/server`): phishing-resistant (bound to the site's domain); only the public key is stored.
+- **User verification required** (fingerprint, face or PIN) on every ceremony, so a passkey counts as two factors: it can sign in on its own and satisfies the MFA requirement of administrative roles (owner decisions 2026-09-29).
+- **Single-use, 5-minute challenges** stored as keyed hashes; replayed or foreign-origin responses are refused.
+- **Cloned-key signal:** a signature counter that goes backwards is refused and audited.
+- **Last factor protected:** a role that requires MFA can't remove its last passkey or authenticator app.
+- **Re-authentication** with a passkey; accounts with passkeys but no authenticator app can't re-authenticate with the password alone.
+- The relying-party ID must be the real domain in production (the API refuses `localhost`).

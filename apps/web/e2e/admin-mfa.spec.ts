@@ -8,7 +8,7 @@ test('a new administrator is sent to two-step verification setup', async ({ page
 
   await signIn(page, 'en', email, password);
   await expect(page).toHaveURL(/\/en\/account\/security$/);
-  const banner = page.getByText('Turn it on to get access to your administrative permissions');
+  const banner = page.getByText('Add a passkey or turn on an authenticator app');
   await expect(banner).toBeVisible();
 
   await page.getByRole('button', { name: 'Turn on two-step verification' }).click();
