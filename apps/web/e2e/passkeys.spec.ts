@@ -54,6 +54,8 @@ test('the passkey sign-in works in Hebrew and renames in place', async ({ page }
   const password = createAdmin(email);
 
   await signIn(page, 'en', email, password);
+  // Wait for the sign-in to land (it sets the refresh cookie) before loading another page.
+  await expect(page).toHaveURL(/\/en\/account\/security$/);
   await page.goto('/he/account/security');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await page.getByRole('button', { name: 'הוספת מפתח גישה' }).click();
