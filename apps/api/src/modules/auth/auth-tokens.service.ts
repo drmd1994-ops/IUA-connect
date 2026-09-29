@@ -5,9 +5,19 @@ import { SecretHasher, randomToken } from '../../infra/crypto/secrets';
 import { type AuthToken, type AuthTokenPurpose } from '../../generated/prisma/client';
 import { AUTH_TOKEN_TTL_SEC } from './session-policy';
 
+/** Purposes that always belong to a known account. */
+export type AccountTokenPurpose = Exclude<AuthTokenPurpose, 'WEBAUTHN_AUTHENTICATION'>;
+export type AccountToken = AuthToken & { userId: string };
+
+type ChallengePurpose = Extract<
+  AuthTokenPurpose,
+  'WEBAUTHN_REGISTRATION' | 'WEBAUTHN_AUTHENTICATION'
+>;
+
 /**
- * Single-use, expiring tokens: email verification, password reset and the MFA sign-in challenge.
- * Only a keyed hash is stored; the plain token exists only in the email or the client.
+ * Single-use, expiring tokens: email verification, password reset, the MFA sign-in challenge and
+ * passkey (WebAuthn) challenges. Only a keyed hash is stored; the plain value exists only in the
+ * email or the client.
  */
 @Injectable()
 export class AuthTokensService {
@@ -16,8 +26,8 @@ export class AuthTokensService {
     private readonly hasher: SecretHasher,
   ) {}
 
-  /** Issues a token. Older unused tokens of the same purpose for the user are invalidated. */
-  async issue(userId: string, purpose: AuthTokenPurpose): Promise<string> {
+  /** Issues an account token. The user's older unused tokens of the same purpose are invalidated. */
+  async issue(userId: string, purpose: AccountTokenPurpose): Promise<string> {
     const token = randomToken();
     const now = new Date();
     await this.prisma.$transaction([
@@ -38,24 +48,46 @@ export class AuthTokensService {
     return token;
   }
 
-  /** Finds a usable (unused, unexpired) token without consuming it. */
-  async find(token: string, purpose: AuthTokenPurpose): Promise<AuthToken | null> {
-    const row = await this.prisma.authToken.findUnique({
-      where: { tokenHash: this.hasher.hash(token) },
-    });
-    if (!row || row.purpose !== purpose || row.usedAt || row.expiresAt <= new Date()) return null;
-    return row;
+  /** Finds a usable (unused, unexpired) account token without consuming it. */
+  async find(token: string, purpose: AccountTokenPurpose): Promise<AccountToken | null> {
+    const row = await this.usable(token, purpose);
+    return row?.userId ? (row as AccountToken) : null;
   }
 
-  /** Consumes a token atomically; returns it only if this call was the one that used it. */
-  async consume(token: string, purpose: AuthTokenPurpose): Promise<AuthToken | null> {
+  /** Consumes an account token atomically; returns it only if this call was the one that used it. */
+  async consume(token: string, purpose: AccountTokenPurpose): Promise<AccountToken | null> {
     const row = await this.find(token, purpose);
-    if (!row) return null;
-    const { count } = await this.prisma.authToken.updateMany({
-      where: { id: row.id, usedAt: null },
-      data: { usedAt: new Date() },
+    return row && (await this.markUsed(row.id)) ? row : null;
+  }
+
+  /**
+   * Stores a WebAuthn challenge (the value the browser signs). Sign-in challenges have no user:
+   * they are issued before anyone is identified, so nothing else is invalidated.
+   */
+  async issueChallenge(challenge: string, purpose: ChallengePurpose, userId: string | null) {
+    await this.prisma.authToken.create({
+      data: {
+        id: uuidv7(),
+        userId,
+        purpose,
+        tokenHash: this.hasher.hash(challenge),
+        expiresAt: new Date(Date.now() + AUTH_TOKEN_TTL_SEC[purpose] * 1000),
+      },
     });
-    return count === 1 ? row : null;
+  }
+
+  /**
+   * Consumes a WebAuthn challenge atomically. Registration challenges must belong to the user
+   * completing the ceremony.
+   */
+  async consumeChallenge(
+    challenge: string,
+    purpose: ChallengePurpose,
+    userId: string | null,
+  ): Promise<boolean> {
+    const row = await this.usable(challenge, purpose);
+    if (!row || row.userId !== userId) return false;
+    return this.markUsed(row.id);
   }
 
   /** Counts a failed attempt; burns the token once the limit is reached. Returns attempts left. */
@@ -69,5 +101,21 @@ export class AuthTokensService {
       return 0;
     }
     return maxAttempts - row.attempts;
+  }
+
+  private async usable(value: string, purpose: AuthTokenPurpose): Promise<AuthToken | null> {
+    const row = await this.prisma.authToken.findUnique({
+      where: { tokenHash: this.hasher.hash(value) },
+    });
+    if (!row || row.purpose !== purpose || row.usedAt || row.expiresAt <= new Date()) return null;
+    return row;
+  }
+
+  private async markUsed(id: string): Promise<boolean> {
+    const { count } = await this.prisma.authToken.updateMany({
+      where: { id, usedAt: null },
+      data: { usedAt: new Date() },
+    });
+    return count === 1;
   }
 }

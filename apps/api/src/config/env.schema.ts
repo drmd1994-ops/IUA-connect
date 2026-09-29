@@ -92,6 +92,27 @@ export const envSchema = z
     TOKEN_HASH_KEY: base64Secret(32),
     FIELD_ENCRYPTION_KEYS: fieldKeys,
     FIELD_ENCRYPTION_KEY_ID: KEY_ID,
+
+    // Passkeys (M1b). Default to the web app's host and origin (APP_BASE_URL).
+    /** WebAuthn relying-party ID: the site's domain (e.g. "localhost", "connect.example.org"). */
+    WEBAUTHN_RP_ID: z
+      .string()
+      .regex(/^[a-z0-9.-]+$/, 'must be a domain name without scheme or port')
+      .optional(),
+    /** Origin(s) the browser reports during passkey ceremonies, comma-separated. */
+    WEBAUTHN_ORIGIN: z
+      .string()
+      .transform((value) => value.split(',').map((origin) => origin.trim()))
+      .pipe(z.array(z.url()))
+      .optional(),
+  })
+  .transform(({ WEBAUTHN_RP_ID, WEBAUTHN_ORIGIN, ...env }) => {
+    const base = new URL(env.APP_BASE_URL);
+    return {
+      ...env,
+      WEBAUTHN_RP_ID: WEBAUTHN_RP_ID ?? base.hostname,
+      WEBAUTHN_ORIGIN: WEBAUTHN_ORIGIN ?? [base.origin],
+    };
   })
   .superRefine((env, ctx) => {
     if (!(env.FIELD_ENCRYPTION_KEY_ID in env.FIELD_ENCRYPTION_KEYS)) {
@@ -102,6 +123,13 @@ export const envSchema = z
       });
     }
     if (env.NODE_ENV !== 'production') return;
+    if (env.WEBAUTHN_RP_ID === 'localhost') {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['WEBAUTHN_RP_ID'],
+        message: 'passkeys need the real domain in production, not localhost',
+      });
+    }
     for (const key of ['JWT_KEY_ID', 'FIELD_ENCRYPTION_KEY_ID'] as const) {
       if (env[key].startsWith(DEV_KEY_PREFIX)) {
         ctx.addIssue({

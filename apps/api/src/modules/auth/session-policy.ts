@@ -23,6 +23,8 @@ export const AUTH_TOKEN_TTL_SEC = {
   EMAIL_VERIFICATION: 24 * 3600,
   PASSWORD_RESET: 3600,
   MFA_CHALLENGE: 5 * 60,
+  WEBAUTHN_REGISTRATION: 5 * 60,
+  WEBAUTHN_AUTHENTICATION: 5 * 60,
 } as const;
 
 /** Wrong codes allowed against one MFA challenge before it is burned. */
