@@ -1,6 +1,6 @@
 # M2 — People & membership: plan
 
-- Status: **Approved by the owner on 2026-09-29**
+- Status: **Approved by the owner on 2026-09-29. Implemented 2026-09-30** (all eight checkpoints; see `PROJECT_STATUS.md`, "M2 People & membership")
 - Date: 2026-09-29
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M2. Design sources: `PRODUCT_REQUIREMENTS.md` §3.2–3.3, `ARCHITECTURE.md` §6–7 (authorization model, verification workflow), `DATABASE_DESIGN.md` §3 (people, institutions, membership, verification), `API_DESIGN.md` §4, spec §6–7 and §17 (subspecialties), ADR 0004. Owner decisions D2, D3, D9 and the answers to **O3** (2026-09-29).
 

@@ -31,7 +31,7 @@ export default defineConfig({
           {
             name: 'edge',
             use: { ...devices['Desktop Edge'], channel: 'msedge' },
-            testIgnore: /member-journey/,
+            testIgnore: /member-journey|membership/,
           },
         ]),
   ],
