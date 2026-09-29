@@ -259,6 +259,8 @@ model RecoveryCode {
 enum AuthTokenPurpose {
   EMAIL_VERIFICATION
   PASSWORD_RESET
+  /// "Set your password" link for accounts a membership import created (M2). 7 days.
+  ACCOUNT_SETUP
   /// Issued after a correct password when MFA is enabled; exchanged for a session with a code.
   MFA_CHALLENGE
   /// Passkey registration challenge (M1b).
@@ -529,6 +531,8 @@ enum MembershipEvent {
   EXPIRED
   TYPE_CHANGED
   PAYMENT_STATUS_CHANGED
+  /// Created or changed by a CSV import (details: batch, type, end date).
+  IMPORTED
 
   @@map("membership_event")
 }
@@ -619,4 +623,30 @@ model VerificationDecision {
 
   @@index([requestId, at])
   @@map("verification_decisions")
+}
+
+enum ImportBatchStatus {
+  DRY_RUN
+  APPLIED
+
+  @@map("import_batch_status")
+}
+
+/// A CSV membership import (D2, the IMA source-of-truth workflow). Holds the dry-run report and a
+/// keyed hash of the file, never the file: applying requires the same file again, so certificate
+/// and licence numbers are not kept here.
+model ImportBatch {
+  id          String            @id @db.Uuid
+  createdBy   String?           @map("created_by") @db.Uuid
+  fileName    String?           @map("file_name") @db.VarChar(255)
+  contentHash String            @map("content_hash") @db.VarChar(128)
+  status      ImportBatchStatus @default(DRY_RUN)
+  /// Per-row outcome (line, email, action, reasons) and totals. No identifiers.
+  report      Json
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  appliedAt   DateTime?         @map("applied_at") @db.Timestamptz(6)
+  appliedBy   String?           @map("applied_by") @db.Uuid
+
+  @@index([createdAt])
+  @@map("import_batches")
 }

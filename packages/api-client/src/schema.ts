@@ -612,6 +612,38 @@ export interface paths {
         patch: operations["ProfilesController_update"];
         trace?: never;
     };
+    "/api/v1/admin/memberships/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ImportController_dryRun"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/memberships/import/{batchId}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ImportController_apply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/membership": {
         parameters: {
             query?: never;
@@ -1248,6 +1280,33 @@ export interface components {
                 CONTACT_PHONE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
         };
+        ImportDryRunDto: {
+            fileName?: string;
+            csv: string;
+        };
+        ImportBatchDto: {
+            fileErrors: {
+                code: string;
+                line?: number;
+                column?: string;
+            }[];
+            rows: {
+                line: number;
+                email: string | null;
+                /** @enum {string} */
+                action: "CREATE_ACCOUNT" | "CREATE_MEMBERSHIP" | "UPDATE_MEMBERSHIP" | "UNCHANGED" | "SKIP";
+                reasons: string[];
+                changes: string[];
+            }[];
+            totals: {
+                [key: string]: number;
+            };
+            batchId: string | null;
+            status: ("DRY_RUN" | "APPLIED") | null;
+        };
+        ImportApplyDto: {
+            csv: string;
+        };
         MyMembershipDto: {
             membership: {
                 /** Format: uuid */
@@ -1270,7 +1329,7 @@ export interface components {
             } | null;
             history: {
                 /** @enum {string} */
-                event: "CREATED" | "RENEWED" | "SUSPENDED" | "REINSTATED" | "EXPIRED" | "TYPE_CHANGED" | "PAYMENT_STATUS_CHANGED";
+                event: "CREATED" | "RENEWED" | "SUSPENDED" | "REINSTATED" | "EXPIRED" | "TYPE_CHANGED" | "PAYMENT_STATUS_CHANGED" | "IMPORTED";
                 fromStatus: string | null;
                 toStatus: string | null;
                 details: {
@@ -1541,7 +1600,7 @@ export interface components {
             };
             history: {
                 /** @enum {string} */
-                event: "CREATED" | "RENEWED" | "SUSPENDED" | "REINSTATED" | "EXPIRED" | "TYPE_CHANGED" | "PAYMENT_STATUS_CHANGED";
+                event: "CREATED" | "RENEWED" | "SUSPENDED" | "REINSTATED" | "EXPIRED" | "TYPE_CHANGED" | "PAYMENT_STATUS_CHANGED" | "IMPORTED";
                 fromStatus: string | null;
                 toStatus: string | null;
                 details: {
@@ -2524,6 +2583,54 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileDto"];
+                };
+            };
+        };
+    };
+    ImportController_dryRun: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportDryRunDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportBatchDto"];
+                };
+            };
+        };
+    };
+    ImportController_apply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                batchId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportApplyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportBatchDto"];
                 };
             };
         };

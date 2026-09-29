@@ -98,6 +98,7 @@ export const MEMBERSHIP_EVENTS = [
   'EXPIRED',
   'TYPE_CHANGED',
   'PAYMENT_STATUS_CHANGED',
+  'IMPORTED',
 ] as const;
 export const PAYMENT_STATUSES = ['NOT_REQUIRED', 'UNPAID', 'PAID', 'WAIVED'] as const;
 

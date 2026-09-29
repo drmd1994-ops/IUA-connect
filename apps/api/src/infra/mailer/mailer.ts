@@ -13,6 +13,8 @@ export interface EmailTemplates {
   membershipDirectorApproved: { typeName: string; link: string };
   membershipApproved: { typeName: string; endDate: string; link: string };
   membershipRejected: { typeName: string; reason: string; link: string };
+  /** An import created the account: set a password (ACCOUNT_SETUP link, 7 days). */
+  membershipImportWelcome: { typeName: string; link: string };
 }
 
 export type EmailTemplate = keyof EmailTemplates;

@@ -67,5 +67,12 @@
     "body": "Your membership application ({typeName}) was not approved.",
     "reason": "Reason given: {reason}",
     "action": "View your membership"
+  },
+  "membershipImportWelcome": {
+    "subject": "Your IUA Connect account is ready",
+    "heading": "Welcome to IUA Connect",
+    "body": "The association created an IUA Connect account for you, with your membership ({typeName}). Set a password to sign in.",
+    "action": "Set your password",
+    "expiry": "This link is valid for 7 days. After that, use “Forgot password” on the sign-in page."
   }
 }

@@ -1321,6 +1321,87 @@
         ]
       }
     },
+    "/api/v1/admin/memberships/import": {
+      "post": {
+        "operationId": "ImportController_dryRun",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportDryRunDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportBatchDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/memberships/import/{batchId}/apply": {
+      "post": {
+        "operationId": "ImportController_apply",
+        "parameters": [
+          {
+            "name": "batchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportApplyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportBatchDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/me/membership": {
       "get": {
         "operationId": "MyMembershipController_mine",
@@ -3784,6 +3865,174 @@
         },
         "additionalProperties": false
       },
+      "ImportDryRunDto": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "csv": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000000
+          }
+        },
+        "required": [
+          "csv"
+        ],
+        "additionalProperties": false
+      },
+      "ImportBatchDto": {
+        "type": "object",
+        "properties": {
+          "fileErrors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "column": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "line": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "email": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "CREATE_ACCOUNT",
+                    "CREATE_MEMBERSHIP",
+                    "UPDATE_MEMBERSHIP",
+                    "UNCHANGED",
+                    "SKIP"
+                  ]
+                },
+                "reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "changes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "line",
+                "email",
+                "action",
+                "reasons",
+                "changes"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "totals": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "enum": [
+                "CREATE_ACCOUNT",
+                "CREATE_MEMBERSHIP",
+                "UPDATE_MEMBERSHIP",
+                "UNCHANGED",
+                "SKIP"
+              ]
+            },
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "required": [
+              "CREATE_ACCOUNT",
+              "CREATE_MEMBERSHIP",
+              "UPDATE_MEMBERSHIP",
+              "UNCHANGED",
+              "SKIP"
+            ]
+          },
+          "batchId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "DRY_RUN",
+                  "APPLIED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "fileErrors",
+          "rows",
+          "totals",
+          "batchId",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ImportApplyDto": {
+        "type": "object",
+        "properties": {
+          "csv": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000000
+          }
+        },
+        "required": [
+          "csv"
+        ],
+        "additionalProperties": false
+      },
       "MyMembershipDto": {
         "type": "object",
         "properties": {
@@ -3880,7 +4129,8 @@
                     "REINSTATED",
                     "EXPIRED",
                     "TYPE_CHANGED",
-                    "PAYMENT_STATUS_CHANGED"
+                    "PAYMENT_STATUS_CHANGED",
+                    "IMPORTED"
                   ]
                 },
                 "fromStatus": {
@@ -5142,7 +5392,8 @@
                     "REINSTATED",
                     "EXPIRED",
                     "TYPE_CHANGED",
-                    "PAYMENT_STATUS_CHANGED"
+                    "PAYMENT_STATUS_CHANGED",
+                    "IMPORTED"
                   ]
                 },
                 "fromStatus": {
