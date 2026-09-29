@@ -64,13 +64,14 @@ model User {
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles         UserRole[]      @relation("UserRoles")
-  rolesGranted  UserRole[]      @relation("RolesGrantedBy")
+  roles         UserRole[]     @relation("UserRoles")
+  rolesGranted  UserRole[]     @relation("RolesGrantedBy")
   sessions      Session[]
   devices       Device[]
   mfaFactors    MfaFactor[]
   recoveryCodes RecoveryCode[]
   authTokens    AuthToken[]
+  profile       Profile?
 
   @@map("users")
 }
@@ -301,6 +302,7 @@ model Hospital {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   departments Department[]
+  profiles    Profile[]
 
   @@map("hospitals")
 }
@@ -317,7 +319,8 @@ model Department {
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  hospital Hospital @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  hospital Hospital  @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  profiles Profile[]
 
   @@unique([hospitalId, code])
   @@map("departments")
@@ -332,6 +335,8 @@ model Subspecialty {
   active    Boolean  @default(true)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  profiles ProfileSubspecialty[]
 
   @@map("subspecialties")
 }
@@ -365,4 +370,86 @@ model MembershipType {
   updatedAt        DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("membership_types")
+}
+
+/// A member's professional profile (spec §6). Photo arrives with the Files module (M3),
+/// publications with Phase 2. Who may see each field is in profile_field_visibility.
+model Profile {
+  userId            String   @id @map("user_id") @db.Uuid
+  firstName         String?  @map("first_name") @db.VarChar(100)
+  lastName          String?  @map("last_name") @db.VarChar(100)
+  nameHe            String?  @map("name_he") @db.VarChar(200)
+  nameEn            String?  @map("name_en") @db.VarChar(200)
+  title             String?  @db.VarChar(100)
+  position          String?  @db.VarChar(200)
+  hospitalId        String?  @map("hospital_id") @db.Uuid
+  departmentId      String?  @map("department_id") @db.Uuid
+  bio               String?
+  researchInterests String?  @map("research_interests")
+  orcid             String?  @db.VarChar(19)
+  /// ISO 639 language codes; clients show the names in the reader's locale.
+  languages         String[] @default([])
+  contactEmail      String?  @map("contact_email") @db.Citext
+  contactPhone      String?  @map("contact_phone") @db.VarChar(32)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hospital       Hospital?                @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  department     Department?              @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  subspecialties ProfileSubspecialty[]
+  visibility     ProfileFieldVisibility[]
+
+  @@index([departmentId])
+  @@map("profiles")
+}
+
+model ProfileSubspecialty {
+  userId         String @map("user_id") @db.Uuid
+  subspecialtyId String @map("subspecialty_id") @db.Uuid
+
+  profile      Profile      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  subspecialty Subspecialty @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+
+  @@id([userId, subspecialtyId])
+  @@map("profile_subspecialties")
+}
+
+/// Profile fields with their own visibility (D9). First and last name share NAME.
+enum ProfileField {
+  NAME
+  NAME_HE
+  NAME_EN
+  TITLE
+  POSITION
+  INSTITUTION
+  SUBSPECIALTIES
+  BIO
+  RESEARCH_INTERESTS
+  ORCID
+  LANGUAGES
+  CONTACT_EMAIL
+  CONTACT_PHONE
+
+  @@map("profile_field")
+}
+
+enum Visibility {
+  PRIVATE
+  MEMBERS
+  PUBLIC
+
+  @@map("visibility")
+}
+
+/// A missing row means PRIVATE (the default, PRODUCT_REQUIREMENTS §3.2).
+model ProfileFieldVisibility {
+  userId     String       @map("user_id") @db.Uuid
+  field      ProfileField
+  visibility Visibility
+
+  profile Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@id([userId, field])
+  @@map("profile_field_visibility")
 }

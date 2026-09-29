@@ -15,6 +15,7 @@ import { AuditModule } from './modules/audit';
 import { AuthModule } from './modules/auth';
 import { HealthModule } from './modules/health';
 import { InstitutionsModule } from './modules/institutions';
+import { ProfilesModule } from './modules/profiles';
 
 /**
  * Global request pipeline (ARCHITECTURE.md §3): guards → pipes → handler → interceptors → filter.
@@ -44,6 +45,7 @@ export class AppModule {
         HealthModule,
         AuthModule,
         InstitutionsModule,
+        ProfilesModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

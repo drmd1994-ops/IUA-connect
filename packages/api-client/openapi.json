@@ -1260,6 +1260,66 @@
           "admin"
         ]
       }
+    },
+    "/api/v1/me/profile": {
+      "get": {
+        "operationId": "ProfilesController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "me"
+        ]
+      },
+      "patch": {
+        "operationId": "ProfilesController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "me"
+        ]
+      }
     }
   },
   "info": {
@@ -2543,6 +2603,534 @@
         "required": [
           "email"
         ],
+        "additionalProperties": false
+      },
+      "ProfileDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nameHe": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nameEn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "position": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hospitalId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "departmentId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subspecialtyIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "bio": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "researchInterests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "orcid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contactEmail": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contactPhone": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "visibility": {
+            "type": "object",
+            "properties": {
+              "NAME": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "NAME_HE": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "NAME_EN": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "TITLE": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "POSITION": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "INSTITUTION": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "SUBSPECIALTIES": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "BIO": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "RESEARCH_INTERESTS": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "ORCID": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "LANGUAGES": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "CONTACT_EMAIL": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "CONTACT_PHONE": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              }
+            },
+            "required": [
+              "NAME",
+              "NAME_HE",
+              "NAME_EN",
+              "TITLE",
+              "POSITION",
+              "INSTITUTION",
+              "SUBSPECIALTIES",
+              "BIO",
+              "RESEARCH_INTERESTS",
+              "ORCID",
+              "LANGUAGES",
+              "CONTACT_EMAIL",
+              "CONTACT_PHONE"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "nameHe",
+          "nameEn",
+          "title",
+          "position",
+          "hospitalId",
+          "departmentId",
+          "subspecialtyIds",
+          "bio",
+          "researchInterests",
+          "orcid",
+          "languages",
+          "contactEmail",
+          "contactPhone",
+          "visibility"
+        ],
+        "additionalProperties": false
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nameHe": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nameEn": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hospitalId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "departmentId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subspecialtyIds": {
+            "maxItems": 11,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "researchInterests": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "orcid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "languages": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z]{2,3}$"
+            }
+          },
+          "contactEmail": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "contactPhone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\+?[0-9 ()-]{7,20}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visibility": {
+            "type": "object",
+            "properties": {
+              "NAME": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "NAME_HE": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "NAME_EN": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "TITLE": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "POSITION": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "INSTITUTION": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "SUBSPECIALTIES": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "BIO": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "RESEARCH_INTERESTS": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "ORCID": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "LANGUAGES": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "CONTACT_EMAIL": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              },
+              "CONTACT_PHONE": {
+                "type": "string",
+                "enum": [
+                  "PRIVATE",
+                  "MEMBERS",
+                  "PUBLIC"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
         "additionalProperties": false
       }
     }

@@ -596,6 +596,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProfilesController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["ProfilesController_update"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -917,6 +933,96 @@ export interface components {
         AssignDirectorDto: {
             /** Format: email */
             email: string;
+        };
+        ProfileDto: {
+            firstName: string[];
+            lastName: string[];
+            nameHe: string[];
+            nameEn: string[];
+            title: string[];
+            position: string[];
+            hospitalId: string | null;
+            departmentId: string | null;
+            subspecialtyIds: string[];
+            bio: string[];
+            researchInterests: string[];
+            orcid: string[];
+            languages: string[];
+            contactEmail: string[];
+            contactPhone: string[];
+            visibility: {
+                /** @enum {string} */
+                NAME: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                NAME_HE: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                NAME_EN: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                TITLE: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                POSITION: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                INSTITUTION: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                SUBSPECIALTIES: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                BIO: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                RESEARCH_INTERESTS: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                ORCID: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                LANGUAGES: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                CONTACT_EMAIL: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                CONTACT_PHONE: "PRIVATE" | "MEMBERS" | "PUBLIC";
+            };
+        };
+        UpdateProfileDto: {
+            firstName?: string | null;
+            lastName?: string | null;
+            nameHe?: string | null;
+            nameEn?: string | null;
+            title?: string | null;
+            position?: string | null;
+            hospitalId?: string | null;
+            departmentId?: string | null;
+            subspecialtyIds?: string[];
+            bio?: string | null;
+            researchInterests?: string | null;
+            orcid?: string[];
+            languages?: string[];
+            contactEmail?: string | null;
+            contactPhone?: string | null;
+            visibility?: {
+                /** @enum {string} */
+                NAME?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                NAME_HE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                NAME_EN?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                TITLE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                POSITION?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                INSTITUTION?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                SUBSPECIALTIES?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                BIO?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                RESEARCH_INTERESTS?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                ORCID?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                LANGUAGES?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                CONTACT_EMAIL?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                CONTACT_PHONE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+            };
         };
     };
     responses: never;
@@ -1816,6 +1922,48 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    ProfilesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileDto"];
+                };
+            };
+        };
+    };
+    ProfilesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileDto"];
+                };
             };
         };
     };
