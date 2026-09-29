@@ -40,6 +40,12 @@ export class LoginResultDto extends createZodDto(
     accessToken: z.string().optional(),
     expiresIn: z.number().int().optional(),
     mfaToken: z.string().optional(),
+    /**
+     * With mfaRequired: which second steps the account has. "totp": a code (or recovery code) at
+     * /auth/mfa/verify with mfaToken. "passkey": a passkey sign-in (/auth/passkeys/authentication/*),
+     * which completes sign-in on its own.
+     */
+    mfaMethods: z.array(z.enum(['totp', 'passkey'])).optional(),
   }),
 ) {}
 
@@ -74,8 +80,10 @@ export class MfaStatusDto extends createZodDto(
     enabled: z.boolean(),
     factorId: z.uuid().optional(),
     recoveryCodesRemaining: z.number().int(),
-    /** The user holds a role that requires MFA, so it can't be turned off. */
+    /** The user holds a role that requires MFA. */
     requiredByRole: z.boolean(),
+    /** The authenticator app can be turned off (false when a role requires MFA and it's the only factor). */
+    canDisable: z.boolean(),
   }),
 ) {}
 
@@ -102,8 +110,62 @@ export class RecoveryCodesDto extends createZodDto(
   z.strictObject({ recoveryCodes: z.array(z.string()) }),
 ) {}
 
+/**
+ * WebAuthn responses as produced by @simplewebauthn/browser. Kept loose on purpose: browsers add
+ * extension fields, and the library verifies the content cryptographically.
+ */
+const webauthnResponse = z.looseObject({
+  id: z.string().min(1).max(1024),
+  rawId: z.string().min(1).max(1024),
+  type: z.literal('public-key'),
+  response: z.looseObject({ clientDataJSON: z.string().min(1) }),
+  clientExtensionResults: z.looseObject({}),
+});
+
+/** Re-enter the password (+ code when MFA is on), or use a passkey instead: exactly one of them. */
 export class ReauthenticateDto extends createZodDto(
-  z.strictObject({ password: anyPassword, code: mfaCode.optional() }),
+  z
+    .strictObject({
+      password: anyPassword.optional(),
+      code: mfaCode.optional(),
+      passkey: webauthnResponse.optional(),
+    })
+    .refine((body) => (body.password === undefined) !== (body.passkey === undefined), {
+      message: 'Give either password (+ code) or passkey',
+      path: ['password'],
+    }),
+) {}
+
+// --- passkeys (M1b) ------------------------------------------------------------
+
+const passkeyName = z.string().trim().min(1).max(100);
+
+/** WebAuthn creation/request options, passed unchanged to @simplewebauthn/browser. */
+export class WebAuthnOptionsDto extends createZodDto(z.record(z.string(), z.unknown())) {}
+
+export class PasskeyRegisterDto extends createZodDto(
+  z.strictObject({ response: webauthnResponse, name: passkeyName }),
+) {}
+
+export class PasskeyRenameDto extends createZodDto(z.strictObject({ name: passkeyName })) {}
+
+export class PasskeySignInDto extends createZodDto(
+  z.strictObject({ response: webauthnResponse }),
+) {}
+
+const passkeySummary = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+  createdAt: z.iso.datetime(),
+  lastUsedAt: z.iso.datetime().nullable(),
+  /** Synced across the person's devices (iCloud Keychain, Google Password Manager, ...). */
+  synced: z.boolean(),
+});
+
+export class PasskeyDto extends createZodDto(passkeySummary) {}
+
+export class PasskeyListDto extends createZodDto(
+  z.strictObject({ passkeys: z.array(passkeySummary) }),
 ) {}
 
 export class PasswordChangeDto extends createZodDto(

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { type AuthenticationResponseJSON } from '@simplewebauthn/server';
 import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
@@ -10,6 +11,7 @@ import { AuthTokensService } from './auth-tokens.service';
 import { AuthService, assertPasswordPolicy, userLocale } from './auth.service';
 import { DevicesService } from './devices.service';
 import { type TotpEnrollment, MfaService } from './mfa.service';
+import { PasskeysService } from './passkeys.service';
 import { MFA_CHALLENGE_MAX_ATTEMPTS, REAUTH_WINDOW_SEC } from './session-policy';
 import { type IssuedTokens, SessionsService } from './sessions.service';
 
@@ -26,6 +28,7 @@ export class AccountSecurityService {
     private readonly sessions: SessionsService,
     private readonly devices: DevicesService,
     private readonly mfa: MfaService,
+    private readonly passkeys: PasskeysService,
     private readonly auth: AuthService,
     private readonly mailer: Mailer,
     private readonly audit: AuditService,
@@ -81,25 +84,51 @@ export class AccountSecurityService {
 
   // --- re-authentication ---------------------------------------------------------
 
+  /**
+   * Confirms identity for sensitive changes: the password plus a code when an authenticator app
+   * is enrolled, or a passkey. An account with passkeys but no app must use a passkey: the
+   * password alone would be weaker than its normal sign-in.
+   */
   async reauthenticate(
     principal: Principal,
-    input: { password: string; code?: string },
+    input: { password: string; code?: string } | { passkey: AuthenticationResponseJSON },
     meta: RequestMeta,
   ): Promise<void> {
-    const user = await this.users.findById(principal.userId);
-    if (!user || !(await this.passwords.verify(user.passwordHash, input.password))) {
-      await this.record('auth.reauth.failed', principal.userId, meta);
-      throw new AppException('INVALID_CREDENTIALS');
-    }
-    if (await this.mfa.hasConfirmedFactor(user.id)) {
-      const check = input.code ? await this.mfa.verify(user.id, input.code) : { ok: false };
-      if (!check.ok) {
+    if ('passkey' in input) {
+      const check = await this.passkeys.verify(input.passkey);
+      if (!check.ok || check.factor.userId !== principal.userId) {
+        await this.record('auth.reauth.failed', principal.userId, meta, { method: 'passkey' });
+        throw new AppException('PASSKEY_INVALID');
+      }
+    } else {
+      const user = await this.users.findById(principal.userId);
+      if (!user || !(await this.passwords.verify(user.passwordHash, input.password))) {
         await this.record('auth.reauth.failed', principal.userId, meta);
-        throw new AppException('MFA_INVALID_CODE');
+        throw new AppException('INVALID_CREDENTIALS');
+      }
+      if (await this.mfa.hasConfirmedFactor(user.id)) {
+        const check = input.code ? await this.mfa.verify(user.id, input.code) : { ok: false };
+        if (!check.ok) {
+          await this.record('auth.reauth.failed', principal.userId, meta);
+          throw new AppException('MFA_INVALID_CODE');
+        }
+      } else if ((await this.passkeys.list(user.id)).length > 0) {
+        throw new AppException('MFA_INVALID_CODE', [
+          { field: 'passkey', code: 'PASSKEY_REQUIRED' },
+        ]);
       }
     }
     await this.sessions.markReauthenticated(principal.sessionId);
     await this.record('auth.reauthenticated', principal.userId, meta);
+  }
+
+  /** Throws REAUTHENTICATION_REQUIRED unless identity was confirmed in the last few minutes. */
+  async assertRecentAuthentication(principal: Principal): Promise<void> {
+    const session = await this.sessions.findById(principal.sessionId);
+    const at = session?.reauthenticatedAt?.getTime() ?? 0;
+    if (Date.now() - at > REAUTH_WINDOW_SEC * 1000) {
+      throw new AppException('REAUTHENTICATION_REQUIRED');
+    }
   }
 
   // --- MFA management --------------------------------------------------------------
@@ -107,11 +136,13 @@ export class AccountSecurityService {
   async mfaStatus(principal: Principal) {
     const factor = await this.mfa.confirmedTotp(principal.userId);
     const profile = await this.users.accessProfile(principal.userId);
+    const passkeys = (await this.passkeys.list(principal.userId)).length;
     return {
       enabled: factor !== null,
       ...(factor ? { factorId: factor.id } : {}),
       recoveryCodesRemaining: factor ? await this.mfa.remainingRecoveryCodes(principal.userId) : 0,
       requiredByRole: profile.requiresMfa,
+      canDisable: !profile.requiresMfa || passkeys > 0,
     };
   }
 
@@ -138,7 +169,10 @@ export class AccountSecurityService {
   async disableMfa(principal: Principal, factorId: string, meta: RequestMeta): Promise<void> {
     await this.assertRecentAuthentication(principal);
     const profile = await this.users.accessProfile(principal.userId);
-    if (profile.requiresMfa) throw new AppException('MFA_REQUIRED_BY_ROLE');
+    // A role that requires MFA may drop the app only while a passkey remains.
+    if (profile.requiresMfa && (await this.passkeys.list(principal.userId)).length === 0) {
+      throw new AppException('MFA_REQUIRED_BY_ROLE');
+    }
     await this.mfa.disable(principal.userId, factorId);
     await this.record('auth.mfa.disabled', principal.userId, meta, { factorId });
   }
@@ -230,14 +264,6 @@ export class AccountSecurityService {
   }
 
   // --- helpers -----------------------------------------------------------------------
-
-  private async assertRecentAuthentication(principal: Principal): Promise<void> {
-    const session = await this.sessions.findById(principal.sessionId);
-    const at = session?.reauthenticatedAt?.getTime() ?? 0;
-    if (Date.now() - at > REAUTH_WINDOW_SEC * 1000) {
-      throw new AppException('REAUTHENTICATION_REQUIRED');
-    }
-  }
 
   private record(
     action: string,

@@ -84,11 +84,12 @@ describe('identity: MFA, re-authentication, passwords, sessions (M1)', () => {
     it('sets up an authenticator app and returns recovery codes once', async () => {
       const email = await createVerifiedUser(h, 'enrol');
       const { accessToken } = await signIn(h, email);
-      await h
-        .http()
-        .get('/api/v1/auth/mfa')
-        .set(bearer(accessToken))
-        .expect(200, { enabled: false, recoveryCodesRemaining: 0, requiredByRole: false });
+      await h.http().get('/api/v1/auth/mfa').set(bearer(accessToken)).expect(200, {
+        enabled: false,
+        recoveryCodesRemaining: 0,
+        requiredByRole: false,
+        canDisable: true,
+      });
 
       const setup = await h
         .http()
@@ -138,7 +139,11 @@ describe('identity: MFA, re-authentication, passwords, sessions (M1)', () => {
     it('requires a second step and issues no session before it', async () => {
       const user = await userWithMfa('mfa-login');
       const step1 = await passwordStep(user.email);
-      expect(step1.body).toEqual({ mfaRequired: true, mfaToken: expect.any(String) });
+      expect(step1.body).toEqual({
+        mfaRequired: true,
+        mfaToken: expect.any(String),
+        mfaMethods: ['totp'],
+      });
       expect(
         (step1.headers['set-cookie'] as unknown as string[] | undefined)?.join('\n') ?? '',
       ).not.toContain('iua_rt=');

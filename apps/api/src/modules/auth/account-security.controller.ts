@@ -10,6 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { type AuthenticationResponseJSON } from '@simplewebauthn/server';
 import { type RequestWithPrincipal } from '../../common/auth/principal';
 import { Authenticated } from '../../common/decorators/access.decorators';
 import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
@@ -42,7 +43,10 @@ export class AccountSecurityController {
     private readonly sessions: SessionsService,
   ) {}
 
-  /** Re-enter the password (and a code when MFA is on) before sensitive changes. */
+  /**
+   * Confirm identity before sensitive changes: the password (and a code when an authenticator app
+   * is on), or a passkey (challenge from POST /auth/passkeys/authentication/options).
+   */
   @Post('reauthenticate')
   @RateLimit(RATE_LIMITS.signInPerIp)
   @HttpCode(200)
@@ -52,7 +56,10 @@ export class AccountSecurityController {
     @Body() body: ReauthenticateDto,
     @Meta() meta: RequestMeta,
   ): Promise<OkDto> {
-    await this.security.reauthenticate(principalOf(req), body, meta);
+    const input = body.passkey
+      ? { passkey: body.passkey as unknown as AuthenticationResponseJSON }
+      : { password: body.password!, ...(body.code ? { code: body.code } : {}) };
+    await this.security.reauthenticate(principalOf(req), input, meta);
     return { status: 'ok' };
   }
 

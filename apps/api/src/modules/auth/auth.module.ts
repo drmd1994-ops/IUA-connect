@@ -10,6 +10,8 @@ import { AuthTokensService } from './auth-tokens.service';
 import { DevicesService } from './devices.service';
 import { MeController } from './me.controller';
 import { MfaService } from './mfa.service';
+import { PasskeysController } from './passkeys.controller';
+import { PasskeysService } from './passkeys.service';
 import { SessionsService } from './sessions.service';
 
 /**
@@ -18,7 +20,7 @@ import { SessionsService } from './sessions.service';
  */
 @Module({
   imports: [UsersModule],
-  controllers: [AuthController, AccountSecurityController, MeController],
+  controllers: [AuthController, AccountSecurityController, MeController, PasskeysController],
   providers: [
     AccessTokenService,
     AccountSecurityService,
@@ -26,6 +28,7 @@ import { SessionsService } from './sessions.service';
     AuthTokensService,
     DevicesService,
     MfaService,
+    PasskeysService,
     SessionsService,
     { provide: PrincipalResolver, useExisting: SessionsService },
   ],
