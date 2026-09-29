@@ -1,6 +1,6 @@
 # M2 — People & membership: plan
 
-- Status: **Proposed — awaiting owner approval** (no code is written before approval)
+- Status: **Approved by the owner on 2026-09-29**
 - Date: 2026-09-29
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M2. Design sources: `PRODUCT_REQUIREMENTS.md` §3.2–3.3, `ARCHITECTURE.md` §6–7 (authorization model, verification workflow), `DATABASE_DESIGN.md` §3 (people, institutions, membership, verification), `API_DESIGN.md` §4, spec §6–7 and §17 (subspecialties), ADR 0004. Owner decisions D2, D3, D9 and the answers to **O3** (2026-09-29).
 
