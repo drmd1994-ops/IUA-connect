@@ -213,8 +213,17 @@ model MfaFactor {
   type                MfaFactorType
   /// AES-256-GCM ciphertext with key ID (TOTP only).
   secretEncrypted     String?       @map("secret_encrypted")
-  /// WebAuthn public key (M1b).
+  /// WebAuthn (passkey, M1b): COSE public key. The private key never leaves the device.
   credentialPublicKey Bytes?        @map("credential_public_key")
+  /// WebAuthn credential ID, as returned by the authenticator.
+  credentialId        Bytes?        @unique @map("credential_id")
+  /// WebAuthn signature counter (0 for authenticators that don't count, e.g. synced passkeys).
+  signCount           BigInt        @default(0) @map("sign_count")
+  /// How the browser can reach the authenticator: internal, hybrid, usb, nfc, ble.
+  transports          String[]      @default([])
+  /// Synced passkey (iCloud Keychain, Google Password Manager, ...) rather than device-bound.
+  backedUp            Boolean?      @map("backed_up")
+  /// Passkey name chosen by the user; "Authenticator app" for TOTP.
   label               String?       @db.VarChar(100)
   /// Null until the user proves possession with a first valid code.
   confirmedAt         DateTime?     @map("confirmed_at") @db.Timestamptz(6)
@@ -247,14 +256,19 @@ enum AuthTokenPurpose {
   PASSWORD_RESET
   /// Issued after a correct password when MFA is enabled; exchanged for a session with a code.
   MFA_CHALLENGE
+  /// Passkey registration challenge (M1b).
+  WEBAUTHN_REGISTRATION
+  /// Passkey sign-in challenge (M1b). Issued before the user is known, so it has no user.
+  WEBAUTHN_AUTHENTICATION
 
   @@map("auth_token_purpose")
 }
 
 /// Single-use, expiring tokens sent by email or used between sign-in steps. Only a keyed hash is stored.
+/// user_id is required for every purpose except WEBAUTHN_AUTHENTICATION (check constraint).
 model AuthToken {
   id        String           @id @db.Uuid
-  userId    String           @map("user_id") @db.Uuid
+  userId    String?          @map("user_id") @db.Uuid
   purpose   AuthTokenPurpose
   tokenHash String           @unique @map("token_hash") @db.VarChar(128)
   /// Failed attempts against this token (MFA challenge).
@@ -263,7 +277,7 @@ model AuthToken {
   usedAt    DateTime?        @map("used_at") @db.Timestamptz(6)
   createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, purpose])
   @@map("auth_tokens")

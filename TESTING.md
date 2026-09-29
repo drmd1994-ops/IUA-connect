@@ -36,6 +36,15 @@
 - **End to end (Playwright):** a member signs up, verifies from the outbox, signs in, enables MFA and signs in with a code (Hebrew); a forgotten password is reset (English); a new administrator is sent to MFA setup.
 - **Accessibility (axe):** no WCAG 2.2 AA violations on any auth page, in Hebrew (RTL) and English (LTR).
 
+## What the M1b (Passkeys) suites prove
+
+- **Real ceremonies (integration):** `test/soft-authenticator.ts` is a software authenticator with a real P-256 key, producing genuine attestation and assertion signatures, so the server's WebAuthn verification runs for real (no mocks).
+- **Registration:** user verification and discoverable credentials required; existing passkeys excluded; recent re-authentication required; another user's challenge or a missing user-verification flag is refused; only the public key is stored.
+- **Sign-in:** a passkey alone signs in as an MFA session with the usual cookies; replayed assertions, other origins or relying parties, unknown passkeys and missing user verification are refused; a signature counter that goes backwards is refused and audited.
+- **Rules:** passkeys satisfy MFA for administrative roles; the last factor can't be removed; the authenticator app can be turned off while a passkey remains; password sign-in reports that a passkey can complete it; re-authentication accepts only the user's own passkey, and passkey-only accounts must use it.
+- **End to end (Playwright, Chromium and Edge):** with the browser's **virtual authenticator** (DevTools protocol), an administrator adds a passkey, the MFA banner disappears, and they sign in with the passkey alone — in English and Hebrew, with axe checks on the passkeys section.
+- **Manual:** a real Windows Hello prompt in Chrome and Edge is checked by hand (automated tests can't use a real fingerprint reader).
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

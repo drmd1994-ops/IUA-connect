@@ -17,7 +17,12 @@ import { type IssuedTokens, SessionsService } from './sessions.service';
 
 export type LoginOutcome =
   | { mfaRequired: false; tokens: IssuedTokens; newDeviceCookie: string | null }
-  | { mfaRequired: true; mfaToken: string; newDeviceCookie: string | null };
+  | {
+      mfaRequired: true;
+      mfaToken: string;
+      mfaMethods: ('totp' | 'passkey')[];
+      newDeviceCookie: string | null;
+    };
 
 /**
  * Account sign-up and sign-in (SECURITY_MODEL.md §3). Responses never reveal whether an email is
@@ -157,6 +162,66 @@ export class AuthService {
         ? await this.passwords.hash(input.password)
         : undefined,
     );
+    const device = await this.recognizeDevice(user, deviceCookie, meta);
+
+    const factors = await this.prisma.mfaFactor.findMany({
+      where: { userId: user.id, confirmedAt: { not: null } },
+      select: { type: true },
+    });
+    if (factors.length > 0) {
+      const mfaMethods = [
+        ...(factors.some((f) => f.type === 'TOTP') ? (['totp'] as const) : []),
+        ...(factors.some((f) => f.type === 'WEBAUTHN') ? (['passkey'] as const) : []),
+      ];
+      const mfaToken = await this.tokens.issue(user.id, 'MFA_CHALLENGE');
+      await this.audit.record({
+        action: 'auth.login.password_ok_mfa_pending',
+        entityType: 'user',
+        entityId: user.id,
+        actorUserId: user.id,
+        actorIp: meta.ip,
+        correlationId: meta.correlationId,
+      });
+      return { mfaRequired: true, mfaToken, mfaMethods, newDeviceCookie: device.newCookieToken };
+    }
+
+    const tokens = await this.startSession(user.id, device.deviceId, false, meta, 'password');
+    return { mfaRequired: false, tokens, newDeviceCookie: device.newCookieToken };
+  }
+
+  /**
+   * Signs in with a verified passkey (docs/plans/M1b-passkeys.md). The passkey required user
+   * verification on the device, so the session counts as MFA-verified. A temporary password
+   * lockout doesn't block it: the lockout protects the password, which isn't used here.
+   */
+  async completePasskeySignIn(
+    userId: string,
+    deviceCookie: string | undefined,
+    meta: RequestMeta,
+  ): Promise<{ tokens: IssuedTokens; newDeviceCookie: string | null }> {
+    const user = await this.users.findById(userId);
+    if (!user || user.status !== 'ACTIVE') throw new AppException('ACCOUNT_DISABLED');
+    if (!user.emailVerifiedAt) throw new AppException('EMAIL_NOT_VERIFIED');
+    await this.users.recordSuccessfulLogin(user.id);
+    const device = await this.recognizeDevice(user, deviceCookie, meta);
+    const tokens = await this.startSession(user.id, device.deviceId, true, meta, 'passkey');
+    return { tokens, newDeviceCookie: device.newCookieToken };
+  }
+
+  async auditPasskeyFailure(reason: string, userId: string | null, meta: RequestMeta) {
+    await this.audit.record({
+      action:
+        reason === 'counter_regression' ? 'auth.passkey.counter_regression' : 'auth.login.failure',
+      entityType: userId ? 'user' : null,
+      entityId: userId,
+      actorIp: meta.ip,
+      correlationId: meta.correlationId,
+      changes: { method: 'passkey', reason },
+    });
+  }
+
+  /** Recognizes the browser; emails the user about a sign-in from a new device. */
+  private async recognizeDevice(user: User, deviceCookie: string | undefined, meta: RequestMeta) {
     const device = await this.devices.identify(user.id, deviceCookie, meta.userAgent);
     if (device.isNewForUser) {
       await this.mailer.send({
@@ -171,39 +236,27 @@ export class AuthService {
         },
       });
     }
+    return device;
+  }
 
-    const hasMfa =
-      (await this.prisma.mfaFactor.count({
-        where: { userId: user.id, confirmedAt: { not: null } },
-      })) > 0;
-    if (hasMfa) {
-      const mfaToken = await this.tokens.issue(user.id, 'MFA_CHALLENGE');
-      await this.audit.record({
-        action: 'auth.login.password_ok_mfa_pending',
-        entityType: 'user',
-        entityId: user.id,
-        actorUserId: user.id,
-        actorIp: meta.ip,
-        correlationId: meta.correlationId,
-      });
-      return { mfaRequired: true, mfaToken, newDeviceCookie: device.newCookieToken };
-    }
-
-    const tokens = await this.sessions.create({
-      userId: user.id,
-      deviceId: device.deviceId,
-      mfa: false,
-      meta,
-    });
+  private async startSession(
+    userId: string,
+    deviceId: string,
+    mfa: boolean,
+    meta: RequestMeta,
+    method: 'password' | 'passkey',
+  ): Promise<IssuedTokens> {
+    const tokens = await this.sessions.create({ userId, deviceId, mfa, meta });
     await this.audit.record({
       action: 'auth.login.success',
       entityType: 'session',
       entityId: tokens.sessionId,
-      actorUserId: user.id,
+      actorUserId: userId,
       actorIp: meta.ip,
       correlationId: meta.correlationId,
+      ...(method === 'passkey' ? { changes: { method } } : {}),
     });
-    return { mfaRequired: false, tokens, newDeviceCookie: device.newCookieToken };
+    return tokens;
   }
 
   async logout(refreshToken: string | undefined, meta: RequestMeta): Promise<void> {

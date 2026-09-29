@@ -75,6 +75,20 @@ describe('parseEnv', () => {
     expect(error.message).not.toContain('c2hvcnQ');
   });
 
+  it('derives the passkey relying party from the web app URL', () => {
+    const env = parseEnv({ ...valid, APP_BASE_URL: 'https://connect.example.org' });
+    expect(env.WEBAUTHN_RP_ID).toBe('connect.example.org');
+    expect(env.WEBAUTHN_ORIGIN).toEqual(['https://connect.example.org']);
+    const local = parseEnv(valid);
+    expect(local.WEBAUTHN_RP_ID).toBe('localhost');
+    expect(local.WEBAUTHN_ORIGIN).toEqual(['http://localhost:3001']);
+  });
+
+  it('refuses localhost as the passkey relying party in production', () => {
+    const problems = parseError({ ...valid, NODE_ENV: 'production' }).problems.join('\n');
+    expect(problems).toContain('WEBAUTHN_RP_ID');
+  });
+
   it('never includes secret values in error messages', () => {
     const error = parseError({ ...valid, DATABASE_URL: 'mysql://user:TopSecret123@host/db' });
     expect(error.message).toContain('DATABASE_URL');

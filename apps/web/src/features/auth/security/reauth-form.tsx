@@ -1,5 +1,6 @@
 'use client';
 
+import { ApiError } from '@iua/api-client';
 import { useTranslations } from 'next-intl';
 import { type FormEvent, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
@@ -7,8 +8,13 @@ import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/text-field';
 import { errorMessage } from '@/lib/api-errors';
 import { useAuth } from '../auth-context';
+import { usePasskeysSupported } from '../login-form';
+import { PasskeyCeremonyError, getAssertion } from '../passkeys';
 
-/** Password (+ code when MFA is on) before a sensitive change; then the change is retried. */
+/**
+ * Confirms identity before a sensitive change — with a passkey, or the password (+ code when an
+ * authenticator app is on) — then the change is retried.
+ */
 export function ReauthForm({
   needsCode,
   onDone,
@@ -20,6 +26,7 @@ export function ReauthForm({
 }) {
   const t = useTranslations();
   const { api, call } = useAuth();
+  const supportsPasskeys = usePasskeysSupported();
   const [error, setError] = useState<unknown>(null);
   const [pending, setPending] = useState(false);
 
@@ -43,6 +50,29 @@ export function ReauthForm({
     }
   }
 
+  async function withPasskey() {
+    setPending(true);
+    setError(null);
+    try {
+      const passkey = await getAssertion(api);
+      await call(() => api.POST('/api/v1/auth/reauthenticate', { body: { passkey } }));
+      onDone();
+    } catch (caught) {
+      setError(caught);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  const passkeyRequired =
+    error instanceof ApiError && error.details.some((d) => d.code === 'PASSKEY_REQUIRED');
+  const message =
+    error instanceof PasskeyCeremonyError
+      ? t(`auth.passkeys.${error.reason}`)
+      : passkeyRequired
+        ? t('auth.security.passkeyRequired')
+        : errorMessage(error, t);
+
   return (
     <section
       aria-labelledby="reauth-title"
@@ -54,7 +84,21 @@ export function ReauthForm({
       <p className="mt-1 text-sm text-text-muted">{t('auth.security.reauthIntro')}</p>
       {error !== null && (
         <div className="mt-3">
-          <Alert tone="error">{errorMessage(error, t)}</Alert>
+          <Alert tone="error">{message}</Alert>
+        </div>
+      )}
+      {supportsPasskeys && (
+        <div className="mt-4">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => void withPasskey()}
+            pending={pending}
+            pendingLabel={t('auth.pending')}
+          >
+            {t('auth.security.reauthWithPasskey')}
+          </Button>
+          <p className="mt-3 text-sm text-text-muted">{t('auth.login.or')}</p>
         </div>
       )}
       <form onSubmit={submit} className="mt-4 flex flex-col gap-4" noValidate>
@@ -63,7 +107,6 @@ export function ReauthForm({
           type="password"
           label={t('auth.fields.password')}
           autoComplete="current-password"
-          autoFocus
           required
         />
         {needsCode && (

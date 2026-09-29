@@ -6,7 +6,7 @@ _Last updated: 2026-09-27_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M1 Identity: implemented (2026-09-27), in review** as pull request #1 on `feat/auth-identity`; exit criteria met (auth suite incl. reuse-detection and lockout tests passes; CI green). M0 Foundations complete (2026-09-27). Next: M1b Passkeys, after PR #1 is merged and its plan is approved. |
+| Phase                     | **M1b Passkeys: merged 2026-09-29** (pull request #2); automated checks pass in Chromium and Edge; the manual Windows Hello check is deferred by the owner until the mobile app exists. M1 Identity merged 2026-09-29 (PR #1). M0 Foundations complete. Next: M2, after O3. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -93,9 +93,9 @@ _Last updated: 2026-09-27_
 - `C:\Users\PC` (the home folder) is itself an empty git repository, created outside this project. It was left untouched; the owner may want to remove `C:\Users\PC\.git`.
 - Prettier briefly reformatted the planning documents (whitespace and table padding only; content verified unchanged). They are now excluded from formatting.
 
-## M1 Identity (2026-09-27)
+## M1 Identity (2026-09-27, merged 2026-09-29)
 
-Plan: [`docs/plans/M1-identity.md`](docs/plans/M1-identity.md), approved by the owner with four decisions (web screens included; bundled breached-password list; shorter sessions: members 7 d / 3 d idle, admins 4 h / 15 min idle; branch + pull request). Branch `feat/auth-identity`, **pull request #1** (the owner reviews and merges).
+Plan: [`docs/plans/M1-identity.md`](docs/plans/M1-identity.md), approved by the owner with four decisions (web screens included; bundled breached-password list; shorter sessions: members 7 d / 3 d idle, admins 4 h / 15 min idle; branch + pull request). **Merged** into `main` on 2026-09-29 at the owner's request (pull request #1, squash commit `cd97d49`); CI green on `main` afterwards.
 
 ### Delivered
 
@@ -122,11 +122,34 @@ Plan: [`docs/plans/M1-identity.md`](docs/plans/M1-identity.md), approved by the 
 - Local end-to-end runs share one IP, so the registration limit (5/hour) allows two or three full runs per hour; restarting the API resets it (TESTING.md). Edge skips the account-creating journeys for this reason.
 - 17 dependency versions were stepped back to releases at least 7 days old (supply-chain rule); `multer` forced to 2.4.0.
 
+## M1b Passkeys (2026-09-29)
+
+Plan: [`docs/plans/M1b-passkeys.md`](docs/plans/M1b-passkeys.md), approved by the owner with three decisions: a passkey alone signs in (passwordless); a passkey satisfies the MFA requirement of administrative roles; synced and device-bound passkeys are both allowed. **Merged** into `main` on 2026-09-29 at the owner's request (pull request #2).
+
+### Delivered
+
+- **Schema:** passkey fields on `mfa_factors` (credential ID, public key, counter, transports, synced flag); WebAuthn challenge purposes on `auth_tokens` (user optional only for sign-in challenges).
+- **API:** `/auth/passkeys` registration (options/verify), list, rename, remove; sign-in (options/verify) with the same session and cookies as password sign-in; re-authentication with a passkey; password sign-in reports `mfaMethods`.
+- **Web (he/en):** "Sign in with a passkey" and passkey suggestions in the email field; a Passkeys section on Account security; "Confirm with a passkey" when re-authenticating.
+- **Settings:** `WEBAUTHN_RP_ID` / `WEBAUTHN_ORIGIN`, defaulting to the web app's address; production refuses `localhost`.
+
+### Verified
+
+- API: 82 unit and 80 integration tests, including **15 passkey tests with real signatures** from a software authenticator (replay, wrong origin or relying party, missing user verification, counter regression, ownership, admin rules).
+- **36 Playwright tests** locally in Chromium and Microsoft Edge, including passkey registration and passwordless sign-in with the browser's virtual authenticator, in English and Hebrew, with axe checks.
+
+### Deviations and notes
+
+- The passkey **challenge** endpoint has only the global rate limit (the sign-in page asks for one on every visit, for autofill); the **verify** step keeps the strict sign-in limit.
+- Re-authentication for accounts with passkeys but no authenticator app requires the passkey (the password alone would be weaker than the account's sign-in). Not spelled out in the plan; follows its security intent.
+- A temporary password lockout doesn't block passkey sign-in (the lockout protects the password, which isn't used). An administrator-locked or disabled account can't sign in either way.
+- Passkey-only accounts have no recovery codes; the Account security page recommends a second passkey or an authenticator app as a backup.
+
 ### Open for the owner
 
-- Review and merge pull request #1.
+- **Manual Windows Hello check — deferred by the owner (2026-09-29)** until the mobile app exists: add a passkey with a real Windows Hello prompt and sign in with it, in Chrome and in Edge. Until then, M1b's exit criterion is met by the automated tests only (virtual authenticator in Chromium and Edge).
 - O3 (certificate number format, resident identifiers) is needed for M2.
 
 ## Next step
 
-After PR #1 is merged: **M1b Passkeys** (WebAuthn registration and sign-in, working in Chrome and Edge on Windows). It starts with a written plan in `docs/plans/` for the owner's approval.
+After PR #2 is merged: **M2 People & membership** (profiles, institutions and directors, membership types, the verification workflow, admin approval queue, CSV import, digital card). It needs the owner's answer to **O3** and starts with a written plan for approval.

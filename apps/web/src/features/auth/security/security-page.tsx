@@ -6,6 +6,7 @@ import { Alert } from '@/components/ui/alert';
 import { Link } from '@/i18n/navigation';
 import { useAuth } from '../auth-context';
 import { MfaSection } from './mfa-section';
+import { PasskeysSection } from './passkeys-section';
 import { PasswordSection } from './password-section';
 import { SessionsSection } from './sessions-section';
 
@@ -17,6 +18,7 @@ export function SecurityPage() {
   const t = useTranslations();
   const { status, me } = useAuth();
   const [sessionsVersion, setSessionsVersion] = useState(0);
+  const [factorsVersion, setFactorsVersion] = useState(0);
 
   if (status === 'loading') {
     return (
@@ -46,11 +48,18 @@ export function SecurityPage() {
       </div>
       {me.mfaEnrollmentRequired && <Alert tone="warning">{t('auth.security.enrollBanner')}</Alert>}
 
+      <section aria-labelledby="passkeys-heading" className="flex flex-col gap-4">
+        <h2 id="passkeys-heading" className="text-xl font-semibold">
+          {t('auth.passkeys.title')}
+        </h2>
+        <PasskeysSection onChanged={() => setFactorsVersion((v) => v + 1)} />
+      </section>
+
       <section aria-labelledby="mfa-heading" className="flex flex-col gap-4">
         <h2 id="mfa-heading" className="text-xl font-semibold">
           {t('auth.security.mfaTitle')}
         </h2>
-        <MfaSection />
+        <MfaSection refreshKey={factorsVersion} />
       </section>
 
       <section aria-labelledby="password-heading" className="flex flex-col gap-4">

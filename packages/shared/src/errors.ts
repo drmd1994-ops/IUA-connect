@@ -27,6 +27,8 @@ export const ERROR_DEFINITIONS = {
   INVALID_TOKEN: { status: 400, message: 'errors.auth.invalidToken' },
   MFA_ALREADY_ENABLED: { status: 409, message: 'errors.auth.mfaAlreadyEnabled' },
   MFA_REQUIRED_BY_ROLE: { status: 422, message: 'errors.auth.mfaRequiredByRole' },
+  // Passkeys (M1b)
+  PASSKEY_INVALID: { status: 401, message: 'errors.auth.passkeyInvalid' },
 } as const satisfies Record<string, { status: number; message: string }>;
 
 export type ErrorCode = keyof typeof ERROR_DEFINITIONS;

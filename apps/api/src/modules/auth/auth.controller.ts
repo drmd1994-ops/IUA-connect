@@ -91,7 +91,9 @@ export class AuthController {
   ): Promise<LoginResultDto> {
     const outcome = await this.auth.login(body, readCookie(req, DEVICE_COOKIE), meta);
     if (outcome.newDeviceCookie) setDeviceCookie(res, outcome.newDeviceCookie);
-    if (outcome.mfaRequired) return { mfaRequired: true, mfaToken: outcome.mfaToken };
+    if (outcome.mfaRequired) {
+      return { mfaRequired: true, mfaToken: outcome.mfaToken, mfaMethods: outcome.mfaMethods };
+    }
     setSessionCookies(res, outcome.tokens.refreshToken, outcome.tokens.sessionExpiresAt);
     return {
       mfaRequired: false,

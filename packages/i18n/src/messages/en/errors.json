@@ -19,6 +19,7 @@
     "reauthenticationRequired": "Please confirm your identity to continue.",
     "invalidToken": "This link is invalid or has expired.",
     "mfaAlreadyEnabled": "Two-step verification is already enabled on this account.",
-    "mfaRequiredByRole": "Your role requires two-step verification, so it can’t be turned off."
+    "mfaRequiredByRole": "Your role requires two-step verification, so it can’t be turned off.",
+    "passkeyInvalid": "We couldn’t verify the passkey. Please try again."
   }
 }

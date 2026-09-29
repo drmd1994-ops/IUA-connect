@@ -64,6 +64,25 @@ export function totp(secret: string, offsetSteps = 0): string {
   });
 }
 
+/**
+ * Adds a virtual platform authenticator (like Windows Hello with fingerprint/PIN) to the page via
+ * the Chromium DevTools protocol, so passkey prompts complete automatically. Chromium and Edge.
+ */
+export async function addVirtualAuthenticator(page: Page): Promise<void> {
+  const client = await page.context().newCDPSession(page);
+  await client.send('WebAuthn.enable');
+  await client.send('WebAuthn.addVirtualAuthenticator', {
+    options: {
+      protocol: 'ctap2',
+      transport: 'internal',
+      hasResidentKey: true,
+      hasUserVerification: true,
+      isUserVerified: true,
+      automaticPresenceSimulation: true,
+    },
+  });
+}
+
 /** Fills the sign-in form (in either language) using the accessible labels. */
 export async function signIn(page: Page, locale: 'he' | 'en', email: string, password: string) {
   const labels =
