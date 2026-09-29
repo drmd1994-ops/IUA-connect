@@ -45,9 +45,9 @@ Neither number is checked against a registry (there is no live check; D2/D3). Bo
 
 ## 4. Decisions with proposed defaults
 
-- **Membership types:** FULL_MEMBER and RESIDENT and STUDENT are self-applied; **HONORARY_MEMBER is granted by admins only**; NON_FULL_MEMBER → **question 1 (§11)**.
-- **Identifiers per type:** FULL_MEMBER → specialist certificate number; RESIDENT → medical licence number; STUDENT → none; NON_FULL_MEMBER → question 1.
-- **Membership period:** **question 2 (§11)**. Renewal and expiry are manual admin actions in M2; "expired" is computed from the end date, never stored (DATABASE_DESIGN §1).
+- **Membership types:** FULL_MEMBER, NON_FULL_MEMBER, RESIDENT and STUDENT are self-applied; **HONORARY_MEMBER is granted by admins only**.
+- **Identifiers per type:** FULL_MEMBER → specialist certificate number; RESIDENT and NON_FULL_MEMBER → medical licence number; STUDENT → none.
+- **Membership period:** the calendar year (ends 31 December; §11). Renewal and expiry are manual admin actions in M2; "expired" is computed from the end date, never stored (DATABASE_DESIGN §1).
 - **Directors:** a DEPARTMENT_DIRECTOR role scoped to one department (M1's scoped roles; MFA required). A director can't decide their own application; it goes to the admin queue, flagged.
 - **Workflow states:** PENDING_DIRECTOR → PENDING_ADMIN → APPROVED, or REJECTED (with reason, at either stage), or WITHDRAWN by the applicant. Every transition is audited and writes membership history.
 - **Card token:** signed with the API's EdDSA key under a separate key purpose ("card"), 5-minute lifetime, refreshed while the card is open. The verification page is rate-limited (60/min per IP, API_DESIGN §5) and never reveals the certificate or licence number.
@@ -99,9 +99,9 @@ Git: branch `feat/membership`, pull request into `main` (Claude pushes and opens
 | Directors see applicants' personal data      | Only their own departments; identifiers never shown to directors (only "provided ✓"); audited   |
 | Real hospital names next to fictional people | Every seeded person is fictional; the demo banner stays; names of real directors are never used |
 
-## 11. Questions for the owner
+## 11. Owner answers (2026-09-29)
 
-1. **NON_FULL_MEMBER:** who is this, and what do they give — a specialist certificate number (e.g. a urologist who isn't a full IUA member), a medical licence number, or nothing?
-2. **Membership period:** does a membership run for the **calendar year** (ends 31 December) or **12 months from approval**?
-3. **CSV import, people without an account:** create their account and email them a "set your password" link (recommended), or only update people who already have accounts?
-4. **Demo data:** seed fictional members, directors and admins sharing one documented demo password for local demos (recommended; refused in production), or wait for the M9 demo accounts?
+1. **NON_FULL_MEMBER** gives a **medical licence number** (digits, 1–15), like residents, and goes through the director then the admin.
+2. **Membership period: calendar year.** A membership ends on 31 December of the year it is approved or renewed; renewal is for the next calendar year.
+3. **CSV import, people without an account:** the import **creates the account** (email treated as verified by the import) and sends a **"set your password" email**.
+4. **Demo data:** M2 **seeds fictional demo people** (members, directors, admins, applications at every stage) with **one documented demo password**, development only; the seed refuses to run in production.
