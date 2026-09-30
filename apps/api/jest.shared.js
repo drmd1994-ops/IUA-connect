@@ -1,8 +1,8 @@
 /**
  * Settings shared by the unit and integration Jest configs.
  *
- * Some dependencies ship as ES modules only (jose; file-type and its helpers, M3). Node 24 loads them natively at runtime, but
- * Jest's CommonJS module system can't, so tests compile them to CommonJS with ts-jest.
+ * Some dependencies ship as ES modules only (jose; file-type, pg-boss and their helpers, M3).
+ * Node 24 loads them natively at runtime, but Jest's CommonJS module system can't, so tests compile them to CommonJS with ts-jest.
  */
 const ESM_ONLY_PACKAGES = [
   'jose',
@@ -12,6 +12,11 @@ const ESM_ONLY_PACKAGES = [
   'uint8array-extras',
   '@tokenizer/inflate',
   '@borewit/text-codec',
+  'pg-boss',
+  'rrule-temporal',
+  'temporal-spec',
+  'serialize-error',
+  'non-error',
 ];
 
 // pnpm writes scoped names as @scope+name in its store folder.

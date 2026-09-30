@@ -7,6 +7,7 @@ import { RateLimitGuard } from './common/guards/rate-limit.guard';
 import { ConfigModule } from './config/config.module';
 import { type Env } from './config/env.schema';
 import { CryptoModule } from './infra/crypto/crypto.module';
+import { JobsModule } from './infra/jobs/jobs.module';
 import { LoggerModule } from './infra/logger/logger.module';
 import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
@@ -45,6 +46,7 @@ export class AppModule {
         MailerModule,
         RateLimitModule,
         StorageModule,
+        JobsModule.forRoot(env),
         AuditModule,
         HealthModule,
         AuthModule,
