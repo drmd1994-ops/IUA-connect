@@ -14,6 +14,7 @@ import { PrismaModule } from './infra/prisma/prisma.module';
 import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
 import { StorageModule } from './infra/storage/storage.module';
 import { AuditModule } from './modules/audit';
+import { AccessModule } from './modules/access';
 import { AuthModule } from './modules/auth';
 import { FilesModule } from './modules/files';
 import { HealthModule } from './modules/health';
@@ -54,6 +55,7 @@ export class AppModule {
         ProfilesModule,
         MembershipModule,
         FilesModule,
+        AccessModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

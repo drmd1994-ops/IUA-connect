@@ -383,6 +383,7 @@ model MembershipType {
 
   memberships  Membership[]
   applications VerificationRequest[]
+  accessRules  ContentAccessRule[]
 
   @@map("membership_types")
 }
@@ -715,4 +716,33 @@ model StoredFile {
 
   @@index([attachedAt, createdAt])
   @@map("files")
+}
+
+// ---------------------------------------------------------------------------
+// Content access tiers (M3, D7). DATABASE_DESIGN.md §3 "Content".
+// ---------------------------------------------------------------------------
+
+/// Who may read a content item. Everything defaults to PUBLIC (D7).
+enum AccessTier {
+  PUBLIC
+  /// Anyone with an active membership.
+  MEMBERS
+  /// Active members of the membership types listed in content_access_rules.
+  TYPES
+
+  @@map("access_tier")
+}
+
+/// The membership types allowed to read an item whose tier is TYPES.
+model ContentAccessRule {
+  /// "news", "guideline", … (later: "event", "education").
+  entityType       String @map("entity_type") @db.VarChar(40)
+  entityId         String @map("entity_id") @db.Uuid
+  membershipTypeId String @map("membership_type_id") @db.Uuid
+
+  membershipType MembershipType @relation(fields: [membershipTypeId], references: [id], onDelete: Restrict)
+
+  @@id([entityType, entityId, membershipTypeId])
+  @@index([entityType, membershipTypeId])
+  @@map("content_access_rules")
 }
