@@ -6,7 +6,7 @@ _Last updated: 2026-09-30_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: complete on branch `feat/membership` (pull request #4)**, awaiting the owner's review, demo and merge. M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. Next: the M3 plan, for the owner's approval. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. Next: the M3 plan, for the owner's approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -189,9 +189,9 @@ Library added with the owner's approval: `uqr` 0.1.3 (QR codes, no dependencies)
 
 ### Open for the owner
 
-- Review and try the demo, then merge pull request #4 (or ask Claude to).
+- ~~Merge pull request #4~~ merged at the owner's request on 2026-09-30. The owner's own checkpoint test of the demo is still to come.
 - The Hebrew membership type names are suggestions: חברות מלאה, חברות שאינה מלאה, מתמחה, סטודנט/ית, חברות כבוד. Admins can edit them.
 
 ## Next step
 
-After the owner reviews M2: **M3 Content core** (per `DEVELOPMENT_ROADMAP.md`) starts with a written plan in `docs/plans/` for the owner's approval. No M3 code is written before that.
+**M3 Content core:** the plan [`docs/plans/M3-content-core.md`](docs/plans/M3-content-core.md) is written with the owner's answers to its questions and awaits the owner's approval. No M3 code is written before that.
