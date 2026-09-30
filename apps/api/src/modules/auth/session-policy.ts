@@ -22,6 +22,8 @@ export const ACTIVITY_WRITE_INTERVAL_SEC = 60;
 export const AUTH_TOKEN_TTL_SEC = {
   EMAIL_VERIFICATION: 24 * 3600,
   PASSWORD_RESET: 3600,
+  /** "Set your password" link for accounts an import created (M2). */
+  ACCOUNT_SETUP: 7 * 24 * 3600,
   MFA_CHALLENGE: 5 * 60,
   WEBAUTHN_REGISTRATION: 5 * 60,
   WEBAUTHN_AUTHENTICATION: 5 * 60,

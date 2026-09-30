@@ -80,9 +80,17 @@ describe('identity schema and reference seed', () => {
         [uuidv7(), userId, director, uuidv7()],
       ),
     ).rejects.toMatchObject({ code: '23514' });
+    // The scope must also name an existing department (M2 trigger).
+    await expect(
+      db.query(
+        `INSERT INTO user_roles (id, user_id, role_id, scope_type, scope_id) VALUES ($1, $2, $3, 'DEPARTMENT', $4)`,
+        [uuidv7(), userId, director, uuidv7()],
+      ),
+    ).rejects.toMatchObject({ code: '23503' });
+    const { rows } = await db.query<{ id: string }>('SELECT id FROM departments LIMIT 1');
     await db.query(
       `INSERT INTO user_roles (id, user_id, role_id, scope_type, scope_id) VALUES ($1, $2, $3, 'DEPARTMENT', $4)`,
-      [uuidv7(), userId, director, uuidv7()],
+      [uuidv7(), userId, director, rows[0]!.id],
     );
   });
 

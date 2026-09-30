@@ -236,15 +236,18 @@ export class AccountSecurityService {
 
   /**
    * Sets a new password from an emailed link. All sessions are signed out; any lockout is cleared;
-   * the address is proven, so it counts as verified. MFA stays enabled.
+   * the address is proven, so it counts as verified. MFA stays enabled. Also takes the longer-lived
+   * ACCOUNT_SETUP link sent to members whose account an import created (M2).
    */
   async resetPassword(token: string, newPassword: string, meta: RequestMeta): Promise<void> {
-    const row = await this.tokens.find(token, 'PASSWORD_RESET');
+    const row =
+      (await this.tokens.find(token, 'PASSWORD_RESET')) ??
+      (await this.tokens.find(token, 'ACCOUNT_SETUP'));
     if (!row) throw new AppException('INVALID_TOKEN');
     const user = await this.users.findById(row.userId);
     if (!user || user.status !== 'ACTIVE') throw new AppException('INVALID_TOKEN');
     assertPasswordPolicy(newPassword, user.email); // before consuming, so a weak choice can be retried
-    if (!(await this.tokens.consume(token, 'PASSWORD_RESET')))
+    if (!(await this.tokens.consume(token, row.purpose as 'PASSWORD_RESET' | 'ACCOUNT_SETUP')))
       throw new AppException('INVALID_TOKEN');
 
     await this.users.setPassword(user.id, await this.passwords.hash(newPassword));

@@ -31,7 +31,7 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
   );
   const link = (params.link ?? params.signInLink) as string | undefined;
 
-  const paragraphs = ['body', 'expiry', 'resetHint', 'notYou']
+  const paragraphs = ['body', 'reason', 'expiry', 'resetHint', 'notYou']
     .filter((key) => copy[key])
     .map((key) => ({ key, text: copy[key]! }));
   const dir = directionOf(message.locale);

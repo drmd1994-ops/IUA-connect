@@ -16,6 +16,21 @@ describe('api error helpers', () => {
     );
   });
 
+  it('prefers a translated detail code over the generic message', () => {
+    const known = new Set(['errors.details.identifierInUse']);
+    const withHas = Object.assign((key: string) => `t(${key})`, {
+      has: (key: string) => known.has(key),
+    });
+    const error = apiError('CONFLICT', 'errors.conflict', [
+      { field: 'x', code: 'somethingUnknown' },
+      { field: 'identifier', code: 'identifierInUse' },
+    ]);
+    expect(errorMessage(error, withHas)).toBe('t(errors.details.identifierInUse)');
+    expect(errorMessage(apiError('CONFLICT', 'errors.conflict', [{ code: 'x' }]), withHas)).toBe(
+      't(errors.conflict)',
+    );
+  });
+
   it('falls back to the generic message for anything else', () => {
     expect(errorMessage(new TypeError('Failed to fetch'), t)).toBe('t(errors.internal)');
   });

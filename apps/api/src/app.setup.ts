@@ -1,6 +1,7 @@
 import { type INestApplication, RequestMethod } from '@nestjs/common';
 import { DocumentBuilder, type OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { type NestExpressApplication } from '@nestjs/platform-express';
 import { type Application } from 'express';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
@@ -15,6 +16,8 @@ export function configureApp(app: INestApplication, env: Env): void {
   // The web app proxies /api/v1 to this server (same-origin cookies); trust X-Forwarded-For only
   // from loopback, so req.ip is the browser's address and can't be spoofed by remote clients.
   (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 'loopback');
+  // Membership imports send a CSV file of up to 5,000 rows as JSON (M2); 1 MB covers it.
+  (app as NestExpressApplication).useBodyParser('json', { limit: '1mb' });
   app.use(cookieParser());
   app.use(
     helmet({

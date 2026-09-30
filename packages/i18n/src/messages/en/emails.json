@@ -42,5 +42,37 @@
     "heading": "New device sign-in",
     "body": "Your account was signed in from {device} at {time}.",
     "notYou": "If this wasn’t you, reset your password and sign out that session from the account security page."
+  },
+  "membershipApplicationReceived": {
+    "subject": "We received your membership application",
+    "heading": "Application received",
+    "body": "We received your membership application ({typeName}). It will be reviewed, and we will email you at each step.",
+    "action": "View your membership"
+  },
+  "membershipDirectorApproved": {
+    "subject": "Your department director approved your application",
+    "heading": "Approved by your department director",
+    "body": "Your department director approved your membership application ({typeName}). It now goes to the association for final approval.",
+    "action": "View your membership"
+  },
+  "membershipApproved": {
+    "subject": "Your IUA membership is approved",
+    "heading": "Welcome to the association",
+    "body": "Your membership application ({typeName}) was approved. Your membership is valid until {endDate}, and your digital membership card is ready.",
+    "action": "View your membership"
+  },
+  "membershipRejected": {
+    "subject": "Your membership application was not approved",
+    "heading": "Application not approved",
+    "body": "Your membership application ({typeName}) was not approved.",
+    "reason": "Reason given: {reason}",
+    "action": "View your membership"
+  },
+  "membershipImportWelcome": {
+    "subject": "Your IUA Connect account is ready",
+    "heading": "Welcome to IUA Connect",
+    "body": "The association created an IUA Connect account for you, with your membership ({typeName}). Set a password to sign in.",
+    "action": "Set your password",
+    "expiry": "This link is valid for 7 days. After that, use “Forgot password” on the sign-in page."
   }
 }

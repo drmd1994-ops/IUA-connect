@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-09-27_
+_Last updated: 2026-09-30_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M1b Passkeys: merged 2026-09-29** (pull request #2); automated checks pass in Chromium and Edge; the manual Windows Hello check is deferred by the owner until the mobile app exists. M1 Identity merged 2026-09-29 (PR #1). M0 Foundations complete. Next: M2, after O3. |
+| Phase                     | **M2 People & membership: complete on branch `feat/membership` (pull request #4)**, awaiting the owner's review, demo and merge. M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. Next: the M3 plan, for the owner's approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -45,7 +45,7 @@ _Last updated: 2026-09-27_
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | O1  | ~~Approval of these planning documents~~ **Resolved 2026-09-27:** approved by the owner.                                                                                                                                             | —                    |
 | O2  | ~~Git setup~~ **Resolved 2026-09-27:** `git init` done, remote added, pushed to `main` with a personal access token (Git Credential Manager). CI green.                                                                               | —                    |
-| O3  | Specialist certificate number: confirm the format rules (digits only? length?). **Residents have no specialist certificate yet**: which identifier do they provide (medical license number?), and do students need director approval? | M2                   |
+| O3  | ~~Certificate number format and resident identifiers~~ **Resolved 2026-09-29:** any digits (1–15); residents and non-full members give a medical licence number; students are approved by an IUA admin directly. | —                    |
 | O4  | Permission from IUA/IMA before showing imported content in a pitch (recommended)                                                                                                                                                      | Before the pitch     |
 | O5  | Video hosting choice                                                                                                                                                                                                                  | Video milestone      |
 | O6  | Professional legal review (spec §59)                                                                                                                                                                                                  | Before any real data |
@@ -148,8 +148,50 @@ Plan: [`docs/plans/M1b-passkeys.md`](docs/plans/M1b-passkeys.md), approved by th
 ### Open for the owner
 
 - **Manual Windows Hello check — deferred by the owner (2026-09-29)** until the mobile app exists: add a passkey with a real Windows Hello prompt and sign in with it, in Chrome and in Edge. Until then, M1b's exit criterion is met by the automated tests only (virtual authenticator in Chromium and Edge).
-- O3 (certificate number format, resident identifiers) is needed for M2.
+## M2 People & membership (2026-09-30)
+
+Plan: [`docs/plans/M2-people-membership.md`](docs/plans/M2-people-membership.md), approved by the owner on 2026-09-29 with these answers:
+
+- **O3:** certificate numbers are any digits; residents give a medical licence number; students are approved by an admin directly.
+- **Non-full members** give a medical licence number.
+- **Memberships run by calendar year.**
+- **The CSV import creates accounts**, with a "set your password" email.
+- **The demo seed** has fictional people with one documented password.
+
+Library added with the owner's approval: `uqr` 0.1.3 (QR codes, no dependencies).
+
+### Delivered
+
+- **Institutions:** membership types, 11 subspecialties, 21 hospitals with urology departments (reference seed, insert-only). Admin screens for hospitals, departments and **department directors**. A role's scope must point at a real department (database triggers).
+- **Profiles:** every spec §6 field except photo (M3) and publications (Phase 2). Each field has its own visibility (private by default). ORCID is checked with its check digit. A department must belong to its hospital.
+- **Application workflow:** member → department director → IUA admin → active membership until 31 December.
+  - Students skip the director. Departments without a director are flagged for the admin.
+  - Directors see only their own departments, never their own application. A reason is required to reject.
+  - One open application per user. Withdraw. Emails at each step (he/en).
+- **Identifiers:** certificate and licence numbers are stored encrypted with a keyed hash. One number can't be used twice. The number is never returned, logged or audited.
+- **Admin:** approval queue; members list with filters, search and paging; member detail; create by hand (including honorary members); renew, suspend (with reason), reinstate, expire; payment status set by hand. Every change goes into the append-only history and the audit log.
+- **Digital card:** a 5-minute signed QR token that names only the membership. The public `/card/verify` page (60 per minute per IP) shows valid/invalid, the name and the type. Suspension or expiry invalidates the card immediately.
+- **CSV import:** the dry run reports per row (create account / create membership / update / unchanged / skip, with reasons). Applying needs the same file and runs once. New accounts get a 7-day "set your password" link. Only the report and a keyed hash of the file are stored.
+- **Demo seed:** 13 fictional people at `@demo.test` covering every state (see README, "Demo accounts").
+
+### Verified
+
+- API: **117 unit and 124 integration tests.** Every admin route has the anonymous 401 / member 403 / admin-without-MFA 403 / admin 2xx tests.
+- Web: 10 unit tests; **62 Playwright tests** in Chromium and Edge, including the **exit test**: register → director approves → admin approves → the card verifies (then suspension invalidates it), with axe WCAG 2.2 AA checks on every page it visits, and all new pages in he and en.
+
+### Deviations and findings
+
+- **OpenAPI types:** a bare `z.string().nullable()` came out as an array type, so the web's generated types were wrong. This also affected M1's session IP field. Fixed with `nullableString()`, plus a test that checks the document and forbids the bare form.
+- **Prisma and raw-SQL rules:** Prisma doesn't model the composite foreign keys (a department inside its hospital), so each generated migration tries to drop them. Those lines are removed by hand; a note at the top of the schema explains why.
+- **Admin checks in the web app are for display only.** The web server never sees the in-memory access token, so every rule (roles, MFA, department scope) is enforced by the API. This is how ADR 0006 is applied.
+- **Password-reset links now also accept the new 7-day account-setup link** from imports. Ordinary reset links still last 1 hour.
+- **Emails go to the applicant only.** Directors and admins aren't notified of new applications (in-app notifications are M7).
+
+### Open for the owner
+
+- Review and try the demo, then merge pull request #4 (or ask Claude to).
+- The Hebrew membership type names are suggestions: חברות מלאה, חברות שאינה מלאה, מתמחה, סטודנט/ית, חברות כבוד. Admins can edit them.
 
 ## Next step
 
-After PR #2 is merged: **M2 People & membership** (profiles, institutions and directors, membership types, the verification workflow, admin approval queue, CSV import, digital card). It needs the owner's answer to **O3** and starts with a written plan for approval.
+After the owner reviews M2: **M3 Content core** (per `DEVELOPMENT_ROADMAP.md`) starts with a written plan in `docs/plans/` for the owner's approval. No M3 code is written before that.

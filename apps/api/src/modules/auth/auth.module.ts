@@ -32,6 +32,6 @@ import { SessionsService } from './sessions.service';
     SessionsService,
     { provide: PrincipalResolver, useExisting: SessionsService },
   ],
-  exports: [PrincipalResolver, SessionsService],
+  exports: [PrincipalResolver, SessionsService, AuthTokensService],
 })
 export class AuthModule {}

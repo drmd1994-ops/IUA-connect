@@ -1,13 +1,15 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
+import { isAdmin } from '@/features/admin/admin-shell';
 import { useAuth } from '@/features/auth/auth-context';
 import { Link, useRouter } from '@/i18n/navigation';
 
 /** Header links: "Sign in / Sign up" when signed out; account links and "Sign out" when signed in. */
 export function AccountMenu() {
   const t = useTranslations('auth.nav');
+  const tm = useTranslations('membership.nav');
   const { status, me, signOut } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -50,15 +52,25 @@ export function AccountMenu() {
           id="account-menu"
           className="absolute end-0 z-20 mt-2 w-56 rounded-md border border-border bg-surface p-1 shadow-raised"
         >
-          <li>
-            <Link
-              href="/account/security"
-              onClick={() => setOpen(false)}
-              className="block rounded px-3 py-2 text-sm hover:bg-surface-muted"
-            >
-              {t('security')}
-            </Link>
-          </li>
+          <MenuLink href="/account/profile" onClick={() => setOpen(false)}>
+            {tm('profile')}
+          </MenuLink>
+          <MenuLink href="/account/membership" onClick={() => setOpen(false)}>
+            {tm('membership')}
+          </MenuLink>
+          {me.permissions.includes('membership.approve.department') && (
+            <MenuLink href="/account/applications" onClick={() => setOpen(false)}>
+              {tm('applications')}
+            </MenuLink>
+          )}
+          {isAdmin(me) && (
+            <MenuLink href="/admin" onClick={() => setOpen(false)}>
+              {tm('admin')}
+            </MenuLink>
+          )}
+          <MenuLink href="/account/security" onClick={() => setOpen(false)}>
+            {t('security')}
+          </MenuLink>
           <li>
             <button
               type="button"
@@ -75,5 +87,27 @@ export function AccountMenu() {
         </ul>
       )}
     </div>
+  );
+}
+
+function MenuLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <li>
+      <Link
+        href={href}
+        onClick={onClick}
+        className="block rounded px-3 py-2 text-sm hover:bg-surface-muted"
+      >
+        {children}
+      </Link>
+    </li>
   );
 }

@@ -1,0 +1,193 @@
+{
+  "nav": {
+    "profile": "My profile",
+    "membership": "My membership",
+    "card": "Membership card",
+    "applications": "Applications to review",
+    "admin": "Administration"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "saved": "Saved.",
+    "cancel": "Cancel",
+    "signInRequired": "Please sign in to view this page.",
+    "signIn": "Sign in",
+    "none": "—",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "visibility": {
+    "label": "Who can see this",
+    "PRIVATE": "Only me",
+    "MEMBERS": "Members",
+    "PUBLIC": "Everyone"
+  },
+  "profile": {
+    "title": "My profile",
+    "intro": "Your professional details. Each field is visible only to you unless you choose otherwise. The member directory arrives later.",
+    "sections": {
+      "names": "Names",
+      "work": "Work",
+      "about": "About you",
+      "contact": "Professional contact"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "nameHe": "Name in Hebrew",
+      "nameEn": "Name in English",
+      "title": "Professional title",
+      "position": "Position",
+      "hospital": "Hospital",
+      "department": "Department",
+      "subspecialties": "Subspecialties",
+      "bio": "Professional biography",
+      "researchInterests": "Research interests",
+      "orcid": "ORCID iD",
+      "languages": "Languages",
+      "contactEmail": "Professional email",
+      "contactPhone": "Professional phone"
+    },
+    "visibilityOf": {
+      "NAME": "First and last name",
+      "NAME_HE": "Name in Hebrew",
+      "NAME_EN": "Name in English",
+      "TITLE": "Professional title",
+      "POSITION": "Position",
+      "INSTITUTION": "Hospital and department",
+      "SUBSPECIALTIES": "Subspecialties",
+      "BIO": "Professional biography",
+      "RESEARCH_INTERESTS": "Research interests",
+      "ORCID": "ORCID iD",
+      "LANGUAGES": "Languages",
+      "CONTACT_EMAIL": "Professional email",
+      "CONTACT_PHONE": "Professional phone"
+    },
+    "hints": {
+      "title": "For example Dr. or Prof.",
+      "orcid": "16 characters, for example 0000-0002-1825-0097.",
+      "languages": "The languages you work in."
+    },
+    "chooseHospital": "Choose a hospital",
+    "chooseDepartment": "Choose a department",
+    "noHospital": "Not set",
+    "saved": "Your profile was saved."
+  },
+  "membership": {
+    "title": "My membership",
+    "none": "You don’t have a membership yet.",
+    "type": "Membership type",
+    "status": "Status",
+    "statuses": {
+      "ACTIVE": "Active",
+      "SUSPENDED": "Suspended",
+      "EXPIRED": "Expired"
+    },
+    "validFrom": "Member since",
+    "validUntil": "Valid until",
+    "payment": "Payment",
+    "payments": {
+      "NOT_REQUIRED": "Not required",
+      "UNPAID": "Unpaid",
+      "PAID": "Paid",
+      "WAIVED": "Waived"
+    },
+    "viewCard": "Show my membership card",
+    "historyTitle": "History",
+    "events": {
+      "CREATED": "Membership started",
+      "RENEWED": "Renewed",
+      "SUSPENDED": "Suspended",
+      "REINSTATED": "Reinstated",
+      "EXPIRED": "Ended",
+      "TYPE_CHANGED": "Membership type changed",
+      "PAYMENT_STATUS_CHANGED": "Payment status changed",
+      "IMPORTED": "Updated from the association’s records"
+    },
+    "reason": "Reason: {reason}"
+  },
+  "apply": {
+    "title": "Apply for membership",
+    "intro": "Your department director reviews the application first, then the association gives final approval. Students are reviewed by the association directly.",
+    "type": "Membership type",
+    "chooseType": "Choose a membership type",
+    "hospital": "Hospital",
+    "department": "Department",
+    "identifiers": {
+      "SPECIALIST_CERTIFICATE": "Specialist certificate number",
+      "MEDICAL_LICENCE": "Medical licence number"
+    },
+    "identifierHint": "Digits only. It is stored encrypted and never shown to anyone.",
+    "submit": "Submit application",
+    "submitted": "Your application was sent. We’ll email you at each step.",
+    "profileFirst": "Before applying, add your first and last name in your profile.",
+    "goToProfile": "Go to my profile"
+  },
+  "application": {
+    "title": "My application",
+    "submittedOn": "Submitted on {date}",
+    "states": {
+      "PENDING_DIRECTOR": "Waiting for the department director",
+      "PENDING_ADMIN": "Waiting for the association",
+      "APPROVED": "Approved",
+      "REJECTED": "Not approved",
+      "WITHDRAWN": "Withdrawn"
+    },
+    "stages": {
+      "DIRECTOR": "Department director",
+      "ADMIN": "Association"
+    },
+    "decisions": {
+      "APPROVE": "approved",
+      "REJECT": "did not approve"
+    },
+    "decisionLine": "{stage} {decision} on {date}",
+    "reason": "Reason: {reason}",
+    "withdraw": "Withdraw application",
+    "withdrawn": "Your application was withdrawn.",
+    "numberProvided": "Number provided",
+    "flags": {
+      "NO_DIRECTOR": "The department has no director",
+      "APPLICANT_IS_DIRECTOR": "The applicant is the department’s director"
+    }
+  },
+  "card": {
+    "title": "Membership card",
+    "intro": "Show this code to confirm your membership. It changes every few minutes, so a screenshot stops working.",
+    "qrLabel": "QR code for verifying the membership of {name}",
+    "validUntil": "Valid until {date}",
+    "refreshed": "Code refreshed at {time}",
+    "noActive": "The card is available once your membership is active.",
+    "association": "Israeli Urological Association"
+  },
+  "verify": {
+    "title": "Membership verification",
+    "checking": "Checking…",
+    "valid": "Valid membership",
+    "invalid": "Not valid",
+    "invalidHint": "The code has expired or the membership is not active. Ask the member to show the card again.",
+    "missing": "This page checks a code from a membership card. Scan the card’s QR code to open it.",
+    "name": "Name",
+    "type": "Membership type"
+  },
+  "review": {
+    "title": "Applications to review",
+    "adminTitle": "Applications for final approval",
+    "intro": "Applications from your department. After you approve, the association gives final approval.",
+    "adminIntro": "Applications approved by a department director, from students, and from departments without a director.",
+    "empty": "There are no applications waiting.",
+    "applicant": "Applicant",
+    "type": "Membership type",
+    "place": "Hospital and department",
+    "submitted": "Submitted",
+    "approve": "Approve",
+    "reject": "Don’t approve",
+    "reason": "Reason (sent to the applicant)",
+    "reasonOptional": "Note (optional)",
+    "confirmReject": "Confirm",
+    "approved": "The application was approved.",
+    "rejected": "The application was not approved. The applicant was told why.",
+    "notAllowed": "This page is for department directors and association administrators, in a session with two-step verification."
+  }
+}

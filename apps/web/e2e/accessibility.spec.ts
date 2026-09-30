@@ -13,6 +13,13 @@ const PAGES = [
   '/forgot-password',
   '/reset-password',
   '/account/security',
+  // M2 (signed-out views; the signed-in views are checked in membership.spec.ts)
+  '/account/profile',
+  '/account/membership',
+  '/account/membership/card',
+  '/account/applications',
+  '/admin/members',
+  '/card/verify',
 ];
 
 for (const locale of ['he', 'en'] as const) {

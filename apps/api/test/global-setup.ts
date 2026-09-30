@@ -15,7 +15,12 @@ export default function globalSetup(): void {
   });
   execSync('pnpm exec prisma db seed', {
     cwd,
-    env: { ...process.env, MIGRATION_DATABASE_URL: testOwnerUrl(), DATABASE_URL: testAppUrl() },
+    env: {
+      ...process.env,
+      MIGRATION_DATABASE_URL: testOwnerUrl(),
+      DATABASE_URL: testAppUrl(),
+      SEED_LAYERS: 'reference',
+    },
     stdio: 'inherit',
   });
 }
