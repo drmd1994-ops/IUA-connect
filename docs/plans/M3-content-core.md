@@ -1,6 +1,6 @@
 # M3 — Content core: plan
 
-- Status: **Proposed — awaiting owner approval** (no code is written before approval)
+- Status: **Approved by the owner on 2026-09-30**
 - Date: 2026-09-30
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M3. Design sources:
   - `PRODUCT_REQUIREMENTS.md` §3.5 (news) and §3.8 (guidelines)

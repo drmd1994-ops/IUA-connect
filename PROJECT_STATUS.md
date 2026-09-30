@@ -194,4 +194,4 @@ Library added with the owner's approval: `uqr` 0.1.3 (QR codes, no dependencies)
 
 ## Next step
 
-**M3 Content core:** the plan [`docs/plans/M3-content-core.md`](docs/plans/M3-content-core.md) is written with the owner's answers to its questions and awaits the owner's approval. No M3 code is written before that.
+**M3 Content core:** the plan [`docs/plans/M3-content-core.md`](docs/plans/M3-content-core.md) was approved by the owner on 2026-09-30; building on branch `feat/content`.
