@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { type Principal } from '../../common/auth/principal';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { effectiveStatus } from '../membership/memberships.service';
-import { todayInIsrael } from '../membership/period';
+import { effectiveStatus, todayInIsrael } from '../membership';
 import { ANONYMOUS, type AccessTier, type Viewer, canSee } from './access-policy';
 
 /** Content kinds that carry an access tier (`content_access_rules.entity_type`). */
