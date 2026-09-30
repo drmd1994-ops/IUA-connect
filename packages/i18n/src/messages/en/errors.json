@@ -49,6 +49,12 @@
     "paymentStatusUnchanged": "The payment status is already set to this value.",
     "batchApplied": "This import has already been applied.",
     "batchExpired": "This dry run is more than 24 hours old. Please run it again.",
-    "fileChanged": "The file is not the one that was checked. Please run the dry run again."
+    "fileChanged": "The file is not the one that was checked. Please run the dry run again.",
+    "fileMissing": "Please choose a file.",
+    "fileEmpty": "The file is empty.",
+    "fileTypeNotAllowed": "This type of file isn’t allowed. Use JPEG or PNG images, or PDF, Word (DOCX) or PowerPoint (PPTX) documents.",
+    "fileTooLarge": "The file is too large.",
+    "fileUnreadable": "The image couldn’t be read. Please try another file.",
+    "fileInfected": "The file was rejected by the security check."
   }
 }

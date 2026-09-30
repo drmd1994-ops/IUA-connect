@@ -11,8 +11,10 @@ import { LoggerModule } from './infra/logger/logger.module';
 import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
+import { StorageModule } from './infra/storage/storage.module';
 import { AuditModule } from './modules/audit';
 import { AuthModule } from './modules/auth';
+import { FilesModule } from './modules/files';
 import { HealthModule } from './modules/health';
 import { InstitutionsModule } from './modules/institutions';
 import { MembershipModule } from './modules/membership';
@@ -42,12 +44,14 @@ export class AppModule {
         CryptoModule,
         MailerModule,
         RateLimitModule,
+        StorageModule,
         AuditModule,
         HealthModule,
         AuthModule,
         InstitutionsModule,
         ProfilesModule,
         MembershipModule,
+        FilesModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

@@ -76,6 +76,7 @@ model User {
   profile       Profile?
   membership    Membership?
   applications  VerificationRequest[]
+  files         StoredFile[]
 
   @@map("users")
 }
@@ -405,10 +406,13 @@ model Profile {
   languages         String[] @default([])
   contactEmail      String?  @map("contact_email") @db.Citext
   contactPhone      String?  @map("contact_phone") @db.VarChar(32)
+  /// Profile photo (M3): an image file the member uploaded.
+  photoFileId       String?  @unique @map("photo_file_id") @db.Uuid
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photo          StoredFile?              @relation("ProfilePhoto", fields: [photoFileId], references: [id], onDelete: SetNull)
   hospital       Hospital?                @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
   department     Department?              @relation(fields: [departmentId], references: [id], onDelete: Restrict)
   subspecialties ProfileSubspecialty[]
@@ -444,6 +448,8 @@ enum ProfileField {
   LANGUAGES
   CONTACT_EMAIL
   CONTACT_PHONE
+  /// Profile photo (M3).
+  PHOTO
 
   @@map("profile_field")
 }
@@ -649,4 +655,64 @@ model ImportBatch {
 
   @@index([createdAt])
   @@map("import_batches")
+}
+
+// ---------------------------------------------------------------------------
+// Files (M3). DATABASE_DESIGN.md §3 "Files"; SECURITY_MODEL.md "Files".
+// ---------------------------------------------------------------------------
+
+enum FileKind {
+  IMAGE
+  DOCUMENT
+
+  @@map("file_kind")
+}
+
+enum FilePurpose {
+  /// Content images and documents, uploaded by staff.
+  CONTENT
+  /// A member's own profile photo.
+  PROFILE_PHOTO
+
+  @@map("file_purpose")
+}
+
+enum ScanStatus {
+  UNSCANNED
+  CLEAN
+  INFECTED
+  ERROR
+
+  @@map("scan_status")
+}
+
+/// An uploaded file. The bytes live in object storage under a random key, never in the web root.
+/// Images are stored re-encoded, without metadata. Downloads go through short-lived signed URLs
+/// after an access check.
+model StoredFile {
+  id           String      @id @db.Uuid
+  storageKey   String      @unique @map("storage_key") @db.VarChar(200)
+  /// Smaller copy of an image (for lists and avatars).
+  thumbnailKey String?     @unique @map("thumbnail_key") @db.VarChar(200)
+  /// The uploaded name, cleaned (shown to users and used for downloads).
+  originalName String      @map("original_name") @db.VarChar(255)
+  /// Detected from the content, never taken from the client.
+  mimeType     String      @map("mime_type") @db.VarChar(120)
+  kind         FileKind
+  purpose      FilePurpose
+  sizeBytes    Int         @map("size_bytes")
+  sha256       String      @db.Char(64)
+  width        Int?
+  height       Int?
+  scanStatus   ScanStatus  @default(UNSCANNED) @map("scan_status")
+  ownerUserId  String?     @map("owner_user_id") @db.Uuid
+  /// Set when something uses the file; unused uploads are removed after a day.
+  attachedAt   DateTime?   @map("attached_at") @db.Timestamptz(6)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  owner        User?    @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  profilePhoto Profile? @relation("ProfilePhoto")
+
+  @@index([attachedAt, createdAt])
+  @@map("files")
 }

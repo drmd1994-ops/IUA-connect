@@ -1,12 +1,21 @@
 /**
  * Settings shared by the unit and integration Jest configs.
  *
- * Some dependencies ship as ES modules only (jose). Node 24 loads them natively at runtime, but
+ * Some dependencies ship as ES modules only (jose; file-type and its helpers, M3). Node 24 loads them natively at runtime, but
  * Jest's CommonJS module system can't, so tests compile them to CommonJS with ts-jest.
  */
-const ESM_ONLY_PACKAGES = ['jose'];
+const ESM_ONLY_PACKAGES = [
+  'jose',
+  'file-type',
+  'strtok3',
+  'token-types',
+  'uint8array-extras',
+  '@tokenizer/inflate',
+  '@borewit/text-codec',
+];
 
-const esmPattern = ESM_ONLY_PACKAGES.join('|');
+// pnpm writes scoped names as @scope+name in its store folder.
+const esmPattern = ESM_ONLY_PACKAGES.map((name) => name.replace('/', '[+/]')).join('|');
 
 module.exports = (tsconfig) => ({
   testEnvironment: 'node',

@@ -76,6 +76,8 @@ export const envSchema = z
       .string()
       .regex(/^postgres(ql)?:\/\//, 'must be a postgresql:// connection string'),
     STORAGE_ADAPTER: z.enum(['local']).default('local'),
+    /** Where the local storage adapter keeps uploaded files (relative to the repository root). */
+    STORAGE_DIR: z.string().min(1).default('storage'),
     MAILER_ADAPTER: z.enum(['console']).default('console'),
     MALWARE_SCANNER: z.enum(['noop']).default('noop'),
     RATE_LIMIT_STORE: z.enum(['memory']).default('memory'),

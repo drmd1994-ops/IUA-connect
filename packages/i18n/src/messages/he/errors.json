@@ -49,6 +49,12 @@
     "paymentStatusUnchanged": "מצב התשלום כבר מוגדר לערך הזה.",
     "batchApplied": "הייבוא הזה כבר בוצע.",
     "batchExpired": "הבדיקה המקדימה בת יותר מ־24 שעות. נא להריץ אותה שוב.",
-    "fileChanged": "זה לא הקובץ שנבדק. נא להריץ שוב את הבדיקה המקדימה."
+    "fileChanged": "זה לא הקובץ שנבדק. נא להריץ שוב את הבדיקה המקדימה.",
+    "fileMissing": "נא לבחור קובץ.",
+    "fileEmpty": "הקובץ ריק.",
+    "fileTypeNotAllowed": "סוג הקובץ אינו מותר. אפשר להעלות תמונות JPEG או PNG, או מסמכי PDF, Word (DOCX) או PowerPoint (PPTX).",
+    "fileTooLarge": "הקובץ גדול מדי.",
+    "fileUnreadable": "לא ניתן היה לקרוא את התמונה. נא לנסות קובץ אחר.",
+    "fileInfected": "הקובץ נדחה בבדיקת האבטחה."
   }
 }

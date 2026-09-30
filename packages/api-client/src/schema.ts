@@ -868,6 +868,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["FilesController_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/files/{id}/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FilesController_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/files/{id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FilesController_content"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/profile/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ProfilePhotoController_set"];
+        post?: never;
+        delete: operations["ProfilePhotoController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1206,6 +1270,7 @@ export interface components {
             languages: string[];
             contactEmail: string | null;
             contactPhone: string | null;
+            photoFileId: string | null;
             visibility: {
                 /** @enum {string} */
                 NAME: "PRIVATE" | "MEMBERS" | "PUBLIC";
@@ -1233,6 +1298,8 @@ export interface components {
                 CONTACT_EMAIL: "PRIVATE" | "MEMBERS" | "PUBLIC";
                 /** @enum {string} */
                 CONTACT_PHONE: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                PHOTO: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
         };
         UpdateProfileDto: {
@@ -1278,6 +1345,8 @@ export interface components {
                 CONTACT_EMAIL?: "PRIVATE" | "MEMBERS" | "PUBLIC";
                 /** @enum {string} */
                 CONTACT_PHONE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                PHOTO?: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
         };
         ImportDryRunDto: {
@@ -1643,6 +1712,39 @@ export interface components {
                 nameHe: string;
                 nameEn: string;
             } | null;
+        };
+        FileDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "IMAGE" | "DOCUMENT";
+            mimeType: string;
+            originalName: string;
+            sizeBytes: number;
+            width: number | null;
+            height: number | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        SignedUrlDto: {
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        ProfilePhotoDto: {
+            photo: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            };
         };
     };
     responses: never;
@@ -2995,6 +3097,122 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["CardVerificationDto"];
                 };
+            };
+        };
+    };
+    FilesController_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDto"];
+                };
+            };
+        };
+    };
+    FilesController_url: {
+        parameters: {
+            query?: {
+                v?: "full" | "thumb";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedUrlDto"];
+                };
+            };
+        };
+    };
+    FilesController_content: {
+        parameters: {
+            query: {
+                v: string;
+                exp: string;
+                sig: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ProfilePhotoController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfilePhotoDto"];
+                };
+            };
+        };
+    };
+    ProfilePhotoController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

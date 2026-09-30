@@ -62,7 +62,8 @@
       "ORCID": "ORCID iD",
       "LANGUAGES": "Languages",
       "CONTACT_EMAIL": "Professional email",
-      "CONTACT_PHONE": "Professional phone"
+      "CONTACT_PHONE": "Professional phone",
+      "PHOTO": "Profile photo"
     },
     "hints": {
       "title": "For example Dr. or Prof.",
