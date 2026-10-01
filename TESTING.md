@@ -55,6 +55,13 @@
 - **Admin routes:** each has the anonymous 401, member 403 and admin-without-MFA 403 tests.
 - **End to end (Playwright, `content.spec.ts`):** the exit test. An editor writes an article with an image in both languages and submits it; a reviewer schedules it; it appears on `/news` once the job has run (the test waits up to four minutes for it). A members-only article stays hidden from a visitor in the list and by link. An admin adds a guideline and a visitor opens it. Axe checks run on every page visited, and on the new public pages in both languages.
 
+## What the M4 (Content import) suites prove
+
+- **Importer (unit, `tools/importer`):** only the hand-picked kinds of page are accepted; the physician directory, sign-in pages, forms, other hosts, look-alike hosts and extra parameters are refused and never fetched. `robots.txt` is obeyed. Titles, dates and document links are read from pages written for the tests (not copies of the site). A page with an email address, a phone number or an ID-like number is kept out. News needs a reviewed title that names nobody.
+- **Seed layer 3 (integration, fictional fixtures):** each item is created once however often the seed runs; imported news is public and keeps its original date and source address; documents keep the publisher's link and store no file; `pnpm import:remove` deletes exactly the imported items.
+- **End to end:** a visitor opens an imported news item (source label and link) and an imported document (year only), with axe checks.
+- **No test contacts the real site.**
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

@@ -27,10 +27,11 @@
     "archivedNotice": "This item is archived. It may be out of date.",
     "attachments": "Attachments",
     "references": "References",
-    "source": "Originally published at",
     "by": "By {author}",
     "back": "Back to all news",
-    "imageAlt": "Image for: {title}"
+    "imageAlt": "Image for: {title}",
+    "sourceLabel": "Source: IUA website",
+    "readAtSource": "Read the full item on the IUA website"
   },
   "guidelines": {
     "title": "Guidelines",

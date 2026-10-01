@@ -205,8 +205,7 @@ export class NewsAdminService {
           accessTier: live.accessTier,
           featuredImageFileId: live.featuredImageFileId,
           references: live.references as Prisma.InputJsonValue,
-          sourceUrl: live.sourceUrl,
-          sourcePublishedAt: live.sourcePublishedAt,
+          // The source address stays on the live item only: one source page is one row (M4).
         },
       });
       await this.copyParts(tx, live, revisionId);

@@ -153,10 +153,10 @@ function ArticleView({ article }: { article: Article }) {
       )}
 
       {article.sourceUrl && (
-        <p className="text-sm text-text-muted">
-          {t('content.news.source')}{' '}
-          <a href={article.sourceUrl} className={link} rel="noopener noreferrer" dir="ltr">
-            {new URL(article.sourceUrl).hostname}
+        <p className="rounded-md border border-border p-4" data-testid="news-source">
+          <span className="block text-sm text-text-muted">{t('content.news.sourceLabel')}</span>
+          <a href={article.sourceUrl} className={link} rel="noopener noreferrer">
+            {t('content.news.readAtSource')}
           </a>
         </p>
       )}

@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - tools/importer
 
 # pnpm 10 blocks dependency lifecycle scripts by default. Only these are allowed to build.
 onlyBuiltDependencies:

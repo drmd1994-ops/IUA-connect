@@ -116,6 +116,9 @@ export function NewsList() {
                       {item.summary}
                     </p>
                   )}
+                  {item.sourceUrl && (
+                    <p className="text-sm text-text-muted">{t('content.news.sourceLabel')}</p>
+                  )}
                   {item.accessTier !== 'PUBLIC' && (
                     <p className="mt-auto">
                       <span className="rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-semibold text-text-muted">

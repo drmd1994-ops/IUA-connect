@@ -6,7 +6,7 @@ _Last updated: 2026-10-01_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: built on `feat/content` (pull request #5), waiting for the owner to merge.** Next: the M4 plan, for the owner's approval. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: built on `feat/content-import` (pull request #6), waiting for the owner to merge.** Next: the M5 plan, for the owner's approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -235,9 +235,55 @@ Libraries added with the owner's approval: sharp, file-type, unified/remark, pg-
 
 ### Open for the owner
 
-- Review and merge pull request #5 (or ask Claude to), then the owner's checkpoint test of the demo.
+- ~~Merge pull request #5~~ merged at the owner's request on 2026-10-01 (CI green). The owner's own checkpoint test of the demo is still to come.
 - The Hebrew names of the two demo news categories are suggestions: הודעות האיגוד, הוראה והשתלמות.
+
+## M4 Content import (2026-10-01)
+
+Plan: [`docs/plans/M4-content-import.md`](docs/plans/M4-content-import.md), approved by the owner on 2026-10-01. Owner decisions (plan §11):
+
+- **Conference pages** are saved as fixtures now and loaded in M5, when events exist.
+- **Text copied:** title, date and a link. A short excerpt was allowed, but none is kept (see below).
+- **Page list:** proposed by Claude, approved by the owner before anything was fetched into fixtures.
+- **Real names are removed** from news titles: each source is listed with a reviewed title that names nobody.
+- **Year only:** documents show the year the site states, not an invented day and month.
+- **Library:** cheerio, a development dependency of the importer only.
+
+### Delivered
+
+- **`tools/importer`** (`pnpm import:fetch`, development only): reads a hand-picked list of pages (`tools/importer/sources.json`), once each, into JSON fixtures.
+  - It never follows links or redirects and never lists the site.
+  - An address allow-list refuses everything else, including the physician directory, sign-in and form pages.
+  - It obeys `robots.txt`, waits between requests and names itself in the user-agent.
+  - Results must pass a personal-data check (email addresses, phone numbers, ID-like numbers, people's titles). Any problem means nothing is written.
+- **The sample** (fixtures in `apps/api/prisma/fixtures/iua-import/`): 8 news items, 9 documents (one clinical guideline and eight position papers) and one conference page.
+- **Seed layer 3** (`pnpm db:seed`): loads the fixtures without any network. News items are public, in a "From the IUA website" category, with the original date and the source address. Documents become guideline entries with the publisher's own link; no document is fetched or stored.
+- **`pnpm import:remove`:** deletes everything the import created, and nothing else.
+- **Web:** imported news shows "Source: IUA website" in the list and a link to the full item on the IUA website; imported documents show the year only.
+
+### Verified
+
+- Importer: **52 unit tests** (allow-list including directory addresses, `robots.txt`, extraction from pages written for the tests, the personal-data and name checks, link fixes).
+- API: **6 integration tests** with fictional fixtures: each item is created once however often the seed runs; source address and original date are kept; removal deletes exactly the imported items.
+- Playwright: a visitor opens an imported news item and an imported document, with axe checks.
+- CI never contacts the real site.
+
+### Deviations and findings
+
+- **No excerpts.** Most news pages hold no text, only a link to a PDF. The three that do name people without a title a program can spot (journal citation authors, the author of a summary) or are garbled on the site. Excerpts are therefore opt-in per source after a person has read them, and none is kept.
+- **One conference page, not three.** Two of the three conference pages redirect to the members' sign-in. Members-only pages are not imported.
+- **8 news items, not 10–20:** the site's news list shows eight.
+- **The 1999 guideline's link is malformed on the site.** The working address of the same file on www.ima.org.il is used.
+- **Six position-paper links are plain `http`** on the site. They are stored as the site gives them.
+- **All documents are listed as Current**, including the 1999 guideline: nothing about their status is inferred. An admin can change it.
+- **Imported text is Hebrew only**, so English readers see the Hebrew title with the fallback notice.
+- **A revision of an imported news item** no longer carries the source address (it stays on the live item), because one source page may only be one row.
+
+### Open for the owner
+
+- **O4 is still open:** permission from IUA/IMA before showing this content in the pitch. `robots.txt` blocks one AI company's crawler from the whole site, which is worth mentioning when asking. If permission is refused, `pnpm import:remove` takes the sample out.
+- Review the reviewed news titles in `tools/importer/sources.json`.
 
 ## Next step
 
-**M4:** write the plan in `docs/plans/` for the owner's approval (scope in `DEVELOPMENT_ROADMAP.md`). No M4 code before the plan is approved.
+**M5 Events:** write the plan in `docs/plans/` for the owner's approval (scope in `DEVELOPMENT_ROADMAP.md`). No M5 code before the plan is approved.

@@ -801,7 +801,7 @@ model News {
   publishedAt         DateTime?  @map("published_at") @db.Timestamptz(6)
   archivedAt          DateTime?  @map("archived_at") @db.Timestamptz(6)
   /// Imported items (M4) keep their source and original date.
-  sourceUrl           String?    @map("source_url") @db.VarChar(500)
+  sourceUrl           String?    @unique @map("source_url") @db.VarChar(500)
   sourcePublishedAt   DateTime?  @map("source_published_at") @db.Timestamptz(6)
   /// [{ "title": "...", "url": "https://..." }]
   references          Json       @default("[]")
@@ -920,6 +920,8 @@ model Guideline {
   status         GuidelineStatus @default(CURRENT)
   subspecialtyId String?         @map("subspecialty_id") @db.Uuid
   accessTier     AccessTier      @default(PUBLIC) @map("access_tier")
+  /// Imported entries (M4): the page of the source site the entry was read from.
+  sourceUrl      String?         @map("source_url") @db.VarChar(500)
   createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
 
@@ -927,6 +929,7 @@ model Guideline {
   translations GuidelineTranslation[]
   versions     GuidelineVersion[]
 
+  @@unique([sourceUrl, officialUrl])
   @@index([status])
   @@index([subspecialtyId])
   @@map("guidelines")
@@ -954,6 +957,8 @@ model GuidelineVersion {
   guidelineId String   @map("guideline_id") @db.Uuid
   version     String   @db.VarChar(60)
   publishedOn DateTime @map("published_on") @db.Date
+  /// The source states only a year: show the year, not the day and month (M4 plan §11.7).
+  yearOnly    Boolean  @default(false) @map("year_only")
   /// This edition's own page, when it differs from the guideline's official link.
   url         String?  @db.VarChar(500)
   licenseNote String?  @map("license_note") @db.VarChar(500)

@@ -1,0 +1,42 @@
+{
+  "news": [
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8399",
+      "title": "דף מידע לציבור: מחלת פירוני"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8379",
+      "title": "דף מידע לציבור: סרטן הערמונית וטיפול פוקלי (ממוקד)"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8327",
+      "title": "הזרקת מים סטריליים בעווית כליתי"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8308",
+      "title": "חסמי אלפא וסטנט טרם אורטרוסקופיה"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8128",
+      "title": "דף מידע לציבור: הגדלה שפירה של הערמונית"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8129",
+      "title": "דף מידע לציבור: הרטבת לילה"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=7047",
+      "title": "ספריית ניתוחים מוקלטים"
+    },
+    {
+      "url": "https://urology.ima.org.il/ViewArticle.aspx?aId=8053",
+      "title": "דף מידע לציבור: אורודינמיקה"
+    }
+  ],
+  "guidelines": ["https://urology.ima.org.il/ViewContent.aspx?CategoryId=9249"],
+  "positionPapers": ["https://urology.ima.org.il/ViewContent.aspx?CategoryId=9240"],
+  "conferences": ["https://urology.ima.org.il/ViewContent.aspx?CategoryId=9308"],
+  "documentLinkFixes": {
+    "https://urology.ima.org.il/UserControls/www.ima.org.il/userfiles/image/clinical_01_sheten.pdf": "https://www.ima.org.il/userfiles/image/clinical_01_sheten.pdf"
+  }
+}

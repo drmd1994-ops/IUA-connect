@@ -16,6 +16,8 @@ const translationInput = z.strictObject({
 const versionInput = z.strictObject({
   version: z.string().trim().min(1).max(60),
   publishedOn: z.iso.date(),
+  /** The source states only a year: the year is shown, not the day and month. */
+  yearOnly: z.boolean().default(false),
   /** This edition's own page, when it differs from the official link. */
   url: httpUrl.optional(),
   licenseNote: z.string().trim().max(500).optional(),
@@ -56,6 +58,7 @@ const versionView = z.strictObject({
   id: z.uuid(),
   version: z.string(),
   publishedOn: z.iso.date(),
+  yearOnly: z.boolean(),
   url: nullableString(),
   licenseNote: nullableString(),
 });
@@ -104,6 +107,7 @@ export class AdminGuidelineListDto extends createZodDto(
         accessTier: z.enum(TIERS),
         version: nullableString(),
         publishedOn: z.iso.date().nullable(),
+        yearOnly: z.boolean(),
         updatedAt: z.iso.datetime(),
       }),
     ),
@@ -145,6 +149,8 @@ const publicSummary = z.strictObject({
   /** The newest version and its date. */
   version: nullableString(),
   publishedOn: z.iso.date().nullable(),
+  /** True when only the year of that date is known. */
+  yearOnly: z.boolean(),
   accessTier: z.enum(TIERS),
   /** The language of the text returned. */
   locale,

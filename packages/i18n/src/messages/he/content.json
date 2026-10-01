@@ -27,10 +27,11 @@
     "archivedNotice": "הפריט הזה בארכיון. ייתכן שהוא אינו עדכני.",
     "attachments": "קבצים מצורפים",
     "references": "מקורות",
-    "source": "פורסם במקור ב־",
     "by": "מאת {author}",
     "back": "חזרה לכל החדשות",
-    "imageAlt": "תמונה עבור: {title}"
+    "imageAlt": "תמונה עבור: {title}",
+    "sourceLabel": "מקור: אתר האיגוד",
+    "readAtSource": "לקריאת הפריט המלא באתר האיגוד"
   },
   "guidelines": {
     "title": "הנחיות קליניות",

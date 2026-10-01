@@ -1,7 +1,9 @@
-// Root config: lints repository tooling (tools/). Each app and package has its own eslint.config.mjs.
+// Root config: lints repository tooling (tools/scripts). Each app and package has its own eslint.config.mjs.
 import base from '@iua/eslint-config/base';
 
 export default [
+  // The importer is a workspace package with its own config and lint task.
+  { ignores: ['tools/importer/**'] },
   ...base,
   {
     files: ['tools/**/*.mjs'],

@@ -20,7 +20,7 @@ export function GuidelineView({ id }: { id: string }) {
   const t = useTranslations();
   const locale = useLocale() as 'he' | 'en';
   const name = useLocalName();
-  const { date } = useDateFormat();
+  const { dateOrYear } = useDateFormat();
   const { api, call, status } = useAuth();
   const [guideline, setGuideline] = useState<Guideline | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -93,7 +93,9 @@ export function GuidelineView({ id }: { id: string }) {
             <Item label={t('content.guidelines.version')}>{guideline.version}</Item>
           )}
           {guideline.publishedOn && (
-            <Item label={t('content.guidelines.publishedOn')}>{date(guideline.publishedOn)}</Item>
+            <Item label={t('content.guidelines.publishedOn')}>
+              {dateOrYear(guideline.publishedOn, guideline.yearOnly)}
+            </Item>
           )}
           {guideline.evidenceLevel && (
             <Item label={t('content.guidelines.evidenceLevel')}>{guideline.evidenceLevel}</Item>
@@ -135,7 +137,7 @@ export function GuidelineView({ id }: { id: string }) {
                 {t('content.guidelines.version')} {version.version}
                 <span className="font-normal text-text-muted">
                   {' · '}
-                  {date(version.publishedOn)}
+                  {dateOrYear(version.publishedOn, version.yearOnly)}
                 </span>
               </p>
               {version.licenseNote && (
