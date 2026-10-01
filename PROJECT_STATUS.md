@@ -6,7 +6,7 @@ _Last updated: 2026-10-01_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: built on `feat/content-import` (pull request #6), waiting for the owner to merge.** Next: the M5 plan, for the owner's approval. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). Next: M5 Events; the plan is written and waits for the owner's approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -283,7 +283,8 @@ Plan: [`docs/plans/M4-content-import.md`](docs/plans/M4-content-import.md), appr
 
 - **O4 is still open:** permission from IUA/IMA before showing this content in the pitch. `robots.txt` blocks one AI company's crawler from the whole site, which is worth mentioning when asking. If permission is refused, `pnpm import:remove` takes the sample out.
 - Review the reviewed news titles in `tools/importer/sources.json`.
+- ~~Merge pull request #6~~ merged at the owner's request on 2026-10-01 (CI green).
 
 ## Next step
 
-**M5 Events:** write the plan in `docs/plans/` for the owner's approval (scope in `DEVELOPMENT_ROADMAP.md`). No M5 code before the plan is approved.
+**M5 Events:** the plan [`docs/plans/M5-events.md`](docs/plans/M5-events.md) is written. No M5 code before the owner approves it.
