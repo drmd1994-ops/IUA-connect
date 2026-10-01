@@ -71,6 +71,8 @@
     "unknownCategory": "נא לבחור קטגוריה מהרשימה.",
     "unknownImage": "נא לבחור תמונה שהועלתה (JPEG או PNG).",
     "unknownFile": "אחד הקבצים המצורפים אינו זמין.",
-    "categoryKeyTaken": "כבר קיימת קטגוריה עם המפתח הזה."
+    "categoryKeyTaken": "כבר קיימת קטגוריה עם המפתח הזה.",
+    "guidelineVersionTaken": "להנחיה הזאת כבר יש גרסה בשם הזה.",
+    "guidelineLastVersion": "להנחיה חייבת להיות לפחות גרסה אחת."
   }
 }

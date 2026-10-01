@@ -71,6 +71,8 @@
     "unknownCategory": "Please choose a category from the list.",
     "unknownImage": "Choose an uploaded image (JPEG or PNG).",
     "unknownFile": "One of the attachments isn’t available.",
-    "categoryKeyTaken": "A category with this key already exists."
+    "categoryKeyTaken": "A category with this key already exists.",
+    "guidelineVersionTaken": "This guideline already has a version with this name.",
+    "guidelineLastVersion": "A guideline needs at least one version."
   }
 }

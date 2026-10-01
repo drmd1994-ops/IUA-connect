@@ -349,7 +349,8 @@ model Subspecialty {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  profiles ProfileSubspecialty[]
+  profiles   ProfileSubspecialty[]
+  guidelines Guideline[]
 
   @@map("subspecialties")
 }
@@ -892,4 +893,75 @@ model NewsHistory {
 
   @@index([newsId, at])
   @@map("news_history")
+}
+
+// ---------------------------------------------------------------------------
+// Guidelines (M3). Metadata and official links only: third-party guideline documents are never
+// copied (spec §14, PRODUCT_REQUIREMENTS §3.8).
+// ---------------------------------------------------------------------------
+
+/// The state of the guideline itself (M3 plan §11.7). All three stay listed.
+enum GuidelineStatus {
+  CURRENT
+  SUPERSEDED
+  WITHDRAWN
+
+  @@map("guideline_status")
+}
+
+model Guideline {
+  id             String          @id @db.Uuid
+  /// The organisation that published it (e.g. "EAU"), named as the source only.
+  sourceOrg      String          @map("source_org") @db.VarChar(200)
+  /// The guideline's page at the source organisation.
+  officialUrl    String          @map("official_url") @db.VarChar(500)
+  /// Free text: organisations grade evidence on different scales.
+  evidenceLevel  String?         @map("evidence_level") @db.VarChar(100)
+  status         GuidelineStatus @default(CURRENT)
+  subspecialtyId String?         @map("subspecialty_id") @db.Uuid
+  accessTier     AccessTier      @default(PUBLIC) @map("access_tier")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subspecialty Subspecialty?          @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  translations GuidelineTranslation[]
+  versions     GuidelineVersion[]
+
+  @@index([status])
+  @@index([subspecialtyId])
+  @@map("guidelines")
+}
+
+model GuidelineTranslation {
+  guidelineId  String                   @map("guideline_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  /// An optional summary written by the IUA (plain text), never the source's own text.
+  summary      String?                  @db.VarChar(4000)
+  /// Maintained by a trigger from title and summary (Hebrew-normalised). Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  guideline Guideline @relation(fields: [guidelineId], references: [id], onDelete: Cascade)
+
+  @@id([guidelineId, locale])
+  @@index([searchVector], map: "guideline_translations_search_idx", type: Gin)
+  @@map("guideline_translations")
+}
+
+/// One published edition. The newest by date is the guideline's current version and date.
+model GuidelineVersion {
+  id          String   @id @db.Uuid
+  guidelineId String   @map("guideline_id") @db.Uuid
+  version     String   @db.VarChar(60)
+  publishedOn DateTime @map("published_on") @db.Date
+  /// This edition's own page, when it differs from the guideline's official link.
+  url         String?  @db.VarChar(500)
+  licenseNote String?  @map("license_note") @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  guideline Guideline @relation(fields: [guidelineId], references: [id], onDelete: Cascade)
+
+  @@unique([guidelineId, version])
+  @@index([guidelineId, publishedOn(sort: Desc)])
+  @@map("guideline_versions")
 }
