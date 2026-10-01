@@ -15,6 +15,9 @@ export interface EmailTemplates {
   membershipRejected: { typeName: string; reason: string; link: string };
   /** An import created the account: set a password (ACCOUNT_SETUP link, 7 days). */
   membershipImportWelcome: { typeName: string; link: string };
+  // News (M3), to the item's author.
+  newsSentBack: { title: string; reason: string; link: string };
+  newsPublished: { title: string; link: string };
 }
 
 export type EmailTemplate = keyof EmailTemplates;

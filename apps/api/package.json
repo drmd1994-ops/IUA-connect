@@ -45,8 +45,11 @@
     "pino-http": "11.0.0",
     "qrcode": "1.5.4",
     "reflect-metadata": "0.2.2",
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
     "rxjs": "7.8.2",
     "sharp": "0.35.4",
+    "unified": "11.0.5",
     "zod": "4.6.5"
   },
   "devDependencies": {

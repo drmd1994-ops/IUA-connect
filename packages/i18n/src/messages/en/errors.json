@@ -55,6 +55,22 @@
     "fileTypeNotAllowed": "This type of file isn’t allowed. Use JPEG or PNG images, or PDF, Word (DOCX) or PowerPoint (PPTX) documents.",
     "fileTooLarge": "The file is too large.",
     "fileUnreadable": "The image couldn’t be read. Please try another file.",
-    "fileInfected": "The file was rejected by the security check."
+    "fileInfected": "The file was rejected by the security check.",
+    "newsChanged": "Someone changed this item in the meantime. Please reload it and try again.",
+    "newsNotEditable": "Only drafts can be edited. Send it back to draft first.",
+    "newsNotRevisable": "Only a published item can be revised.",
+    "newsNotDeletable": "Only a draft that was never published can be deleted.",
+    "newsActionNotAllowed": "You don’t have permission for this step.",
+    "newsTransitionNotAllowed": "This step isn’t possible in the item’s current state.",
+    "ownSubmission": "Someone else must review what you submitted.",
+    "commentRequired": "Please write a comment for the editor.",
+    "publishAtRequired": "Please choose when to publish.",
+    "publishAtInPast": "Choose a time in the future.",
+    "hebrewRequired": "A Hebrew title and text are required before submitting.",
+    "slugTaken": "This web address is already used by another item.",
+    "unknownCategory": "Please choose a category from the list.",
+    "unknownImage": "Choose an uploaded image (JPEG or PNG).",
+    "unknownFile": "One of the attachments isn’t available.",
+    "categoryKeyTaken": "A category with this key already exists."
   }
 }

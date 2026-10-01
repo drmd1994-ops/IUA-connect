@@ -92,7 +92,10 @@ describe('access tiers (integration)', () => {
         },
       ),
     ).toBe(false);
-    expect((await access.visibleWhere('news', full)).OR).toContainEqual({ id: { in: [itemId] } });
+    // Other tests' items may be in the list too (shared test database).
+    expect((await access.visibleWhere('news', full)).OR).toContainEqual({
+      id: { in: expect.arrayContaining([itemId]) },
+    });
     expect(await access.visibleWhere('news', { activeTypeId: null })).toEqual({
       OR: [{ accessTier: 'PUBLIC' }],
     });

@@ -209,3 +209,7 @@ Git: branch `feat/content`, pull request into `main` (Claude pushes and opens it
 3. **Four eyes:** the person who submitted an item **can't approve it**; a second person reviews.
 4. **Publishing:** only **IUA admins** review and publish (as seeded); content editors write and submit.
 5. **Profile photo:** has its **own "who can see this" setting** (a new PHOTO field, private by default).
+6. **Markdown libraries** (asked at checkpoint 4, 2026-10-01):
+   - Server: **unified/remark** parses each body and keeps only allowed elements (raw HTML is dropped).
+   - Web: **react-markdown** renders bodies as React elements, never as raw HTML.
+   - Editor: TipTap's Markdown extension.

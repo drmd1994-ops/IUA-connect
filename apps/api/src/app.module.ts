@@ -20,6 +20,7 @@ import { FilesModule } from './modules/files';
 import { HealthModule } from './modules/health';
 import { InstitutionsModule } from './modules/institutions';
 import { MembershipModule } from './modules/membership';
+import { NewsModule } from './modules/news';
 import { ProfilesModule } from './modules/profiles';
 
 /**
@@ -56,6 +57,7 @@ export class AppModule {
         MembershipModule,
         FilesModule,
         AccessModule,
+        NewsModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

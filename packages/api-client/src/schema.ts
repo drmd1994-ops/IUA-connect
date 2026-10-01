@@ -932,6 +932,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_list"];
+        put?: never;
+        post: operations["NewsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_listCategories"];
+        put?: never;
+        post: operations["NewsAdminController_createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["NewsAdminController_updateCategory"];
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_get"];
+        put: operations["NewsAdminController_update"];
+        post?: never;
+        delete: operations["NewsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}/revision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NewsAdminController_revision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}/transitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NewsAdminController_transition"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1745,6 +1857,191 @@ export interface components {
                 /** Format: date-time */
                 createdAt: string;
             };
+        };
+        AdminNewsListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string | null;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                titleHe: string | null;
+                titleEn: string | null;
+                categoryId: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                revisionOfId: string | null;
+                revisionId: string | null;
+                submittedBy: string | null;
+                publishAt: string | null;
+                publishedAt: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        NewsCategoryListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+                sortOrder: number;
+                active: boolean;
+            }[];
+        };
+        CreateNewsCategoryDto: {
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+        };
+        NewsCategoryDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            sortOrder: number;
+            active: boolean;
+        };
+        UpdateNewsCategoryDto: {
+            nameHe?: string;
+            nameEn?: string;
+            sortOrder?: number;
+            active?: boolean;
+        };
+        NewsInputDto: {
+            slug?: string;
+            categoryId?: string | null;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            featuredImageFileId?: string | null;
+            /** @default [] */
+            attachmentFileIds: string[];
+            /** @default [] */
+            tags: string[];
+            /** @default [] */
+            references: {
+                title: string;
+                /** Format: uri */
+                url: string;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary?: string;
+                    /** @default  */
+                    body: string;
+                    author?: string;
+                };
+                en?: {
+                    title: string;
+                    summary?: string;
+                    /** @default  */
+                    body: string;
+                    author?: string;
+                };
+            };
+        };
+        AdminNewsDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+            categoryId: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            typeIds: string[];
+            featuredImage: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            } | null;
+            attachments: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            tags: string[];
+            references: {
+                title: string;
+                /** Format: uri */
+                url: string;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary: string | null;
+                    body: string;
+                    author: string | null;
+                };
+                en?: {
+                    title: string;
+                    summary: string | null;
+                    body: string;
+                    author: string | null;
+                };
+            };
+            publishAt: string | null;
+            publishedAt: string | null;
+            archivedAt: string | null;
+            sourceUrl: string | null;
+            sourcePublishedAt: string | null;
+            revisionOfId: string | null;
+            revisionId: string | null;
+            authorUserId: string | null;
+            submittedBy: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        NewsTransitionDto: {
+            /** @enum {string} */
+            action: "SUBMIT" | "SEND_BACK" | "PUBLISH" | "SCHEDULE" | "UNSCHEDULE" | "ARCHIVE";
+            comment?: string;
+            /** Format: date-time */
+            publishAt?: string;
+        };
+        NewsHistoryDto: {
+            items: {
+                action: string;
+                fromStatus: ("DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED") | null;
+                /** @enum {string} */
+                toStatus: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                actorUserId: string | null;
+                comment: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
         };
     };
     responses: never;
@@ -3213,6 +3510,255 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    NewsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsListDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NewsInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_listCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryListDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateNewsCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_updateCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNewsCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The version you edited: "<n>" */
+                "If-Match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NewsInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NewsAdminController_revision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NewsTransitionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsHistoryDto"];
+                };
             };
         };
     };

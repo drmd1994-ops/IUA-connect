@@ -74,5 +74,18 @@
     "body": "The association created an IUA Connect account for you, with your membership ({typeName}). Set a password to sign in.",
     "action": "Set your password",
     "expiry": "This link is valid for 7 days. After that, use “Forgot password” on the sign-in page."
+  },
+  "newsSentBack": {
+    "subject": "Your news item needs changes",
+    "heading": "Sent back for changes",
+    "body": "The reviewer sent “{title}” back to you.",
+    "reason": "Their comment: {reason}",
+    "action": "Open the item"
+  },
+  "newsPublished": {
+    "subject": "Your news item is published",
+    "heading": "Published",
+    "body": "“{title}” is now published on IUA Connect.",
+    "action": "View it"
   }
 }

@@ -55,6 +55,22 @@
     "fileTypeNotAllowed": "סוג הקובץ אינו מותר. אפשר להעלות תמונות JPEG או PNG, או מסמכי PDF, Word (DOCX) או PowerPoint (PPTX).",
     "fileTooLarge": "הקובץ גדול מדי.",
     "fileUnreadable": "לא ניתן היה לקרוא את התמונה. נא לנסות קובץ אחר.",
-    "fileInfected": "הקובץ נדחה בבדיקת האבטחה."
+    "fileInfected": "הקובץ נדחה בבדיקת האבטחה.",
+    "newsChanged": "מישהו שינה את הפריט בינתיים. נא לטעון אותו מחדש ולנסות שוב.",
+    "newsNotEditable": "אפשר לערוך רק טיוטות. יש להחזיר את הפריט לטיוטה קודם.",
+    "newsNotRevisable": "אפשר לתקן רק פריט שפורסם.",
+    "newsNotDeletable": "אפשר למחוק רק טיוטה שמעולם לא פורסמה.",
+    "newsActionNotAllowed": "אין לך הרשאה לשלב הזה.",
+    "newsTransitionNotAllowed": "השלב הזה אינו אפשרי במצב הנוכחי של הפריט.",
+    "ownSubmission": "מישהו אחר צריך לבדוק את מה ששלחת.",
+    "commentRequired": "נא לכתוב הערה לעורך/ת.",
+    "publishAtRequired": "נא לבחור מתי לפרסם.",
+    "publishAtInPast": "נא לבחור מועד עתידי.",
+    "hebrewRequired": "נדרשים כותרת ותוכן בעברית לפני השליחה לבדיקה.",
+    "slugTaken": "כתובת הדף הזאת כבר בשימוש בפריט אחר.",
+    "unknownCategory": "נא לבחור קטגוריה מהרשימה.",
+    "unknownImage": "נא לבחור תמונה שהועלתה (JPEG או PNG).",
+    "unknownFile": "אחד הקבצים המצורפים אינו זמין.",
+    "categoryKeyTaken": "כבר קיימת קטגוריה עם המפתח הזה."
   }
 }
