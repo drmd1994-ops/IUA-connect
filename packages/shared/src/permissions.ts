@@ -16,6 +16,7 @@ export const PERMISSIONS = [
   'news.publish',
   'events.manage',
   'education.manage',
+  'education.review',
   'guidelines.manage',
   'files.upload',
   'broadcasts.create',

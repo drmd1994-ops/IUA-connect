@@ -1,6 +1,6 @@
 # M6 — Education: plan
 
-- Status: **Draft (revised 2026-10-02), waiting for the owner's approval**
+- Status: **Approved by the owner on 2026-10-02** (after one revision)
 - Date: 2026-10-02
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M6. Design sources:
   - `PRODUCT_REQUIREMENTS.md` §3.7 (education)

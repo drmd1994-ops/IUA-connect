@@ -1588,6 +1588,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/education": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EducationAdminController_list"];
+        put?: never;
+        post: operations["EducationAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/education/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EducationAdminController_get"];
+        put: operations["EducationAdminController_update"];
+        post?: never;
+        delete: operations["EducationAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/education/{id}/lessons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["EducationAdminController_setLessons"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/education/{id}/transitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EducationAdminController_transition"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/education/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EducationAdminController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/education": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EducationPublicController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/education/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EducationPublicController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3349,6 +3461,224 @@ export interface components {
                     mimeType: string;
                     sizeBytes: number;
                 }[];
+            }[];
+        };
+        AdminEducationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                /** @enum {string} */
+                type: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                titleHe: string | null;
+                titleEn: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                submittedBy: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        EducationInputDto: {
+            /** @enum {string} */
+            type: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+            slug?: string;
+            level?: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+            subspecialtyId?: string | null;
+            durationMinutes?: number | null;
+            cmePoints?: number | null;
+            externalUrl?: string | null;
+            /** @default false */
+            videoPending: boolean;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            coverFileId?: string | null;
+            /** @default [] */
+            fileIds: string[];
+            /** @default [] */
+            references: {
+                title: string;
+                /** Format: uri */
+                url: string;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    /** @default  */
+                    description: string;
+                    author?: string;
+                };
+                en?: {
+                    title: string;
+                    /** @default  */
+                    description: string;
+                    author?: string;
+                };
+            };
+        };
+        AdminEducationDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            /** @enum {string} */
+            type: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+            level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+            subspecialtyId: string | null;
+            durationMinutes: number | null;
+            cmePoints: number[];
+            externalUrl: string | null;
+            /** @enum {string} */
+            videoStatus: "NONE" | "EXTERNAL" | "PENDING_PROVIDER";
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            typeIds: string[];
+            cover: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            } | null;
+            files: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            }[];
+            references: {
+                title: string;
+                /** Format: uri */
+                url: string;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    description: string;
+                    author: string | null;
+                };
+                en?: {
+                    title: string;
+                    description: string;
+                    author: string | null;
+                };
+            };
+            lessonIds: string[];
+            authorUserId: string | null;
+            submittedBy: string | null;
+            publishedAt: string | null;
+            archivedAt: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CourseLessonsDto: {
+            lessonIds: string[];
+        };
+        EducationTransitionDto: {
+            /** @enum {string} */
+            action: "SUBMIT" | "SEND_BACK" | "PUBLISH" | "TAKE_DOWN" | "ARCHIVE";
+            comment?: string;
+        };
+        EducationHistoryDto: {
+            items: {
+                action: string;
+                fromStatus: ("DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED") | null;
+                /** @enum {string} */
+                toStatus: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                actorUserId: string | null;
+                comment: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        PublicEducationListDto: {
+            items: {
+                slug: string;
+                /** @enum {string} */
+                type: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+                title: string;
+                author: string | null;
+                level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+                subspecialty: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                durationMinutes: number | null;
+                cmePoints: number | null;
+                coverFileId: string | null;
+                /** Format: date-time */
+                publishedAt: string;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                /** @enum {string} */
+                locale: "he" | "en";
+                fallback: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        PublicEducationDto: {
+            slug: string;
+            /** @enum {string} */
+            type: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+            title: string;
+            author: string | null;
+            level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+            subspecialty: {
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            durationMinutes: number | null;
+            cmePoints: number[];
+            coverFileId: string | null;
+            /** Format: date-time */
+            publishedAt: string;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @enum {string} */
+            locale: "he" | "en";
+            fallback: boolean;
+            description: string;
+            archived: boolean;
+            externalUrl: string | null;
+            /** @enum {string} */
+            videoStatus: "NONE" | "EXTERNAL" | "PENDING_PROVIDER";
+            files: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            }[];
+            references: {
+                title: string;
+                url: string;
+            }[];
+            lessons: {
+                position: number;
+                locked: boolean;
+                slug: string | null;
+                type: ("VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE") | null;
+                title: string | null;
+                durationMinutes: number | null;
             }[];
         };
     };
@@ -6164,6 +6494,242 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicSessionListDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                type?: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEducationListDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EducationInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEducationDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEducationDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The version you edited: "<n>" */
+                "If-Match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EducationInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEducationDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EducationAdminController_setLessons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CourseLessonsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEducationDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EducationTransitionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEducationDto"];
+                };
+            };
+        };
+    };
+    EducationAdminController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EducationHistoryDto"];
+                };
+            };
+        };
+    };
+    EducationPublicController_list: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+                type?: "VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE";
+                level?: "STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT";
+                subspecialty?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicEducationListDto"];
+                };
+            };
+        };
+    };
+    EducationPublicController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicEducationDto"];
                 };
             };
         };

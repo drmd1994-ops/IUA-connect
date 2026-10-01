@@ -6,7 +6,7 @@ import { effectiveStatus, todayInIsrael } from '../membership';
 import { ANONYMOUS, type AccessTier, type Viewer, canSee } from './access-policy';
 
 /** Content kinds that carry an access tier (`content_access_rules.entity_type`). */
-export type ContentEntity = 'news' | 'guideline' | 'event';
+export type ContentEntity = 'news' | 'guideline' | 'event' | 'education' | 'exam_question';
 
 /**
  * Applies access tiers to content reads (M3 plan §2.5). Lists leave out what the viewer may not

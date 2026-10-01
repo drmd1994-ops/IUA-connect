@@ -99,6 +99,20 @@
     "checkInNotRegistered": "אפשר לרשום נוכחות רק למי שנרשם לאירוע.",
     "unknownAccount": "אין חשבון עם כתובת הדוא״ל הזאת.",
     "attendanceAlreadyRecorded": "הנוכחות של האדם הזה כבר נרשמה.",
-    "attendanceAlreadyVoided": "הרישום הזה כבר בוטל."
+    "attendanceAlreadyVoided": "הרישום הזה כבר בוטל.",
+    "educationChanged": "מישהו שינה את הפריט בינתיים. נא לטעון אותו מחדש ולנסות שוב.",
+    "educationNotEditable": "אי אפשר לערוך את הפריט עכשיו. טיוטות נערכות בידי עורכים; פריט בבדיקה בידי בודק/ת.",
+    "educationTypeFixed": "אי אפשר לשנות את סוג הפריט. יש ליצור פריט חדש.",
+    "educationNotDeletable": "אפשר למחוק רק טיוטה שמעולם לא פורסמה.",
+    "educationNotACourse": "רק לקורס יש שיעורים.",
+    "educationActionNotAllowed": "אין לך הרשאה לשלב הזה.",
+    "educationTransitionNotAllowed": "השלב הזה אינו אפשרי במצב הנוכחי של הפריט.",
+    "educationHebrewRequired": "נדרשת כותרת בעברית לפני ההגשה.",
+    "educationLinkRequired": "יש לתת את הקישור להקלטה, או לסמן שהיא תתווסף בהמשך.",
+    "educationFileRequired": "יש לצרף את הקובץ לפני ההגשה.",
+    "educationTextRequired": "יש לכתוב את הטקסט בעברית לפני ההגשה.",
+    "educationLessonsRequired": "יש להוסיף שיעור אחד לפחות לפני ההגשה.",
+    "unknownLesson": "אחד השיעורים אינו זמין.",
+    "courseAsLesson": "קורס אינו יכול להיות שיעור בקורס אחר."
   }
 }

@@ -124,5 +124,18 @@
     "heading": "האירוע שלך מתקרב",
     "body": "האירוע ״{title}״ יתקיים {when}, ב{place}.",
     "action": "לצפייה באירוע"
+  },
+  "educationSentBack": {
+    "subject": "פריט ההדרכה שלך דורש תיקונים",
+    "heading": "הוחזר לתיקונים",
+    "body": "הבודק/ת החזיר/ה אליך את ״{title}״.",
+    "reason": "ההערה: {reason}",
+    "action": "פתיחת הפריט"
+  },
+  "educationPublished": {
+    "subject": "פריט ההדרכה שלך פורסם",
+    "heading": "פורסם",
+    "body": "״{title}״ פורסם עכשיו ב־IUA Connect.",
+    "action": "לצפייה"
   }
 }

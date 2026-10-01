@@ -124,5 +124,18 @@
     "heading": "Your event is coming up",
     "body": "“{title}” takes place {when}, at {place}.",
     "action": "View the event"
+  },
+  "educationSentBack": {
+    "subject": "Your education item needs changes",
+    "heading": "Sent back for changes",
+    "body": "The reviewer sent “{title}” back to you.",
+    "reason": "Their comment: {reason}",
+    "action": "Open the item"
+  },
+  "educationPublished": {
+    "subject": "Your education item is published",
+    "heading": "Published",
+    "body": "“{title}” is now published on IUA Connect.",
+    "action": "View it"
   }
 }
