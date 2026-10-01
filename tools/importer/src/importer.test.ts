@@ -13,6 +13,8 @@ import { type SourceList, runImport } from './run';
 import { checkSource } from './sources';
 
 const SITE = 'https://urology.ima.org.il';
+/** A news source with a reviewed title that names nobody. */
+const n = (url: string) => ({ url, title: 'כותרת שנבדקה', keepExcerpt: true });
 
 // Small pages written for these tests, in the shape of the site's pages. Not copies of the site.
 const newsPage = (body: string, date = '31.01.2026 | ') => `
@@ -197,7 +199,7 @@ describe('the personal-data check', () => {
 describe('a run', () => {
   const robots = parseRobots('User-agent: *\nDisallow: /Users.aspx\nAllow: /');
   const sources = (extra: Partial<SourceList> = {}): SourceList => ({
-    news: [`${SITE}/ViewArticle.aspx?aId=1`],
+    news: [n(`${SITE}/ViewArticle.aspx?aId=1`)],
     guidelines: [],
     positionPapers: [`${SITE}/ViewContent.aspx?CategoryId=9240`],
     conferences: [],
@@ -225,7 +227,9 @@ describe('a run', () => {
   it('never fetches a refused address, and reports it', async () => {
     const fetched: string[] = [];
     const result = await runImport(
-      sources({ news: ['https://www.ima.org.il/DoctorsIndex/', `${SITE}/Users.aspx?id=1`] }),
+      sources({
+        news: [n('https://www.ima.org.il/DoctorsIndex/'), n(`${SITE}/Users.aspx?id=1`)],
+      }),
       {
         robots,
         fetchPage: async (url) => {
@@ -265,7 +269,7 @@ describe('a run', () => {
   it('reports a page listed twice and a page that can’t be read', async () => {
     const result = await runImport(
       sources({
-        news: [`${SITE}/ViewArticle.aspx?aId=1`, `${SITE}/ViewArticle.aspx?aId=1`],
+        news: [n(`${SITE}/ViewArticle.aspx?aId=1`), n(`${SITE}/ViewArticle.aspx?aId=1`)],
         positionPapers: [],
       }),
       { robots, fetchPage: async () => '<html></html>' },

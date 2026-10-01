@@ -22,9 +22,14 @@ const TIMEOUT_MS = 30_000;
 async function get(url: string): Promise<string> {
   const response = await fetch(url, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'text/html' },
-    redirect: 'error', // a redirect could lead outside the allowed pages
+    // Never followed: a redirect could lead outside the allowed pages. The site redirects
+    // members-only pages to its sign-in page, and those are not imported.
+    redirect: 'manual',
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error('the page redirects (members-only pages are not imported)');
+  }
   if (!response.ok) throw new Error(`the site answered ${response.status}`);
   return response.text();
 }

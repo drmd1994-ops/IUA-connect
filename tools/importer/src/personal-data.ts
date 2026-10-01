@@ -20,3 +20,14 @@ export function findPersonalData(texts: readonly (string | null | undefined)[]):
   }
   return [...found];
 }
+
+/**
+ * Titles and bylines of people: Dr., Prof. and their Hebrew forms (ד"ר, ד״ר, דר', פרופ'). The
+ * owner decided that imported news names nobody (M4 plan §11.5).
+ */
+const PERSON_MARKER =
+  /(?:^|[\s(\-–])(?:ד["״”']ר|דר['׳]?|פרופ['׳]?|פרופסור|Dr\.?|Prof\.?)(?=[\s.:]|$)/i;
+
+export function namesAPerson(text: string | null | undefined): boolean {
+  return !!text && PERSON_MARKER.test(text);
+}

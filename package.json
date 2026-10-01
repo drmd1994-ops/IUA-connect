@@ -23,7 +23,7 @@
     "db:reset": "pnpm --filter @iua/api db:reset",
     "db:seed": "pnpm --filter @iua/api db:seed",
     "admin:create": "pnpm --filter @iua/api admin:create",
-    "import:fetch": "pnpm --filter @iua/importer fetch",
+    "import:fetch": "pnpm --filter @iua/importer run pages",
     "openapi:generate": "turbo run build --filter=@iua/api && pnpm --filter @iua/api openapi:export && pnpm --filter @iua/api-client generate",
     "prepare": "husky"
   },

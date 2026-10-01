@@ -7,7 +7,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint --max-warnings=0 src",
     "test": "vitest run",
-    "fetch": "tsx src/cli.ts"
+    "pages": "tsx src/cli.ts"
   },
   "devDependencies": {
     "@iua/eslint-config": "workspace:*",
