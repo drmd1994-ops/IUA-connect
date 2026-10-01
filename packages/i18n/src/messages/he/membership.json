@@ -62,7 +62,8 @@
       "ORCID": "מזהה ORCID",
       "LANGUAGES": "שפות",
       "CONTACT_EMAIL": "דוא״ל מקצועי",
-      "CONTACT_PHONE": "טלפון מקצועי"
+      "CONTACT_PHONE": "טלפון מקצועי",
+      "PHOTO": "תמונת פרופיל"
     },
     "hints": {
       "title": "לדוגמה ד״ר או פרופ׳.",

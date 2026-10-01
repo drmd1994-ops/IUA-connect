@@ -11,6 +11,7 @@ import { TextareaField } from '@/components/ui/textarea-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
 import { errorMessage } from '@/lib/api-errors';
+import { PhotoSection } from './photo-section';
 import { useDepartments, useLocalName, useReference } from './reference';
 
 type Profile = components['schemas']['ProfileDto'];
@@ -64,7 +65,10 @@ function ProfileEditor() {
       </div>
       {loadError !== null && <Alert tone="error">{errorMessage(loadError, t)}</Alert>}
       {profile ? (
-        <ProfileForm initial={profile} onSaved={setProfile} />
+        <>
+          <PhotoSection initialFileId={profile.photoFileId} />
+          <ProfileForm initial={profile} onSaved={setProfile} />
+        </>
       ) : (
         loadError === null && <p role="status">{t('membership.common.loading')}</p>
       )}
@@ -149,6 +153,7 @@ function ProfileForm({ initial, onSaved }: { initial: Profile; onSaved: (p: Prof
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-8" noValidate>
+      <VisibilityOnly>{see('PHOTO')}</VisibilityOnly>
       <Section title={t('membership.profile.sections.names')}>
         <Row visibility={see('NAME')}>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -321,6 +326,11 @@ function ProfileForm({ initial, onSaved }: { initial: Profile; onSaved: (p: Prof
       </div>
     </form>
   );
+}
+
+/** A visibility choice on its own (the photo is uploaded above, outside this form). */
+function VisibilityOnly({ children }: { children: ReactNode }) {
+  return <div className="max-w-xs">{children}</div>;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {

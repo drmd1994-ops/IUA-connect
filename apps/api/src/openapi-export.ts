@@ -20,6 +20,7 @@ async function exportOpenApi(): Promise<void> {
     LOG_LEVEL: 'silent',
     WEB_ORIGIN: 'http://localhost:3001',
     DATABASE_URL: 'postgresql://unused@localhost:5432/unused',
+    JOB_QUEUE: 'manual',
     ...generateDevSecrets(),
   });
   const app = await NestFactory.create(AppModule.forRoot(env), { logger: false });

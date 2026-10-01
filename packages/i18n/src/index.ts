@@ -1,12 +1,14 @@
 import enAdmin from './messages/en/admin.json';
 import enAuth from './messages/en/auth.json';
 import enCommon from './messages/en/common.json';
+import enContent from './messages/en/content.json';
 import enEmails from './messages/en/emails.json';
 import enErrors from './messages/en/errors.json';
 import enMembership from './messages/en/membership.json';
 import heAdmin from './messages/he/admin.json';
 import heAuth from './messages/he/auth.json';
 import heCommon from './messages/he/common.json';
+import heContent from './messages/he/content.json';
 import heEmails from './messages/he/emails.json';
 import heErrors from './messages/he/errors.json';
 import heMembership from './messages/he/membership.json';
@@ -38,6 +40,7 @@ export type Messages = {
   emails: typeof heEmails;
   membership: typeof heMembership;
   admin: typeof heAdmin;
+  content: typeof heContent;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -48,6 +51,7 @@ const MESSAGES: Record<Locale, Messages> = {
     emails: heEmails,
     membership: heMembership,
     admin: heAdmin,
+    content: heContent,
   },
   en: {
     common: enCommon,
@@ -56,6 +60,7 @@ const MESSAGES: Record<Locale, Messages> = {
     emails: enEmails,
     membership: enMembership,
     admin: enAdmin,
+    content: enContent,
   },
 };
 

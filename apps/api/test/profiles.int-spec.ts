@@ -52,7 +52,7 @@ describe('profiles (integration)', () => {
       subspecialtyIds: [],
       languages: [],
     });
-    expect(Object.values(res.body.visibility)).toHaveLength(13);
+    expect(Object.values(res.body.visibility)).toHaveLength(14);
     expect(new Set(Object.values(res.body.visibility))).toEqual(new Set(['PRIVATE']));
   });
 

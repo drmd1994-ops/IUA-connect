@@ -868,6 +868,326 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["FilesController_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/files/{id}/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FilesController_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/files/{id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FilesController_content"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/profile/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ProfilePhotoController_set"];
+        post?: never;
+        delete: operations["ProfilePhotoController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_list"];
+        put?: never;
+        post: operations["NewsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_listCategories"];
+        put?: never;
+        post: operations["NewsAdminController_createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["NewsAdminController_updateCategory"];
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_get"];
+        put: operations["NewsAdminController_update"];
+        post?: never;
+        delete: operations["NewsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}/revision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NewsAdminController_revision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}/transitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NewsAdminController_transition"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/news/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsAdminController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsPublicController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsPublicController_listCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsPublicController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/guidelines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuidelinesAdminController_list"];
+        put?: never;
+        post: operations["GuidelinesAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/guidelines/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuidelinesAdminController_get"];
+        put: operations["GuidelinesAdminController_update"];
+        post?: never;
+        delete: operations["GuidelinesAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/guidelines/{id}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GuidelinesAdminController_addVersion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/guidelines/{id}/versions/{versionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["GuidelinesAdminController_removeVersion"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/guidelines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuidelinesPublicController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/guidelines/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GuidelinesPublicController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1206,6 +1526,7 @@ export interface components {
             languages: string[];
             contactEmail: string | null;
             contactPhone: string | null;
+            photoFileId: string | null;
             visibility: {
                 /** @enum {string} */
                 NAME: "PRIVATE" | "MEMBERS" | "PUBLIC";
@@ -1233,6 +1554,8 @@ export interface components {
                 CONTACT_EMAIL: "PRIVATE" | "MEMBERS" | "PUBLIC";
                 /** @enum {string} */
                 CONTACT_PHONE: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                PHOTO: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
         };
         UpdateProfileDto: {
@@ -1278,6 +1601,8 @@ export interface components {
                 CONTACT_EMAIL?: "PRIVATE" | "MEMBERS" | "PUBLIC";
                 /** @enum {string} */
                 CONTACT_PHONE?: "PRIVATE" | "MEMBERS" | "PUBLIC";
+                /** @enum {string} */
+                PHOTO?: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
         };
         ImportDryRunDto: {
@@ -1643,6 +1968,472 @@ export interface components {
                 nameHe: string;
                 nameEn: string;
             } | null;
+        };
+        FileDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "IMAGE" | "DOCUMENT";
+            mimeType: string;
+            originalName: string;
+            sizeBytes: number;
+            width: number | null;
+            height: number | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        SignedUrlDto: {
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        ProfilePhotoDto: {
+            photo: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            };
+        };
+        AdminNewsListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string | null;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                titleHe: string | null;
+                titleEn: string | null;
+                categoryId: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                revisionOfId: string | null;
+                revisionId: string | null;
+                submittedBy: string | null;
+                publishAt: string | null;
+                publishedAt: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        NewsCategoryListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+                sortOrder: number;
+                active: boolean;
+            }[];
+        };
+        CreateNewsCategoryDto: {
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+        };
+        NewsCategoryDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            sortOrder: number;
+            active: boolean;
+        };
+        UpdateNewsCategoryDto: {
+            nameHe?: string;
+            nameEn?: string;
+            sortOrder?: number;
+            active?: boolean;
+        };
+        NewsInputDto: {
+            slug?: string;
+            categoryId?: string | null;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            featuredImageFileId?: string | null;
+            /** @default [] */
+            attachmentFileIds: string[];
+            /** @default [] */
+            tags: string[];
+            /** @default [] */
+            references: {
+                title: string;
+                /** Format: uri */
+                url: string;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary?: string;
+                    /** @default  */
+                    body: string;
+                    author?: string;
+                };
+                en?: {
+                    title: string;
+                    summary?: string;
+                    /** @default  */
+                    body: string;
+                    author?: string;
+                };
+            };
+        };
+        AdminNewsDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string | null;
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+            categoryId: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            typeIds: string[];
+            featuredImage: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            } | null;
+            attachments: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            tags: string[];
+            references: {
+                title: string;
+                /** Format: uri */
+                url: string;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary: string | null;
+                    body: string;
+                    author: string | null;
+                };
+                en?: {
+                    title: string;
+                    summary: string | null;
+                    body: string;
+                    author: string | null;
+                };
+            };
+            publishAt: string | null;
+            publishedAt: string | null;
+            archivedAt: string | null;
+            sourceUrl: string | null;
+            sourcePublishedAt: string | null;
+            revisionOfId: string | null;
+            revisionId: string | null;
+            authorUserId: string | null;
+            submittedBy: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        NewsTransitionDto: {
+            /** @enum {string} */
+            action: "SUBMIT" | "SEND_BACK" | "PUBLISH" | "SCHEDULE" | "UNSCHEDULE" | "ARCHIVE";
+            comment?: string;
+            /** Format: date-time */
+            publishAt?: string;
+        };
+        NewsHistoryDto: {
+            items: {
+                action: string;
+                fromStatus: ("DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED") | null;
+                /** @enum {string} */
+                toStatus: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                actorUserId: string | null;
+                comment: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        PublicNewsListDto: {
+            items: {
+                slug: string;
+                title: string;
+                summary: string | null;
+                category: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                tags: string[];
+                /** Format: date-time */
+                date: string;
+                featuredImageFileId: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                /** @enum {string} */
+                locale: "he" | "en";
+                fallback: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        PublicNewsDto: {
+            slug: string;
+            title: string;
+            summary: string | null;
+            category: {
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            tags: string[];
+            /** Format: date-time */
+            date: string;
+            featuredImageFileId: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @enum {string} */
+            locale: "he" | "en";
+            fallback: boolean;
+            body: string;
+            author: string | null;
+            archived: boolean;
+            attachments: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            }[];
+            references: {
+                title: string;
+                url: string;
+            }[];
+            sourceUrl: string | null;
+        };
+        AdminGuidelineListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                sourceOrg: string;
+                titleHe: string | null;
+                titleEn: string | null;
+                /** @enum {string} */
+                status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                version: string | null;
+                publishedOn: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        CreateGuidelineDto: {
+            sourceOrg: string;
+            /** Format: uri */
+            officialUrl: string;
+            evidenceLevel?: string;
+            /**
+             * @default CURRENT
+             * @enum {string}
+             */
+            status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+            subspecialtyId?: string | null;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary?: string;
+                };
+                en?: {
+                    title: string;
+                    summary?: string;
+                };
+            };
+            version: {
+                version: string;
+                /** Format: date */
+                publishedOn: string;
+                /** Format: uri */
+                url?: string;
+                licenseNote?: string;
+            };
+        };
+        AdminGuidelineDto: {
+            /** Format: uuid */
+            id: string;
+            sourceOrg: string;
+            officialUrl: string;
+            evidenceLevel: string | null;
+            /** @enum {string} */
+            status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+            subspecialtyId: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            typeIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary: string | null;
+                };
+                en?: {
+                    title: string;
+                    summary: string | null;
+                };
+            };
+            versions: {
+                /** Format: uuid */
+                id: string;
+                version: string;
+                /** Format: date */
+                publishedOn: string;
+                url: string | null;
+                licenseNote: string | null;
+            }[];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        UpdateGuidelineDto: {
+            sourceOrg: string;
+            /** Format: uri */
+            officialUrl: string;
+            evidenceLevel?: string;
+            /**
+             * @default CURRENT
+             * @enum {string}
+             */
+            status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+            subspecialtyId?: string | null;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary?: string;
+                };
+                en?: {
+                    title: string;
+                    summary?: string;
+                };
+            };
+        };
+        GuidelineVersionInputDto: {
+            version: string;
+            /** Format: date */
+            publishedOn: string;
+            /** Format: uri */
+            url?: string;
+            licenseNote?: string;
+        };
+        PublicGuidelineListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                summary: string | null;
+                sourceOrg: string;
+                officialUrl: string;
+                evidenceLevel: string | null;
+                /** @enum {string} */
+                status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+                subspecialty: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                version: string | null;
+                publishedOn: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                /** @enum {string} */
+                locale: "he" | "en";
+                fallback: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        PublicGuidelineDto: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            summary: string | null;
+            sourceOrg: string;
+            officialUrl: string;
+            evidenceLevel: string | null;
+            /** @enum {string} */
+            status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+            subspecialty: {
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            version: string | null;
+            publishedOn: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @enum {string} */
+            locale: "he" | "en";
+            fallback: boolean;
+            versions: {
+                /** Format: uuid */
+                id: string;
+                version: string;
+                /** Format: date */
+                publishedOn: string;
+                url: string | null;
+                licenseNote: string | null;
+            }[];
         };
     };
     responses: never;
@@ -2994,6 +3785,645 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CardVerificationDto"];
+                };
+            };
+        };
+    };
+    FilesController_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDto"];
+                };
+            };
+        };
+    };
+    FilesController_url: {
+        parameters: {
+            query?: {
+                v?: "full" | "thumb";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedUrlDto"];
+                };
+            };
+        };
+    };
+    FilesController_content: {
+        parameters: {
+            query: {
+                v: string;
+                exp: string;
+                sig: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ProfilePhotoController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfilePhotoDto"];
+                };
+            };
+        };
+    };
+    ProfilePhotoController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NewsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsListDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NewsInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_listCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryListDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateNewsCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_updateCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNewsCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The version you edited: "<n>" */
+                "If-Match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NewsInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NewsAdminController_revision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NewsTransitionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsDto"];
+                };
+            };
+        };
+    };
+    NewsAdminController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsHistoryDto"];
+                };
+            };
+        };
+    };
+    NewsPublicController_list: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+                category?: string;
+                tag?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicNewsListDto"];
+                };
+            };
+        };
+    };
+    NewsPublicController_listCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryListDto"];
+                };
+            };
+        };
+    };
+    NewsPublicController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicNewsDto"];
+                };
+            };
+        };
+    };
+    GuidelinesAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGuidelineListDto"];
+                };
+            };
+        };
+    };
+    GuidelinesAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateGuidelineDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGuidelineDto"];
+                };
+            };
+        };
+    };
+    GuidelinesAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGuidelineDto"];
+                };
+            };
+        };
+    };
+    GuidelinesAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGuidelineDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGuidelineDto"];
+                };
+            };
+        };
+    };
+    GuidelinesAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GuidelinesAdminController_addVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuidelineVersionInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGuidelineDto"];
+                };
+            };
+        };
+    };
+    GuidelinesAdminController_removeVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                versionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminGuidelineDto"];
+                };
+            };
+        };
+    };
+    GuidelinesPublicController_list: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+                subspecialty?: string;
+                status?: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicGuidelineListDto"];
+                };
+            };
+        };
+    };
+    GuidelinesPublicController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicGuidelineDto"];
                 };
             };
         };

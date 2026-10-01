@@ -45,6 +45,16 @@
 - **End to end (Playwright, Chromium and Edge):** with the browser's **virtual authenticator** (DevTools protocol), an administrator adds a passkey, the MFA banner disappears, and they sign in with the passkey alone — in English and Hebrew, with axe checks on the passkeys section.
 - **Manual:** a real Windows Hello prompt in Chrome and Edge is checked by hand (automated tests can't use a real fingerprint reader).
 
+## What the M3 (Content core) suites prove
+
+- **Files:** the type comes from the content, never the name (renamed files, SVG and HTML are refused); size limits per type; images are re-encoded and lose their metadata (a JPEG with GPS data comes out without it); downloads need a signed, unexpired address and pass the access check.
+- **Access tiers:** every tier against every membership state (unit), and every content read as six readers (integration): anonymous, signed in without a membership, active full member, active student, suspended, expired. Hidden items are left out of lists and answer 404 by link. Covered for news, guidelines and the files attached to an article.
+- **News workflow:** the state machine and the four-eyes rule (unit); the full path including send-back with a comment, scheduling, the job publishing a due item once however often it runs, revisions of published items, and stale saves refused with `If-Match` (integration). History is append-only.
+- **Article text:** the Markdown sanitiser keeps an allow-list and drops raw HTML, scripts, images and unsafe links (XSS vectors, unit).
+- **Guidelines:** versions (newest first, unique names, never empty), language fallback, unsafe links refused, admin-only management.
+- **Admin routes:** each has the anonymous 401, member 403 and admin-without-MFA 403 tests.
+- **End to end (Playwright, `content.spec.ts`):** the exit test. An editor writes an article with an image in both languages and submits it; a reviewer schedules it; it appears on `/news` once the job has run (the test waits up to four minutes for it). A members-only article stays hidden from a visitor in the list and by link. An admin adds a guideline and a visitor opens it. Axe checks run on every page visited, and on the new public pages in both languages.
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

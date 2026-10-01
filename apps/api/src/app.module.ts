@@ -7,15 +7,21 @@ import { RateLimitGuard } from './common/guards/rate-limit.guard';
 import { ConfigModule } from './config/config.module';
 import { type Env } from './config/env.schema';
 import { CryptoModule } from './infra/crypto/crypto.module';
+import { JobsModule } from './infra/jobs/jobs.module';
 import { LoggerModule } from './infra/logger/logger.module';
 import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
+import { StorageModule } from './infra/storage/storage.module';
 import { AuditModule } from './modules/audit';
+import { AccessModule } from './modules/access';
 import { AuthModule } from './modules/auth';
+import { FilesModule } from './modules/files';
+import { GuidelinesModule } from './modules/guidelines';
 import { HealthModule } from './modules/health';
 import { InstitutionsModule } from './modules/institutions';
 import { MembershipModule } from './modules/membership';
+import { NewsModule } from './modules/news';
 import { ProfilesModule } from './modules/profiles';
 
 /**
@@ -42,12 +48,18 @@ export class AppModule {
         CryptoModule,
         MailerModule,
         RateLimitModule,
+        StorageModule,
+        JobsModule.forRoot(env),
         AuditModule,
         HealthModule,
         AuthModule,
         InstitutionsModule,
         ProfilesModule,
         MembershipModule,
+        FilesModule,
+        AccessModule,
+        NewsModule,
+        GuidelinesModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

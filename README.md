@@ -121,10 +121,12 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `applicant.admin@demo.test`, `applicant.student@demo.test` | Applications waiting for final approval                             |
 | `applicant.nodirector@demo.test`                           | Application from a department without a director (flagged)          |
 | `applicant.rejected@demo.test`                             | Application the director didn't approve, with the reason            |
+| `editor@demo.test`                                         | Content editor: writes news and submits it for review (M3)          |
 
-The admin and the directors must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
+The admin, the directors and the editor must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
 
 - **Membership (M2):** the account menu has **My profile** (each field has its own "who can see this"), **My membership** (apply, status, history) and **Membership card** (a QR code that changes every 4 minutes; scanning it opens `/card/verify`). Directors also see **Applications to review**, and admins see **Administration** (`/admin`).
+- **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
 - **CSV import:** `/admin/import` takes a file with the header `email,first_name,last_name,membership_type[,identifier,end_date,payment_status,locale]`. Run the dry run first, then apply the same file.
 
 ### Troubleshooting

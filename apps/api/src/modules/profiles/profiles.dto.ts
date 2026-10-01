@@ -18,6 +18,7 @@ export const PROFILE_FIELDS = [
   'LANGUAGES',
   'CONTACT_EMAIL',
   'CONTACT_PHONE',
+  'PHOTO',
 ] as const;
 export type ProfileFieldKey = (typeof PROFILE_FIELDS)[number];
 
@@ -75,6 +76,8 @@ export class ProfileDto extends createZodDto(
     languages: z.array(z.string()),
     contactEmail: nullableString(),
     contactPhone: nullableString(),
+    /** The profile photo (M3); fetch it with GET /files/{id}/url. */
+    photoFileId: z.uuid().nullable(),
     /** Every field, PRIVATE unless the member chose otherwise. */
     visibility: visibilityMap,
   }),

@@ -81,10 +81,18 @@ export interface Harness {
   close: () => Promise<void>;
 }
 
-/** Starts the full app against the test database. Real rate limits only when asked for. */
-export async function startHarness(options: { rateLimits?: boolean } = {}): Promise<Harness> {
+/**
+ * Starts the full app against the test database. Real rate limits and the real job queue (pg-boss)
+ * only when asked for; otherwise jobs run only when a test triggers them.
+ */
+export async function startHarness(
+  options: { rateLimits?: boolean; jobs?: boolean } = {},
+): Promise<Harness> {
   const mailer = new CapturingMailer();
-  const env = testEnv({ DATABASE_URL: testAppUrl() });
+  const env = testEnv({
+    DATABASE_URL: testAppUrl(),
+    ...(options.jobs ? { JOB_QUEUE: 'pgboss' } : {}),
+  });
   let builder = Test.createTestingModule({ imports: [AppModule.forRoot(env)] })
     .overrideProvider(Mailer)
     .useValue(mailer);

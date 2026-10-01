@@ -10,6 +10,8 @@ export function testEnv(overrides: Record<string, string> = {}): Env {
     LOG_LEVEL: 'silent',
     WEB_ORIGIN: 'http://localhost:3001',
     DATABASE_URL: 'postgresql://unused@localhost:5432/unused',
+    STORAGE_DIR: 'storage/test',
+    JOB_QUEUE: 'manual',
     ...secrets,
     ...overrides,
   });

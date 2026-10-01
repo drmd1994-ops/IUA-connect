@@ -76,6 +76,8 @@ model User {
   profile       Profile?
   membership    Membership?
   applications  VerificationRequest[]
+  files         StoredFile[]
+  newsAuthored  News[]
 
   @@map("users")
 }
@@ -347,7 +349,8 @@ model Subspecialty {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  profiles ProfileSubspecialty[]
+  profiles   ProfileSubspecialty[]
+  guidelines Guideline[]
 
   @@map("subspecialties")
 }
@@ -382,6 +385,7 @@ model MembershipType {
 
   memberships  Membership[]
   applications VerificationRequest[]
+  accessRules  ContentAccessRule[]
 
   @@map("membership_types")
 }
@@ -405,10 +409,13 @@ model Profile {
   languages         String[] @default([])
   contactEmail      String?  @map("contact_email") @db.Citext
   contactPhone      String?  @map("contact_phone") @db.VarChar(32)
+  /// Profile photo (M3): an image file the member uploaded.
+  photoFileId       String?  @unique @map("photo_file_id") @db.Uuid
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photo          StoredFile?              @relation("ProfilePhoto", fields: [photoFileId], references: [id], onDelete: SetNull)
   hospital       Hospital?                @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
   department     Department?              @relation(fields: [departmentId], references: [id], onDelete: Restrict)
   subspecialties ProfileSubspecialty[]
@@ -444,6 +451,8 @@ enum ProfileField {
   LANGUAGES
   CONTACT_EMAIL
   CONTACT_PHONE
+  /// Profile photo (M3).
+  PHOTO
 
   @@map("profile_field")
 }
@@ -649,4 +658,310 @@ model ImportBatch {
 
   @@index([createdAt])
   @@map("import_batches")
+}
+
+// ---------------------------------------------------------------------------
+// Files (M3). DATABASE_DESIGN.md §3 "Files"; SECURITY_MODEL.md "Files".
+// ---------------------------------------------------------------------------
+
+enum FileKind {
+  IMAGE
+  DOCUMENT
+
+  @@map("file_kind")
+}
+
+enum FilePurpose {
+  /// Content images and documents, uploaded by staff.
+  CONTENT
+  /// A member's own profile photo.
+  PROFILE_PHOTO
+
+  @@map("file_purpose")
+}
+
+enum ScanStatus {
+  UNSCANNED
+  CLEAN
+  INFECTED
+  ERROR
+
+  @@map("scan_status")
+}
+
+/// An uploaded file. The bytes live in object storage under a random key, never in the web root.
+/// Images are stored re-encoded, without metadata. Downloads go through short-lived signed URLs
+/// after an access check.
+model StoredFile {
+  id           String      @id @db.Uuid
+  storageKey   String      @unique @map("storage_key") @db.VarChar(200)
+  /// Smaller copy of an image (for lists and avatars).
+  thumbnailKey String?     @unique @map("thumbnail_key") @db.VarChar(200)
+  /// The uploaded name, cleaned (shown to users and used for downloads).
+  originalName String      @map("original_name") @db.VarChar(255)
+  /// Detected from the content, never taken from the client.
+  mimeType     String      @map("mime_type") @db.VarChar(120)
+  kind         FileKind
+  purpose      FilePurpose
+  sizeBytes    Int         @map("size_bytes")
+  sha256       String      @db.Char(64)
+  width        Int?
+  height       Int?
+  scanStatus   ScanStatus  @default(UNSCANNED) @map("scan_status")
+  ownerUserId  String?     @map("owner_user_id") @db.Uuid
+  /// Set when something uses the file; unused uploads are removed after a day.
+  attachedAt   DateTime?   @map("attached_at") @db.Timestamptz(6)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  owner          User?            @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  profilePhoto   Profile?         @relation("ProfilePhoto")
+  newsFeatured   News[]
+  newsAttachment NewsAttachment[]
+
+  @@index([attachedAt, createdAt])
+  @@map("files")
+}
+
+// ---------------------------------------------------------------------------
+// Content access tiers (M3, D7). DATABASE_DESIGN.md §3 "Content".
+// ---------------------------------------------------------------------------
+
+/// Who may read a content item. Everything defaults to PUBLIC (D7).
+enum AccessTier {
+  PUBLIC
+  /// Anyone with an active membership.
+  MEMBERS
+  /// Active members of the membership types listed in content_access_rules.
+  TYPES
+
+  @@map("access_tier")
+}
+
+/// The membership types allowed to read an item whose tier is TYPES.
+model ContentAccessRule {
+  /// "news", "guideline", … (later: "event", "education").
+  entityType       String @map("entity_type") @db.VarChar(40)
+  entityId         String @map("entity_id") @db.Uuid
+  membershipTypeId String @map("membership_type_id") @db.Uuid
+
+  membershipType MembershipType @relation(fields: [membershipTypeId], references: [id], onDelete: Restrict)
+
+  @@id([entityType, entityId, membershipTypeId])
+  @@index([entityType, membershipTypeId])
+  @@map("content_access_rules")
+}
+
+// ---------------------------------------------------------------------------
+// News (M3). DATABASE_DESIGN.md §3 "Content"; ADR 0005 (translation tables).
+// ---------------------------------------------------------------------------
+
+/// DRAFT → IN_REVIEW → SCHEDULED or PUBLISHED → ARCHIVED (M3 plan §3).
+enum NewsStatus {
+  DRAFT
+  IN_REVIEW
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+
+  @@map("news_status")
+}
+
+/// Admin-editable news categories (names in Hebrew and English).
+model NewsCategory {
+  id        String   @id @db.Uuid
+  key       String   @unique @db.VarChar(64)
+  nameHe    String   @map("name_he") @db.VarChar(200)
+  nameEn    String   @map("name_en") @db.VarChar(200)
+  sortOrder Int      @default(0) @map("sort_order")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  news News[]
+
+  @@map("news_categories")
+}
+
+/// A news item. The text lives in news_translations (one row per language). Editing a published
+/// item creates a revision: another row pointing at it (revision_of_id), which goes through the
+/// same workflow; publishing the revision copies it onto the live item.
+model News {
+  id                  String     @id @db.Uuid
+  /// URL name; null for revisions (they use the live item's).
+  slug                String?    @unique @db.VarChar(160)
+  status              NewsStatus @default(DRAFT)
+  categoryId          String?    @map("category_id") @db.Uuid
+  authorUserId        String?    @map("author_user_id") @db.Uuid
+  /// Who submitted it for review (four eyes: they can't approve it).
+  submittedBy         String?    @map("submitted_by") @db.Uuid
+  featuredImageFileId String?    @map("featured_image_file_id") @db.Uuid
+  accessTier          AccessTier @default(PUBLIC) @map("access_tier")
+  /// When a SCHEDULED item goes live.
+  publishAt           DateTime?  @map("publish_at") @db.Timestamptz(6)
+  publishedAt         DateTime?  @map("published_at") @db.Timestamptz(6)
+  archivedAt          DateTime?  @map("archived_at") @db.Timestamptz(6)
+  /// Imported items (M4) keep their source and original date.
+  sourceUrl           String?    @map("source_url") @db.VarChar(500)
+  sourcePublishedAt   DateTime?  @map("source_published_at") @db.Timestamptz(6)
+  /// [{ "title": "...", "url": "https://..." }]
+  references          Json       @default("[]")
+  revisionOfId        String?    @unique @map("revision_of_id") @db.Uuid
+  /// Increases on every change; the ETag for concurrent edits.
+  version             Int        @default(1)
+  createdAt           DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  category      NewsCategory?     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  author        User?             @relation(fields: [authorUserId], references: [id], onDelete: SetNull)
+  featuredImage StoredFile?       @relation(fields: [featuredImageFileId], references: [id], onDelete: SetNull)
+  revisionOf    News?             @relation("NewsRevision", fields: [revisionOfId], references: [id], onDelete: Cascade)
+  revision      News?             @relation("NewsRevision")
+  translations  NewsTranslation[]
+  attachments   NewsAttachment[]
+  tags          NewsTag[]
+  history       NewsHistory[]
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([status, publishAt])
+  @@map("news")
+}
+
+model NewsTranslation {
+  newsId       String                   @map("news_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  summary      String?                  @db.VarChar(1000)
+  /// Sanitised Markdown (M3 plan §11).
+  body         String                   @default("")
+  /// The byline as shown (e.g. "Prof. …" or "The IUA board"); empty means the account's name.
+  author       String?                  @db.VarChar(200)
+  /// Maintained by a trigger from title, summary and body (Hebrew-normalised). Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@id([newsId, locale])
+  @@index([searchVector], map: "news_translations_search_idx", type: Gin)
+  @@map("news_translations")
+}
+
+model NewsAttachment {
+  newsId    String @map("news_id") @db.Uuid
+  fileId    String @map("file_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  news News       @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  file StoredFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([newsId, fileId])
+  @@index([fileId])
+  @@map("news_attachments")
+}
+
+model Tag {
+  id   String @id @db.Uuid
+  name String @unique @db.Citext
+
+  news NewsTag[]
+
+  @@map("tags")
+}
+
+model NewsTag {
+  newsId String @map("news_id") @db.Uuid
+  tagId  String @map("tag_id") @db.Uuid
+
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Restrict)
+
+  @@id([newsId, tagId])
+  @@map("news_tags")
+}
+
+/// Append-only workflow history (like membership_history).
+model NewsHistory {
+  id          String      @id @db.Uuid
+  newsId      String      @map("news_id") @db.Uuid
+  action      String      @db.VarChar(40)
+  fromStatus  NewsStatus? @map("from_status")
+  toStatus    NewsStatus  @map("to_status")
+  actorUserId String?     @map("actor_user_id") @db.Uuid
+  comment     String?     @db.VarChar(1000)
+  at          DateTime    @default(now()) @db.Timestamptz(6)
+
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@index([newsId, at])
+  @@map("news_history")
+}
+
+// ---------------------------------------------------------------------------
+// Guidelines (M3). Metadata and official links only: third-party guideline documents are never
+// copied (spec §14, PRODUCT_REQUIREMENTS §3.8).
+// ---------------------------------------------------------------------------
+
+/// The state of the guideline itself (M3 plan §11.7). All three stay listed.
+enum GuidelineStatus {
+  CURRENT
+  SUPERSEDED
+  WITHDRAWN
+
+  @@map("guideline_status")
+}
+
+model Guideline {
+  id             String          @id @db.Uuid
+  /// The organisation that published it (e.g. "EAU"), named as the source only.
+  sourceOrg      String          @map("source_org") @db.VarChar(200)
+  /// The guideline's page at the source organisation.
+  officialUrl    String          @map("official_url") @db.VarChar(500)
+  /// Free text: organisations grade evidence on different scales.
+  evidenceLevel  String?         @map("evidence_level") @db.VarChar(100)
+  status         GuidelineStatus @default(CURRENT)
+  subspecialtyId String?         @map("subspecialty_id") @db.Uuid
+  accessTier     AccessTier      @default(PUBLIC) @map("access_tier")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subspecialty Subspecialty?          @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  translations GuidelineTranslation[]
+  versions     GuidelineVersion[]
+
+  @@index([status])
+  @@index([subspecialtyId])
+  @@map("guidelines")
+}
+
+model GuidelineTranslation {
+  guidelineId  String                   @map("guideline_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  /// An optional summary written by the IUA (plain text), never the source's own text.
+  summary      String?                  @db.VarChar(4000)
+  /// Maintained by a trigger from title and summary (Hebrew-normalised). Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  guideline Guideline @relation(fields: [guidelineId], references: [id], onDelete: Cascade)
+
+  @@id([guidelineId, locale])
+  @@index([searchVector], map: "guideline_translations_search_idx", type: Gin)
+  @@map("guideline_translations")
+}
+
+/// One published edition. The newest by date is the guideline's current version and date.
+model GuidelineVersion {
+  id          String   @id @db.Uuid
+  guidelineId String   @map("guideline_id") @db.Uuid
+  version     String   @db.VarChar(60)
+  publishedOn DateTime @map("published_on") @db.Date
+  /// This edition's own page, when it differs from the guideline's official link.
+  url         String?  @db.VarChar(500)
+  licenseNote String?  @map("license_note") @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  guideline Guideline @relation(fields: [guidelineId], references: [id], onDelete: Cascade)
+
+  @@unique([guidelineId, version])
+  @@index([guidelineId, publishedOn(sort: Desc)])
+  @@map("guideline_versions")
 }

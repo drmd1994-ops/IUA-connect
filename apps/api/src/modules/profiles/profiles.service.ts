@@ -65,6 +65,7 @@ export class ProfilesService {
       languages: profile?.languages ?? [],
       contactEmail: profile?.contactEmail ?? null,
       contactPhone: profile?.contactPhone ?? null,
+      photoFileId: profile?.photoFileId ?? null,
       visibility,
     };
   }

@@ -5,7 +5,9 @@
     "applications": "Applications",
     "members": "Members",
     "institutions": "Hospitals and directors",
-    "import": "Import members"
+    "import": "Import members",
+    "news": "News",
+    "guidelines": "Guidelines"
   },
   "notAllowed": "This area is for association administrators, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",

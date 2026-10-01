@@ -44,7 +44,8 @@
         "title": "Membership",
         "body": "Registration, verification by your department director, and a digital membership card."
       }
-    }
+    },
+    "availableTitle": "Available now"
   },
   "notFound": {
     "title": "Page not found",
