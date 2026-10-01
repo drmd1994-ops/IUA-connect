@@ -7,6 +7,7 @@ export function SiteHeader() {
   const t = useTranslations('common');
   const nav = useTranslations('content.nav');
   const events = useTranslations('events');
+  const education = useTranslations('education');
   return (
     <header className="border-b border-border bg-surface">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
@@ -34,6 +35,12 @@ export function SiteHeader() {
             className="rounded-md px-2 py-1.5 text-sm font-semibold text-text hover:bg-surface-muted"
           >
             {events('nav')}
+          </Link>
+          <Link
+            href="/education"
+            className="rounded-md px-2 py-1.5 text-sm font-semibold text-text hover:bg-surface-muted"
+          >
+            {education('nav')}
           </Link>
           <Link
             href="/guidelines"

@@ -3178,8 +3178,8 @@ export interface components {
             timezone: string;
             locationName: string | null;
             address: string | null;
-            lat: number[];
-            lng: number[];
+            lat: number | null;
+            lng: number | null;
             organizer: string | null;
             image: {
                 /** Format: uuid */
@@ -3534,8 +3534,8 @@ export interface components {
             fallback: boolean;
             description: string;
             address: string | null;
-            lat: number[];
-            lng: number[];
+            lat: number | null;
+            lng: number | null;
             organizer: string | null;
             registrationUrl: string | null;
             capacity: number | null;
@@ -3649,7 +3649,7 @@ export interface components {
             level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
             subspecialtyId: string | null;
             durationMinutes: number | null;
-            cmePoints: number[];
+            cmePoints: number | null;
             externalUrl: string | null;
             /** @enum {string} */
             videoStatus: "NONE" | "EXTERNAL" | "PENDING_PROVIDER";
@@ -3759,7 +3759,7 @@ export interface components {
                 nameEn: string;
             } | null;
             durationMinutes: number | null;
-            cmePoints: number[];
+            cmePoints: number | null;
             coverFileId: string | null;
             /** Format: date-time */
             publishedAt: string;

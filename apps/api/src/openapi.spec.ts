@@ -36,7 +36,18 @@ describe('OpenAPI document', () => {
     expect(schemas.CardVerificationDto!.properties.name).toEqual(stringOrNull);
   });
 
-  it('has no bare z.string().nullable() in the source', () => {
+  it('describes nullable numbers as a number or null', () => {
+    const coordinate = schemas.PublicEventDto!.properties.lat as {
+      anyOf?: unknown[];
+      type?: string;
+    };
+    expect(coordinate.type).not.toBe('array');
+    expect(coordinate.anyOf).toEqual(
+      expect.arrayContaining([expect.objectContaining({ type: 'number' }), { type: 'null' }]),
+    );
+  });
+
+  it('has no bare z.string().nullable() or z.number().nullable() in the source', () => {
     const offenders: string[] = [];
     const walk = (dir: string) => {
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -44,7 +55,9 @@ describe('OpenAPI document', () => {
         if (entry.isDirectory()) {
           if (entry.name !== 'generated') walk(full);
         } else if (entry.name.endsWith('.ts') && !entry.name.endsWith('.spec.ts')) {
-          if (/z\.string\(\)\.nullable\(\)/.test(readFileSync(full, 'utf8'))) offenders.push(full);
+          if (/z\.(string|number)\(\)\.nullable\(\)/.test(readFileSync(full, 'utf8'))) {
+            offenders.push(full);
+          }
         }
       }
     };

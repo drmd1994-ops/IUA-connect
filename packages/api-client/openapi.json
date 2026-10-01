@@ -12616,16 +12616,28 @@
             ]
           },
           "lat": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": -1000000000000000,
+                "maximum": 1000000000000000
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "lng": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": -1000000000000000,
+                "maximum": 1000000000000000
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "organizer": {
             "anyOf": [
@@ -14567,16 +14579,28 @@
             ]
           },
           "lat": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": -1000000000000000,
+                "maximum": 1000000000000000
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "lng": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": -1000000000000000,
+                "maximum": 1000000000000000
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "organizer": {
             "anyOf": [
@@ -15275,10 +15299,16 @@
             ]
           },
           "cmePoints": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": -1000000000000000,
+                "maximum": 1000000000000000
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "externalUrl": {
             "anyOf": [
@@ -15785,9 +15815,15 @@
                   ]
                 },
                 "cmePoints": {
-                  "type": [
-                    "number",
-                    "null"
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": -1000000000000000,
+                      "maximum": 1000000000000000
+                    },
+                    {
+                      "type": "null"
+                    }
                   ]
                 },
                 "coverFileId": {
@@ -15959,10 +15995,16 @@
             ]
           },
           "cmePoints": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": -1000000000000000,
+                "maximum": 1000000000000000
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "coverFileId": {
             "anyOf": [

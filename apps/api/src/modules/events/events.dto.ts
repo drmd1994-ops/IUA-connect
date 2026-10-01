@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
-import { nullableString } from '../../common/dto/nullable-string';
+import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
 import { MAX_BODY_LENGTH, SLUG_PATTERN } from '../news';
 
 const TIERS = ['PUBLIC', 'MEMBERS', 'TYPES'] as const;
@@ -81,8 +81,8 @@ const imageView = z
   .nullable();
 
 const coordinates = {
-  lat: z.number().nullable(),
-  lng: z.number().nullable(),
+  lat: nullableNumber(),
+  lng: nullableNumber(),
 };
 
 export class AdminEventDto extends createZodDto(

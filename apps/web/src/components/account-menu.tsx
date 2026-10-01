@@ -61,6 +61,9 @@ export function AccountMenu() {
           <MenuLink href="/account/schedule" onClick={() => setOpen(false)}>
             {tm('schedule')}
           </MenuLink>
+          <MenuLink href="/account/exam-results" onClick={() => setOpen(false)}>
+            {tm('examResults')}
+          </MenuLink>
           {me.permissions.includes('membership.approve.department') && (
             <MenuLink href="/account/applications" onClick={() => setOpen(false)}>
               {tm('applications')}

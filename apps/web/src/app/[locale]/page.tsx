@@ -8,9 +8,10 @@ import { Link } from '@/i18n/navigation';
 const AVAILABLE = [
   { key: 'news', href: '/news' },
   { key: 'events', href: '/events' },
+  { key: 'education', href: '/education' },
   { key: 'guidelines', href: '/guidelines' },
 ] as const;
-const PLANNED = ['education', 'membership'] as const;
+const PLANNED = ['membership'] as const;
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);

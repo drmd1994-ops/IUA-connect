@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
-import { nullableString } from '../../common/dto/nullable-string';
+import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
 import { MAX_BODY_LENGTH, SLUG_PATTERN } from '../news';
 import { EDUCATION_ACTIONS } from './education-workflow';
 
@@ -98,7 +98,7 @@ export class AdminEducationDto extends createZodDto(
     level: z.enum(LEVELS).nullable(),
     subspecialtyId: z.uuid().nullable(),
     durationMinutes: z.number().int().nullable(),
-    cmePoints: z.number().nullable(),
+    cmePoints: nullableNumber(),
     externalUrl: nullableString(),
     videoStatus: z.enum(VIDEO_STATUSES),
     accessTier: z.enum(TIERS),
@@ -203,7 +203,7 @@ const publicSummary = z.strictObject({
     .strictObject({ key: z.string(), nameHe: z.string(), nameEn: z.string() })
     .nullable(),
   durationMinutes: z.number().int().nullable(),
-  cmePoints: z.number().nullable(),
+  cmePoints: nullableNumber(),
   coverFileId: z.uuid().nullable(),
   publishedAt: z.iso.datetime(),
   accessTier: z.enum(TIERS),

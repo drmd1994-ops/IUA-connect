@@ -38,6 +38,8 @@ const INCLUDE = {
 type Row = Prisma.EducationItemGetPayload<{ include: typeof INCLUDE }>;
 type Tx = Prisma.TransactionClient;
 type Lang = 'he' | 'en';
+/** /education/exam is the exam practice page, so no item may take that URL name. */
+const RESERVED_SLUG = 'exam';
 
 /**
  * Education items in the admin area (M6 plan §2, §3): writing, the review workflow and courses.
@@ -122,7 +124,9 @@ export class EducationAdminService {
     meta: RequestMeta,
   ): Promise<AdminEducationDto> {
     await this.validate(input);
-    const base = input.slug ?? slugify((input.translations.he ?? input.translations.en)!.title);
+    const made = input.slug ?? slugify((input.translations.he ?? input.translations.en)!.title);
+    // "exam" is the address of the exam practice page.
+    const base = made === RESERVED_SLUG ? `${made}-item` : made;
     const slug = await uniqueSlug(base, async (candidate) =>
       Boolean(await this.prisma.educationItem.findUnique({ where: { slug: candidate } })),
     );
@@ -307,6 +311,7 @@ export class EducationAdminService {
   }
 
   private async validate(input: EducationInputDto): Promise<void> {
+    if (input.slug === RESERVED_SLUG) throw invalid('slug', 'slugTaken');
     if (input.subspecialtyId) {
       const found = await this.prisma.subspecialty.findFirst({
         where: { id: input.subspecialtyId, active: true },
