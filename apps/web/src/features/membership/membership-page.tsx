@@ -24,6 +24,11 @@ export function useDateFormat() {
     date: (value: string) =>
       format.dateTime(new Date(`${value}T00:00:00Z`), { dateStyle: 'long', timeZone: 'UTC' }),
     dateTime: (iso: string) => format.dateTime(new Date(iso), { dateStyle: 'medium' }),
+    /** A date of which only the year may be known (imported guideline entries). */
+    dateOrYear: (value: string, yearOnly: boolean) =>
+      yearOnly
+        ? value.slice(0, 4)
+        : format.dateTime(new Date(`${value}T00:00:00Z`), { dateStyle: 'long', timeZone: 'UTC' }),
   };
 }
 

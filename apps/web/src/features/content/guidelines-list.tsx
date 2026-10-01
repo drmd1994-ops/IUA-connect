@@ -39,7 +39,7 @@ export function GuidelinesList() {
   const t = useTranslations();
   const locale = useLocale() as 'he' | 'en';
   const name = useLocalName();
-  const { date } = useDateFormat();
+  const { dateOrYear } = useDateFormat();
   const { api, call, status: session } = useAuth();
   const reference = useReference();
   const [subspecialty, setSubspecialty] = useState('');
@@ -129,7 +129,7 @@ export function GuidelinesList() {
                 {[
                   item.sourceOrg,
                   item.version && `${t('content.guidelines.version')} ${item.version}`,
-                  item.publishedOn && date(item.publishedOn),
+                  item.publishedOn && dateOrYear(item.publishedOn, item.yearOnly),
                   item.subspecialty && name(item.subspecialty),
                 ]
                   .filter(Boolean)

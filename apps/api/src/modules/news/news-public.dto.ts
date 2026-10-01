@@ -33,6 +33,8 @@ const summaryShape = z.strictObject({
   date: z.iso.datetime(),
   featuredImageFileId: z.uuid().nullable(),
   accessTier: z.enum(['PUBLIC', 'MEMBERS', 'TYPES']),
+  /** Imported items: where the original was published. */
+  sourceUrl: nullableString(),
   /** The language of the text returned. */
   locale,
   /** True when the requested language was missing and Hebrew is shown instead. */
@@ -63,7 +65,5 @@ export class PublicNewsDto extends createZodDto(
       }),
     ),
     references: z.array(z.strictObject({ title: z.string(), url: z.string() })),
-    /** Imported items: where the original was published. */
-    sourceUrl: nullableString(),
   }),
 ) {}

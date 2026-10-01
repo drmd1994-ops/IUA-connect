@@ -107,7 +107,6 @@ export class NewsPublicService implements OnModuleInit {
         sizeBytes: file.sizeBytes,
       })),
       references: row.references as PublicNewsDto['references'],
-      sourceUrl: row.sourceUrl,
     };
   }
 }
@@ -133,6 +132,7 @@ function summary(row: Row, locale: Locale) {
     date: (row.sourcePublishedAt ?? row.publishedAt)!.toISOString(),
     featuredImageFileId: row.featuredImageFileId,
     accessTier: row.accessTier,
+    sourceUrl: row.sourceUrl,
     locale: text.locale,
     fallback: text.fallback,
   };

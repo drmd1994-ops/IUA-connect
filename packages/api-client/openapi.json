@@ -8337,6 +8337,17 @@
                     "TYPES"
                   ]
                 },
+                "sourceUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "locale": {
                   "type": "string",
                   "enum": [
@@ -8357,6 +8368,7 @@
                 "date",
                 "featuredImageFileId",
                 "accessTier",
+                "sourceUrl",
                 "locale",
                 "fallback"
               ],
@@ -8465,6 +8477,17 @@
               "TYPES"
             ]
           },
+          "sourceUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "locale": {
             "type": "string",
             "enum": [
@@ -8541,17 +8564,6 @@
               ],
               "additionalProperties": false
             }
-          },
-          "sourceUrl": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 100000
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "required": [
@@ -8563,14 +8575,14 @@
           "date",
           "featuredImageFileId",
           "accessTier",
+          "sourceUrl",
           "locale",
           "fallback",
           "body",
           "author",
           "archived",
           "attachments",
-          "references",
-          "sourceUrl"
+          "references"
         ],
         "additionalProperties": false
       },
@@ -8651,6 +8663,9 @@
                     }
                   ]
                 },
+                "yearOnly": {
+                  "type": "boolean"
+                },
                 "updatedAt": {
                   "type": "string",
                   "format": "date-time",
@@ -8666,6 +8681,7 @@
                 "accessTier",
                 "version",
                 "publishedOn",
+                "yearOnly",
                 "updatedAt"
               ],
               "additionalProperties": false
@@ -8806,6 +8822,10 @@
                 "type": "string",
                 "format": "date",
                 "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              "yearOnly": {
+                "default": false,
+                "type": "boolean"
               },
               "url": {
                 "type": "string",
@@ -8965,6 +8985,9 @@
                   "format": "date",
                   "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
                 },
+                "yearOnly": {
+                  "type": "boolean"
+                },
                 "url": {
                   "anyOf": [
                     {
@@ -8992,6 +9015,7 @@
                 "id",
                 "version",
                 "publishedOn",
+                "yearOnly",
                 "url",
                 "licenseNote"
               ],
@@ -9145,6 +9169,10 @@
             "format": "date",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
           },
+          "yearOnly": {
+            "default": false,
+            "type": "boolean"
+          },
           "url": {
             "type": "string",
             "maxLength": 500,
@@ -9263,6 +9291,9 @@
                     }
                   ]
                 },
+                "yearOnly": {
+                  "type": "boolean"
+                },
                 "accessTier": {
                   "type": "string",
                   "enum": [
@@ -9293,6 +9324,7 @@
                 "subspecialty",
                 "version",
                 "publishedOn",
+                "yearOnly",
                 "accessTier",
                 "locale",
                 "fallback"
@@ -9421,6 +9453,9 @@
               }
             ]
           },
+          "yearOnly": {
+            "type": "boolean"
+          },
           "accessTier": {
             "type": "string",
             "enum": [
@@ -9457,6 +9492,9 @@
                   "format": "date",
                   "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
                 },
+                "yearOnly": {
+                  "type": "boolean"
+                },
                 "url": {
                   "anyOf": [
                     {
@@ -9484,6 +9522,7 @@
                 "id",
                 "version",
                 "publishedOn",
+                "yearOnly",
                 "url",
                 "licenseNote"
               ],
@@ -9502,6 +9541,7 @@
           "subspecialty",
           "version",
           "publishedOn",
+          "yearOnly",
           "accessTier",
           "locale",
           "fallback",

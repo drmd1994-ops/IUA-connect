@@ -80,6 +80,7 @@ export class GuidelinesService {
         accessTier: row.accessTier,
         version: row.versions[0]?.version ?? null,
         publishedOn: row.versions[0] ? isoDate(row.versions[0].publishedOn) : null,
+        yearOnly: row.versions[0]?.yearOnly ?? false,
         updatedAt: row.updatedAt.toISOString(),
       })),
       page: query.page,
@@ -305,6 +306,7 @@ function versionColumns(input: GuidelineVersionInputDto) {
   return {
     version: input.version,
     publishedOn: new Date(`${input.publishedOn}T00:00:00.000Z`),
+    yearOnly: input.yearOnly,
     url: input.url ?? null,
     licenseNote: input.licenseNote || null,
   };
@@ -317,6 +319,7 @@ function versionView(version: Row['versions'][number]) {
     id: version.id,
     version: version.version,
     publishedOn: isoDate(version.publishedOn),
+    yearOnly: version.yearOnly,
     url: version.url,
     licenseNote: version.licenseNote,
   };
@@ -344,6 +347,7 @@ function summary(row: Row, locale: Locale) {
       : null,
     version: latest?.version ?? null,
     publishedOn: latest ? isoDate(latest.publishedOn) : null,
+    yearOnly: latest?.yearOnly ?? false,
     accessTier: row.accessTier,
     locale: text.locale as Locale,
     fallback: !wanted,

@@ -127,6 +127,7 @@ The admin, the directors and the editor must set up two-step verification (a pas
 
 - **Membership (M2):** the account menu has **My profile** (each field has its own "who can see this"), **My membership** (apply, status, history) and **Membership card** (a QR code that changes every 4 minutes; scanning it opens `/card/verify`). Directors also see **Applications to review**, and admins see **Administration** (`/admin`).
 - **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
+- **Imported sample (M4):** `pnpm db:seed` also loads a small sample of the IUA website from committed fixtures: 8 news items (title, date and a link to the source) and 9 guideline entries (details and the publisher's link). No network is needed. `pnpm import:remove` takes the sample out again. To change the sample, edit `tools/importer/sources.json`, run `pnpm import:fetch` and review the fixtures before committing them. Permission to show this content is still open (O4 in `PROJECT_STATUS.md`).
 - **CSV import:** `/admin/import` takes a file with the header `email,first_name,last_name,membership_type[,identifier,end_date,payment_status,locale]`. Run the dry run first, then apply the same file.
 
 ### Troubleshooting
@@ -149,6 +150,8 @@ The admin, the directors and the editor must set up two-step verification (a pas
 | `pnpm test:integration`                        | API integration tests against `iua_connect_test`                          |
 | `pnpm --filter @iua/web e2e`                   | Playwright end-to-end + accessibility tests (see TESTING.md)              |
 | `pnpm admin:create --email <address>`          | Development only: create a fictional administrator                        |
+| `pnpm import:fetch`                            | Development only: read the hand-picked IUA website pages into fixtures    |
+| `pnpm import:remove`                           | Development only: delete everything the content import created            |
 | `pnpm lint` · `pnpm typecheck` · `pnpm format` | Quality checks                                                            |
 | `pnpm build`                                   | Production build of everything                                            |
 | `pnpm db:migrate`                              | Create/apply a migration in development (`prisma migrate dev`)            |

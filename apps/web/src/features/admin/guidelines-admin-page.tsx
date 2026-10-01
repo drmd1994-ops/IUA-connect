@@ -37,6 +37,8 @@ const EMPTY_VERSION: VersionDraft = { version: '', publishedOn: '', url: '', lic
 const versionBody = (draft: VersionDraft) => ({
   version: draft.version.trim(),
   publishedOn: draft.publishedOn,
+  // Entries added by hand carry a full date; only imported ones are "year only".
+  yearOnly: false,
   ...(draft.url.trim() ? { url: draft.url.trim() } : {}),
   ...(draft.licenseNote.trim() ? { licenseNote: draft.licenseNote.trim() } : {}),
 });
@@ -45,7 +47,7 @@ const versionBody = (draft: VersionDraft) => ({
 export function GuidelinesAdminPage() {
   const t = useTranslations();
   const locale = useLocale();
-  const { date } = useDateFormat();
+  const { dateOrYear } = useDateFormat();
   const { api, call } = useAuth();
   const [search, setSearch] = useState('');
   const [q, setQ] = useState('');
@@ -127,7 +129,7 @@ export function GuidelinesAdminPage() {
                       {[
                         item.sourceOrg,
                         item.version,
-                        item.publishedOn && date(item.publishedOn),
+                        item.publishedOn && dateOrYear(item.publishedOn, item.yearOnly),
                         t(`content.common.tiers.${item.accessTier}`),
                       ]
                         .filter(Boolean)
@@ -202,7 +204,7 @@ function GuidelineForm({
 }) {
   const t = useTranslations();
   const name = useLocalName();
-  const { date } = useDateFormat();
+  const { dateOrYear } = useDateFormat();
   const reference = useReference();
   const { api, call } = useAuth();
   const [current, setCurrent] = useState(guideline);
@@ -457,7 +459,7 @@ function GuidelineForm({
                 <span>
                   <span className="font-semibold">{version.version}</span>
                   {' · '}
-                  {date(version.publishedOn)}
+                  {dateOrYear(version.publishedOn, version.yearOnly)}
                 </span>
                 {current.versions.length > 1 && (
                   <Button

@@ -3,7 +3,7 @@
  *   1. reference: roles, permissions (M1); membership types, subspecialties, hospitals (M2)
  *   2. demo:      fictional people, directors, memberships, applications (M2);
  *                 a content editor, news in every state and sample guidelines (M3)
- *   3. import:    curated IUA website sample from fixtures/iua-import/    (added in M4)
+ *   3. import:    the hand-picked IUA website sample from fixtures/iua-import/ (M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
  * only the reference layer.
@@ -14,6 +14,7 @@ import { PrismaClient } from '../../src/generated/prisma/client';
 import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedDemo } from './demo';
 import { seedDemoContent } from './demo-content';
+import { seedImport } from './import';
 import { seedReference } from './reference';
 
 interface SeedLayer {
@@ -32,7 +33,18 @@ const LAYERS: SeedLayer[] = [
       await seedDemoContent(prisma);
     },
   },
-  { name: 'import', milestone: 'M4' },
+  {
+    name: 'import',
+    milestone: 'M4',
+    run: async (prisma) => {
+      const created = await seedImport(prisma);
+      console.log(
+        created.news + created.guidelines > 0
+          ? `seed: import layer — ${created.news} news items, ${created.guidelines} guideline entries`
+          : 'seed: import layer already present, skipped',
+      );
+    },
+  },
 ];
 
 async function main(): Promise<void> {

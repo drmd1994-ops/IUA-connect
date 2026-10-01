@@ -24,6 +24,7 @@
     "db:seed": "pnpm --filter @iua/api db:seed",
     "admin:create": "pnpm --filter @iua/api admin:create",
     "import:fetch": "pnpm --filter @iua/importer run pages",
+    "import:remove": "pnpm --filter @iua/api import:remove",
     "openapi:generate": "turbo run build --filter=@iua/api && pnpm --filter @iua/api openapi:export && pnpm --filter @iua/api-client generate",
     "prepare": "husky"
   },

@@ -2203,6 +2203,7 @@ export interface components {
                 featuredImageFileId: string | null;
                 /** @enum {string} */
                 accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                sourceUrl: string | null;
                 /** @enum {string} */
                 locale: "he" | "en";
                 fallback: boolean;
@@ -2226,6 +2227,7 @@ export interface components {
             featuredImageFileId: string | null;
             /** @enum {string} */
             accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            sourceUrl: string | null;
             /** @enum {string} */
             locale: "he" | "en";
             fallback: boolean;
@@ -2243,7 +2245,6 @@ export interface components {
                 title: string;
                 url: string;
             }[];
-            sourceUrl: string | null;
         };
         AdminGuidelineListDto: {
             items: {
@@ -2258,6 +2259,7 @@ export interface components {
                 accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
                 version: string | null;
                 publishedOn: string | null;
+                yearOnly: boolean;
                 /** Format: date-time */
                 updatedAt: string;
             }[];
@@ -2297,6 +2299,8 @@ export interface components {
                 version: string;
                 /** Format: date */
                 publishedOn: string;
+                /** @default false */
+                yearOnly: boolean;
                 /** Format: uri */
                 url?: string;
                 licenseNote?: string;
@@ -2330,6 +2334,7 @@ export interface components {
                 version: string;
                 /** Format: date */
                 publishedOn: string;
+                yearOnly: boolean;
                 url: string | null;
                 licenseNote: string | null;
             }[];
@@ -2371,6 +2376,8 @@ export interface components {
             version: string;
             /** Format: date */
             publishedOn: string;
+            /** @default false */
+            yearOnly: boolean;
             /** Format: uri */
             url?: string;
             licenseNote?: string;
@@ -2393,6 +2400,7 @@ export interface components {
                 } | null;
                 version: string | null;
                 publishedOn: string | null;
+                yearOnly: boolean;
                 /** @enum {string} */
                 accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
                 /** @enum {string} */
@@ -2420,6 +2428,7 @@ export interface components {
             } | null;
             version: string | null;
             publishedOn: string | null;
+            yearOnly: boolean;
             /** @enum {string} */
             accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
             /** @enum {string} */
@@ -2431,6 +2440,7 @@ export interface components {
                 version: string;
                 /** Format: date */
                 publishedOn: string;
+                yearOnly: boolean;
                 url: string | null;
                 licenseNote: string | null;
             }[];

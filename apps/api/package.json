@@ -17,6 +17,7 @@
     "db:reset": "prisma migrate reset --force",
     "db:seed": "prisma db seed",
     "admin:create": "tsx prisma/scripts/create-admin.ts",
+    "import:remove": "tsx prisma/scripts/remove-import.ts",
     "openapi:export": "node dist/openapi-export.js ../../packages/api-client/openapi.json"
   },
   "dependencies": {
