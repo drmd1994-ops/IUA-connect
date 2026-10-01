@@ -62,6 +62,17 @@
 - **End to end:** a visitor opens an imported news item (source label and link) and an imported document (year only), with axe checks.
 - **No test contacts the real site.**
 
+## What the M5 (Events) suites prove
+
+- **Rules (unit):** what makes an event publishable or cancellable; when registration is open; free places; overlapping sessions; when each reminder is due and when it is skipped; the calendar writer (escaping, lines folded at 75 octets without splitting a Hebrew letter, UTC times in both seasons, stable IDs, files that read back with the same values).
+- **Events (integration):** event admins only (not members, not content editors); saves need the current version (`If-Match`); publishing says what is missing; cancelled events stay visible and closed to changes; lists and pages follow the access tiers for five kinds of reader.
+- **Sessions and speakers:** sessions stay inside their event, also when the event's dates change; a speaker named in a session can't be deleted; materials and speaker photos are readable by whoever may see the event, and by nobody else.
+- **Registration:** register, cancel and register again; other modes, drafts, cancelled and started events refuse; tiers are respected; **five people racing for one place: one gets it, four join the waiting list in order**; a cancellation or a larger capacity promotes the first person waiting and emails them; only registered people choose sessions.
+- **Calendar files:** the event file and the personal schedule file are requested over HTTP and read back as calendars with the right times, IDs and status; hidden events give no file.
+- **Attendance:** a scanned code records a registered member once; expired, altered and foreign codes and other kinds of token are refused; waiting people and strangers aren't recorded; marking by hand, voiding with a reason and recording again; the CSV export is safe to open in a spreadsheet; the table is append-only at the database level.
+- **Reminders:** a week and a day before, once each however often the job runs; nothing for cancelled events, cancelled registrations or the waiting list; cancelling or moving an event emails everyone registered or waiting.
+- **End to end (Playwright, `events.spec.ts`):** the exit test. An event admin creates an event with two sessions and publishes it; a demo member registers, picks a session, downloads the calendar file and opens the venue code's address; the admin sees the attendance. Axe checks run on every page visited.
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

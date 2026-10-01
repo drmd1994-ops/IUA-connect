@@ -4,7 +4,8 @@
     "membership": "My membership",
     "card": "Membership card",
     "applications": "Applications to review",
-    "admin": "Administration"
+    "admin": "Administration",
+    "schedule": "My schedule"
   },
   "common": {
     "loading": "Loading…",

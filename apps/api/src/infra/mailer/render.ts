@@ -35,10 +35,12 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
     .filter((key) => copy[key])
     .map((key) => ({ key, text: copy[key]! }));
   const dir = directionOf(message.locale);
+  // Subjects may carry placeholders too (for example the event's title).
+  const subject = interpolate(copy.subject!, params);
 
   const html = [
     '<!doctype html>',
-    `<html lang="${message.locale}" dir="${dir}"><head><meta charset="utf-8"><title>${escapeHtml(copy.subject!)}</title></head>`,
+    `<html lang="${message.locale}" dir="${dir}"><head><meta charset="utf-8"><title>${escapeHtml(subject)}</title></head>`,
     '<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #131a1e; max-width: 560px; margin: 24px auto; padding: 0 16px">',
     `<h1 style="font-size: 22px; color: #0c2d3d">${escapeHtml(copy.heading!)}</h1>`,
     ...paragraphs.map(({ text }) => `<p>${interpolate(escapeHtml(text), htmlParams)}</p>`),
@@ -68,5 +70,5 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
     .filter(Boolean)
     .join('\n\n');
 
-  return { subject: copy.subject!, html, text };
+  return { subject, html, text };
 }

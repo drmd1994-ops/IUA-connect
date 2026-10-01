@@ -87,5 +87,42 @@
     "heading": "Published",
     "body": "“{title}” is now published on IUA Connect.",
     "action": "View it"
+  },
+  "eventRegistered": {
+    "subject": "You are registered: {title}",
+    "heading": "You are registered",
+    "body": "You are registered for “{title}”, {when}.",
+    "action": "View the event"
+  },
+  "eventWaitlisted": {
+    "subject": "You are on the waiting list: {title}",
+    "heading": "You are on the waiting list",
+    "body": "“{title}” is full, so you are on the waiting list. We will email you if a place opens.",
+    "action": "View the event"
+  },
+  "eventPromoted": {
+    "subject": "A place opened for you: {title}",
+    "heading": "You have a place",
+    "body": "A place opened, and you are now registered for “{title}”, {when}.",
+    "action": "View the event"
+  },
+  "eventCancelled": {
+    "subject": "Cancelled: {title}",
+    "heading": "The event was cancelled",
+    "body": "“{title}” was cancelled.",
+    "reason": "The reason given: {reason}",
+    "action": "View the event"
+  },
+  "eventChanged": {
+    "subject": "Updated details: {title}",
+    "heading": "The event details changed",
+    "body": "“{title}” now takes place {when}, at {place}.",
+    "action": "View the event"
+  },
+  "eventReminder": {
+    "subject": "Reminder: {title}",
+    "heading": "Your event is coming up",
+    "body": "“{title}” takes place {when}, at {place}.",
+    "action": "View the event"
   }
 }

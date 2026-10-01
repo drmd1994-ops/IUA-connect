@@ -66,18 +66,22 @@ model User {
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles         UserRole[]            @relation("UserRoles")
-  rolesGranted  UserRole[]            @relation("RolesGrantedBy")
-  sessions      Session[]
-  devices       Device[]
-  mfaFactors    MfaFactor[]
-  recoveryCodes RecoveryCode[]
-  authTokens    AuthToken[]
-  profile       Profile?
-  membership    Membership?
-  applications  VerificationRequest[]
-  files         StoredFile[]
-  newsAuthored  News[]
+  roles              UserRole[]            @relation("UserRoles")
+  rolesGranted       UserRole[]            @relation("RolesGrantedBy")
+  sessions           Session[]
+  devices            Device[]
+  mfaFactors         MfaFactor[]
+  recoveryCodes      RecoveryCode[]
+  authTokens         AuthToken[]
+  profile            Profile?
+  membership         Membership?
+  applications       VerificationRequest[]
+  files              StoredFile[]
+  newsAuthored       News[]
+  eventRegistrations EventRegistration[]
+  scheduleItems      ScheduleItem[]
+  eventAttendances   EventAttendance[]
+  eventReminders     EventReminder[]
 
   @@map("users")
 }
@@ -713,10 +717,13 @@ model StoredFile {
   attachedAt   DateTime?   @map("attached_at") @db.Timestamptz(6)
   createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  owner          User?            @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
-  profilePhoto   Profile?         @relation("ProfilePhoto")
-  newsFeatured   News[]
-  newsAttachment NewsAttachment[]
+  owner           User?             @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  profilePhoto    Profile?          @relation("ProfilePhoto")
+  newsFeatured    News[]
+  newsAttachment  NewsAttachment[]
+  eventImage      Event[]
+  speakerPhoto    Speaker[]
+  sessionMaterial SessionMaterial[]
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -969,4 +976,300 @@ model GuidelineVersion {
   @@unique([guidelineId, version])
   @@index([guidelineId, publishedOn(sort: Desc)])
   @@map("guideline_versions")
+}
+
+// ---------------------------------------------------------------------------
+// Events (M5). DATABASE_DESIGN.md §3; docs/plans/M5-events.md.
+// ---------------------------------------------------------------------------
+
+/// DRAFT → PUBLISHED → CANCELLED. A cancelled event stays visible, marked as cancelled.
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+
+  @@map("event_status")
+}
+
+/// How people sign up: in the app, on another site, or not at all.
+enum RegistrationMode {
+  INTERNAL
+  EXTERNAL
+  NONE
+
+  @@map("registration_mode")
+}
+
+model EventCategory {
+  id        String   @id @db.Uuid
+  key       String   @unique @db.VarChar(64)
+  nameHe    String   @map("name_he") @db.VarChar(200)
+  nameEn    String   @map("name_en") @db.VarChar(200)
+  sortOrder Int      @default(0) @map("sort_order")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  events Event[]
+
+  @@map("event_categories")
+}
+
+model Event {
+  id               String           @id @db.Uuid
+  slug             String           @unique @db.VarChar(160)
+  status           EventStatus      @default(DRAFT)
+  categoryId       String?          @map("category_id") @db.Uuid
+  /// Required once published; a draft (e.g. an imported page without dates) may lack them.
+  startAt          DateTime?        @map("start_at") @db.Timestamptz(6)
+  endAt            DateTime?        @map("end_at") @db.Timestamptz(6)
+  /// IANA zone the times were entered in (API_DESIGN.md §2).
+  timezone         String           @default("Asia/Jerusalem") @db.VarChar(64)
+  locationName     String?          @map("location_name") @db.VarChar(300)
+  address          String?          @db.VarChar(500)
+  lat              Decimal?         @db.Decimal(9, 6)
+  lng              Decimal?         @db.Decimal(9, 6)
+  organizer        String?          @db.VarChar(300)
+  imageFileId      String?          @map("image_file_id") @db.Uuid
+  registrationMode RegistrationMode @default(NONE) @map("registration_mode")
+  /// For EXTERNAL registration: the other site's page.
+  registrationUrl  String?          @map("registration_url") @db.VarChar(500)
+  /// Places for in-app registration; null means unlimited.
+  capacity         Int?
+  cmeAvailable     Boolean          @default(false) @map("cme_available")
+  accessTier       AccessTier       @default(PUBLIC) @map("access_tier")
+  /// Imported events (M4 fixtures): the page of the source site.
+  sourceUrl        String?          @unique @map("source_url") @db.VarChar(500)
+  publishedAt      DateTime?        @map("published_at") @db.Timestamptz(6)
+  cancelledAt      DateTime?        @map("cancelled_at") @db.Timestamptz(6)
+  cancelReason     String?          @map("cancel_reason") @db.VarChar(1000)
+  createdBy        String?          @map("created_by") @db.Uuid
+  /// Increases on every change; the ETag for concurrent edits.
+  version          Int              @default(1)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  category      EventCategory?      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  image         StoredFile?         @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
+  translations  EventTranslation[]
+  sessions      EventSession[]
+  registrations EventRegistration[]
+  attendance    EventAttendance[]
+  reminders     EventReminder[]
+
+  @@index([status, startAt])
+  @@map("events")
+}
+
+model EventTranslation {
+  eventId      String                   @map("event_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  summary      String?                  @db.VarChar(1000)
+  /// Sanitised Markdown, like news bodies.
+  description  String                   @default("")
+  /// Maintained by a trigger from title, summary and description. Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, locale])
+  @@index([searchVector], map: "event_translations_search_idx", type: Gin)
+  @@map("event_translations")
+}
+
+/// A session of an event: a talk, a workshop, a break. It lies inside the event's time span.
+model EventSession {
+  id        String   @id @db.Uuid
+  eventId   String   @map("event_id") @db.Uuid
+  room      String?  @db.VarChar(200)
+  startAt   DateTime @map("start_at") @db.Timestamptz(6)
+  endAt     DateTime @map("end_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  translations EventSessionTranslation[]
+  speakers     SessionSpeaker[]
+  materials    SessionMaterial[]
+  scheduled    ScheduleItem[]
+  attendance   EventAttendance[]
+
+  @@index([eventId, startAt])
+  @@map("event_sessions")
+}
+
+model EventSessionTranslation {
+  sessionId    String                   @map("session_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  /// Plain text.
+  description  String?                  @db.VarChar(4000)
+  /// Maintained by a trigger from title and description. Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, locale])
+  @@index([searchVector], map: "event_session_translations_search_idx", type: Gin)
+  @@map("event_session_translations")
+}
+
+/// A speaker is a record, not an account (M5 plan §2.2). Demo speakers are fictional.
+model Speaker {
+  id          String   @id @db.Uuid
+  photoFileId String?  @map("photo_file_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  photo        StoredFile?          @relation(fields: [photoFileId], references: [id], onDelete: SetNull)
+  translations SpeakerTranslation[]
+  sessions     SessionSpeaker[]
+
+  @@map("speakers")
+}
+
+model SpeakerTranslation {
+  speakerId   String  @map("speaker_id") @db.Uuid
+  locale      String  @db.VarChar(8)
+  name        String  @db.VarChar(200)
+  /// For example "Prof." or "Dr.".
+  title       String? @db.VarChar(100)
+  affiliation String? @db.VarChar(300)
+  bio         String? @db.VarChar(2000)
+
+  speaker Speaker @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+
+  @@id([speakerId, locale])
+  @@map("speaker_translations")
+}
+
+model SessionSpeaker {
+  sessionId String @map("session_id") @db.Uuid
+  speakerId String @map("speaker_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  speaker Speaker      @relation(fields: [speakerId], references: [id], onDelete: Restrict)
+
+  @@id([sessionId, speakerId])
+  @@index([speakerId])
+  @@map("session_speakers")
+}
+
+model SessionMaterial {
+  sessionId String @map("session_id") @db.Uuid
+  fileId    String @map("file_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  file    StoredFile   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, fileId])
+  @@index([fileId])
+  @@map("session_materials")
+}
+
+/// REGISTERED holds a place; WAITLISTED waits for one (M5 plan §11.2); CANCELLED gave it up.
+enum RegistrationStatus {
+  REGISTERED
+  WAITLISTED
+  CANCELLED
+
+  @@map("registration_status")
+}
+
+/// One row per person per event. Registering again after cancelling reuses the row.
+model EventRegistration {
+  id          String             @id @db.Uuid
+  eventId     String             @map("event_id") @db.Uuid
+  userId      String             @map("user_id") @db.Uuid
+  status      RegistrationStatus
+  /// When the person (re)joined: the order of the waiting list.
+  queuedAt    DateTime           @default(now()) @map("queued_at") @db.Timestamptz(6)
+  /// When a waiting person was given a place.
+  promotedAt  DateTime?          @map("promoted_at") @db.Timestamptz(6)
+  cancelledAt DateTime?          @map("cancelled_at") @db.Timestamptz(6)
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, status, queuedAt])
+  @@index([userId])
+  @@map("event_registrations")
+}
+
+/// A session the member put in their personal schedule (only while registered for its event).
+model ScheduleItem {
+  userId    String   @map("user_id") @db.Uuid
+  sessionId String   @map("session_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, sessionId])
+  @@index([sessionId])
+  @@map("schedule_items")
+}
+
+/// How an attendance record was made: the member scanned the venue's QR code, or an event admin
+/// marked them by hand.
+enum AttendanceMethod {
+  QR
+  MANUAL
+
+  @@map("attendance_method")
+}
+
+/// Who attended an event, or one of its sessions (session_id set). Append-only: a record is
+/// never changed or deleted; a wrong one is voided, once, with a reason (M5 plan §3). Kept ready
+/// for CME points in Phase 2.
+model EventAttendance {
+  id         String           @id @db.Uuid
+  eventId    String           @map("event_id") @db.Uuid
+  /// Null: attendance at the event as a whole.
+  sessionId  String?          @map("session_id") @db.Uuid
+  userId     String           @map("user_id") @db.Uuid
+  method     AttendanceMethod
+  /// The event admin who marked it by hand. Null for a QR check-in.
+  recordedBy String?          @map("recorded_by") @db.Uuid
+  at         DateTime         @default(now()) @db.Timestamptz(6)
+  voidedAt   DateTime?        @map("voided_at") @db.Timestamptz(6)
+  voidedBy   String?          @map("voided_by") @db.Uuid
+  voidReason String?          @map("void_reason") @db.VarChar(500)
+
+  event   Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  session EventSession? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, at])
+  @@index([userId])
+  @@map("event_attendance")
+}
+
+/// Which reminder: a week before the event, or a day before (M5 plan §11.4).
+enum ReminderKind {
+  WEEK
+  DAY
+
+  @@map("reminder_kind")
+}
+
+/// A reminder that was sent. The row is written before the email goes out, so a reminder is
+/// never sent twice, even if the job runs twice or is interrupted.
+model EventReminder {
+  eventId String       @map("event_id") @db.Uuid
+  userId  String       @map("user_id") @db.Uuid
+  kind    ReminderKind
+  sentAt  DateTime     @default(now()) @map("sent_at") @db.Timestamptz(6)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, userId, kind])
+  @@map("event_reminders")
 }

@@ -1188,6 +1188,406 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsAdminController_list"];
+        put?: never;
+        post: operations["EventsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsAdminController_listCategories"];
+        put?: never;
+        post: operations["EventsAdminController_createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["EventsAdminController_updateCategory"];
+        trace?: never;
+    };
+    "/api/v1/admin/events/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsAdminController_get"];
+        put: operations["EventsAdminController_update"];
+        post?: never;
+        delete: operations["EventsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EventsAdminController_publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EventsAdminController_cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SessionsAdminController_list"];
+        put?: never;
+        post: operations["SessionsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/sessions/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["SessionsAdminController_update"];
+        post?: never;
+        delete: operations["SessionsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/speakers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SpeakersAdminController_list"];
+        put?: never;
+        post: operations["SpeakersAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/speakers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["SpeakersAdminController_update"];
+        post?: never;
+        delete: operations["SpeakersAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/registrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RegistrationsAdminController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttendanceAdminController_list"];
+        put?: never;
+        post: operations["AttendanceAdminController_record"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttendanceAdminController_code"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttendanceAdminController_csv"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance/{attendanceId}/void": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AttendanceAdminController_void"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EventCheckInController_checkIn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/schedule.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyScheduleController_ics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyScheduleController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventRegistrationController_mine"];
+        put?: never;
+        post: operations["EventRegistrationController_register"];
+        delete: operations["EventRegistrationController_cancel"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["EventRegistrationController_setSchedule"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsPublicController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsPublicController_listCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsPublicController_ics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsPublicController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsPublicController_listSessions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2443,6 +2843,512 @@ export interface components {
                 yearOnly: boolean;
                 url: string | null;
                 licenseNote: string | null;
+            }[];
+        };
+        AdminEventListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                /** @enum {string} */
+                status: "DRAFT" | "PUBLISHED" | "CANCELLED";
+                titleHe: string | null;
+                titleEn: string | null;
+                startAt: string | null;
+                endAt: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                /** @enum {string} */
+                registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        EventCategoryListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+                sortOrder: number;
+                active: boolean;
+            }[];
+        };
+        CreateEventCategoryDto: {
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+        };
+        EventCategoryDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            sortOrder: number;
+            active: boolean;
+        };
+        UpdateEventCategoryDto: {
+            nameHe?: string;
+            nameEn?: string;
+            sortOrder?: number;
+            active?: boolean;
+        };
+        EventInputDto: {
+            slug?: string;
+            categoryId?: string | null;
+            startAt?: string | null;
+            endAt?: string | null;
+            locationName?: string;
+            address?: string;
+            lat?: number | null;
+            lng?: number | null;
+            organizer?: string;
+            imageFileId?: string | null;
+            /**
+             * @default NONE
+             * @enum {string}
+             */
+            registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
+            registrationUrl?: string | null;
+            capacity?: number | null;
+            /** @default false */
+            cmeAvailable: boolean;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary?: string;
+                    /** @default  */
+                    description: string;
+                };
+                en?: {
+                    title: string;
+                    summary?: string;
+                    /** @default  */
+                    description: string;
+                };
+            };
+        };
+        AdminEventDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            /** @enum {string} */
+            status: "DRAFT" | "PUBLISHED" | "CANCELLED";
+            categoryId: string | null;
+            startAt: string | null;
+            endAt: string | null;
+            timezone: string;
+            locationName: string | null;
+            address: string | null;
+            lat: number[];
+            lng: number[];
+            organizer: string | null;
+            image: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                width: number | null;
+                height: number | null;
+            } | null;
+            /** @enum {string} */
+            registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
+            registrationUrl: string | null;
+            capacity: number | null;
+            cmeAvailable: boolean;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            typeIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    summary: string | null;
+                    description: string;
+                };
+                en?: {
+                    title: string;
+                    summary: string | null;
+                    description: string;
+                };
+            };
+            sourceUrl: string | null;
+            publishedAt: string | null;
+            cancelledAt: string | null;
+            cancelReason: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CancelEventDto: {
+            reason: string;
+        };
+        AdminSessionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                room: string | null;
+                speakerIds: string[];
+                materials: {
+                    /** Format: uuid */
+                    id: string;
+                    originalName: string;
+                    mimeType: string;
+                    sizeBytes: number;
+                }[];
+                translations: {
+                    he?: {
+                        title: string;
+                        description: string | null;
+                    };
+                    en?: {
+                        title: string;
+                        description: string | null;
+                    };
+                };
+            }[];
+        };
+        SessionInputDto: {
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            room?: string;
+            /** @default [] */
+            speakerIds: string[];
+            /** @default [] */
+            materialFileIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    description?: string;
+                };
+                en?: {
+                    title: string;
+                    description?: string;
+                };
+            };
+        };
+        AdminSessionDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            room: string | null;
+            speakerIds: string[];
+            materials: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    description: string | null;
+                };
+                en?: {
+                    title: string;
+                    description: string | null;
+                };
+            };
+        };
+        AdminSpeakerListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                photoFileId: string | null;
+                translations: {
+                    he?: {
+                        name: string;
+                        title: string | null;
+                        affiliation: string | null;
+                        bio: string | null;
+                    };
+                    en?: {
+                        name: string;
+                        title: string | null;
+                        affiliation: string | null;
+                        bio: string | null;
+                    };
+                };
+                sessionCount: number;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        SpeakerInputDto: {
+            photoFileId?: string | null;
+            translations: {
+                he?: {
+                    name: string;
+                    title?: string;
+                    affiliation?: string;
+                    bio?: string;
+                };
+                en?: {
+                    name: string;
+                    title?: string;
+                    affiliation?: string;
+                    bio?: string;
+                };
+            };
+        };
+        AdminSpeakerDto: {
+            /** Format: uuid */
+            id: string;
+            photoFileId: string | null;
+            translations: {
+                he?: {
+                    name: string;
+                    title: string | null;
+                    affiliation: string | null;
+                    bio: string | null;
+                };
+                en?: {
+                    name: string;
+                    title: string | null;
+                    affiliation: string | null;
+                    bio: string | null;
+                };
+            };
+            sessionCount: number;
+        };
+        AdminRegistrationListDto: {
+            capacity: number | null;
+            registered: number;
+            waiting: number;
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                name: string | null;
+                /** @enum {string} */
+                status: "REGISTERED" | "WAITLISTED" | "CANCELLED";
+                /** Format: date-time */
+                queuedAt: string;
+                promotedAt: string | null;
+                cancelledAt: string | null;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        AttendanceListDto: {
+            attendees: number;
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                name: string | null;
+                sessionId: string | null;
+                /** @enum {string} */
+                method: "QR" | "MANUAL";
+                /** Format: date-time */
+                at: string;
+                voidedAt: string | null;
+                voidReason: string | null;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        CheckInCodeDto: {
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        ManualAttendanceDto: {
+            /** Format: email */
+            email: string;
+            /** Format: uuid */
+            sessionId?: string;
+        };
+        AttendanceRecordDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            userId: string;
+            email: string;
+            name: string | null;
+            sessionId: string | null;
+            /** @enum {string} */
+            method: "QR" | "MANUAL";
+            /** Format: date-time */
+            at: string;
+            voidedAt: string | null;
+            voidReason: string | null;
+        };
+        VoidAttendanceDto: {
+            reason: string;
+        };
+        CheckInDto: {
+            token: string;
+        };
+        CheckInResultDto: {
+            recorded: boolean;
+            sessionId: string | null;
+            /** Format: date-time */
+            at: string;
+        };
+        MyScheduleDto: {
+            items: {
+                slug: string;
+                title: string;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                timezone: string;
+                locationName: string | null;
+                cancelled: boolean;
+                /** @enum {string} */
+                status: "REGISTERED" | "WAITLISTED";
+                sessions: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    /** Format: date-time */
+                    startAt: string;
+                    /** Format: date-time */
+                    endAt: string;
+                    room: string | null;
+                    overlaps: boolean;
+                }[];
+            }[];
+        };
+        MyRegistrationDto: {
+            /** @enum {string} */
+            status: "NONE" | "REGISTERED" | "WAITLISTED";
+            waitingPosition: number | null;
+            sessionIds: string[];
+        };
+        ScheduleInputDto: {
+            sessionIds: string[];
+        };
+        PublicEventListDto: {
+            items: {
+                slug: string;
+                title: string;
+                summary: string | null;
+                category: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                timezone: string;
+                locationName: string | null;
+                imageFileId: string | null;
+                cancelled: boolean;
+                /** @enum {string} */
+                registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
+                cmeAvailable: boolean;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                /** @enum {string} */
+                locale: "he" | "en";
+                fallback: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        PublicEventDto: {
+            slug: string;
+            title: string;
+            summary: string | null;
+            category: {
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            timezone: string;
+            locationName: string | null;
+            imageFileId: string | null;
+            cancelled: boolean;
+            /** @enum {string} */
+            registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
+            cmeAvailable: boolean;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @enum {string} */
+            locale: "he" | "en";
+            fallback: boolean;
+            description: string;
+            address: string | null;
+            lat: number[];
+            lng: number[];
+            organizer: string | null;
+            registrationUrl: string | null;
+            capacity: number | null;
+            placesLeft: number | null;
+            registrationOpen: boolean;
+            cancelReason: string | null;
+            sourceUrl: string | null;
+        };
+        PublicSessionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                description: string | null;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                room: string | null;
+                /** @enum {string} */
+                locale: "he" | "en";
+                speakers: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    title: string | null;
+                    affiliation: string | null;
+                    bio: string | null;
+                    photoFileId: string | null;
+                }[];
+                materials: {
+                    /** Format: uuid */
+                    id: string;
+                    originalName: string;
+                    mimeType: string;
+                    sizeBytes: number;
+                }[];
             }[];
         };
     };
@@ -4434,6 +5340,830 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicGuidelineDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "PUBLISHED" | "CANCELLED";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventListDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_listCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventCategoryListDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateEventCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventCategoryDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_updateCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateEventCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventCategoryDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The version you edited: "<n>" */
+                "If-Match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EventsAdminController_publish: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventDto"];
+                };
+            };
+        };
+    };
+    EventsAdminController_cancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelEventDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminEventDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSessionListDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSessionDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSessionDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SpeakersAdminController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSpeakerListDto"];
+                };
+            };
+        };
+    };
+    SpeakersAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpeakerInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSpeakerDto"];
+                };
+            };
+        };
+    };
+    SpeakersAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpeakerInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSpeakerDto"];
+                };
+            };
+        };
+    };
+    SpeakersAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RegistrationsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "REGISTERED" | "WAITLISTED" | "CANCELLED";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRegistrationListDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_list: {
+        parameters: {
+            query?: {
+                sessionId?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttendanceListDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_record: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualAttendanceDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttendanceRecordDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_code: {
+        parameters: {
+            query?: {
+                sessionId?: string;
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInCodeDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_csv: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": string;
+                };
+            };
+        };
+    };
+    AttendanceAdminController_void: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                attendanceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoidAttendanceDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttendanceRecordDto"];
+                };
+            };
+        };
+    };
+    EventCheckInController_checkIn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckInDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInResultDto"];
+                };
+            };
+        };
+    };
+    MyScheduleController_ics: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/calendar": string;
+                };
+            };
+        };
+    };
+    MyScheduleController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyScheduleDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_cancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_setSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventsPublicController_list: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+                when?: "upcoming" | "past";
+                category?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicEventListDto"];
+                };
+            };
+        };
+    };
+    EventsPublicController_listCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventCategoryListDto"];
+                };
+            };
+        };
+    };
+    EventsPublicController_ics: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/calendar": string;
+                };
+            };
+        };
+    };
+    EventsPublicController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicEventDto"];
+                };
+            };
+        };
+    };
+    EventsPublicController_listSessions: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSessionListDto"];
                 };
             };
         };

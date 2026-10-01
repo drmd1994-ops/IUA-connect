@@ -13,6 +13,7 @@ describe('content import (integration)', () => {
   const run = Date.now();
   const newsUrl = (n: number) => `${SOURCE_SITE}ViewArticle.aspx?aId=${run}${n}`;
   const listUrl = `${SOURCE_SITE}ViewContent.aspx?CategoryId=${run}`;
+  const conferenceUrl = `${SOURCE_SITE}ViewContent.aspx?CategoryId=${run}9`;
   const fixtures: ImportFixtures = {
     news: [
       {
@@ -37,6 +38,7 @@ describe('content import (integration)', () => {
         documentUrl: `http://docs.example.test/${run}.pdf`,
       },
     ],
+    conferences: [{ sourceUrl: conferenceUrl, title: `כנס מיובא לדוגמה ${run}`, excerpt: null }],
   };
 
   beforeAll(async () => {
@@ -52,12 +54,12 @@ describe('content import (integration)', () => {
   });
 
   it('loads each item once, however often it runs', async () => {
-    expect(await seedImport(prisma, fixtures)).toEqual({ news: 2, guidelines: 1 });
+    expect(await seedImport(prisma, fixtures)).toEqual({ news: 2, guidelines: 1, events: 1 });
     const before = await h.db.query(
       `SELECT id, updated_at FROM news WHERE source_url LIKE $1 ORDER BY id`,
       [`${SOURCE_SITE}%`],
     );
-    expect(await seedImport(prisma, fixtures)).toEqual({ news: 0, guidelines: 0 });
+    expect(await seedImport(prisma, fixtures)).toEqual({ news: 0, guidelines: 0, events: 0 });
     const after = await h.db.query(
       `SELECT id, updated_at FROM news WHERE source_url LIKE $1 ORDER BY id`,
       [`${SOURCE_SITE}%`],
@@ -109,6 +111,19 @@ describe('content import (integration)', () => {
     expect(files.rows[0].n).toBe(0);
   });
 
+  it('loads a conference page as a draft event without dates, hidden until an admin publishes it', async () => {
+    const row = await h.db.query(
+      'SELECT slug, status, start_at, end_at FROM events WHERE source_url = $1',
+      [conferenceUrl],
+    );
+    expect(row.rows).toHaveLength(1);
+    expect(row.rows[0]).toMatchObject({ status: 'DRAFT', start_at: null, end_at: null });
+    await h
+      .http()
+      .get(`/api/v1/events/${encodeURIComponent(row.rows[0].slug as string)}`)
+      .expect(404);
+  });
+
   it('refuses fixtures from another site, and documents without a year', async () => {
     await expect(
       seedImport(prisma, {
@@ -116,6 +131,7 @@ describe('content import (integration)', () => {
           { sourceUrl: 'https://example.test/a', title: 'x', date: '2025-01-01', excerpt: null },
         ],
         documents: [],
+        conferences: [],
       }),
     ).rejects.toThrow('another site');
     await expect(
@@ -128,6 +144,7 @@ describe('content import (integration)', () => {
             year: null,
           },
         ],
+        conferences: [],
       }),
     ).rejects.toThrow('without a year');
   });
@@ -153,7 +170,7 @@ describe('content import (integration)', () => {
       .expect(201);
 
     const removed = await removeImport(prisma);
-    expect(removed).toEqual({ news: 2, guidelines: 1 });
+    expect(removed).toEqual({ news: 2, guidelines: 1, events: 1 });
     const left = await h.db.query(
       `SELECT (SELECT count(*)::int FROM news WHERE source_url LIKE $1) AS news,
               (SELECT count(*)::int FROM guidelines WHERE source_url LIKE $1) AS guidelines,
@@ -161,6 +178,6 @@ describe('content import (integration)', () => {
       [`${SOURCE_SITE}%`, own.body.id],
     );
     expect(left.rows[0]).toEqual({ news: 0, guidelines: 0, own: 1 });
-    expect(await removeImport(prisma)).toEqual({ news: 0, guidelines: 0 });
+    expect(await removeImport(prisma)).toEqual({ news: 0, guidelines: 0, events: 0 });
   });
 });
