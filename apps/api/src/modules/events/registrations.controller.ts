@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   HttpCode,
   Param,
   ParseUUIDPipe,
@@ -10,11 +11,14 @@ import {
   Put,
   Query,
   Req,
+  Res,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiProduces, ApiTags } from '@nestjs/swagger';
+import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import { Authenticated, RequirePermission } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
+import { CalendarService } from './calendar.service';
 import {
   AdminRegistrationListDto,
   AdminRegistrationListQueryDto,
@@ -79,12 +83,30 @@ export class EventRegistrationController {
 /** The signed-in person's schedule across all their events. */
 @ApiTags('me')
 @ApiBearerAuth()
-@Controller('me/schedule')
+@Controller('me')
 @Authenticated()
 export class MyScheduleController {
-  constructor(private readonly registrations: RegistrationsService) {}
+  constructor(
+    private readonly registrations: RegistrationsService,
+    private readonly calendar: CalendarService,
+  ) {}
 
-  @Get()
+  /** The schedule as a calendar file: chosen sessions, or whole events where none was chosen. */
+  @Get('schedule.ics')
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  @ApiProduces('text/calendar')
+  @ApiOkResponse({ schema: { type: 'string' } })
+  async ics(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: MyScheduleQueryDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<string> {
+    const file = await this.calendar.scheduleCalendar(principalOf(req), query.locale);
+    res.setHeader('Content-Disposition', 'attachment; filename="my-schedule.ics"');
+    return file;
+  }
+
+  @Get('schedule')
   @ApiOkResponse({ type: MyScheduleDto })
   get(
     @Req() req: RequestWithPrincipal,

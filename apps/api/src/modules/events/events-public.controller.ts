@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Query, Req } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Header, Param, Query, Req, Res } from '@nestjs/common';
+import { ApiOkResponse, ApiProduces, ApiTags } from '@nestjs/swagger';
+import { type Response } from 'express';
 import { PrincipalResolver, type RequestWithPrincipal } from '../../common/auth/principal';
 import { Public } from '../../common/decorators/access.decorators';
 import {
@@ -9,6 +10,7 @@ import {
   PublicEventListDto,
   PublicEventQueryDto,
 } from './events.dto';
+import { CalendarService } from './calendar.service';
 import { EventsAdminService } from './events-admin.service';
 import { EventsPublicService } from './events-public.service';
 import { PublicSessionListDto, PublicSessionQueryDto } from './sessions.dto';
@@ -26,6 +28,7 @@ export class EventsPublicController {
     private readonly events: EventsPublicService,
     private readonly admin: EventsAdminService,
     private readonly sessions: SessionsService,
+    private readonly calendar: CalendarService,
     private readonly principals: PrincipalResolver,
   ) {}
 
@@ -42,6 +45,22 @@ export class EventsPublicController {
   @ApiOkResponse({ type: EventCategoryListDto })
   async listCategories(): Promise<EventCategoryListDto> {
     return { items: await this.admin.listCategories(true) };
+  }
+
+  /** The event as a calendar file. Declared before ':slug', which would match it too. */
+  @Get(':slug.ics')
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  @ApiProduces('text/calendar')
+  @ApiOkResponse({ schema: { type: 'string' } })
+  async ics(
+    @Req() req: RequestWithPrincipal,
+    @Param('slug') slug: string,
+    @Query() query: PublicEventItemQueryDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<string> {
+    const file = await this.calendar.eventCalendar(await this.caller(req), slug, query.locale);
+    res.setHeader('Content-Disposition', 'attachment; filename="event.ics"');
+    return file;
   }
 
   @Get(':slug')

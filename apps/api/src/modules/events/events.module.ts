@@ -5,6 +5,7 @@ import { FilesModule } from '../files';
 import { EventsAdminController } from './events-admin.controller';
 import { EventsAdminService } from './events-admin.service';
 import { EventsPublicController } from './events-public.controller';
+import { CalendarService } from './calendar.service';
 import { EventMailer } from './event-mailer';
 import { EventsPublicService } from './events-public.service';
 import {
@@ -33,6 +34,7 @@ import { SessionsService } from './sessions.service';
     EventsPublicService,
     SessionsService,
     RegistrationsService,
+    CalendarService,
     EventMailer,
   ],
   exports: [EventsAdminService, EventsPublicService],
