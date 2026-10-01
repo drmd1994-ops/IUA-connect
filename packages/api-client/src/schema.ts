@@ -1044,6 +1044,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/news": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsPublicController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsPublicController_listCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NewsPublicController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2042,6 +2090,64 @@ export interface components {
                 /** Format: date-time */
                 at: string;
             }[];
+        };
+        PublicNewsListDto: {
+            items: {
+                slug: string;
+                title: string;
+                summary: string | null;
+                category: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                tags: string[];
+                /** Format: date-time */
+                date: string;
+                featuredImageFileId: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                /** @enum {string} */
+                locale: "he" | "en";
+                fallback: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        PublicNewsDto: {
+            slug: string;
+            title: string;
+            summary: string | null;
+            category: {
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            tags: string[];
+            /** Format: date-time */
+            date: string;
+            featuredImageFileId: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @enum {string} */
+            locale: "he" | "en";
+            fallback: boolean;
+            body: string;
+            author: string | null;
+            archived: boolean;
+            attachments: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            }[];
+            references: {
+                title: string;
+                url: string;
+            }[];
+            sourceUrl: string | null;
         };
     };
     responses: never;
@@ -3758,6 +3864,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["NewsHistoryDto"];
+                };
+            };
+        };
+    };
+    NewsPublicController_list: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+                category?: string;
+                tag?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicNewsListDto"];
+                };
+            };
+        };
+    };
+    NewsPublicController_listCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsCategoryListDto"];
+                };
+            };
+        };
+    };
+    NewsPublicController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicNewsDto"];
                 };
             };
         };

@@ -213,3 +213,6 @@ Git: branch `feat/content`, pull request into `main` (Claude pushes and opens it
    - Server: **unified/remark** parses each body and keeps only allowed elements (raw HTML is dropped).
    - Web: **react-markdown** renders bodies as React elements, never as raw HTML.
    - Editor: TipTap's Markdown extension.
+7. **Guideline fields** (asked at checkpoint 6, 2026-10-01):
+   - **Status:** Current, Superseded or Withdrawn. Superseded and withdrawn guidelines stay listed, clearly marked.
+   - **Evidence level:** optional free text (organisations use different scales).
