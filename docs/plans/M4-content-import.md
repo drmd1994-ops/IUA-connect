@@ -1,6 +1,6 @@
 # M4 — Content import: plan
 
-- Status: **Draft, waiting for the owner's approval**
+- Status: **Approved by the owner on 2026-10-01**
 - Date: 2026-10-01
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M4. Design sources:
   - `PROJECT_STATUS.md` D11 (curated sample; no physician directory) and O4 (permission before the pitch)
