@@ -6,7 +6,7 @@ _Last updated: 2026-10-01_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: built on `feat/content` (pull request #5), waiting for the owner to merge.** Next: the M4 plan, for the owner's approval. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). Next: M4 Content import; the plan is written and waits for the owner's approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -235,9 +235,9 @@ Libraries added with the owner's approval: sharp, file-type, unified/remark, pg-
 
 ### Open for the owner
 
-- Review and merge pull request #5 (or ask Claude to), then the owner's checkpoint test of the demo.
+- ~~Merge pull request #5~~ merged at the owner's request on 2026-10-01 (CI green). The owner's own checkpoint test of the demo is still to come.
 - The Hebrew names of the two demo news categories are suggestions: הודעות האיגוד, הוראה והשתלמות.
 
 ## Next step
 
-**M4:** write the plan in `docs/plans/` for the owner's approval (scope in `DEVELOPMENT_ROADMAP.md`). No M4 code before the plan is approved.
+**M4 Content import:** the plan [`docs/plans/M4-content-import.md`](docs/plans/M4-content-import.md) is written, with the owner's four answers recorded (§11). No M4 code before the owner approves the plan.
