@@ -198,7 +198,6 @@
       "summaryHint": "Shown after the reader answers.",
       "options": "Answer options",
       "optionsHint": "Between 2 and 6. Mark the one right answer, and explain every option: why it is right, or why it is wrong.",
-      "option": "Option {number}",
       "optionText": "Option {number}: text",
       "explanation": "Option {number}: explanation",
       "correct": "Option {number} is the right answer",
