@@ -20,7 +20,8 @@ apps/web/next-env.d.ts
 !.env.example
 
 # Local runtime data
-storage/
+/storage/
+/apps/api/storage/
 outbox/
 coverage/
 playwright-report/
