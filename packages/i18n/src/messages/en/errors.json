@@ -93,6 +93,12 @@
     "alreadyRegistered": "You are already registered for this event.",
     "notRegistered": "You aren’t registered for this event.",
     "scheduleNeedsRegistration": "Register for the event before choosing sessions.",
-    "unknownSession": "One of the sessions doesn’t belong to this event."
+    "unknownSession": "One of the sessions doesn’t belong to this event.",
+    "checkInCodeInvalid": "This code isn’t valid any more. Please scan the code at the venue again.",
+    "checkInClosed": "Attendance isn’t being recorded for this event.",
+    "checkInNotRegistered": "Only people registered for this event can be recorded.",
+    "unknownAccount": "No account has this email address.",
+    "attendanceAlreadyRecorded": "This person is already recorded.",
+    "attendanceAlreadyVoided": "This record was already voided."
   }
 }

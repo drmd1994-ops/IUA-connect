@@ -1364,6 +1364,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/events/{eventId}/attendance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttendanceAdminController_list"];
+        put?: never;
+        post: operations["AttendanceAdminController_record"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttendanceAdminController_code"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttendanceAdminController_csv"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/attendance/{attendanceId}/void": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AttendanceAdminController_void"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EventCheckInController_checkIn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/schedule.ics": {
         parameters: {
             query?: never;
@@ -3077,6 +3157,65 @@ export interface components {
             page: number;
             pageSize: number;
             total: number;
+        };
+        AttendanceListDto: {
+            attendees: number;
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                name: string | null;
+                sessionId: string | null;
+                /** @enum {string} */
+                method: "QR" | "MANUAL";
+                /** Format: date-time */
+                at: string;
+                voidedAt: string | null;
+                voidReason: string | null;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        CheckInCodeDto: {
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        ManualAttendanceDto: {
+            /** Format: email */
+            email: string;
+            /** Format: uuid */
+            sessionId?: string;
+        };
+        AttendanceRecordDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            userId: string;
+            email: string;
+            name: string | null;
+            sessionId: string | null;
+            /** @enum {string} */
+            method: "QR" | "MANUAL";
+            /** Format: date-time */
+            at: string;
+            voidedAt: string | null;
+            voidReason: string | null;
+        };
+        VoidAttendanceDto: {
+            reason: string;
+        };
+        CheckInDto: {
+            token: string;
+        };
+        CheckInResultDto: {
+            recorded: boolean;
+            sessionId: string | null;
+            /** Format: date-time */
+            at: string;
         };
         MyScheduleDto: {
             items: {
@@ -5636,6 +5775,152 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminRegistrationListDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_list: {
+        parameters: {
+            query?: {
+                sessionId?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttendanceListDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_record: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualAttendanceDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttendanceRecordDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_code: {
+        parameters: {
+            query?: {
+                sessionId?: string;
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInCodeDto"];
+                };
+            };
+        };
+    };
+    AttendanceAdminController_csv: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": string;
+                };
+            };
+        };
+    };
+    AttendanceAdminController_void: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                attendanceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoidAttendanceDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttendanceRecordDto"];
+                };
+            };
+        };
+    };
+    EventCheckInController_checkIn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckInDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInResultDto"];
                 };
             };
         };

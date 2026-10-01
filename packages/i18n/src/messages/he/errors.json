@@ -93,6 +93,12 @@
     "alreadyRegistered": "כבר נרשמת לאירוע הזה.",
     "notRegistered": "לא נרשמת לאירוע הזה.",
     "scheduleNeedsRegistration": "יש להירשם לאירוע לפני בחירת מושבים.",
-    "unknownSession": "אחד המושבים אינו שייך לאירוע הזה."
+    "unknownSession": "אחד המושבים אינו שייך לאירוע הזה.",
+    "checkInCodeInvalid": "הקוד כבר אינו בתוקף. נא לסרוק שוב את הקוד שמוצג במקום.",
+    "checkInClosed": "לא נרשמת נוכחות לאירוע הזה.",
+    "checkInNotRegistered": "אפשר לרשום נוכחות רק למי שנרשם לאירוע.",
+    "unknownAccount": "אין חשבון עם כתובת הדוא״ל הזאת.",
+    "attendanceAlreadyRecorded": "הנוכחות של האדם הזה כבר נרשמה.",
+    "attendanceAlreadyVoided": "הרישום הזה כבר בוטל."
   }
 }

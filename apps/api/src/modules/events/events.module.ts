@@ -5,7 +5,10 @@ import { FilesModule } from '../files';
 import { EventsAdminController } from './events-admin.controller';
 import { EventsAdminService } from './events-admin.service';
 import { EventsPublicController } from './events-public.controller';
+import { AttendanceAdminController, EventCheckInController } from './attendance.controller';
+import { AttendanceService } from './attendance.service';
 import { CalendarService } from './calendar.service';
+import { CheckInTokens } from './check-in-token';
 import { EventMailer } from './event-mailer';
 import { EventsPublicService } from './events-public.service';
 import {
@@ -25,6 +28,8 @@ import { SessionsService } from './sessions.service';
     SessionsAdminController,
     SpeakersAdminController,
     RegistrationsAdminController,
+    AttendanceAdminController,
+    EventCheckInController,
     MyScheduleController,
     EventRegistrationController,
     EventsPublicController,
@@ -35,6 +40,8 @@ import { SessionsService } from './sessions.service';
     SessionsService,
     RegistrationsService,
     CalendarService,
+    AttendanceService,
+    CheckInTokens,
     EventMailer,
   ],
   exports: [EventsAdminService, EventsPublicService],
