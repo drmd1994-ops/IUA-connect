@@ -99,6 +99,27 @@
     "checkInNotRegistered": "Only people registered for this event can be recorded.",
     "unknownAccount": "No account has this email address.",
     "attendanceAlreadyRecorded": "This person is already recorded.",
-    "attendanceAlreadyVoided": "This record was already voided."
+    "attendanceAlreadyVoided": "This record was already voided.",
+    "educationChanged": "Someone changed this item in the meantime. Please reload it and try again.",
+    "educationNotEditable": "This item can’t be edited now. Drafts are edited by editors; an item in review by a reviewer.",
+    "educationTypeFixed": "The type of an item can’t be changed. Create a new item instead.",
+    "educationNotDeletable": "Only a draft that was never published can be deleted.",
+    "educationNotACourse": "Only a course has lessons.",
+    "educationActionNotAllowed": "You don’t have permission for this step.",
+    "educationTransitionNotAllowed": "This step isn’t possible in the item’s current state.",
+    "educationHebrewRequired": "A Hebrew title is required before submitting.",
+    "educationLinkRequired": "Give the link to the recording, or mark it as pending.",
+    "educationFileRequired": "Attach the file before submitting.",
+    "educationTextRequired": "Write the Hebrew text before submitting.",
+    "educationLessonsRequired": "Add at least one lesson before submitting.",
+    "unknownLesson": "One of the lessons isn’t available.",
+    "courseAsLesson": "A course can’t be a lesson of another course.",
+    "examStemRequired": "Write the question in Hebrew before submitting.",
+    "examOptionCount": "A question needs between 2 and 6 options.",
+    "examOneCorrectOption": "Mark exactly one option as the right answer.",
+    "examOptionTextRequired": "Every option needs its Hebrew text.",
+    "examExplanationRequired": "Every option needs a Hebrew explanation: why it is right, or why it is wrong.",
+    "examSummaryRequired": "Write the short topic summary in Hebrew before submitting.",
+    "unknownOption": "This question has no such option."
   }
 }

@@ -44,7 +44,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   await headers();
   const t = await getTranslations('common.a11y');
   // The browser needs UI text only; email templates stay on the server.
-  const { common, auth, errors, membership, admin, content, events } = getMessages(locale);
+  const { common, auth, errors, membership, admin, content, events, education } =
+    getMessages(locale);
 
   return (
     <html lang={locale} dir={directionOf(locale)}>
@@ -56,7 +57,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           {t('skipToContent')}
         </a>
         <NextIntlClientProvider
-          messages={{ common, auth, errors, membership, admin, content, events }}
+          messages={{ common, auth, errors, membership, admin, content, events, education }}
         >
           <AuthProvider>
             <DemoBanner />

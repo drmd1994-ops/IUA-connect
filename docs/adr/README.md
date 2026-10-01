@@ -11,5 +11,4 @@ One file per decision that had a real alternative: `NNNN-short-title.md`, with S
 | 0005 | [Translations table for content](0005-translations-table-for-content.md)                  |
 | 0006 | [Admin as route group](0006-admin-as-route-group.md)                                      |
 | 0007 | [Web-first delivery](0007-web-first-delivery.md)                                          |
-
-Upcoming: video hosting (M6, owner decision D8).
+| 0008 | [Videos are links to where they are hosted](0008-videos-are-links.md)                     |

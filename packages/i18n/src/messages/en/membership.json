@@ -5,7 +5,8 @@
     "card": "Membership card",
     "applications": "Applications to review",
     "admin": "Administration",
-    "schedule": "My schedule"
+    "schedule": "My schedule",
+    "examResults": "My exam results"
   },
   "common": {
     "loading": "Loading…",

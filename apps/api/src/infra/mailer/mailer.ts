@@ -18,6 +18,9 @@ export interface EmailTemplates {
   // News (M3), to the item's author.
   newsSentBack: { title: string; reason: string; link: string };
   newsPublished: { title: string; link: string };
+  // Education (M6), to the item's or question's author.
+  educationSentBack: { title: string; reason: string; link: string };
+  educationPublished: { title: string; link: string };
   // Events (M5), to people registered for the event. "when" is formatted for the recipient.
   eventRegistered: { title: string; when: string; link: string };
   eventWaitlisted: { title: string; link: string };

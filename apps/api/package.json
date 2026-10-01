@@ -10,7 +10,7 @@
     "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
     "lint": "eslint --max-warnings=0 src test prisma",
     "test": "prisma generate && jest",
-    "test:integration": "prisma generate && jest -c test/jest-integration.config.js --runInBand",
+    "test:integration": "prisma generate && jest -c test/jest-integration.config.js --maxWorkers=1",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:deploy": "prisma migrate deploy",

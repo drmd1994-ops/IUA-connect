@@ -8,7 +8,8 @@
     "import": "Import members",
     "news": "News",
     "guidelines": "Guidelines",
-    "events": "Events"
+    "events": "Events",
+    "education": "Education"
   },
   "notAllowed": "This area is for association administrators, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",

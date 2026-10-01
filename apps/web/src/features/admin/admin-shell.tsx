@@ -15,6 +15,7 @@ const ADMIN_PERMISSIONS = [
   'news.create',
   'guidelines.manage',
   'events.manage',
+  'education.manage',
 ];
 
 export function isAdmin(me: Me | null): boolean {
@@ -30,6 +31,7 @@ export const ADMIN_SECTIONS = [
   { href: '/admin/news', key: 'news', permission: 'news.create' },
   { href: '/admin/guidelines', key: 'guidelines', permission: 'guidelines.manage' },
   { href: '/admin/events', key: 'events', permission: 'events.manage' },
+  { href: '/admin/education', key: 'education', permission: 'education.manage' },
 ] as const;
 
 /**

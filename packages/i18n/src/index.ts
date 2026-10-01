@@ -2,6 +2,7 @@ import enAdmin from './messages/en/admin.json';
 import enAuth from './messages/en/auth.json';
 import enCommon from './messages/en/common.json';
 import enContent from './messages/en/content.json';
+import enEducation from './messages/en/education.json';
 import enEmails from './messages/en/emails.json';
 import enErrors from './messages/en/errors.json';
 import enEvents from './messages/en/events.json';
@@ -10,6 +11,7 @@ import heAdmin from './messages/he/admin.json';
 import heAuth from './messages/he/auth.json';
 import heCommon from './messages/he/common.json';
 import heContent from './messages/he/content.json';
+import heEducation from './messages/he/education.json';
 import heEmails from './messages/he/emails.json';
 import heErrors from './messages/he/errors.json';
 import heEvents from './messages/he/events.json';
@@ -44,6 +46,7 @@ export type Messages = {
   admin: typeof heAdmin;
   content: typeof heContent;
   events: typeof heEvents;
+  education: typeof heEducation;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -56,6 +59,7 @@ const MESSAGES: Record<Locale, Messages> = {
     admin: heAdmin,
     content: heContent,
     events: heEvents,
+    education: heEducation,
   },
   en: {
     common: enCommon,
@@ -66,6 +70,7 @@ const MESSAGES: Record<Locale, Messages> = {
     admin: enAdmin,
     content: enContent,
     events: enEvents,
+    education: enEducation,
   },
 };
 

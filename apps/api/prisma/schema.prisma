@@ -82,6 +82,7 @@ model User {
   scheduleItems      ScheduleItem[]
   eventAttendances   EventAttendance[]
   eventReminders     EventReminder[]
+  examAnswers        ExamAnswer[]
 
   @@map("users")
 }
@@ -353,8 +354,10 @@ model Subspecialty {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  profiles   ProfileSubspecialty[]
-  guidelines Guideline[]
+  profiles      ProfileSubspecialty[]
+  guidelines    Guideline[]
+  education     EducationItem[]
+  examQuestions ExamQuestion[]
 
   @@map("subspecialties")
 }
@@ -722,6 +725,8 @@ model StoredFile {
   newsFeatured    News[]
   newsAttachment  NewsAttachment[]
   eventImage      Event[]
+  educationCover  EducationItem[]   @relation("EducationCover")
+  educationFile   EducationFile[]   @relation("EducationFile")
   speakerPhoto    Speaker[]
   sessionMaterial SessionMaterial[]
 
@@ -1272,4 +1277,268 @@ model EventReminder {
 
   @@id([eventId, userId, kind])
   @@map("event_reminders")
+}
+
+// ---------------------------------------------------------------------------
+// Education (M6). DATABASE_DESIGN.md §3; docs/plans/M6-education.md.
+// ---------------------------------------------------------------------------
+
+/// The content types of spec §12.
+enum EducationType {
+  VIDEO
+  ARTICLE
+  PDF
+  PRESENTATION
+  PODCAST
+  WEBINAR
+  SURGICAL_VIDEO
+  CASE
+  COURSE
+
+  @@map("education_type")
+}
+
+/// Who the item is written for. Null on an item means all levels.
+enum EducationLevel {
+  STUDENT
+  RESIDENT
+  FELLOW
+  SPECIALIST
+  EXPERT
+
+  @@map("education_level")
+}
+
+/// DRAFT → IN_REVIEW → PUBLISHED → ARCHIVED (M6 plan §3). Shared by items and exam questions.
+enum EducationStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+
+  @@map("education_status")
+}
+
+/// Videos are links to where they are hosted (ADR 0008). PENDING_PROVIDER: no link yet.
+enum VideoStatus {
+  NONE
+  EXTERNAL
+  PENDING_PROVIDER
+
+  @@map("video_status")
+}
+
+model EducationItem {
+  id              String          @id @db.Uuid
+  slug            String          @unique @db.VarChar(160)
+  type            EducationType
+  status          EducationStatus @default(DRAFT)
+  level           EducationLevel?
+  subspecialtyId  String?         @map("subspecialty_id") @db.Uuid
+  durationMinutes Int?            @map("duration_minutes")
+  /// Shown only; CME tracking is Phase 2.
+  cmePoints       Decimal?        @map("cme_points") @db.Decimal(5, 2)
+  /// Where a video, webinar or podcast is hosted (opened there, never embedded).
+  externalUrl     String?         @map("external_url") @db.VarChar(500)
+  videoStatus     VideoStatus     @default(NONE) @map("video_status")
+  accessTier      AccessTier      @default(PUBLIC) @map("access_tier")
+  coverFileId     String?         @map("cover_file_id") @db.Uuid
+  /// [{ "title": "...", "url": "https://..." }]
+  references      Json            @default("[]")
+  authorUserId    String?         @map("author_user_id") @db.Uuid
+  /// Who submitted it for review (four eyes: they can't approve it).
+  submittedBy     String?         @map("submitted_by") @db.Uuid
+  publishedAt     DateTime?       @map("published_at") @db.Timestamptz(6)
+  archivedAt      DateTime?       @map("archived_at") @db.Timestamptz(6)
+  /// Increases on every change; the ETag for concurrent edits.
+  version         Int             @default(1)
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subspecialty Subspecialty?          @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  cover        StoredFile?            @relation("EducationCover", fields: [coverFileId], references: [id], onDelete: SetNull)
+  translations EducationTranslation[]
+  files        EducationFile[]
+  history      EducationHistory[]
+  /// For a course: its lessons. For any other item: the courses it is a lesson of.
+  lessons      CourseItem[]           @relation("CourseLessons")
+  inCourses    CourseItem[]           @relation("LessonOf")
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([type, level, subspecialtyId])
+  @@map("education_items")
+}
+
+model EducationTranslation {
+  itemId       String                   @map("item_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  /// Sanitised Markdown: the description, or the whole text of an article or case.
+  description  String                   @default("")
+  /// The byline as shown.
+  author       String?                  @db.VarChar(200)
+  /// Maintained by a trigger from title and description. Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  item EducationItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, locale])
+  @@index([searchVector], map: "education_translations_search_idx", type: Gin)
+  @@map("education_translations")
+}
+
+model EducationFile {
+  itemId    String @map("item_id") @db.Uuid
+  fileId    String @map("file_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  item EducationItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  file StoredFile    @relation("EducationFile", fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, fileId])
+  @@index([fileId])
+  @@map("education_files")
+}
+
+/// A lesson of a course, in order. A course is never a lesson (a database trigger checks it).
+model CourseItem {
+  courseId String @map("course_id") @db.Uuid
+  itemId   String @map("item_id") @db.Uuid
+  position Int
+
+  course EducationItem @relation("CourseLessons", fields: [courseId], references: [id], onDelete: Cascade)
+  item   EducationItem @relation("LessonOf", fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, itemId])
+  @@unique([courseId, position])
+  @@index([itemId])
+  @@map("course_items")
+}
+
+/// Append-only workflow history (like news_history).
+model EducationHistory {
+  id          String           @id @db.Uuid
+  itemId      String           @map("item_id") @db.Uuid
+  action      String           @db.VarChar(40)
+  fromStatus  EducationStatus? @map("from_status")
+  toStatus    EducationStatus  @map("to_status")
+  actorUserId String?          @map("actor_user_id") @db.Uuid
+  comment     String?          @db.VarChar(1000)
+  at          DateTime         @default(now()) @db.Timestamptz(6)
+
+  item EducationItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, at])
+  @@map("education_history")
+}
+
+// ---------------------------------------------------------------------------
+// Exam question demo (M6 plan §2.10). One question at a time; after the reader answers, the
+// right option, why each option is right or wrong, and a short summary of the topic.
+// ---------------------------------------------------------------------------
+
+model ExamQuestion {
+  id             String          @id @db.Uuid
+  status         EducationStatus @default(DRAFT)
+  level          EducationLevel?
+  subspecialtyId String?         @map("subspecialty_id") @db.Uuid
+  accessTier     AccessTier      @default(PUBLIC) @map("access_tier")
+  authorUserId   String?         @map("author_user_id") @db.Uuid
+  /// Who submitted it for review (four eyes: the same person cannot approve it).
+  submittedBy    String?         @map("submitted_by") @db.Uuid
+  publishedAt    DateTime?       @map("published_at") @db.Timestamptz(6)
+  archivedAt     DateTime?       @map("archived_at") @db.Timestamptz(6)
+  /// Increases on every change; the ETag for concurrent edits.
+  version        Int             @default(1)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subspecialty Subspecialty?             @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  translations ExamQuestionTranslation[]
+  options      ExamOption[]
+  history      ExamQuestionHistory[]
+  answers      ExamAnswer[]
+
+  @@index([status, level, subspecialtyId])
+  @@map("exam_questions")
+}
+
+model ExamQuestionTranslation {
+  questionId String @map("question_id") @db.Uuid
+  locale     String @db.VarChar(8)
+  /// The question as asked.
+  stem       String @db.VarChar(4000)
+  /// A short summary of the topic, shown after the reader answers.
+  summary    String @db.VarChar(4000)
+
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, locale])
+  @@map("exam_question_translations")
+}
+
+/// One answer option. Exactly one option of a question is the right one (a partial unique index).
+model ExamOption {
+  id         String  @id @db.Uuid
+  questionId String  @map("question_id") @db.Uuid
+  /// 1 is shown first ("A").
+  position   Int
+  isCorrect  Boolean @default(false) @map("is_correct")
+
+  question     ExamQuestion            @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  translations ExamOptionTranslation[]
+
+  @@unique([questionId, position])
+  @@map("exam_options")
+}
+
+model ExamOptionTranslation {
+  optionId    String @map("option_id") @db.Uuid
+  locale      String @db.VarChar(8)
+  text        String @db.VarChar(1000)
+  /// Why this option is right, or why it is wrong.
+  explanation String @db.VarChar(4000)
+
+  option ExamOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@id([optionId, locale])
+  @@map("exam_option_translations")
+}
+
+/// Append-only workflow history (like education_history).
+model ExamQuestionHistory {
+  id          String           @id @db.Uuid
+  questionId  String           @map("question_id") @db.Uuid
+  action      String           @db.VarChar(40)
+  fromStatus  EducationStatus? @map("from_status")
+  toStatus    EducationStatus  @map("to_status")
+  actorUserId String?          @map("actor_user_id") @db.Uuid
+  comment     String?          @db.VarChar(1000)
+  at          DateTime         @default(now()) @db.Timestamptz(6)
+
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId, at])
+  @@map("exam_question_history")
+}
+
+/// An answer by a signed-in person (owner answer §11.8). Visible only to that person; deleted
+/// with their account. The first answer to a question counts for the score.
+model ExamAnswer {
+  id         String   @id @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  questionId String   @map("question_id") @db.Uuid
+  /// The position of the option chosen (options may be reworded later; the choice is kept).
+  position   Int
+  correct    Boolean
+  /// True for the first answer of this person to this question: the one that counts.
+  counts     Boolean
+  at         DateTime @default(now()) @db.Timestamptz(6)
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, at(sort: Desc)])
+  @@index([questionId])
+  @@map("exam_answers")
 }
