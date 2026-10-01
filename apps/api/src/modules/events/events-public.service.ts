@@ -5,6 +5,7 @@ import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { FilesService } from '../files';
+import { placesLeft, registrationProblem } from './schedule-rules';
 import {
   type PublicEventDto,
   type PublicEventListDto,
@@ -81,6 +82,12 @@ export class EventsPublicService implements OnModuleInit {
   async get(principal: Principal | null, slug: string, locale: Locale): Promise<PublicEventDto> {
     const row = await this.visible(principal, slug);
     const text = pick(row, locale);
+    const registered =
+      row.registrationMode === 'INTERNAL'
+        ? await this.prisma.eventRegistration.count({
+            where: { eventId: row.id, status: 'REGISTERED' },
+          })
+        : 0;
     return {
       ...summary(row, locale),
       description: text.description,
@@ -90,6 +97,8 @@ export class EventsPublicService implements OnModuleInit {
       organizer: row.organizer,
       registrationUrl: row.registrationMode === 'EXTERNAL' ? row.registrationUrl : null,
       capacity: row.capacity,
+      placesLeft: placesLeft(row.capacity, registered),
+      registrationOpen: registrationProblem(row, new Date()) === null,
       cancelReason: row.cancelReason,
       sourceUrl: row.sourceUrl,
     };

@@ -1348,6 +1348,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/events/{eventId}/registrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RegistrationsAdminController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyScheduleController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventRegistrationController_mine"];
+        put?: never;
+        post: operations["EventRegistrationController_register"];
+        delete: operations["EventRegistrationController_cancel"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["EventRegistrationController_setSchedule"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -2960,6 +3024,63 @@ export interface components {
             };
             sessionCount: number;
         };
+        AdminRegistrationListDto: {
+            capacity: number | null;
+            registered: number;
+            waiting: number;
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                name: string | null;
+                /** @enum {string} */
+                status: "REGISTERED" | "WAITLISTED" | "CANCELLED";
+                /** Format: date-time */
+                queuedAt: string;
+                promotedAt: string | null;
+                cancelledAt: string | null;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        MyScheduleDto: {
+            items: {
+                slug: string;
+                title: string;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                timezone: string;
+                locationName: string | null;
+                cancelled: boolean;
+                /** @enum {string} */
+                status: "REGISTERED" | "WAITLISTED";
+                sessions: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    /** Format: date-time */
+                    startAt: string;
+                    /** Format: date-time */
+                    endAt: string;
+                    room: string | null;
+                    overlaps: boolean;
+                }[];
+            }[];
+        };
+        MyRegistrationDto: {
+            /** @enum {string} */
+            status: "NONE" | "REGISTERED" | "WAITLISTED";
+            waitingPosition: number | null;
+            sessionIds: string[];
+        };
+        ScheduleInputDto: {
+            sessionIds: string[];
+        };
         PublicEventListDto: {
             items: {
                 slug: string;
@@ -3023,6 +3144,8 @@ export interface components {
             organizer: string | null;
             registrationUrl: string | null;
             capacity: number | null;
+            placesLeft: number | null;
+            registrationOpen: boolean;
             cancelReason: string | null;
             sourceUrl: string | null;
         };
@@ -5457,6 +5580,140 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    RegistrationsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "REGISTERED" | "WAITLISTED" | "CANCELLED";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRegistrationListDto"];
+                };
+            };
+        };
+    };
+    MyScheduleController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyScheduleDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_cancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    EventRegistrationController_setSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRegistrationDto"];
+                };
             };
         };
     };

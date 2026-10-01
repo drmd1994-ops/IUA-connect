@@ -247,6 +247,9 @@ export class PublicEventDto extends createZodDto(
     organizer: nullableString(),
     registrationUrl: nullableString(),
     capacity: z.number().int().nullable(),
+    /** In-app registration: free places (null means unlimited), and whether it is open now. */
+    placesLeft: z.number().int().nullable(),
+    registrationOpen: z.boolean(),
     cancelReason: nullableString(),
     /** Imported events: the page of the source site. */
     sourceUrl: nullableString(),

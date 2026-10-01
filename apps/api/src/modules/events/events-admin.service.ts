@@ -10,6 +10,7 @@ import { AuditService } from '../audit';
 import { FilesService } from '../files';
 import { parseIfMatch, sanitizeMarkdown, slugify, uniqueSlug } from '../news';
 import { cancelProblem, publishProblem } from './event-rules';
+import { RegistrationsService } from './registrations.service';
 import {
   type AdminEventDto,
   type AdminEventListDto,
@@ -50,6 +51,7 @@ export class EventsAdminService {
     private readonly access: AccessService,
     private readonly files: FilesService,
     private readonly audit: AuditService,
+    private readonly registrations: RegistrationsService,
   ) {}
 
   async list(query: AdminEventListQueryDto): Promise<AdminEventListDto> {
@@ -163,6 +165,8 @@ export class EventsAdminService {
     });
     if (input.imageFileId) await this.files.markAttached(input.imageFileId);
     await this.record('event.update', id, actor);
+    // A larger capacity gives places to people on the waiting list.
+    await this.registrations.fillFreePlaces(id);
     return this.get(id);
   }
 

@@ -87,5 +87,42 @@
     "heading": "פורסם",
     "body": "„{title}” פורסם/ה כעת ב־IUA Connect.",
     "action": "לצפייה"
+  },
+  "eventRegistered": {
+    "subject": "נרשמת: {title}",
+    "heading": "ההרשמה התקבלה",
+    "body": "נרשמת לאירוע ״{title}״, {when}.",
+    "action": "לצפייה באירוע"
+  },
+  "eventWaitlisted": {
+    "subject": "נכנסת לרשימת ההמתנה: {title}",
+    "heading": "נכנסת לרשימת ההמתנה",
+    "body": "האירוע ״{title}״ מלא, ולכן נכנסת לרשימת ההמתנה. נשלח לך דוא״ל אם יתפנה מקום.",
+    "action": "לצפייה באירוע"
+  },
+  "eventPromoted": {
+    "subject": "התפנה לך מקום: {title}",
+    "heading": "יש לך מקום",
+    "body": "התפנה מקום, ועכשיו נרשמת לאירוע ״{title}״, {when}.",
+    "action": "לצפייה באירוע"
+  },
+  "eventCancelled": {
+    "subject": "בוטל: {title}",
+    "heading": "האירוע בוטל",
+    "body": "האירוע ״{title}״ בוטל.",
+    "reason": "הסיבה שנמסרה: {reason}",
+    "action": "לצפייה באירוע"
+  },
+  "eventChanged": {
+    "subject": "פרטים מעודכנים: {title}",
+    "heading": "פרטי האירוע השתנו",
+    "body": "האירוע ״{title}״ יתקיים {when}, ב{place}.",
+    "action": "לצפייה באירוע"
+  },
+  "eventReminder": {
+    "subject": "תזכורת: {title}",
+    "heading": "האירוע שלך מתקרב",
+    "body": "האירוע ״{title}״ יתקיים {when}, ב{place}.",
+    "action": "לצפייה באירוע"
   }
 }

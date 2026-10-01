@@ -18,6 +18,13 @@ export interface EmailTemplates {
   // News (M3), to the item's author.
   newsSentBack: { title: string; reason: string; link: string };
   newsPublished: { title: string; link: string };
+  // Events (M5), to people registered for the event. "when" is formatted for the recipient.
+  eventRegistered: { title: string; when: string; link: string };
+  eventWaitlisted: { title: string; link: string };
+  eventPromoted: { title: string; when: string; link: string };
+  eventCancelled: { title: string; reason: string; link: string };
+  eventChanged: { title: string; when: string; place: string; link: string };
+  eventReminder: { title: string; when: string; place: string; link: string };
 }
 
 export type EmailTemplate = keyof EmailTemplates;

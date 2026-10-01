@@ -66,18 +66,20 @@ model User {
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles         UserRole[]            @relation("UserRoles")
-  rolesGranted  UserRole[]            @relation("RolesGrantedBy")
-  sessions      Session[]
-  devices       Device[]
-  mfaFactors    MfaFactor[]
-  recoveryCodes RecoveryCode[]
-  authTokens    AuthToken[]
-  profile       Profile?
-  membership    Membership?
-  applications  VerificationRequest[]
-  files         StoredFile[]
-  newsAuthored  News[]
+  roles              UserRole[]            @relation("UserRoles")
+  rolesGranted       UserRole[]            @relation("RolesGrantedBy")
+  sessions           Session[]
+  devices            Device[]
+  mfaFactors         MfaFactor[]
+  recoveryCodes      RecoveryCode[]
+  authTokens         AuthToken[]
+  profile            Profile?
+  membership         Membership?
+  applications       VerificationRequest[]
+  files              StoredFile[]
+  newsAuthored       News[]
+  eventRegistrations EventRegistration[]
+  scheduleItems      ScheduleItem[]
 
   @@map("users")
 }
@@ -1045,10 +1047,11 @@ model Event {
   createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  category     EventCategory?     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  image        StoredFile?        @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
-  translations EventTranslation[]
-  sessions     EventSession[]
+  category      EventCategory?      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  image         StoredFile?         @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
+  translations  EventTranslation[]
+  sessions      EventSession[]
+  registrations EventRegistration[]
 
   @@index([status, startAt])
   @@map("events")
@@ -1085,6 +1088,7 @@ model EventSession {
   translations EventSessionTranslation[]
   speakers     SessionSpeaker[]
   materials    SessionMaterial[]
+  scheduled    ScheduleItem[]
 
   @@index([eventId, startAt])
   @@map("event_sessions")
@@ -1159,4 +1163,50 @@ model SessionMaterial {
   @@id([sessionId, fileId])
   @@index([fileId])
   @@map("session_materials")
+}
+
+/// REGISTERED holds a place; WAITLISTED waits for one (M5 plan §11.2); CANCELLED gave it up.
+enum RegistrationStatus {
+  REGISTERED
+  WAITLISTED
+  CANCELLED
+
+  @@map("registration_status")
+}
+
+/// One row per person per event. Registering again after cancelling reuses the row.
+model EventRegistration {
+  id          String             @id @db.Uuid
+  eventId     String             @map("event_id") @db.Uuid
+  userId      String             @map("user_id") @db.Uuid
+  status      RegistrationStatus
+  /// When the person (re)joined: the order of the waiting list.
+  queuedAt    DateTime           @default(now()) @map("queued_at") @db.Timestamptz(6)
+  /// When a waiting person was given a place.
+  promotedAt  DateTime?          @map("promoted_at") @db.Timestamptz(6)
+  cancelledAt DateTime?          @map("cancelled_at") @db.Timestamptz(6)
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, status, queuedAt])
+  @@index([userId])
+  @@map("event_registrations")
+}
+
+/// A session the member put in their personal schedule (only while registered for its event).
+model ScheduleItem {
+  userId    String   @map("user_id") @db.Uuid
+  sessionId String   @map("session_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, sessionId])
+  @@index([sessionId])
+  @@map("schedule_items")
 }

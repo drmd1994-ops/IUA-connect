@@ -5,7 +5,14 @@ import { FilesModule } from '../files';
 import { EventsAdminController } from './events-admin.controller';
 import { EventsAdminService } from './events-admin.service';
 import { EventsPublicController } from './events-public.controller';
+import { EventMailer } from './event-mailer';
 import { EventsPublicService } from './events-public.service';
+import {
+  EventRegistrationController,
+  MyScheduleController,
+  RegistrationsAdminController,
+} from './registrations.controller';
+import { RegistrationsService } from './registrations.service';
 import { SessionsAdminController, SpeakersAdminController } from './sessions-admin.controller';
 import { SessionsService } from './sessions.service';
 
@@ -16,9 +23,18 @@ import { SessionsService } from './sessions.service';
     EventsAdminController,
     SessionsAdminController,
     SpeakersAdminController,
+    RegistrationsAdminController,
+    MyScheduleController,
+    EventRegistrationController,
     EventsPublicController,
   ],
-  providers: [EventsAdminService, EventsPublicService, SessionsService],
+  providers: [
+    EventsAdminService,
+    EventsPublicService,
+    SessionsService,
+    RegistrationsService,
+    EventMailer,
+  ],
   exports: [EventsAdminService, EventsPublicService],
 })
 export class EventsModule {}

@@ -87,6 +87,12 @@
     "sessionOutsideEvent": "המושב חייב להיות בין מועד ההתחלה למועד הסיום של האירוע.",
     "eventSessionsOutside": "אחד המושבים יהיה מחוץ לזמני האירוע. יש להזיז קודם את המושב.",
     "unknownSpeaker": "אחד המרצים אינו זמין.",
-    "speakerInUse": "המרצה משובץ במושב. יש להסיר אותו קודם מהמושב."
+    "speakerInUse": "המרצה משובץ במושב. יש להסיר אותו קודם מהמושב.",
+    "registrationClosed": "ההרשמה לאירוע הזה סגורה.",
+    "registrationNotInApp": "ההרשמה לאירוע הזה אינה נעשית כאן.",
+    "alreadyRegistered": "כבר נרשמת לאירוע הזה.",
+    "notRegistered": "לא נרשמת לאירוע הזה.",
+    "scheduleNeedsRegistration": "יש להירשם לאירוע לפני בחירת מושבים.",
+    "unknownSession": "אחד המושבים אינו שייך לאירוע הזה."
   }
 }

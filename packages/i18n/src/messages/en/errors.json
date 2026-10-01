@@ -87,6 +87,12 @@
     "sessionOutsideEvent": "The session must be inside the event’s start and end.",
     "eventSessionsOutside": "A session would fall outside the event. Move the session first.",
     "unknownSpeaker": "One of the speakers isn’t available.",
-    "speakerInUse": "This speaker is named in a session. Remove them from the session first."
+    "speakerInUse": "This speaker is named in a session. Remove them from the session first.",
+    "registrationClosed": "Registration for this event is closed.",
+    "registrationNotInApp": "Registration for this event isn’t done here.",
+    "alreadyRegistered": "You are already registered for this event.",
+    "notRegistered": "You aren’t registered for this event.",
+    "scheduleNeedsRegistration": "Register for the event before choosing sessions.",
+    "unknownSession": "One of the sessions doesn’t belong to this event."
   }
 }
