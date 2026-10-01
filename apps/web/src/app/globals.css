@@ -29,3 +29,44 @@
     }
   }
 }
+
+/* Text inside the article editor (TipTap). Mirrors features/content/markdown.tsx. */
+.rich-text > * + * {
+  margin-top: 1rem;
+}
+.rich-text h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.rich-text h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.rich-text h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.rich-text ul {
+  list-style: disc;
+  padding-inline-start: 1.5rem;
+}
+.rich-text ol {
+  list-style: decimal;
+  padding-inline-start: 1.5rem;
+}
+.rich-text blockquote {
+  border-inline-start: 4px solid var(--color-border);
+  padding-inline-start: 1rem;
+  color: var(--color-text-muted);
+}
+.rich-text a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.rich-text code {
+  background: var(--color-surface-muted);
+  border-radius: 0.125rem;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.875rem;
+}

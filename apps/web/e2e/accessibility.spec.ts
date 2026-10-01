@@ -20,6 +20,11 @@ const PAGES = [
   '/account/applications',
   '/admin/members',
   '/card/verify',
+  // M3 (the signed-in and filled views are checked in content.spec.ts)
+  '/news',
+  '/guidelines',
+  '/admin/news',
+  '/admin/guidelines',
 ];
 
 for (const locale of ['he', 'en'] as const) {

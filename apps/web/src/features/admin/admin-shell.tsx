@@ -8,17 +8,26 @@ import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
 import { Link, usePathname } from '@/i18n/navigation';
 
 /** Permissions that open the admin area. The API grants them only in an MFA session. */
-const ADMIN_PERMISSIONS = ['membership.read', 'membership.approve.final', 'institutions.manage'];
+const ADMIN_PERMISSIONS = [
+  'membership.read',
+  'membership.approve.final',
+  'institutions.manage',
+  'news.create',
+  'guidelines.manage',
+];
 
 export function isAdmin(me: Me | null): boolean {
   return !!me && me.permissions.some((permission) => ADMIN_PERMISSIONS.includes(permission));
 }
 
-const SECTIONS = [
-  { href: '/admin/applications', key: 'applications' },
-  { href: '/admin/members', key: 'members' },
-  { href: '/admin/institutions', key: 'institutions' },
-  { href: '/admin/import', key: 'import' },
+/** Each section and the permission that opens it (content editors see only News). */
+export const ADMIN_SECTIONS = [
+  { href: '/admin/applications', key: 'applications', permission: 'membership.approve.final' },
+  { href: '/admin/members', key: 'members', permission: 'membership.read' },
+  { href: '/admin/institutions', key: 'institutions', permission: 'institutions.manage' },
+  { href: '/admin/import', key: 'import', permission: 'membership.manage' },
+  { href: '/admin/news', key: 'news', permission: 'news.create' },
+  { href: '/admin/guidelines', key: 'guidelines', permission: 'guidelines.manage' },
 ] as const;
 
 /**
@@ -35,7 +44,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <PageFrame wide>
             <nav aria-label={t('navLabel')} className="border-b border-border">
               <ul className="flex flex-wrap gap-1">
-                {SECTIONS.map((section) => {
+                {ADMIN_SECTIONS.filter((section) =>
+                  me.permissions.includes(section.permission),
+                ).map((section) => {
                   const current = pathname.startsWith(section.href);
                   return (
                     <li key={section.key}>
