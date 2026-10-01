@@ -55,17 +55,29 @@ function clean(node: MdNode): MdNode[] {
   return [copy];
 }
 
+const CLOSE_AT_START = /^<\/([a-z]+)\s*>/i;
+const CLOSE_ANYWHERE = /<\/([a-z]+)\s*>/gi;
+
+/** The tag a piece of HTML closes at its very start (lower-case), if any. */
+const closedAtStart = (html: string) => CLOSE_AT_START.exec(html)?.[1]?.toLowerCase() ?? null;
+
+/** True when the HTML contains a closing tag for `tag`. */
+const closes = (html: string, tag: string) =>
+  [...html.matchAll(CLOSE_ANYWHERE)].some((match) => match[1]!.toLowerCase() === tag);
+
 function cleanChildren(children: MdNode[]): MdNode[] {
   const out: MdNode[] = [];
-  let skipUntil: RegExp | null = null;
+  /** The container tag being skipped, until its closing tag arrives. */
+  let skipping: string | null = null;
   for (const child of children) {
-    if (skipUntil) {
-      if (child.type === 'html' && skipUntil.test(child.value ?? '')) skipUntil = null;
+    const html = child.type === 'html' ? (child.value ?? '') : null;
+    if (skipping) {
+      if (html !== null && closedAtStart(html) === skipping) skipping = null;
       continue;
     }
-    const open = child.type === 'html' ? CONTAINER_OPEN.exec(child.value ?? '') : null;
-    if (open && !new RegExp(`</${open[1]}\\s*>`, 'i').test(child.value ?? '')) {
-      skipUntil = new RegExp(`^</${open[1]}\\s*>`, 'i');
+    const tag = html === null ? null : (CONTAINER_OPEN.exec(html)?.[1]?.toLowerCase() ?? null);
+    if (tag && !closes(html!, tag)) {
+      skipping = tag;
       continue;
     }
     out.push(...clean(child));
