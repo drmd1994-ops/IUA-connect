@@ -83,6 +83,10 @@
     "eventNotPublished": "אפשר לבטל רק אירוע שפורסם.",
     "eventCancelReasonRequired": "נא לציין את סיבת הביטול.",
     "eventCancelled": "אי אפשר לשנות אירוע שבוטל.",
-    "eventNotDeletable": "אפשר למחוק רק טיוטה. אירוע שפורסם יש לבטל."
+    "eventNotDeletable": "אפשר למחוק רק טיוטה. אירוע שפורסם יש לבטל.",
+    "sessionOutsideEvent": "המושב חייב להיות בין מועד ההתחלה למועד הסיום של האירוע.",
+    "eventSessionsOutside": "אחד המושבים יהיה מחוץ לזמני האירוע. יש להזיז קודם את המושב.",
+    "unknownSpeaker": "אחד המרצים אינו זמין.",
+    "speakerInUse": "המרצה משובץ במושב. יש להסיר אותו קודם מהמושב."
   }
 }

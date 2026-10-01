@@ -83,6 +83,10 @@
     "eventNotPublished": "Only a published event can be cancelled.",
     "eventCancelReasonRequired": "Please give the reason for cancelling.",
     "eventCancelled": "A cancelled event can no longer be changed.",
-    "eventNotDeletable": "Only a draft can be deleted. Cancel a published event instead."
+    "eventNotDeletable": "Only a draft can be deleted. Cancel a published event instead.",
+    "sessionOutsideEvent": "The session must be inside the event’s start and end.",
+    "eventSessionsOutside": "A session would fall outside the event. Move the session first.",
+    "unknownSpeaker": "One of the speakers isn’t available.",
+    "speakerInUse": "This speaker is named in a session. Remove them from the session first."
   }
 }

@@ -713,11 +713,13 @@ model StoredFile {
   attachedAt   DateTime?   @map("attached_at") @db.Timestamptz(6)
   createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  owner          User?            @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
-  profilePhoto   Profile?         @relation("ProfilePhoto")
-  newsFeatured   News[]
-  newsAttachment NewsAttachment[]
-  eventImage     Event[]
+  owner           User?             @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  profilePhoto    Profile?          @relation("ProfilePhoto")
+  newsFeatured    News[]
+  newsAttachment  NewsAttachment[]
+  eventImage      Event[]
+  speakerPhoto    Speaker[]
+  sessionMaterial SessionMaterial[]
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -1046,6 +1048,7 @@ model Event {
   category     EventCategory?     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   image        StoredFile?        @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
   translations EventTranslation[]
+  sessions     EventSession[]
 
   @@index([status, startAt])
   @@map("events")
@@ -1066,4 +1069,94 @@ model EventTranslation {
   @@id([eventId, locale])
   @@index([searchVector], map: "event_translations_search_idx", type: Gin)
   @@map("event_translations")
+}
+
+/// A session of an event: a talk, a workshop, a break. It lies inside the event's time span.
+model EventSession {
+  id        String   @id @db.Uuid
+  eventId   String   @map("event_id") @db.Uuid
+  room      String?  @db.VarChar(200)
+  startAt   DateTime @map("start_at") @db.Timestamptz(6)
+  endAt     DateTime @map("end_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  translations EventSessionTranslation[]
+  speakers     SessionSpeaker[]
+  materials    SessionMaterial[]
+
+  @@index([eventId, startAt])
+  @@map("event_sessions")
+}
+
+model EventSessionTranslation {
+  sessionId    String                   @map("session_id") @db.Uuid
+  locale       String                   @db.VarChar(8)
+  title        String                   @db.VarChar(300)
+  /// Plain text.
+  description  String?                  @db.VarChar(4000)
+  /// Maintained by a trigger from title and description. Search is M7.
+  searchVector Unsupported("tsvector")? @map("search_vector")
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, locale])
+  @@index([searchVector], map: "event_session_translations_search_idx", type: Gin)
+  @@map("event_session_translations")
+}
+
+/// A speaker is a record, not an account (M5 plan §2.2). Demo speakers are fictional.
+model Speaker {
+  id          String   @id @db.Uuid
+  photoFileId String?  @map("photo_file_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  photo        StoredFile?          @relation(fields: [photoFileId], references: [id], onDelete: SetNull)
+  translations SpeakerTranslation[]
+  sessions     SessionSpeaker[]
+
+  @@map("speakers")
+}
+
+model SpeakerTranslation {
+  speakerId   String  @map("speaker_id") @db.Uuid
+  locale      String  @db.VarChar(8)
+  name        String  @db.VarChar(200)
+  /// For example "Prof." or "Dr.".
+  title       String? @db.VarChar(100)
+  affiliation String? @db.VarChar(300)
+  bio         String? @db.VarChar(2000)
+
+  speaker Speaker @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+
+  @@id([speakerId, locale])
+  @@map("speaker_translations")
+}
+
+model SessionSpeaker {
+  sessionId String @map("session_id") @db.Uuid
+  speakerId String @map("speaker_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  speaker Speaker      @relation(fields: [speakerId], references: [id], onDelete: Restrict)
+
+  @@id([sessionId, speakerId])
+  @@index([speakerId])
+  @@map("session_speakers")
+}
+
+model SessionMaterial {
+  sessionId String @map("session_id") @db.Uuid
+  fileId    String @map("file_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  file    StoredFile   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, fileId])
+  @@index([fileId])
+  @@map("session_materials")
 }

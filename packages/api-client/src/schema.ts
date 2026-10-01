@@ -1284,6 +1284,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/events/{eventId}/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SessionsAdminController_list"];
+        put?: never;
+        post: operations["SessionsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/sessions/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["SessionsAdminController_update"];
+        post?: never;
+        delete: operations["SessionsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/speakers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SpeakersAdminController_list"];
+        put?: never;
+        post: operations["SpeakersAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/speakers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["SpeakersAdminController_update"];
+        post?: never;
+        delete: operations["SpeakersAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -1324,6 +1388,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["EventsPublicController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EventsPublicController_listSessions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2741,6 +2821,145 @@ export interface components {
         CancelEventDto: {
             reason: string;
         };
+        AdminSessionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                room: string | null;
+                speakerIds: string[];
+                materials: {
+                    /** Format: uuid */
+                    id: string;
+                    originalName: string;
+                    mimeType: string;
+                    sizeBytes: number;
+                }[];
+                translations: {
+                    he?: {
+                        title: string;
+                        description: string | null;
+                    };
+                    en?: {
+                        title: string;
+                        description: string | null;
+                    };
+                };
+            }[];
+        };
+        SessionInputDto: {
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            room?: string;
+            /** @default [] */
+            speakerIds: string[];
+            /** @default [] */
+            materialFileIds: string[];
+            translations: {
+                he?: {
+                    title: string;
+                    description?: string;
+                };
+                en?: {
+                    title: string;
+                    description?: string;
+                };
+            };
+        };
+        AdminSessionDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            startAt: string;
+            /** Format: date-time */
+            endAt: string;
+            room: string | null;
+            speakerIds: string[];
+            materials: {
+                /** Format: uuid */
+                id: string;
+                originalName: string;
+                mimeType: string;
+                sizeBytes: number;
+            }[];
+            translations: {
+                he?: {
+                    title: string;
+                    description: string | null;
+                };
+                en?: {
+                    title: string;
+                    description: string | null;
+                };
+            };
+        };
+        AdminSpeakerListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                photoFileId: string | null;
+                translations: {
+                    he?: {
+                        name: string;
+                        title: string | null;
+                        affiliation: string | null;
+                        bio: string | null;
+                    };
+                    en?: {
+                        name: string;
+                        title: string | null;
+                        affiliation: string | null;
+                        bio: string | null;
+                    };
+                };
+                sessionCount: number;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        SpeakerInputDto: {
+            photoFileId?: string | null;
+            translations: {
+                he?: {
+                    name: string;
+                    title?: string;
+                    affiliation?: string;
+                    bio?: string;
+                };
+                en?: {
+                    name: string;
+                    title?: string;
+                    affiliation?: string;
+                    bio?: string;
+                };
+            };
+        };
+        AdminSpeakerDto: {
+            /** Format: uuid */
+            id: string;
+            photoFileId: string | null;
+            translations: {
+                he?: {
+                    name: string;
+                    title: string | null;
+                    affiliation: string | null;
+                    bio: string | null;
+                };
+                en?: {
+                    name: string;
+                    title: string | null;
+                    affiliation: string | null;
+                    bio: string | null;
+                };
+            };
+            sessionCount: number;
+        };
         PublicEventListDto: {
             items: {
                 slug: string;
@@ -2806,6 +3025,37 @@ export interface components {
             capacity: number | null;
             cancelReason: string | null;
             sourceUrl: string | null;
+        };
+        PublicSessionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                description: string | null;
+                /** Format: date-time */
+                startAt: string;
+                /** Format: date-time */
+                endAt: string;
+                room: string | null;
+                /** @enum {string} */
+                locale: "he" | "en";
+                speakers: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    title: string | null;
+                    affiliation: string | null;
+                    bio: string | null;
+                    photoFileId: string | null;
+                }[];
+                materials: {
+                    /** Format: uuid */
+                    id: string;
+                    originalName: string;
+                    mimeType: string;
+                    sizeBytes: number;
+                }[];
+            }[];
         };
     };
     responses: never;
@@ -5028,6 +5278,188 @@ export interface operations {
             };
         };
     };
+    SessionsAdminController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSessionListDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSessionDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSessionDto"];
+                };
+            };
+        };
+    };
+    SessionsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SpeakersAdminController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSpeakerListDto"];
+                };
+            };
+        };
+    };
+    SpeakersAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpeakerInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSpeakerDto"];
+                };
+            };
+        };
+    };
+    SpeakersAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpeakerInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSpeakerDto"];
+                };
+            };
+        };
+    };
+    SpeakersAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EventsPublicController_list: {
         parameters: {
             query?: {
@@ -5091,6 +5523,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicEventDto"];
+                };
+            };
+        };
+    };
+    EventsPublicController_listSessions: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSessionListDto"];
                 };
             };
         };

@@ -11,6 +11,8 @@ import {
 } from './events.dto';
 import { EventsAdminService } from './events-admin.service';
 import { EventsPublicService } from './events-public.service';
+import { PublicSessionListDto, PublicSessionQueryDto } from './sessions.dto';
+import { SessionsService } from './sessions.service';
 
 /**
  * Public events (API_DESIGN.md §4). Open to everyone; signed-in members also see what their
@@ -23,6 +25,7 @@ export class EventsPublicController {
   constructor(
     private readonly events: EventsPublicService,
     private readonly admin: EventsAdminService,
+    private readonly sessions: SessionsService,
     private readonly principals: PrincipalResolver,
   ) {}
 
@@ -49,6 +52,16 @@ export class EventsPublicController {
     @Query() query: PublicEventItemQueryDto,
   ): Promise<PublicEventDto> {
     return this.events.get(await this.caller(req), slug, query.locale);
+  }
+
+  @Get(':slug/sessions')
+  @ApiOkResponse({ type: PublicSessionListDto })
+  async listSessions(
+    @Req() req: RequestWithPrincipal,
+    @Param('slug') slug: string,
+    @Query() query: PublicSessionQueryDto,
+  ): Promise<PublicSessionListDto> {
+    return this.sessions.publicSessions(await this.caller(req), slug, query.locale);
   }
 
   private async caller(req: RequestWithPrincipal) {

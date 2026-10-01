@@ -140,6 +140,7 @@ export class EventsAdminService {
       const problem = publishProblem({ ...checkOf(input), status: 'DRAFT' });
       if (problem) throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: problem }]);
     }
+    await this.sessionsStillFit(id, input);
     // The URL name can change until the event is first published.
     let slug = row.slug;
     if (row.status === 'DRAFT' && input.slug && input.slug !== row.slug) {
@@ -250,6 +251,22 @@ export class EventsAdminService {
   }
 
   // --- Helpers --------------------------------------------------------------------------------
+
+  /** Changing the dates must not leave a session outside the event. */
+  private async sessionsStillFit(id: string, input: EventInputDto): Promise<void> {
+    const span = await this.prisma.eventSession.aggregate({
+      where: { eventId: id },
+      _min: { startAt: true },
+      _max: { endAt: true },
+    });
+    if (!span._min.startAt || !span._max.endAt) return;
+    const fits =
+      input.startAt &&
+      input.endAt &&
+      Date.parse(input.startAt) <= span._min.startAt.getTime() &&
+      Date.parse(input.endAt) >= span._max.endAt.getTime();
+    if (!fits) throw invalid('startAt', 'eventSessionsOutside');
+  }
 
   private async validate(input: EventInputDto): Promise<void> {
     if (input.categoryId) {
