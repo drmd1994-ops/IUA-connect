@@ -6,7 +6,7 @@ _Last updated: 2026-10-02_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: built on `feat/events` (pull request #7), waiting for the owner to merge.** Next: the M6 plan, for the owner's approval (it starts with the video-hosting question, D8). |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). Next: M6 Education; the plan is written and waits for the owner's approval. The owner will test the demo after M6. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -46,8 +46,8 @@ _Last updated: 2026-10-02_
 | O1  | ~~Approval of these planning documents~~ **Resolved 2026-09-27:** approved by the owner.                                                                                                                                             | —                    |
 | O2  | ~~Git setup~~ **Resolved 2026-09-27:** `git init` done, remote added, pushed to `main` with a personal access token (Git Credential Manager). CI green.                                                                               | —                    |
 | O3  | ~~Certificate number format and resident identifiers~~ **Resolved 2026-09-29:** any digits (1–15); residents and non-full members give a medical licence number; students are approved by an IUA admin directly. | —                    |
-| O4  | Permission from IUA/IMA before showing imported content in a pitch (recommended)                                                                                                                                                      | Before the pitch     |
-| O5  | Video hosting choice                                                                                                                                                                                                                  | Video milestone      |
+| O4  | ~~Permission from IUA/IMA before showing imported content in a pitch~~ **Resolved 2026-10-02:** the owner states that the approval exists. | —                    |
+| O5  | ~~Video hosting choice~~ **Resolved 2026-10-02 for the demo:** links to videos hosted elsewhere; no upload or provider yet. A provider is chosen after the pitch (ADR 0008, with M6). | —                    |
 | O6  | Professional legal review (spec §59)                                                                                                                                                                                                  | Before any real data |
 
 ## M0 Foundations (2026-09-27)
@@ -281,7 +281,7 @@ Plan: [`docs/plans/M4-content-import.md`](docs/plans/M4-content-import.md), appr
 
 ### Open for the owner
 
-- **O4 is still open:** permission from IUA/IMA before showing this content in the pitch. `robots.txt` blocks one AI company's crawler from the whole site, which is worth mentioning when asking. If permission is refused, `pnpm import:remove` takes the sample out.
+- **O4 was resolved on 2026-10-02** (the owner states that the approval exists). Written before that: permission from IUA/IMA before showing this content in the pitch. `robots.txt` blocks one AI company's crawler from the whole site, which is worth mentioning when asking. If permission is refused, `pnpm import:remove` takes the sample out.
 - Review the reviewed news titles in `tools/importer/sources.json`.
 - ~~Merge pull request #6~~ merged at the owner's request on 2026-10-01 (CI green).
 
@@ -324,16 +324,17 @@ No new libraries.
 - **A reminder whose time passed before the person got their place is skipped:** someone who registers three days before gets the day reminder only.
 - **Email subjects can now carry the event's title.** The mail renderer filled placeholders in the body only.
 - **Calendar links are percent-encoded** in the file (Hebrew addresses), as addresses are.
-- **Time ranges** use the language's own formatting. In Hebrew pages they read right to left; the owner may prefer otherwise.
+- **Time ranges** use the language's own formatting. In Hebrew pages they read right to left. The owner chose to keep it (2026-10-02).
 - **Location, address and organiser are single texts**, not per language (as in the database design).
 - **Local end-to-end runs leave their events behind** in the development database, like the news tests.
 - **CI during the build:** each push cancelled the run before it, so no run finished until the last push.
 
 ### Open for the owner
 
-- Review and merge pull request #7 (or ask Claude to), then the checkpoint test of the demo.
+- ~~Merge pull request #7~~ merged at the owner's request on 2026-10-02 (CI green).
+- The owner's checkpoint test of the demo comes after M6 (said 2026-10-02).
 - The Hebrew names of the two demo event categories are suggestions: כנסים, קורסים והשתלמויות.
 
 ## Next step
 
-**M6 Education:** it starts with the owner's decision on video hosting (D8, O5), then the plan in `docs/plans/` for approval. No M6 code before the plan is approved.
+**M6 Education:** the plan [`docs/plans/M6-education.md`](docs/plans/M6-education.md) is written, with the video decision (D8) and two more answers recorded in §11. No M6 code before the owner approves it.
