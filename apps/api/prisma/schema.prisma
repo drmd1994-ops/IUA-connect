@@ -81,6 +81,7 @@ model User {
   eventRegistrations EventRegistration[]
   scheduleItems      ScheduleItem[]
   eventAttendances   EventAttendance[]
+  eventReminders     EventReminder[]
 
   @@map("users")
 }
@@ -1054,6 +1055,7 @@ model Event {
   sessions      EventSession[]
   registrations EventRegistration[]
   attendance    EventAttendance[]
+  reminders     EventReminder[]
 
   @@index([status, startAt])
   @@map("events")
@@ -1247,4 +1249,27 @@ model EventAttendance {
   @@index([eventId, at])
   @@index([userId])
   @@map("event_attendance")
+}
+
+/// Which reminder: a week before the event, or a day before (M5 plan §11.4).
+enum ReminderKind {
+  WEEK
+  DAY
+
+  @@map("reminder_kind")
+}
+
+/// A reminder that was sent. The row is written before the email goes out, so a reminder is
+/// never sent twice, even if the job runs twice or is interrupted.
+model EventReminder {
+  eventId String       @map("event_id") @db.Uuid
+  userId  String       @map("user_id") @db.Uuid
+  kind    ReminderKind
+  sentAt  DateTime     @default(now()) @map("sent_at") @db.Timestamptz(6)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, userId, kind])
+  @@map("event_reminders")
 }

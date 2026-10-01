@@ -17,6 +17,7 @@ import {
   RegistrationsAdminController,
 } from './registrations.controller';
 import { RegistrationsService } from './registrations.service';
+import { EventRemindersJob } from './reminders.job';
 import { SessionsAdminController, SpeakersAdminController } from './sessions-admin.controller';
 import { SessionsService } from './sessions.service';
 
@@ -43,6 +44,7 @@ import { SessionsService } from './sessions.service';
     AttendanceService,
     CheckInTokens,
     EventMailer,
+    EventRemindersJob,
   ],
   exports: [EventsAdminService, EventsPublicService],
 })

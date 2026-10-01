@@ -289,6 +289,22 @@ export class RegistrationsService {
     for (const userId of promoted) await this.mailer.send(userId, 'eventPromoted', eventId);
   }
 
+  /**
+   * Emails everyone who holds a place or is waiting: the event was cancelled, or its time or
+   * place changed (M5 plan §2.1, §3).
+   */
+  async notifyRegistrants(
+    eventId: string,
+    template: 'eventCancelled' | 'eventChanged',
+    extra: { reason?: string } = {},
+  ): Promise<void> {
+    const people = await this.prisma.eventRegistration.findMany({
+      where: { eventId, status: { in: ['REGISTERED', 'WAITLISTED'] } },
+      select: { userId: true },
+    });
+    for (const { userId } of people) await this.mailer.send(userId, template, eventId, extra);
+  }
+
   // --- Internals ------------------------------------------------------------------------------
 
   /** Locks the event row for the rest of the transaction and returns its current state. */

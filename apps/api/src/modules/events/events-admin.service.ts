@@ -167,6 +167,9 @@ export class EventsAdminService {
     await this.record('event.update', id, actor);
     // A larger capacity gives places to people on the waiting list.
     await this.registrations.fillFreePlaces(id);
+    if (row.status === 'PUBLISHED' && movedOrRescheduled(row, input)) {
+      await this.registrations.notifyRegistrants(id, 'eventChanged');
+    }
     return this.get(id);
   }
 
@@ -207,6 +210,7 @@ export class EventsAdminService {
     });
     if (count === 0) throw new AppException('CONFLICT', [{ code: 'eventChanged' }]);
     await this.record('event.cancel', id, actor);
+    await this.registrations.notifyRegistrants(id, 'eventCancelled', { reason: reason.trim() });
     return this.get(id);
   }
 
@@ -344,6 +348,18 @@ function translations(input: EventInputDto) {
         ]
       : [];
   });
+}
+
+/** True when the time or the place of the event changed (registrants are told). */
+function movedOrRescheduled(row: Row, input: EventInputDto): boolean {
+  const time = (value: Date | string | null | undefined) =>
+    value ? new Date(value).getTime() : null;
+  return (
+    time(row.startAt) !== time(input.startAt) ||
+    time(row.endAt) !== time(input.endAt) ||
+    (row.locationName ?? '') !== (input.locationName ?? '') ||
+    (row.address ?? '') !== (input.address ?? '')
+  );
 }
 
 /** The publishing check for an input (used while a published event is edited). */
