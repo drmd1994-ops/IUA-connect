@@ -1700,6 +1700,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/exam-questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExamAdminController_list"];
+        put?: never;
+        post: operations["ExamAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/exam-questions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExamAdminController_get"];
+        put: operations["ExamAdminController_update"];
+        post?: never;
+        delete: operations["ExamAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/exam-questions/{id}/transitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ExamAdminController_transition"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/exam-questions/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExamAdminController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/exam-questions/next": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExamPracticeController_next"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/exam-questions/{id}/answer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ExamPracticeController_answer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/exam-results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExamResultsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3679,6 +3791,163 @@ export interface components {
                 type: ("VIDEO" | "ARTICLE" | "PDF" | "PRESENTATION" | "PODCAST" | "WEBINAR" | "SURGICAL_VIDEO" | "CASE" | "COURSE") | null;
                 title: string | null;
                 durationMinutes: number | null;
+            }[];
+        };
+        AdminExamQuestionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                stemHe: string | null;
+                stemEn: string | null;
+                /** @enum {string} */
+                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                submittedBy: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        ExamQuestionInputDto: {
+            level?: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+            subspecialtyId?: string | null;
+            /**
+             * @default PUBLIC
+             * @enum {string}
+             */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            /** @default [] */
+            typeIds: string[];
+            translations: {
+                he?: {
+                    stem: string;
+                    /** @default  */
+                    summary: string;
+                };
+                en?: {
+                    stem: string;
+                    /** @default  */
+                    summary: string;
+                };
+            };
+            options: {
+                /** @default false */
+                correct: boolean;
+                translations: {
+                    he?: {
+                        text: string;
+                        /** @default  */
+                        explanation: string;
+                    };
+                    en?: {
+                        text: string;
+                        /** @default  */
+                        explanation: string;
+                    };
+                };
+            }[];
+        };
+        AdminExamQuestionDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+            level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+            subspecialtyId: string | null;
+            /** @enum {string} */
+            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            typeIds: string[];
+            translations: {
+                he?: {
+                    stem: string;
+                    summary: string;
+                };
+                en?: {
+                    stem: string;
+                    summary: string;
+                };
+            };
+            options: {
+                position: number;
+                correct: boolean;
+                translations: {
+                    he?: {
+                        text: string;
+                        explanation: string;
+                    };
+                    en?: {
+                        text: string;
+                        explanation: string;
+                    };
+                };
+            }[];
+            authorUserId: string | null;
+            submittedBy: string | null;
+            publishedAt: string | null;
+            archivedAt: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        NextQuestionDto: {
+            question: {
+                /** Format: uuid */
+                id: string;
+                stem: string;
+                options: {
+                    position: number;
+                    text: string;
+                }[];
+                level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
+                subspecialty: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                /** @enum {string} */
+                locale: "he" | "en";
+            } | null;
+            remaining: number;
+        };
+        AnswerInputDto: {
+            position: number;
+            /**
+             * @default he
+             * @enum {string}
+             */
+            locale: "he" | "en";
+        };
+        AnswerResultDto: {
+            correct: boolean;
+            chosenPosition: number;
+            correctPosition: number;
+            options: {
+                position: number;
+                text: string;
+                correct: boolean;
+                explanation: string;
+            }[];
+            summary: string;
+            saved: boolean;
+            countsForScore: boolean;
+        };
+        ExamResultsDto: {
+            answered: number;
+            correct: number;
+            percent: number | null;
+            items: {
+                /** Format: uuid */
+                questionId: string;
+                stem: string;
+                firstCorrect: boolean;
+                attempts: number;
+                /** Format: date-time */
+                lastAnsweredAt: string;
             }[];
         };
     };
@@ -6730,6 +6999,237 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicEducationDto"];
+                };
+            };
+        };
+    };
+    ExamAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminExamQuestionListDto"];
+                };
+            };
+        };
+    };
+    ExamAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExamQuestionInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminExamQuestionDto"];
+                };
+            };
+        };
+    };
+    ExamAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminExamQuestionDto"];
+                };
+            };
+        };
+    };
+    ExamAdminController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The version you edited: "<n>" */
+                "If-Match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExamQuestionInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminExamQuestionDto"];
+                };
+            };
+        };
+    };
+    ExamAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ExamAdminController_transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EducationTransitionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminExamQuestionDto"];
+                };
+            };
+        };
+    };
+    ExamAdminController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EducationHistoryDto"];
+                };
+            };
+        };
+    };
+    ExamPracticeController_next: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+                level?: "STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT";
+                subspecialty?: string;
+                exclude?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NextQuestionDto"];
+                };
+            };
+        };
+    };
+    ExamPracticeController_answer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnswerInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnswerResultDto"];
+                };
+            };
+        };
+    };
+    ExamResultsController_get: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExamResultsDto"];
                 };
             };
         };

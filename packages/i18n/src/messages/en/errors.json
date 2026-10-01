@@ -113,6 +113,13 @@
     "educationTextRequired": "Write the Hebrew text before submitting.",
     "educationLessonsRequired": "Add at least one lesson before submitting.",
     "unknownLesson": "One of the lessons isn’t available.",
-    "courseAsLesson": "A course can’t be a lesson of another course."
+    "courseAsLesson": "A course can’t be a lesson of another course.",
+    "examStemRequired": "Write the question in Hebrew before submitting.",
+    "examOptionCount": "A question needs between 2 and 6 options.",
+    "examOneCorrectOption": "Mark exactly one option as the right answer.",
+    "examOptionTextRequired": "Every option needs its Hebrew text.",
+    "examExplanationRequired": "Every option needs a Hebrew explanation: why it is right, or why it is wrong.",
+    "examSummaryRequired": "Write the short topic summary in Hebrew before submitting.",
+    "unknownOption": "This question has no such option."
   }
 }

@@ -113,6 +113,13 @@
     "educationTextRequired": "יש לכתוב את הטקסט בעברית לפני ההגשה.",
     "educationLessonsRequired": "יש להוסיף שיעור אחד לפחות לפני ההגשה.",
     "unknownLesson": "אחד השיעורים אינו זמין.",
-    "courseAsLesson": "קורס אינו יכול להיות שיעור בקורס אחר."
+    "courseAsLesson": "קורס אינו יכול להיות שיעור בקורס אחר.",
+    "examStemRequired": "יש לכתוב את השאלה בעברית לפני ההגשה.",
+    "examOptionCount": "שאלה צריכה בין 2 ל־6 תשובות אפשריות.",
+    "examOneCorrectOption": "יש לסמן תשובה נכונה אחת בדיוק.",
+    "examOptionTextRequired": "לכל תשובה אפשרית נדרש טקסט בעברית.",
+    "examExplanationRequired": "לכל תשובה אפשרית נדרש הסבר בעברית: מדוע היא נכונה, או מדוע היא שגויה.",
+    "examSummaryRequired": "יש לכתוב את סיכום הנושא הקצר בעברית לפני ההגשה.",
+    "unknownOption": "אין לשאלה הזאת תשובה כזאת."
   }
 }
