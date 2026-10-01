@@ -107,7 +107,7 @@ function ArticleView({ article }: { article: Article }) {
           <StoredImage
             fileId={article.featuredImageFileId}
             alt={t('content.news.imageAlt', { title: article.title })}
-            className="mt-6 w-full rounded-lg"
+            className="mt-6 max-h-112 w-full rounded-lg object-cover"
           />
         )}
         {article.summary && (

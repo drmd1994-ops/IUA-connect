@@ -1,7 +1,8 @@
 /**
  * Seed runner (DATABASE_DESIGN.md §6). Layers run in order and must be idempotent:
  *   1. reference: roles, permissions (M1); membership types, subspecialties, hospitals (M2)
- *   2. demo:      fictional people, directors, memberships, applications (M2)
+ *   2. demo:      fictional people, directors, memberships, applications (M2);
+ *                 a content editor, news in every state and sample guidelines (M3)
  *   3. import:    curated IUA website sample from fixtures/iua-import/    (added in M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
@@ -12,6 +13,7 @@ import { config as loadEnv } from 'dotenv';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedDemo } from './demo';
+import { seedDemoContent } from './demo-content';
 import { seedReference } from './reference';
 
 interface SeedLayer {
@@ -22,7 +24,14 @@ interface SeedLayer {
 
 const LAYERS: SeedLayer[] = [
   { name: 'reference', milestone: 'M1', run: seedReference },
-  { name: 'demo', milestone: 'M2', run: seedDemo },
+  {
+    name: 'demo',
+    milestone: 'M2',
+    run: async (prisma) => {
+      await seedDemo(prisma);
+      await seedDemoContent(prisma);
+    },
+  },
   { name: 'import', milestone: 'M4' },
 ];
 

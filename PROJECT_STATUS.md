@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-09-30_
+_Last updated: 2026-10-01_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. Next: the M3 plan, for the owner's approval. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: built on `feat/content` (pull request #5), waiting for the owner to merge.** Next: the M4 plan, for the owner's approval. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -192,6 +192,52 @@ Library added with the owner's approval: `uqr` 0.1.3 (QR codes, no dependencies)
 - ~~Merge pull request #4~~ merged at the owner's request on 2026-09-30. The owner's own checkpoint test of the demo is still to come.
 - The Hebrew membership type names are suggestions: חברות מלאה, חברות שאינה מלאה, מתמחה, סטודנט/ית, חברות כבוד. Admins can edit them.
 
+## M3 Content core (2026-10-01)
+
+Plan: [`docs/plans/M3-content-core.md`](docs/plans/M3-content-core.md), approved by the owner on 2026-09-30. Owner decisions (plan §11):
+
+- **Uploads:** sharp re-encodes images; file-type detects the type from the content.
+- **Article text:** Markdown, written in a WYSIWYG editor (TipTap), sanitised on the server (unified/remark) and rendered without raw HTML (react-markdown).
+- **Four eyes:** whoever submitted an item can't approve it. Only IUA admins review and publish.
+- **Profile photo:** its own "who can see this" setting, private by default.
+- **Guidelines:** status is Current, Superseded or Withdrawn; evidence level is optional free text.
+
+Libraries added with the owner's approval: sharp, file-type, unified/remark, pg-boss, react-markdown, TipTap (which brings `marked`).
+
+### Delivered
+
+- **Files:** uploads with an allow-list (JPEG, PNG, PDF, DOCX, PPTX), type detected from the content, per-type size limits, images re-encoded without metadata. Stored outside the web root; downloads only through 5-minute signed addresses after an access check. Staff upload; a member uploads only their own profile photo.
+- **Job queue:** pg-boss behind a `JobQueue` interface, in its own `pgboss` schema. Jobs: publish scheduled news (every minute), remove unused uploads (hourly).
+- **Access tiers:** public, members, or chosen membership types, applied to every read of news, guidelines and their files. Hidden items are left out of lists and answer "not found" by link.
+- **News:** Hebrew and English text with a Hebrew fallback; categories, tags, featured image, attachments, references. Workflow: draft → review → published or scheduled → archived, with send-back comments, revisions of published items, and an append-only history. Emails tell the editor when an item is sent back or published.
+- **Guidelines:** details, official link, version history and an optional IUA summary. No third-party documents are stored.
+- **Search columns:** Hebrew-normalised search vectors on news and guideline text (the search screen is M7).
+- **Web (he/en):** `/news`, `/news/[slug]`, `/guidelines`, `/guidelines/[id]`; `/admin/news` (list and review queue, editor with preview, scheduling in Israel time), `/admin/news/categories`, `/admin/guidelines`; a photo on My profile. The home page and header link to News and Guidelines.
+- **Demo seed:** `editor@demo.test` (content editor), seven news items covering every state, four guidelines. Runs once; on a database seeded before M3, `pnpm db:seed` adds it.
+
+### Verified
+
+- API: **162 unit and 169 integration tests**, including every tier against six kinds of reader, the workflow with four eyes, the job publishing a due item once, and the admin access pattern on each admin route.
+- Web: unit tests, including Israel-time conversion across daylight saving.
+- Playwright (Chromium, local): the **exit test** (editor writes with an image → reviewer schedules → the article appears after the job runs; a members-only article stays hidden from a visitor), a guideline added and opened, and **axe WCAG 2.2 AA checks** on every page visited plus all 34 public-page checks in he and en.
+
+### Deviations and findings
+
+- **Demo guidelines are all fictional** (a made-up society on a reserved domain). The plan allowed naming real organisations as the source, but each entry needs a version and a date that couldn't be verified here. Real entries come with the M4 curated import.
+- **Guideline summaries are plain text**, not Markdown, and guideline edits have no stale-save check (news has one).
+- **`news_revisions` is not a separate table:** a revision is a news row pointing at its live item (`revision_of_id`).
+- **pg-boss permissions:** the `pgboss` schema is created by a migration that grants the app role USAGE and CREATE; pg-boss itself runs without creating schemas.
+- **Hebrew file names** arrived garbled (multer read them as Latin-1); fixed and tested.
+- **Next.js 16.3.5 → 16.3.6:** a critical advisory (remote code execution in `next/og`) appeared in `pnpm audit` during M3. The app doesn't use that feature; updated so the security job passes.
+- **The browser needs each message group listed in the layout.** The new `content` group was missing at first, so the new pages showed no labels; found by the end-to-end test.
+- **Local end-to-end runs leave their items behind** (one test article and one test guideline per run) in the development database. An admin can archive or delete them.
+- **Editor accounts can't be created in the app yet** (user and role management is a later milestone): the seed and `pnpm admin:create --role CONTENT_EDITOR` create them.
+
+### Open for the owner
+
+- Review and merge pull request #5 (or ask Claude to), then the owner's checkpoint test of the demo.
+- The Hebrew names of the two demo news categories are suggestions: הודעות האיגוד, הוראה והשתלמות.
+
 ## Next step
 
-**M3 Content core:** the plan [`docs/plans/M3-content-core.md`](docs/plans/M3-content-core.md) was approved by the owner on 2026-09-30; building on branch `feat/content`.
+**M4:** write the plan in `docs/plans/` for the owner's approval (scope in `DEVELOPMENT_ROADMAP.md`). No M4 code before the plan is approved.
