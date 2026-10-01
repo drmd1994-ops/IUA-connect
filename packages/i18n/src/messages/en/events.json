@@ -72,8 +72,7 @@
     "waiting": "On the waiting list",
     "cancelled": "Cancelled",
     "noSessions": "No sessions chosen.",
-    "overlap": "Overlaps another session you chose",
-    "open": "Open the event"
+    "overlap": "Overlaps another session you chose"
   },
   "admin": {
     "title": "Events",
@@ -201,13 +200,10 @@
       "email": "The person’s account email",
       "mark": "Mark as attended",
       "empty": "No attendance recorded yet.",
-      "method": "How",
       "methods": {
         "QR": "Scanned the code",
         "MANUAL": "Marked by hand"
       },
-      "session": "Session",
-      "at": "When",
       "void": "Void",
       "voidItem": "Void the record of {name}",
       "voidReason": "Reason for voiding",
