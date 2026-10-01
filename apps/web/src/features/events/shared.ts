@@ -20,6 +20,9 @@ export function useEventTime() {
         timeStyle: 'short',
         timeZone,
       }),
+    /** "09:00 – 10:00", written the way the page's language writes a range of times. */
+    timeRange: (startIso: string, endIso: string, timeZone: string) =>
+      format.dateTimeRange(new Date(startIso), new Date(endIso), { timeStyle: 'short', timeZone }),
     /** The day as YYYY-MM-DD in the event's zone, for grouping sessions by day. */
     dayKey: (iso: string, timeZone: string) =>
       new Intl.DateTimeFormat('en-CA', { timeZone, dateStyle: 'short' }).format(new Date(iso)),

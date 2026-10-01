@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-01_
+_Last updated: 2026-10-02_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). Next: M5 Events; the plan is written and waits for the owner's approval. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: built on `feat/events` (pull request #7), waiting for the owner to merge.** Next: the M6 plan, for the owner's approval (it starts with the video-hosting question, D8). |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -285,6 +285,55 @@ Plan: [`docs/plans/M4-content-import.md`](docs/plans/M4-content-import.md), appr
 - Review the reviewed news titles in `tools/importer/sources.json`.
 - ~~Merge pull request #6~~ merged at the owner's request on 2026-10-01 (CI green).
 
+## M5 Events (2026-10-02)
+
+Plan: [`docs/plans/M5-events.md`](docs/plans/M5-events.md), approved by the owner on 2026-10-01. Owner decisions (plan §11):
+
+- **Who registers:** anyone signed in who may see the event.
+- **Full events:** a waiting list; a cancellation gives the place to the first person waiting.
+- **Attendance:** members scan a QR code shown at the venue with their own phone; admins can also mark people by hand. No camera library was added.
+- **Reminders:** two emails, 7 days and 1 day before.
+- Approved with the plan: event admins publish without a second reviewer; the imported conference page loads as a draft, because the source shows no dates.
+
+No new libraries.
+
+### Delivered
+
+- **Events:** every spec §10 field, Hebrew and English text with the Hebrew fallback, categories, an image, access tiers. States: draft, published, cancelled (a cancelled event stays visible, marked).
+- **Sessions and speakers:** sessions inside the event's time span, with speakers in a chosen order and attached materials. Speakers are shared records, not accounts.
+- **Registration:** in the app, on another site, or none. An optional capacity with a waiting list; places are counted under a lock on the event, so the last place can't be taken twice. Registration closes when the event starts.
+- **Personal schedule:** registered members choose sessions; "My schedule" flags overlaps.
+- **Calendar files:** one per event and one for the personal schedule, written by hand to the iCalendar standard.
+- **Attendance:** a signed code, valid five minutes and renewed by the admin's screen, for the event or a session. Marking by hand, voiding with a reason, CSV export. Records are append-only at the database level.
+- **Emails:** registered, waiting list, promoted, reminders (a week and a day before), event cancelled, time or place changed.
+- **Admin (he/en):** `/admin/events` with the event editor, programme, registrations and attendance; `/admin/events/speakers`; `/admin/events/categories`. For EVENT_ADMIN and IUA_ADMIN.
+- **Public and member (he/en):** `/events`, `/events/[slug]`, the check-in page a venue code opens, `/account/schedule`. Events joined the header and the home page.
+- **Imported conference page (M4):** loaded as a draft event with its source link. An event admin adds the dates and publishes it.
+- **Demo seed:** `events@demo.test` (event admin), three fictional speakers and five fictional events covering every state.
+
+### Verified
+
+- API: **197 unit and 226 integration tests** in total. The events part includes five people racing for one place (one gets it, four join the waiting list in order), calendar files read back as calendars, check-in codes that are expired, altered or for another event, the append-only attendance table, and reminders sent once however often the job runs.
+- Every admin route for events has the anonymous 401, member 403 and admin-without-MFA 403 tests.
+- Playwright (Chromium, local): the **exit test** (an event admin creates and publishes an event with two sessions; a member registers, picks a session, downloads the calendar file and is recorded through the venue code; the admin sees the attendance), with axe WCAG 2.2 AA checks on every page it visits, plus all 40 public-page checks in he and en.
+- The Hebrew events list and an event page were also checked by eye from screenshots.
+
+### Deviations and findings
+
+- **Where places are booked in the app, only registered people are recorded** by the venue code. For other events, anyone who may see the event can be recorded.
+- **A reminder whose time passed before the person got their place is skipped:** someone who registers three days before gets the day reminder only.
+- **Email subjects can now carry the event's title.** The mail renderer filled placeholders in the body only.
+- **Calendar links are percent-encoded** in the file (Hebrew addresses), as addresses are.
+- **Time ranges** use the language's own formatting. In Hebrew pages they read right to left; the owner may prefer otherwise.
+- **Location, address and organiser are single texts**, not per language (as in the database design).
+- **Local end-to-end runs leave their events behind** in the development database, like the news tests.
+- **CI during the build:** each push cancelled the run before it, so no run finished until the last push.
+
+### Open for the owner
+
+- Review and merge pull request #7 (or ask Claude to), then the checkpoint test of the demo.
+- The Hebrew names of the two demo event categories are suggestions: כנסים, קורסים והשתלמויות.
+
 ## Next step
 
-**M5 Events:** the plan [`docs/plans/M5-events.md`](docs/plans/M5-events.md) is written. No M5 code before the owner approves it.
+**M6 Education:** it starts with the owner's decision on video hosting (D8, O5), then the plan in `docs/plans/` for approval. No M6 code before the plan is approved.

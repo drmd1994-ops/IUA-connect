@@ -23,7 +23,7 @@ export function MySchedule() {
 function ScheduleView() {
   const t = useTranslations();
   const locale = useLocale() as 'he' | 'en';
-  const { range, time, day } = useEventTime();
+  const { range, timeRange, day } = useEventTime();
   const { api, call } = useAuth();
   const [items, setItems] = useState<Schedule | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -110,10 +110,7 @@ function ScheduleView() {
                         <p className="text-sm text-text-muted">
                           {day(session.startAt, event.timezone)}
                           {' · '}
-                          <span dir="ltr">
-                            {time(session.startAt, event.timezone)}–
-                            {time(session.endAt, event.timezone)}
-                          </span>
+                          {timeRange(session.startAt, session.endAt, event.timezone)}
                           {session.room && ` · ${t('events.event.room', { room: session.room })}`}
                         </p>
                         <p className="font-semibold">{session.title}</p>

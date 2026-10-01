@@ -2,7 +2,8 @@
  * Seed runner (DATABASE_DESIGN.md §6). Layers run in order and must be idempotent:
  *   1. reference: roles, permissions (M1); membership types, subspecialties, hospitals (M2)
  *   2. demo:      fictional people, directors, memberships, applications (M2);
- *                 a content editor, news in every state and sample guidelines (M3)
+ *                 a content editor, news in every state and sample guidelines (M3);
+ *                 an event admin, speakers and events in every state (M5)
  *   3. import:    the hand-picked IUA website sample from fixtures/iua-import/ (M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
@@ -14,6 +15,7 @@ import { PrismaClient } from '../../src/generated/prisma/client';
 import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedDemo } from './demo';
 import { seedDemoContent } from './demo-content';
+import { seedDemoEvents } from './demo-events';
 import { seedImport } from './import';
 import { seedReference } from './reference';
 
@@ -31,6 +33,7 @@ const LAYERS: SeedLayer[] = [
     run: async (prisma) => {
       await seedDemo(prisma);
       await seedDemoContent(prisma);
+      await seedDemoEvents(prisma);
     },
   },
   {
@@ -39,8 +42,8 @@ const LAYERS: SeedLayer[] = [
     run: async (prisma) => {
       const created = await seedImport(prisma);
       console.log(
-        created.news + created.guidelines > 0
-          ? `seed: import layer — ${created.news} news items, ${created.guidelines} guideline entries`
+        created.news + created.guidelines + created.events > 0
+          ? `seed: import layer — ${created.news} news items, ${created.guidelines} guideline entries, ${created.events} draft events`
           : 'seed: import layer already present, skipped',
       );
     },

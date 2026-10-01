@@ -25,6 +25,10 @@ const PAGES = [
   '/guidelines',
   '/admin/news',
   '/admin/guidelines',
+  // M5 (the signed-in views are checked in events.spec.ts)
+  '/events',
+  '/account/schedule',
+  '/admin/events',
 ];
 
 for (const locale of ['he', 'en'] as const) {

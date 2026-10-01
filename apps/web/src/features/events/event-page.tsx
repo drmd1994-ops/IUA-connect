@@ -362,7 +362,7 @@ function Programme({
   onChanged: (registration: Registration) => void;
 }) {
   const t = useTranslations();
-  const { day, time, dayKey } = useEventTime();
+  const { day, timeRange, dayKey } = useEventTime();
   const { api, call } = useAuth();
   const canChoose = registration?.status === 'REGISTERED';
   // The saved choice arrives with the registration (and empties when it is cancelled). When it
@@ -422,9 +422,7 @@ function Programme({
             {list.map((session) => (
               <li key={session.id} className="rounded-md border border-border p-4">
                 <p className="text-sm text-text-muted">
-                  <span dir="ltr">
-                    {time(session.startAt, event.timezone)}–{time(session.endAt, event.timezone)}
-                  </span>
+                  {timeRange(session.startAt, session.endAt, event.timezone)}
                   {session.room && ` · ${t('events.event.room', { room: session.room })}`}
                 </p>
                 <p className="font-semibold" lang={session.locale}>

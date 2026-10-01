@@ -23,7 +23,7 @@ async function main(): Promise<void> {
   try {
     const removed = await removeImport(prisma);
     console.log(
-      `Removed ${removed.news} imported news items and ${removed.guidelines} guideline entries.`,
+      `Removed ${removed.news} imported news items, ${removed.guidelines} guideline entries and ${removed.events} events.`,
     );
   } finally {
     await prisma.$disconnect();

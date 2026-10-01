@@ -12,7 +12,8 @@ import { slugify, uniqueSlug } from '../../src/modules/news/slug';
  * - News: the reviewed title, the original date and a link to the source. No text is copied.
  * - Documents (clinical guidelines and position papers): details and the publisher's own link.
  *   The documents themselves are never fetched or stored (spec §14).
- * - Conference pages wait in their fixture for the events module (M5).
+ * - Conference pages become draft events (M5 plan §4): the source pages show no dates, so an
+ *   event admin fills them in and publishes. Nothing is invented.
  *
  * Idempotent: every item is matched by its source address, so a second run creates nothing.
  * `removeImport` takes the whole sample out again.
@@ -38,20 +39,32 @@ export interface DocumentFixture {
   documentUrl: string;
 }
 
+export interface ConferenceFixture {
+  sourceUrl: string;
+  title: string;
+  excerpt: string | null;
+}
+
 export interface ImportFixtures {
   news: NewsFixture[];
   documents: DocumentFixture[];
+  conferences: ConferenceFixture[];
 }
 
 export interface ImportCounts {
   news: number;
   guidelines: number;
+  events: number;
 }
 
 export function loadFixtures(): ImportFixtures {
   const read = <T>(name: string) =>
     JSON.parse(readFileSync(path.join(FIXTURES, name), 'utf8')) as T;
-  return { news: read('news.json'), documents: read('documents.json') };
+  return {
+    news: read('news.json'),
+    documents: read('documents.json'),
+    conferences: read('conferences.json'),
+  };
 }
 
 /** Every imported address must belong to the source site (a last check before the database). */
@@ -64,8 +77,8 @@ export async function seedImport(
   prisma: PrismaClient,
   fixtures: ImportFixtures = loadFixtures(),
 ): Promise<ImportCounts> {
-  const created: ImportCounts = { news: 0, guidelines: 0 };
-  for (const item of [...fixtures.news, ...fixtures.documents]) {
+  const created: ImportCounts = { news: 0, guidelines: 0, events: 0 };
+  for (const item of [...fixtures.news, ...fixtures.documents, ...fixtures.conferences]) {
     if (!fromSourceSite(item.sourceUrl)) {
       throw new Error(`Import fixture from another site: ${item.sourceUrl}`);
     }
@@ -152,6 +165,29 @@ export async function seedImport(
         });
         created.guidelines++;
       }
+
+      for (const item of fixtures.conferences) {
+        if (await tx.event.findUnique({ where: { sourceUrl: item.sourceUrl } })) continue;
+        const slug = await uniqueSlug(
+          slugify(item.title),
+          async (candidate) => (await tx.event.findUnique({ where: { slug: candidate } })) !== null,
+        );
+        // A draft without dates: the source page shows none, and none is invented.
+        await tx.event.create({
+          data: {
+            id: uuidv7(),
+            slug,
+            status: 'DRAFT',
+            accessTier: 'PUBLIC',
+            organizer: SOURCE_ORG,
+            sourceUrl: item.sourceUrl,
+            translations: {
+              create: [{ locale: 'he', title: item.title, summary: item.excerpt }],
+            },
+          },
+        });
+        created.events++;
+      }
     },
     { timeout: 60_000 },
   );
@@ -173,6 +209,7 @@ export async function removeImport(prisma: PrismaClient): Promise<ImportCounts> 
     if (category && category._count.news === 0) {
       await tx.newsCategory.delete({ where: { id: category.id } });
     }
-    return { news: news.count, guidelines: guidelines.count };
+    const events = await tx.event.deleteMany({ where: { sourceUrl: { startsWith: SOURCE_SITE } } });
+    return { news: news.count, guidelines: guidelines.count, events: events.count };
   });
 }

@@ -62,7 +62,7 @@ export function EventSessions({ event }: { event: Event }) {
   const t = useTranslations();
   const s = (key: string) => t(`events.admin.sessions.${key}`);
   const locale = useLocale();
-  const { dateTime, time } = useEventTime();
+  const { range } = useEventTime();
   const { api, call } = useAuth();
   const [sessions, setSessions] = useState<Session[] | null>(null);
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
@@ -135,9 +135,7 @@ export function EventSessions({ event }: { event: Event }) {
                       <div>
                         <p className="font-semibold">{title}</p>
                         <p className="text-sm text-text-muted">
-                          {dateTime(session.startAt, ZONE)}
-                          {' – '}
-                          <span dir="ltr">{time(session.endAt, ZONE)}</span>
+                          {range(session.startAt, session.endAt, ZONE)}
                           {session.room && ` · ${session.room}`}
                         </p>
                       </div>
