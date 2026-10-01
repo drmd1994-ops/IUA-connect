@@ -73,6 +73,16 @@
     "unknownFile": "אחד הקבצים המצורפים אינו זמין.",
     "categoryKeyTaken": "כבר קיימת קטגוריה עם המפתח הזה.",
     "guidelineVersionTaken": "להנחיה הזאת כבר יש גרסה בשם הזה.",
-    "guidelineLastVersion": "להנחיה חייבת להיות לפחות גרסה אחת."
+    "guidelineLastVersion": "להנחיה חייבת להיות לפחות גרסה אחת.",
+    "eventChanged": "מישהו שינה את האירוע בינתיים. נא לטעון אותו מחדש ולנסות שוב.",
+    "eventNotDraft": "אפשר לפרסם רק טיוטה.",
+    "eventDatesRequired": "יש לקבוע מועד התחלה ומועד סיום לפני הפרסום.",
+    "eventEndBeforeStart": "מועד הסיום חייב להיות אחרי מועד ההתחלה.",
+    "eventHebrewRequired": "נדרשת כותרת בעברית לפני הפרסום.",
+    "eventRegistrationUrlRequired": "יש לתת את קישור ההרשמה כשההרשמה נעשית באתר אחר.",
+    "eventNotPublished": "אפשר לבטל רק אירוע שפורסם.",
+    "eventCancelReasonRequired": "נא לציין את סיבת הביטול.",
+    "eventCancelled": "אי אפשר לשנות אירוע שבוטל.",
+    "eventNotDeletable": "אפשר למחוק רק טיוטה. אירוע שפורסם יש לבטל."
   }
 }

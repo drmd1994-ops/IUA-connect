@@ -1,6 +1,6 @@
 # M5 — Events: plan
 
-- Status: **Draft, waiting for the owner's approval**
+- Status: **Approved by the owner on 2026-10-01**
 - Date: 2026-10-01
 - Roadmap: `DEVELOPMENT_ROADMAP.md` §3, M5. Design sources:
   - `PRODUCT_REQUIREMENTS.md` §3.6 (events, core only)

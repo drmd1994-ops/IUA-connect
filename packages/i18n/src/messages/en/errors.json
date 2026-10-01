@@ -73,6 +73,16 @@
     "unknownFile": "One of the attachments isn’t available.",
     "categoryKeyTaken": "A category with this key already exists.",
     "guidelineVersionTaken": "This guideline already has a version with this name.",
-    "guidelineLastVersion": "A guideline needs at least one version."
+    "guidelineLastVersion": "A guideline needs at least one version.",
+    "eventChanged": "Someone changed this event in the meantime. Please reload it and try again.",
+    "eventNotDraft": "Only a draft can be published.",
+    "eventDatesRequired": "Set the start and the end before publishing.",
+    "eventEndBeforeStart": "The end must be after the start.",
+    "eventHebrewRequired": "A Hebrew title is required before publishing.",
+    "eventRegistrationUrlRequired": "Give the registration link for registration on another site.",
+    "eventNotPublished": "Only a published event can be cancelled.",
+    "eventCancelReasonRequired": "Please give the reason for cancelling.",
+    "eventCancelled": "A cancelled event can no longer be changed.",
+    "eventNotDeletable": "Only a draft can be deleted. Cancel a published event instead."
   }
 }

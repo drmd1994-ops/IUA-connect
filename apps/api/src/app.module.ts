@@ -16,6 +16,7 @@ import { StorageModule } from './infra/storage/storage.module';
 import { AuditModule } from './modules/audit';
 import { AccessModule } from './modules/access';
 import { AuthModule } from './modules/auth';
+import { EventsModule } from './modules/events';
 import { FilesModule } from './modules/files';
 import { GuidelinesModule } from './modules/guidelines';
 import { HealthModule } from './modules/health';
@@ -60,6 +61,7 @@ export class AppModule {
         AccessModule,
         NewsModule,
         GuidelinesModule,
+        EventsModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };
