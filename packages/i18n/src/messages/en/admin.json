@@ -7,7 +7,8 @@
     "institutions": "Hospitals and directors",
     "import": "Import members",
     "news": "News",
-    "guidelines": "Guidelines"
+    "guidelines": "Guidelines",
+    "events": "Events"
   },
   "notAllowed": "This area is for association administrators, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",

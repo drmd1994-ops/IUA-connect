@@ -7,9 +7,10 @@ import { Link } from '@/i18n/navigation';
 /** Sections that work today; the home dashboard itself arrives in M8. */
 const AVAILABLE = [
   { key: 'news', href: '/news' },
+  { key: 'events', href: '/events' },
   { key: 'guidelines', href: '/guidelines' },
 ] as const;
-const PLANNED = ['events', 'education', 'membership'] as const;
+const PLANNED = ['education', 'membership'] as const;
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
