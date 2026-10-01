@@ -29,6 +29,12 @@ const PAGES = [
   '/events',
   '/account/schedule',
   '/admin/events',
+  // M6 (the signed-in and filled views are checked in education.spec.ts)
+  '/education',
+  '/education/exam',
+  '/account/exam-results',
+  '/admin/education',
+  '/admin/education/questions',
 ];
 
 for (const locale of ['he', 'en'] as const) {

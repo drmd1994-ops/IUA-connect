@@ -73,6 +73,14 @@
 - **Reminders:** a week and a day before, once each however often the job runs; nothing for cancelled events, cancelled registrations or the waiting list; cancelling or moving an event emails everyone registered or waiting.
 - **End to end (Playwright, `events.spec.ts`):** the exit test. An event admin creates an event with two sessions and publishes it; a demo member registers, picks a session, downloads the calendar file and opens the venue code's address; the admin sees the attendance. Axe checks run on every page visited.
 
+## What the M6 (Education) suites prove
+
+- **Rules (unit):** which review step each state allows and to whom; the person who submitted can't publish (four eyes); what each type needs before it can be submitted (a link or "recording not available yet", a file, a text, lessons); what makes an exam question complete (two to six options, exactly one right, every option explained, a summary); how a score is counted.
+- **Library (integration):** editors write and submit, reviewers publish, send back with a comment, take down and archive; saves need the current version (`If-Match`); lists and pages follow the access tiers; a course lists its lessons in order and shows a lesson the reader can't open as locked, without its title; a course can't be a lesson; files are readable by whoever may read the item, and by nobody else; the history can't be changed at the database level.
+- **Exam questions (integration):** the same review steps; a question is never asked before it is published; the right answer and the explanations are sent only after an answer; a visitor's answer isn't stored; a signed-in person's answers are stored, the first one counts, and only they can read their results; a question with two right options is refused; the history can't be changed at the database level.
+- **End to end (Playwright, `education.spec.ts`):** the exit tests. An editor writes an article and a course, a reviewer publishes them and a visitor reads the course and its lesson in both languages. An editor writes an exam question, a reviewer corrects an explanation and publishes it, a visitor answers it and sees the right answer, why each option is right or wrong and the summary, and a signed-in reader finds the answer in their results. Axe checks run on every page visited.
+- **The sample exam questions** in `apps/api/prisma/fixtures/demo-exam-questions.json` are loaded waiting for review. No test publishes them; the tests write their own filler questions.
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

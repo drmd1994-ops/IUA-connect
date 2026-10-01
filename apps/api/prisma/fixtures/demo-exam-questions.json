@@ -1,0 +1,582 @@
+[
+  {
+    "level": "STUDENT",
+    "subspecialty": "UROLITHIASIS",
+    "he": {
+      "stem": "מהו ההרכב השכיח ביותר של אבני כליה?",
+      "summary": "רוב אבני הכליה מכילות סידן, בעיקר סידן אוקסלט, לעיתים יחד עם סידן פוספט. סוגים שכיחים פחות הם אבני חומצה אורית, אבני סטרוביט (על רקע זיהום) ואבני ציסטין (על רקע תורשתי). הכרת הרכב האבן מכוונת את הבירור המטבולי ואת המניעה."
+    },
+    "en": {
+      "stem": "What is the most common composition of kidney stones?",
+      "summary": "Most kidney stones contain calcium, mainly calcium oxalate, sometimes together with calcium phosphate. Less common types are uric acid stones, struvite stones (related to infection) and cystine stones (hereditary). Knowing the composition guides the metabolic work-up and prevention."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "סידן אוקסלט",
+          "explanation": "נכון. אבני סידן הן הרוב הגדול של אבני הכליה, ורובן מורכבות מסידן אוקסלט."
+        },
+        "en": {
+          "text": "Calcium oxalate",
+          "explanation": "Right. Calcium stones are the large majority of kidney stones, and most of them are made of calcium oxalate."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חומצה אורית",
+          "explanation": "שגוי. אבני חומצה אורית הן מיעוט מהאבנים. הן נוצרות בשתן חומצי."
+        },
+        "en": {
+          "text": "Uric acid",
+          "explanation": "Wrong. Uric acid stones are a minority of stones. They form in acidic urine."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "סטרוביט (מגנזיום אמוניום פוספט)",
+          "explanation": "שגוי. אבני סטרוביט נוצרות על רקע זיהום בחיידקים מייצרי אוראז, והן שכיחות פחות מאבני סידן."
+        },
+        "en": {
+          "text": "Struvite (magnesium ammonium phosphate)",
+          "explanation": "Wrong. Struvite stones form with infection by urease-producing bacteria, and are less common than calcium stones."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ציסטין",
+          "explanation": "שגוי. אבני ציסטין נדירות, ומופיעות בחולי ציסטינוריה, מחלה תורשתית."
+        },
+        "en": {
+          "text": "Cystine",
+          "explanation": "Wrong. Cystine stones are rare and occur in people with cystinuria, a hereditary disorder."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "subspecialty": "UROLITHIASIS",
+    "he": {
+      "stem": "איזה מהמשפטים הבאים נכון לגבי אבני חומצה אורית?",
+      "summary": "אבני חומצה אורית נוצרות בשתן חומצי באופן קבוע. הן אינן נראות בצילום בטן ריק, אך נראות היטב ב־CT ללא חומר ניגוד. בשונה מרוב האבנים האחרות, אפשר לעיתים קרובות להמיס אותן בטיפול תרופתי שמעלה את ה־pH של השתן."
+    },
+    "en": {
+      "stem": "Which of the following statements about uric acid stones is correct?",
+      "summary": "Uric acid stones form in persistently acidic urine. They are not seen on a plain abdominal film but are seen well on non-contrast CT. Unlike most other stones, they can often be dissolved with medical treatment that raises the urine pH."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "הן נוצרות בשתן בסיסי",
+          "explanation": "שגוי. הן נוצרות בשתן חומצי. שתן בסיסי דווקא מסייע להמיס אותן."
+        },
+        "en": {
+          "text": "They form in alkaline urine",
+          "explanation": "Wrong. They form in acidic urine. Alkaline urine actually helps to dissolve them."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "הן בדרך כלל אינן נראות בצילום בטן ריק, ואפשר לעיתים קרובות להמיס אותן בהבססת השתן",
+          "explanation": "נכון. אבני חומצה אורית שקופות לקרני רנטגן בצילום רגיל, והבססת השתן יכולה להמיס אותן."
+        },
+        "en": {
+          "text": "They are usually not seen on a plain abdominal film, and can often be dissolved by alkalinising the urine",
+          "explanation": "Right. Uric acid stones are radiolucent on a plain film, and alkalinising the urine can dissolve them."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הן האבנים האופייניות לזיהום בחיידקים מייצרי אוראז",
+          "explanation": "שגוי. האבנים האופייניות לזיהום כזה הן אבני סטרוביט."
+        },
+        "en": {
+          "text": "They are the stones typical of infection with urease-producing bacteria",
+          "explanation": "Wrong. The stones typical of such infection are struvite stones."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הן נראות בבירור בצילום בטן ריק",
+          "explanation": "שגוי. בצילום רגיל הן בדרך כלל אינן נראות. הן נראות ב־CT ללא חומר ניגוד."
+        },
+        "en": {
+          "text": "They are clearly visible on a plain abdominal film",
+          "explanation": "Wrong. On a plain film they are usually not seen. They are seen on non-contrast CT."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "subspecialty": "UROLITHIASIS",
+    "he": {
+      "stem": "איזה חיידק קשור באופן קלאסי להיווצרות אבני סטרוביט?",
+      "summary": "אבני סטרוביט (מגנזיום אמוניום פוספט) נוצרות כשחיידקים מייצרי אוראז מפרקים שתנן לאמוניה, וה־pH של השתן עולה. Proteus הוא החיידק הקלאסי. האבנים עלולות לגדול ולמלא את מערכת האיסוף (אבן יציקה). הטיפול דורש הוצאה מלאה של האבן וטיפול בזיהום."
+    },
+    "en": {
+      "stem": "Which bacterium is classically associated with struvite stones?",
+      "summary": "Struvite (magnesium ammonium phosphate) stones form when urease-producing bacteria split urea into ammonia and the urine pH rises. Proteus is the classic organism. The stones can grow to fill the collecting system (a staghorn stone). Treatment requires complete removal of the stone and control of the infection."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "Escherichia coli",
+          "explanation": "שגוי. זהו הגורם השכיח ביותר לזיהום בדרכי השתן, אך הוא בדרך כלל אינו מייצר אוראז."
+        },
+        "en": {
+          "text": "Escherichia coli",
+          "explanation": "Wrong. It is the most common cause of urinary tract infection, but it usually does not produce urease."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "Enterococcus faecalis",
+          "explanation": "שגוי. חיידק זה גורם לזיהומים בדרכי השתן, אך אינו מייצר אוראז באופן אופייני."
+        },
+        "en": {
+          "text": "Enterococcus faecalis",
+          "explanation": "Wrong. This organism causes urinary tract infections, but it is not a typical urease producer."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "Proteus mirabilis",
+          "explanation": "נכון. Proteus מייצר אוראז, שמפרק שתנן לאמוניה ומעלה את ה־pH של השתן, וכך נוצרות אבני סטרוביט."
+        },
+        "en": {
+          "text": "Proteus mirabilis",
+          "explanation": "Right. Proteus produces urease, which splits urea into ammonia and raises the urine pH, and struvite stones form."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "Neisseria gonorrhoeae",
+          "explanation": "שגוי. חיידק זה גורם לדלקת השופכה, ואינו קשור לאבני סטרוביט."
+        },
+        "en": {
+          "text": "Neisseria gonorrhoeae",
+          "explanation": "Wrong. This organism causes urethritis and is not associated with struvite stones."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "subspecialty": null,
+    "he": {
+      "stem": "נער בן 15 מגיע לחדר המיון עם כאב חד וחזק באשך אחד שהחל לפני שלוש שעות, מלווה בבחילה. בבדיקה האשך מורם, ורפלקס הקרמסטר אינו מופק. מהו הצעד הבא המתאים ביותר?",
+      "summary": "בתסביב האשך חבל הזרע מסתובב ואספקת הדם לאשך נפסקת. הסיכוי להציל את האשך הוא הגבוה ביותר בשעות הראשונות ויורד במהירות עם הזמן. האבחנה היא בעיקרה קלינית. בדיקת דופלר יכולה לעזור כשהאבחנה אינה ברורה, אך אסור שתעכב ניתוח כשהחשד גבוה. בניתוח משחררים את התסביב ומקבעים את שני האשכים."
+    },
+    "en": {
+      "stem": "A 15-year-old boy comes to the emergency department with sudden, severe pain in one testis that began three hours ago, with nausea. On examination the testis is high-riding and the cremasteric reflex is absent. What is the most appropriate next step?",
+      "summary": "In testicular torsion the spermatic cord twists and the blood supply to the testis stops. The chance of saving the testis is highest in the first hours and falls quickly with time. The diagnosis is mainly clinical. Doppler ultrasound can help when the diagnosis is unclear, but it must not delay surgery when suspicion is high. At surgery the torsion is released and both testes are fixed."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "טיפול אנטיביוטי וביקורת בעוד כמה ימים",
+          "explanation": "שגוי. זהו טיפול בדלקת האשך או יותרת האשך. כשהתמונה מתאימה לתסביב, דחייה כזאת מסכנת את האשך."
+        },
+        "en": {
+          "text": "Antibiotics and a review in a few days",
+          "explanation": "Wrong. This is the treatment of epididymo-orchitis. When the picture fits torsion, such a delay puts the testis at risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קביעת בדיקת אולטרסאונד למחרת",
+          "explanation": "שגוי. כשהחשד לתסביב גבוה, אין לעכב את הטיפול לצורך הדמיה."
+        },
+        "en": {
+          "text": "Booking an ultrasound for the next day",
+          "explanation": "Wrong. When suspicion of torsion is high, treatment must not be delayed for imaging."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "חקירה ניתוחית דחופה של שק האשכים",
+          "explanation": "נכון. התמונה מתאימה לתסביב האשך, וזהו מצב חירום שבו הזמן קובע את גורל האשך."
+        },
+        "en": {
+          "text": "Urgent surgical exploration of the scrotum",
+          "explanation": "Right. The picture fits testicular torsion, an emergency in which time decides whether the testis survives."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "משככי כאבים ושחרור לביתו",
+          "explanation": "שגוי. הקלה בכאב אינה פותרת את הפסקת אספקת הדם לאשך."
+        },
+        "en": {
+          "text": "Pain relief and discharge home",
+          "explanation": "Wrong. Relieving the pain does not restore the blood supply to the testis."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "subspecialty": null,
+    "he": {
+      "stem": "איזה מהמשפטים הבאים נכון לגבי פרפימוזיס?",
+      "summary": "בפרפימוזיס העורלה נמשכה לאחור מעבר לעטרה ואי אפשר להחזירה. נוצרת בצקת, ואספקת הדם לעטרה עלולה להיפגע. זהו מצב דחוף שמחייב החזרה מהירה של העורלה. אין לבלבל עם פימוזיס, שבה אי אפשר למשוך את העורלה לאחור."
+    },
+    "en": {
+      "stem": "Which of the following statements about paraphimosis is correct?",
+      "summary": "In paraphimosis the foreskin has been pulled back behind the glans and cannot be returned. Swelling develops, and the blood supply to the glans may be compromised. It is an urgent condition that needs prompt reduction of the foreskin. It should not be confused with phimosis, in which the foreskin cannot be pulled back."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "העורלה נמשכה לאחור ואי אפשר להחזירה מעל העטרה, וזהו מצב דחוף",
+          "explanation": "נכון. זוהי ההגדרה של פרפימוזיס, והמצב מחייב החזרה מהירה של העורלה למקומה."
+        },
+        "en": {
+          "text": "The foreskin has been pulled back and cannot be returned over the glans, and it is an urgent condition",
+          "explanation": "Right. This is the definition of paraphimosis, and it needs prompt reduction of the foreskin."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "זהו מצב שבו אי אפשר למשוך את העורלה לאחור",
+          "explanation": "שגוי. זוהי ההגדרה של פימוזיס, לא של פרפימוזיס."
+        },
+        "en": {
+          "text": "It is a condition in which the foreskin cannot be pulled back",
+          "explanation": "Wrong. That is the definition of phimosis, not of paraphimosis."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "זהו מצב תקין בתינוקות שאינו דורש טיפול",
+          "explanation": "שגוי. פימוזיס פיזיולוגית היא ממצא תקין בילדים קטנים. פרפימוזיס אינה מצב תקין באף גיל."
+        },
+        "en": {
+          "text": "It is a normal finding in infants that needs no treatment",
+          "explanation": "Wrong. Physiological phimosis is a normal finding in young children. Paraphimosis is not normal at any age."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הטיפול הראשוני הוא אנטיביוטיקה למשך שבוע",
+          "explanation": "שגוי. הבעיה אינה זיהום אלא לחץ ובצקת. דחיית ההחזרה מסכנת את העטרה."
+        },
+        "en": {
+          "text": "The first treatment is a week of antibiotics",
+          "explanation": "Wrong. The problem is constriction and swelling, not infection. Delaying the reduction puts the glans at risk."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "subspecialty": "URO_ONCOLOGY",
+    "he": {
+      "stem": "מהו הסוג ההיסטולוגי השכיח ביותר של סרטן שלפוחית השתן במדינות המערב?",
+      "summary": "במדינות המערב רוב גדול של גידולי שלפוחית השתן הם קרצינומה אורותליאלית (בעבר: קרצינומה של תאי מעבר). קרצינומה של תאי קשקש קשורה לגירוי כרוני של השלפוחית, ושכיחה יותר באזורים שבהם שיסטוזומיאזיס נפוצה. אדנוקרצינומה וקרצינומה של תאים קטנים נדירות."
+    },
+    "en": {
+      "stem": "What is the most common histological type of bladder cancer in Western countries?",
+      "summary": "In Western countries the large majority of bladder tumours are urothelial carcinoma (formerly transitional cell carcinoma). Squamous cell carcinoma is linked to chronic irritation of the bladder and is more common where schistosomiasis is widespread. Adenocarcinoma and small cell carcinoma are rare."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "קרצינומה של תאי קשקש",
+          "explanation": "שגוי. סוג זה הוא מיעוט מהמקרים במערב. הוא קשור לגירוי כרוני ולשיסטוזומיאזיס."
+        },
+        "en": {
+          "text": "Squamous cell carcinoma",
+          "explanation": "Wrong. This type is a minority of cases in the West. It is linked to chronic irritation and to schistosomiasis."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אדנוקרצינומה",
+          "explanation": "שגוי. אדנוקרצינומה של השלפוחית נדירה."
+        },
+        "en": {
+          "text": "Adenocarcinoma",
+          "explanation": "Wrong. Adenocarcinoma of the bladder is rare."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קרצינומה של תאים קטנים",
+          "explanation": "שגוי. זהו סוג נדיר ואגרסיבי."
+        },
+        "en": {
+          "text": "Small cell carcinoma",
+          "explanation": "Wrong. This is a rare, aggressive type."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "קרצינומה אורותליאלית",
+          "explanation": "נכון. זהו הסוג השכיח ביותר במערב, והוא מהווה את הרוב הגדול של המקרים."
+        },
+        "en": {
+          "text": "Urothelial carcinoma",
+          "explanation": "Right. This is the most common type in the West and accounts for the large majority of cases."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "subspecialty": "URO_ONCOLOGY",
+    "he": {
+      "stem": "מהו גורם הסיכון החשוב ביותר שאפשר לשנות לסרטן שלפוחית השתן?",
+      "summary": "עישון טבק הוא גורם הסיכון החשוב ביותר לסרטן שלפוחית השתן. גורם סיכון מוכר נוסף הוא חשיפה תעסוקתית לחומרים כימיים מסוימים, כמו אמינים ארומטיים. לכן המלצה להפסיק לעשן היא חלק מהטיפול בכל מטופל."
+    },
+    "en": {
+      "stem": "What is the most important modifiable risk factor for bladder cancer?",
+      "summary": "Tobacco smoking is the most important risk factor for bladder cancer. Another recognised risk factor is occupational exposure to certain chemicals, such as aromatic amines. Advice to stop smoking is therefore part of the care of every patient."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "עישון טבק",
+          "explanation": "נכון. עישון הוא גורם הסיכון החשוב ביותר, ואפשר לשנותו."
+        },
+        "en": {
+          "text": "Tobacco smoking",
+          "explanation": "Right. Smoking is the most important risk factor, and it can be changed."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חשיפה תעסוקתית לאמינים ארומטיים",
+          "explanation": "שגוי. זהו גורם סיכון מוכר, אך הוא אחראי לפחות מקרים מאשר עישון."
+        },
+        "en": {
+          "text": "Occupational exposure to aromatic amines",
+          "explanation": "Wrong. This is a recognised risk factor, but it accounts for fewer cases than smoking."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "צריכת אלכוהול",
+          "explanation": "שגוי. אלכוהול אינו גורם סיכון מרכזי מוכר לסרטן שלפוחית השתן."
+        },
+        "en": {
+          "text": "Alcohol consumption",
+          "explanation": "Wrong. Alcohol is not an established major risk factor for bladder cancer."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "השמנת יתר",
+          "explanation": "שגוי. השמנה היא גורם סיכון מוכר לסרטן הכליה. הקשר שלה לסרטן שלפוחית השתן חלש בהרבה."
+        },
+        "en": {
+          "text": "Obesity",
+          "explanation": "Wrong. Obesity is an established risk factor for kidney cancer. Its link to bladder cancer is much weaker."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "subspecialty": "URO_ONCOLOGY",
+    "he": {
+      "stem": "מהו תת־הסוג השכיח ביותר של קרצינומה של תאי הכליה?",
+      "summary": "קרצינומה של תאי הכליה מחולקת לתת־סוגים היסטולוגיים. הסוג של תאים צלולים הוא השכיח ביותר ומהווה את רוב המקרים. אחריו בשכיחות הסוג הפפילרי, ואחריו הכרומופובי. קרצינומה של הצינורות המאספים נדירה ואגרסיבית."
+    },
+    "en": {
+      "stem": "What is the most common subtype of renal cell carcinoma?",
+      "summary": "Renal cell carcinoma is divided into histological subtypes. The clear cell type is the most common and accounts for most cases. The papillary type is next, followed by the chromophobe type. Collecting duct carcinoma is rare and aggressive."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "הסוג הפפילרי",
+          "explanation": "שגוי. זהו תת־הסוג השני בשכיחותו."
+        },
+        "en": {
+          "text": "The papillary type",
+          "explanation": "Wrong. This is the second most common subtype."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "הסוג של תאים צלולים",
+          "explanation": "נכון. זהו תת־הסוג השכיח ביותר, והוא מהווה את רוב המקרים."
+        },
+        "en": {
+          "text": "The clear cell type",
+          "explanation": "Right. This is the most common subtype and accounts for most cases."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הסוג הכרומופובי",
+          "explanation": "שגוי. סוג זה שכיח פחות מהסוג של תאים צלולים ומהסוג הפפילרי."
+        },
+        "en": {
+          "text": "The chromophobe type",
+          "explanation": "Wrong. This type is less common than the clear cell and papillary types."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קרצינומה של הצינורות המאספים",
+          "explanation": "שגוי. זהו סוג נדיר ואגרסיבי."
+        },
+        "en": {
+          "text": "Collecting duct carcinoma",
+          "explanation": "Wrong. This is a rare, aggressive type."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "subspecialty": "FUNCTIONAL",
+    "he": {
+      "stem": "איזו קבוצת תרופות מקטינה את נפח הערמונית לאחר חודשים של טיפול בהגדלה שפירה של הערמונית?",
+      "summary": "בטיפול התרופתי בתסמיני דרכי השתן התחתונות על רקע הגדלה שפירה של הערמונית, חוסמי אלפא מרפים את השריר החלק ומקלים על התסמינים בתוך זמן קצר, אך אינם משנים את גודל הערמונית. מעכבי 5־אלפא רדוקטאז מקטינים את נפח הערמונית בהדרגה, לאורך חודשים, ומתאימים בעיקר לערמונית מוגדלת."
+    },
+    "en": {
+      "stem": "Which class of drugs reduces the volume of the prostate after months of treatment for benign prostatic enlargement?",
+      "summary": "In the medical treatment of lower urinary tract symptoms due to benign prostatic enlargement, alpha-blockers relax smooth muscle and relieve symptoms within a short time, but do not change the size of the prostate. 5-alpha-reductase inhibitors reduce prostate volume gradually, over months, and suit mainly an enlarged prostate."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "חוסמי אלפא־1",
+          "explanation": "שגוי. הם מרפים את השריר החלק בערמונית ובצוואר השלפוחית ומקלים על התסמינים מהר, אך אינם מקטינים את הערמונית."
+        },
+        "en": {
+          "text": "Alpha-1 blockers",
+          "explanation": "Wrong. They relax the smooth muscle of the prostate and bladder neck and relieve symptoms quickly, but do not shrink the prostate."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תרופות אנטי־מוסקריניות",
+          "explanation": "שגוי. הן מפחיתות תסמיני אגירה, כמו דחיפות ותכיפות, ואינן משפיעות על גודל הערמונית."
+        },
+        "en": {
+          "text": "Antimuscarinic drugs",
+          "explanation": "Wrong. They reduce storage symptoms, such as urgency and frequency, and do not affect the size of the prostate."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מעכבי פוספודיאסטראז 5",
+          "explanation": "שגוי. הם יכולים לשפר את התסמינים, אך אינם מקטינים את נפח הערמונית."
+        },
+        "en": {
+          "text": "Phosphodiesterase-5 inhibitors",
+          "explanation": "Wrong. They can improve symptoms, but do not reduce prostate volume."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "מעכבי 5־אלפא רדוקטאז",
+          "explanation": "נכון. הם מעכבים את הפיכת הטסטוסטרון לדיהידרוטסטוסטרון, ונפח הערמונית קטן בהדרגה לאורך חודשים."
+        },
+        "en": {
+          "text": "5-alpha-reductase inhibitors",
+          "explanation": "Right. They block the conversion of testosterone to dihydrotestosterone, and the prostate volume falls gradually over months."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "subspecialty": "PEDIATRIC",
+    "he": {
+      "stem": "איזו בדיקה היא הבדיקה המקובלת לאבחון ולדירוג של רפלוקס שלפוחיתי־שופכני בילדים?",
+      "summary": "ברפלוקס שלפוחיתי־שופכני שתן חוזר מהשלפוחית אל השופכן ולעיתים עד הכליה. ציסטוגרפיה במתן שתן מדגימה את הרפלוקס ומאפשרת לדרג את חומרתו. אולטרסאונד של הכליות יכול להראות הרחבה, ומיפוי DMSA מראה צלקות בכליה, אך שתי הבדיקות האלה אינן מדגימות את הרפלוקס עצמו."
+    },
+    "en": {
+      "stem": "Which test is the standard for diagnosing and grading vesicoureteral reflux in children?",
+      "summary": "In vesicoureteral reflux, urine flows back from the bladder into the ureter and sometimes up to the kidney. A voiding cystourethrogram shows the reflux and allows its severity to be graded. Renal ultrasound can show dilatation, and a DMSA scan shows scarring of the kidney, but neither of these tests shows the reflux itself."
+    },
+    "options": [
+      {
+        "correct": false,
+        "he": {
+          "text": "אולטרסאונד של הכליות",
+          "explanation": "שגוי. הבדיקה יכולה להראות הרחבה של מערכת האיסוף, אך אינה מדגימה רפלוקס באופן אמין ואינה מאפשרת לדרג אותו."
+        },
+        "en": {
+          "text": "Renal ultrasound",
+          "explanation": "Wrong. It can show dilatation of the collecting system, but does not show reflux reliably and cannot grade it."
+        }
+      },
+      {
+        "correct": true,
+        "he": {
+          "text": "ציסטוגרפיה במתן שתן (VCUG)",
+          "explanation": "נכון. הבדיקה מדגימה את חזרת השתן לשופכן בזמן מילוי השלפוחית ובזמן מתן השתן, ומאפשרת לדרג את הרפלוקס."
+        },
+        "en": {
+          "text": "Voiding cystourethrogram (VCUG)",
+          "explanation": "Right. It shows urine flowing back into the ureter during bladder filling and voiding, and allows the reflux to be graded."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מיפוי כליות DMSA",
+          "explanation": "שגוי. המיפוי מראה צלקות ותפקוד של רקמת הכליה, ולא את הרפלוקס עצמו."
+        },
+        "en": {
+          "text": "DMSA renal scan",
+          "explanation": "Wrong. The scan shows scarring and function of the kidney tissue, not the reflux itself."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "צילום בטן ריק",
+          "explanation": "שגוי. צילום רגיל אינו מדגים רפלוקס."
+        },
+        "en": {
+          "text": "Plain abdominal film",
+          "explanation": "Wrong. A plain film does not show reflux."
+        }
+      }
+    ]
+  }
+]

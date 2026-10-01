@@ -6,7 +6,7 @@ _Last updated: 2026-10-02_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). Next: M6 Education; the plan is written and waits for the owner's approval. The owner will test the demo after M6. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: built 2026-10-02**, on `feat/education` (draft pull request #8), waiting for the owner's checkpoint test of the demo and for the merge. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -335,6 +335,56 @@ No new libraries.
 - The owner's checkpoint test of the demo comes after M6 (said 2026-10-02).
 - The Hebrew names of the two demo event categories are suggestions: כנסים, קורסים והשתלמויות.
 
+## M6 Education (2026-10-02)
+
+Plan: [`docs/plans/M6-education.md`](docs/plans/M6-education.md), approved by the owner on 2026-10-02 after one revision that added the exam question demo. Owner decisions (plan §11):
+
+- **Video:** links to videos hosted elsewhere. No upload, no embedded player, no provider yet ([ADR 0008](docs/adr/0008-videos-are-links.md)).
+- **Review:** a second person reviews every item, as with news.
+- **Courses:** a course groups items in order.
+- **Exam question demo:** one multiple-choice question at a time. After the answer: the right option, why it is right, why each other option is wrong, and a short summary of the topic.
+- **Sample questions:** Claude drafts them, the owner reviews them. They are loaded waiting for review and nothing is shown before that.
+- **Questions are written** in an admin editor with the same review. The access tier is set per question, public by default.
+- **Answers** of signed-in people are saved. The first answer to a question counts for the score. Only the person sees their results.
+- Approved with the plan: a new permission `education.review` (IUA admins); a published item is taken down to a draft to be edited.
+
+No new libraries.
+
+### Delivered
+
+- **Library:** nine types (video, article, document, presentation, podcast, webinar, surgical video, case, course), with level, subspecialty, duration, CME points (shown only), a cover image, files, references, Hebrew and English text with the Hebrew fallback, and access tiers.
+- **Review:** draft, waiting for review, published, archived. The person who submitted can't publish. A reviewer can correct an item in review, send it back with a comment, take a published item down, or archive it. The history is append-only at the database level. Emails: sent back, published.
+- **Courses:** lessons in a chosen order. A lesson the reader may not open is shown locked, without its title. A course can't be a lesson (checked in the database).
+- **Exam questions:** two to six options, exactly one right (also enforced in the database), an explanation for every option and a topic summary, in Hebrew and English. The right answer and the explanations leave the server only after an answer.
+- **Practice:** `/education/exam`, filtered by subspecialty and level, never the same question twice in a visit, with the score of the visit. `/account/exam-results` for signed-in people.
+- **Admin (he/en):** `/admin/education` (list, editor, lessons, review, history) and `/admin/education/questions`. For CONTENT_EDITOR (write) and IUA_ADMIN (write and review).
+- **Public (he/en):** `/education`, `/education/[slug]`, `/education/exam`. Education joined the header, the home page and the account menu.
+- **Demo seed:** ten fictional library items covering every type and state, a course of four lessons (the last one members-only), a one-page sample PDF, and **ten sample urology questions waiting for review** (`apps/api/prisma/fixtures/demo-exam-questions.json`).
+
+### Verified
+
+- API: **228 unit and 253 integration tests** in total, all passing. The education part covers the review steps with four eyes, what each type needs before review, the access tiers for five kinds of reader on items and on questions, locked lessons, and answers that are saved once and counted once.
+- Every admin route for education and exam questions has the anonymous 401, member 403 and admin-without-MFA 403 tests.
+- Playwright (Chromium, local): both **exit tests** pass (article and course written, published and read in both languages; an exam question written, corrected by the reviewer, published, answered by a visitor and by a signed-in reader, and found in "My exam results"), with axe WCAG 2.2 AA checks on every page they visit, plus all 50 public-page checks in he and en.
+- The seeded library was read back through the public API: eight items listed for a visitor, the course with its fourth lesson locked, the sample PDF attached, and no exam question asked before one is published.
+
+### Deviations and findings
+
+- **Nothing medical is shown yet.** The ten sample questions are textbook-level and were written by Claude, not by a urologist. Each one must be read and corrected by the owner before it is published. Until then `/education/exam` says there are no questions.
+- **The library items are fictional and carry no medical content.** Their links point to reserved example addresses, so "Open on…" leads nowhere real.
+- **Access tiers protect the item page and the link, not the recording** on its host (ADR 0008).
+- **CME points are shown only.** Nothing is tracked or credited (Phase 2).
+- **OpenAPI types:** a bare `z.number().nullable()` came out as an array type (event coordinates, CME points). Fixed with `nullableNumber()`, and the guard test now covers numbers too.
+- **Search** in the library is by type, level and subspecialty. Full-text search arrives with M7; the search column is already maintained.
+- **Local end-to-end runs leave their items behind** in the development database. The ones from this session were archived by hand.
+- **CI ran out of memory in the integration job** once the suite reached 30 files in one process. The suites still run one at a time, now in a worker that is replaced when it holds 1 GB (`--maxWorkers=1` with `workerIdleMemoryLimit`).
+
+### Open for the owner
+
+- **Checkpoint test of the demo** (asked for on 2026-10-02): the whole product so far, M1 to M6.
+- **Review the ten sample exam questions** at `/admin/education/questions` as `admin@demo.test`: correct what needs correcting, publish the ones that are right, send back or leave the rest.
+- Merge pull request #8 when satisfied.
+
 ## Next step
 
-**M6 Education:** the plan [`docs/plans/M6-education.md`](docs/plans/M6-education.md) is written, with the video decision (D8) and two more answers recorded in §11. No M6 code before the owner approves it.
+The owner's checkpoint test. After it and the merge of M6: the plan for **M7** (`DEVELOPMENT_ROADMAP.md`), written and approved before any code.
