@@ -1,0 +1,142 @@
+{
+  "nav": "התראות",
+  "bell": {
+    "unread": "{count, plural, =0 {התראות, אין חדשות} one {התראות, אחת חדשה} other {התראות, # חדשות}}"
+  },
+  "list": {
+    "title": "התראות",
+    "intro": "מה שקרה ונוגע לך, מהחדש לישן. התראות נשמרות 180 ימים.",
+    "empty": "עדיין אין התראות.",
+    "summary": "{unread, plural, =0 {אין חדשות} one {אחת חדשה} other {# חדשות}} · {total, plural, one {התראה אחת} other {# התראות}}",
+    "markAll": "סימון הכול כנקרא",
+    "markRead": "סימון כנקרא",
+    "new": "חדש",
+    "preferences": "בחירה מה לקבל"
+  },
+  "kinds": {
+    "ACCOUNT": "חשבון וחברות",
+    "MY_EVENTS": "האירועים שלי",
+    "ASSOCIATION": "הודעות מהאיגוד",
+    "NEWS": "חדשות",
+    "NEW_EVENTS": "אירועים חדשים",
+    "EDUCATION": "הדרכה",
+    "GUIDELINES": "הנחיות",
+    "WORK": "העבודה שלך"
+  },
+  "kindHints": {
+    "ACCOUNT": "החלטות על בקשת החברות שלך ושינויים בחברות.",
+    "MY_EVENTS": "אירועים שנרשמת אליהם: אישור, מקום שהתפנה מרשימת ההמתנה, תזכורות, שינויים.",
+    "ASSOCIATION": "הודעות שהאיגוד שולח לחבריו.",
+    "NEWS": "פורסמה ידיעה חדשה.",
+    "NEW_EVENTS": "פורסם אירוע חדש.",
+    "EDUCATION": "פורסם פריט הדרכה חדש.",
+    "GUIDELINES": "נוספה הנחיה או גרסה חדשה של הנחיה."
+  },
+  "items": {
+    "eventRegistered": "נרשמת לאירוע ״{title}״.",
+    "eventWaitlisted": "נכנסת לרשימת ההמתנה של ״{title}״.",
+    "eventPromoted": "התפנה מקום: ההרשמה שלך ל״{title}״ אושרה.",
+    "eventCancelled": "האירוע ״{title}״ בוטל.",
+    "eventChanged": "המועד או המקום של ״{title}״ השתנו.",
+    "eventReminder": "תזכורת: ״{title}״ יתקיים {when}.",
+    "membershipApplicationReceived": "בקשת החברות שלך התקבלה ({typeName}).",
+    "membershipDirectorApproved": "מנהל/ת המחלקה אישר/ה את בקשת החברות שלך ({typeName}). היא ממתינה כעת לאישור האיגוד.",
+    "membershipApproved": "החברות שלך אושרה ({typeName}).",
+    "membershipRejected": "בקשת החברות שלך ({typeName}) לא אושרה.",
+    "newsSentBack": "״{title}״ הוחזר אליך לתיקונים.",
+    "newsPublished": "״{title}״ פורסם.",
+    "educationSentBack": "״{title}״ הוחזר אליך לתיקונים.",
+    "educationPublished": "״{title}״ פורסם.",
+    "contentNews": "חדשות: {title}",
+    "contentEvent": "אירוע חדש: {title}",
+    "contentEducation": "חדש בהדרכה: {title}",
+    "contentGuideline": "הנחיה חדשה: {title}",
+    "contentGuidelineVersion": "גרסה חדשה של הנחיה: {title}",
+    "broadcast": "הודעה מהאיגוד: {title}",
+    "unknown": "יש לך התראה חדשה."
+  },
+  "preferences": {
+    "title": "העדפות התראות",
+    "intro": "לכל סוג אפשר לבחור אם לקבל אותו באתר, בדוא״ל, בשניהם או בכלל לא.",
+    "kind": "סוג",
+    "app": "באתר",
+    "email": "בדוא״ל",
+    "appFor": "{kind}: באתר",
+    "emailFor": "{kind}: בדוא״ל",
+    "alwaysOn": "פועל תמיד",
+    "save": "שמירה",
+    "saved": "נשמר.",
+    "digestNote": "דוא״ל על חדשות, אירועים חדשים, הדרכה והנחיות מגיע כסיכום אחד בכל בוקר, ורק כשיש משהו חדש.",
+    "securityNote": "הודעות אבטחה (אימות כתובת, איפוס סיסמה, כניסה ממכשיר חדש) נשלחות תמיד.",
+    "back": "חזרה להתראות"
+  },
+  "message": {
+    "back": "חזרה להתראות",
+    "from": "הודעה מהאיגוד",
+    "sentAt": "נשלחה {when}"
+  },
+  "unsubscribe": {
+    "title": "העדפות דוא״ל",
+    "working": "רגע אחד…",
+    "done": "בוצע. לא יישלחו אליך עוד הודעות דוא״ל מהסוג הזה:",
+    "missing": "הקישור הזה אינו שלם. אפשר לשנות מה מתקבל בהעדפות ההתראות.",
+    "preferences": "פתיחת העדפות ההתראות שלי",
+    "signInNote": "כדי לראות את כל ההעדפות יש להיכנס לחשבון."
+  },
+  "admin": {
+    "title": "הודעות לחברים",
+    "intro": "הודעה מגיעה לחברים רק אחרי שמנהל/ת אחר/ת אישר/ה אותה.",
+    "new": "כתיבת הודעה",
+    "back": "חזרה להודעות",
+    "status": "מצב",
+    "allStatuses": "הכול",
+    "statuses": {
+      "DRAFT": "טיוטה",
+      "PENDING_APPROVAL": "ממתינה לאישור",
+      "SENT": "נשלחה",
+      "REJECTED": "הוחזרה"
+    },
+    "empty": "אין הודעות מתאימות.",
+    "total": "{total, plural, one {הודעה אחת} other {# הודעות}}",
+    "colTitle": "כותרת",
+    "colStatus": "מצב",
+    "colAudience": "אל",
+    "colAuthor": "נכתבה על ידי",
+    "colUpdated": "שינוי אחרון",
+    "untitled": "(ללא כותרת)",
+    "unknownPerson": "מנהל/ת",
+    "editor": {
+      "newTitle": "הודעה חדשה",
+      "editTitle": "הודעה לחברים",
+      "language": "שפת הטקסט",
+      "hebrew": "עברית",
+      "english": "אנגלית",
+      "titleLabel": "כותרת",
+      "body": "טקסט",
+      "bodyHint": "טקסט פשוט. יש להשאיר שורה ריקה בין פסקאות.",
+      "audience": "מי מקבל/ת אותה",
+      "audienceAll": "כל החברים הפעילים",
+      "audienceTypes": "רק סוגי החברות האלה",
+      "types": "סוגי חברות",
+      "save": "שמירה",
+      "saved": "נשמר.",
+      "delete": "מחיקה",
+      "readOnly": "אי אפשר עוד לשנות את ההודעה הזאת.",
+      "notYours": "רק מי שכתב/ה את ההודעה יכול/ה לשנות אותה או להגיש אותה.",
+      "submit": "הגשה לאישור",
+      "submitHint": "אחרי ההגשה, מנהל/ת אחר/ת מאשר/ת את ההודעה. אי אפשר לאשר הודעה שכתבת."
+    },
+    "review": {
+      "title": "אישור",
+      "audienceCount": "{count, plural, =0 {אין כרגע אף אחד שמתאים לקהל הזה.} one {אם תישלח עכשיו, היא תגיע לאדם אחד.} other {אם תישלח עכשיו, היא תגיע ל־# אנשים.}}",
+      "ownHint": "ההודעה נכתבה על ידך. מנהל/ת אחר/ת צריך/ה לאשר אותה.",
+      "approve": "אישור ושליחה",
+      "approveHint": "האישור שולח את ההודעה מיד. אי אפשר לבטל זאת.",
+      "reason": "סיבת ההחזרה",
+      "reject": "החזרה לכותב/ת",
+      "rejected": "הוחזרה על ידי {name}: {reason}",
+      "sent": "נשלחה {when} אל {count, plural, one {אדם אחד} other {# אנשים}}. אושרה על ידי {name}.",
+      "waiting": "ממתינה לאישור מאז {when}."
+    }
+  }
+}

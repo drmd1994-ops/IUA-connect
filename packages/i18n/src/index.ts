@@ -6,7 +6,10 @@ import enEducation from './messages/en/education.json';
 import enEmails from './messages/en/emails.json';
 import enErrors from './messages/en/errors.json';
 import enEvents from './messages/en/events.json';
+import enDirectory from './messages/en/directory.json';
 import enMembership from './messages/en/membership.json';
+import enNotifications from './messages/en/notifications.json';
+import enSearch from './messages/en/search.json';
 import heAdmin from './messages/he/admin.json';
 import heAuth from './messages/he/auth.json';
 import heCommon from './messages/he/common.json';
@@ -15,7 +18,10 @@ import heEducation from './messages/he/education.json';
 import heEmails from './messages/he/emails.json';
 import heErrors from './messages/he/errors.json';
 import heEvents from './messages/he/events.json';
+import heDirectory from './messages/he/directory.json';
 import heMembership from './messages/he/membership.json';
+import heNotifications from './messages/he/notifications.json';
+import heSearch from './messages/he/search.json';
 
 /**
  * Locales enabled at launch (D6). Arabic (rtl) and Russian (ltr) are added by creating
@@ -47,6 +53,9 @@ export type Messages = {
   content: typeof heContent;
   events: typeof heEvents;
   education: typeof heEducation;
+  notifications: typeof heNotifications;
+  directory: typeof heDirectory;
+  search: typeof heSearch;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -60,6 +69,9 @@ const MESSAGES: Record<Locale, Messages> = {
     content: heContent,
     events: heEvents,
     education: heEducation,
+    notifications: heNotifications,
+    directory: heDirectory,
+    search: heSearch,
   },
   en: {
     common: enCommon,
@@ -71,6 +83,9 @@ const MESSAGES: Record<Locale, Messages> = {
     content: enContent,
     events: enEvents,
     education: enEducation,
+    notifications: enNotifications,
+    directory: enDirectory,
+    search: enSearch,
   },
 };
 

@@ -1,0 +1,23 @@
+{
+  "box": {
+    "label": "Search the site",
+    "button": "Search"
+  },
+  "page": {
+    "title": "Search",
+    "intro": "News, events, education and guidelines. Members with an active membership also find listed members.",
+    "prompt": "Type at least two characters.",
+    "empty": "Nothing was found for “{q}”.",
+    "resultsFor": "Results for “{q}”",
+    "count": "{total, plural, one {# result} other {# results}}",
+    "showAllIn": "Show all {total} in {type}",
+    "backToAll": "Back to all results",
+    "types": {
+      "news": "News",
+      "events": "Events",
+      "education": "Education",
+      "guidelines": "Guidelines",
+      "members": "Members"
+    }
+  }
+}

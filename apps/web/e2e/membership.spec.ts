@@ -145,7 +145,7 @@ test('register → director approves → admin approves → the card verifies', 
   // The admin sees the new member, and suspending them invalidates the card at once.
   await admin.goto('/en/admin/members');
   await admin.getByLabel('Search by name or email').fill(memberEmail);
-  await admin.getByRole('button', { name: 'Search' }).click();
+  await admin.getByRole('main').getByRole('button', { name: 'Search' }).click();
   await admin.getByRole('link', { name: `Dana ${lastName}` }).click();
   await expect(admin.getByTestId('member-detail')).toContainText('Full member');
   await expectAccessible(admin);

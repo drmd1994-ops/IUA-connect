@@ -107,3 +107,38 @@ export async function expectSignedIn(page: Page, email: string) {
     email,
   );
 }
+
+/** The newest outbox email of a template to an address, as HTML. */
+export async function emailFromOutbox(to: string, template: string): Promise<string> {
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const files = (await readdir(OUTBOX).catch(() => [] as string[]))
+      .filter((file) => file.endsWith(`-${template}.html`))
+      .sort()
+      .reverse();
+    for (const file of files) {
+      const html = await readFile(path.join(OUTBOX, file), 'utf8');
+      if (html.startsWith(`<!-- To: ${to} `)) return html;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error(`No ${template} email to ${to} in ${OUTBOX}`);
+}
+
+/** Every link of an email, in order. */
+export function linksOf(html: string): string[] {
+  return [...html.matchAll(/href="([^"]+)"/g)].map((match) => match[1]!.replace(/&amp;/g, '&'));
+}
+
+/**
+ * Runs a scheduled job now with the development CLI (for example the daily summary email,
+ * which otherwise goes out in the morning).
+ */
+export function runJob(name: string): void {
+  const pnpmEntry = process.env.npm_execpath;
+  if (!pnpmEntry) throw new Error('Run the end-to-end tests through pnpm (pnpm e2e).');
+  const output = execFileSync(process.execPath, [pnpmEntry, 'job:run', name], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8',
+  });
+  if (!output.includes(`Ran ${name}.`)) throw new Error(`job:run ${name} failed:\n${output}`);
+}

@@ -10,6 +10,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 export function AccountMenu() {
   const t = useTranslations('auth.nav');
   const tm = useTranslations('membership.nav');
+  const all = useTranslations();
   const { status, me, signOut } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -57,6 +58,12 @@ export function AccountMenu() {
           </MenuLink>
           <MenuLink href="/account/membership" onClick={() => setOpen(false)}>
             {tm('membership')}
+          </MenuLink>
+          <MenuLink href="/account/notifications" onClick={() => setOpen(false)}>
+            {all('notifications.nav')}
+          </MenuLink>
+          <MenuLink href="/members" onClick={() => setOpen(false)}>
+            {all('directory.nav')}
           </MenuLink>
           <MenuLink href="/account/schedule" onClick={() => setOpen(false)}>
             {tm('schedule')}

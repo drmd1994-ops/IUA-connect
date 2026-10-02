@@ -4,7 +4,8 @@
  *   2. demo:      fictional people, directors, memberships, applications (M2);
  *                 a content editor, news in every state and sample guidelines (M3);
  *                 an event admin, speakers and events in every state (M5);
- *                 education items, a course and exam questions waiting for review (M6)
+ *                 education items, a course and exam questions waiting for review (M6);
+ *                 a second admin, directory members, notices and broadcasts (M7)
  *   3. import:    the hand-picked IUA website sample from fixtures/iua-import/ (M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
@@ -18,6 +19,7 @@ import { seedDemo } from './demo';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
 import { seedDemoEvents } from './demo-events';
+import { seedDemoNotifications } from './demo-notifications';
 import { seedImport } from './import';
 import { seedReference } from './reference';
 
@@ -37,6 +39,7 @@ const LAYERS: SeedLayer[] = [
       await seedDemoContent(prisma);
       await seedDemoEvents(prisma);
       await seedDemoEducation(prisma);
+      await seedDemoNotifications(prisma);
     },
   },
   {

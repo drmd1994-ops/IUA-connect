@@ -1,4 +1,6 @@
 import { useTranslations } from 'next-intl';
+import { NotificationBell } from '@/features/notifications/notification-bell';
+import { SearchBox } from '@/features/search/search-box';
 import { Link } from '@/i18n/navigation';
 import { AccountMenu } from './account-menu';
 import { LocaleSwitcher } from './locale-switcher';
@@ -48,7 +50,9 @@ export function SiteHeader() {
           >
             {nav('guidelines')}
           </Link>
+          <SearchBox />
           <LocaleSwitcher />
+          <NotificationBell />
           <AccountMenu />
         </nav>
       </div>
