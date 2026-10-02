@@ -6,7 +6,7 @@ _Last updated: 2026-10-02_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: built 2026-10-02**, on `feat/notifications-search` (draft pull request #9), waiting for the owner's checkpoint test of the demo and for the merge. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). Next: M8 Admin portal completion and dashboards; the plan was approved on 2026-10-02 and the build is under way on `feat/admin-dashboard`. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -435,9 +435,9 @@ No new libraries.
 
 - **Checkpoint test of the demo** (still open from M6): now M1 to M7. For M7: the bell and "Choose what you receive" as a member; `/admin/broadcasts` as `admin@demo.test` (approve the waiting message); `/members` as a member; the search field with a Hebrew word.
 - **Review the ten sample exam questions** at `/admin/education/questions` (still open from M6).
-- Merge pull request #9 when satisfied.
+- ~~Merge pull request #9~~ merged at the owner's request on 2026-10-02 (CI green).
 - The wording of the directory consent (`directory-2026-10`) should be read by whoever does the legal review before real data.
 
 ## Next step
 
-The owner's checkpoint test. After it and the merge of M7: the plan for **M8** (admin portal completion and dashboard), written and approved before any code.
+**M8 Admin portal completion and dashboards:** the plan [`docs/plans/M8-admin-dashboard.md`](docs/plans/M8-admin-dashboard.md) was approved by the owner on 2026-10-02; the build is under way on `feat/admin-dashboard`. The owner's checkpoint test of the demo (M1 to M7) and the review of the ten sample exam questions are still open.
