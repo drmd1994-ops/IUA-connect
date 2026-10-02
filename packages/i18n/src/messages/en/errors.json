@@ -130,6 +130,8 @@
     "broadcastHebrewRequired": "A Hebrew title and text are required before submitting.",
     "broadcastUnknownType": "Please choose membership types from the list.",
     "broadcastChanged": "This message was changed by someone else. Reload and try again.",
-    "broadcastNoRecipients": "Nobody matches this audience right now, so there is nothing to send."
+    "broadcastNoRecipients": "Nobody matches this audience right now, so there is nothing to send.",
+    "membersOnly": "This is for members with an active membership.",
+    "directoryNameRequired": "Add your first and last name to your profile before joining the directory."
   }
 }

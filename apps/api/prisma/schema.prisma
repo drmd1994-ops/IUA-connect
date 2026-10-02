@@ -88,6 +88,7 @@ model User {
   announcementReads   AnnouncementRead[]
   notificationState   NotificationState?
   broadcastDeliveries BroadcastDelivery[]
+  consents            Consent[]
 
   @@map("users")
 }
@@ -423,6 +424,9 @@ model Profile {
   contactPhone      String?  @map("contact_phone") @db.VarChar(32)
   /// Profile photo (M3): an image file the member uploaded.
   photoFileId       String?  @unique @map("photo_file_id") @db.Uuid
+  /// Listed in the member directory (D9). Off until the member switches it on; the consent is
+  /// recorded in consents.
+  directoryOptIn    Boolean  @default(false) @map("directory_opt_in")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
@@ -1736,4 +1740,35 @@ model BroadcastDelivery {
   @@index([emailedAt])
   @@index([userId])
   @@map("broadcast_deliveries")
+}
+
+// ---------------------------------------------------------------------------
+// Consents (M7 plan §2.8). DATABASE_DESIGN.md §3.
+// ---------------------------------------------------------------------------
+
+enum ConsentKind {
+  TERMS
+  PRIVACY
+  /// Being listed in the member directory.
+  DIRECTORY
+  EMAIL_MARKETING
+
+  @@map("consent_kind")
+}
+
+/// A consent a person gave, with the wording version they saw. Kept as history: withdrawing sets
+/// withdrawn_at, and giving it again adds a row. Deleted with the account.
+model Consent {
+  id          String      @id @db.Uuid
+  userId      String      @map("user_id") @db.Uuid
+  kind        ConsentKind
+  /// The version of the wording shown, e.g. "directory-2026-10".
+  version     String      @db.VarChar(40)
+  grantedAt   DateTime    @default(now()) @map("granted_at") @db.Timestamptz(6)
+  withdrawnAt DateTime?   @map("withdrawn_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, kind, grantedAt(sort: Desc)])
+  @@map("consents")
 }

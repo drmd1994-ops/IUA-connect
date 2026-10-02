@@ -612,6 +612,54 @@ export interface paths {
         patch: operations["ProfilesController_update"];
         trace?: never;
     };
+    "/api/v1/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DirectoryController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DirectoryController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/consents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConsentsController_get"];
+        put?: never;
+        post: operations["ConsentsController_set"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/memberships/import": {
         parameters: {
             query?: never;
@@ -2436,6 +2484,89 @@ export interface components {
                 /** @enum {string} */
                 PHOTO?: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
+        };
+        DirectoryListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                firstName: string | null;
+                lastName: string | null;
+                nameHe: string | null;
+                nameEn: string | null;
+                title: string | null;
+                position: string | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                }[];
+                photoFileId: string | null;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        DirectoryMemberDto: {
+            /** Format: uuid */
+            id: string;
+            firstName: string | null;
+            lastName: string | null;
+            nameHe: string | null;
+            nameEn: string | null;
+            title: string | null;
+            position: string | null;
+            hospital: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            department: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            subspecialties: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            }[];
+            photoFileId: string | null;
+            bio: string | null;
+            researchInterests: string | null;
+            orcid: string | null;
+            languages: string[];
+            contactEmail: string | null;
+            contactPhone: string | null;
+        };
+        ConsentsDto: {
+            directory: {
+                granted: boolean;
+                version: string;
+                grantedAt: string | null;
+            };
+        };
+        ConsentInputDto: {
+            /** @enum {string} */
+            kind: "DIRECTORY";
+            granted: boolean;
         };
         ImportDryRunDto: {
             fileName?: string;
@@ -5263,6 +5394,93 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileDto"];
+                };
+            };
+        };
+    };
+    DirectoryController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                hospitalId?: string;
+                subspecialtyId?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectoryListDto"];
+                };
+            };
+        };
+    };
+    DirectoryController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectoryMemberDto"];
+                };
+            };
+        };
+    };
+    ConsentsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentsDto"];
+                };
+            };
+        };
+    };
+    ConsentsController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentsDto"];
                 };
             };
         };
