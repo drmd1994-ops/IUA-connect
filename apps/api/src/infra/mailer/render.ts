@@ -42,8 +42,11 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
     '<!doctype html>',
     `<html lang="${message.locale}" dir="${dir}"><head><meta charset="utf-8"><title>${escapeHtml(subject)}</title></head>`,
     '<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #131a1e; max-width: 560px; margin: 24px auto; padding: 0 16px">',
-    `<h1 style="font-size: 22px; color: #0c2d3d">${escapeHtml(copy.heading!)}</h1>`,
+    `<h1 style="font-size: 22px; color: #0c2d3d">${interpolate(escapeHtml(copy.heading!), htmlParams)}</h1>`,
     ...paragraphs.map(({ text }) => `<p>${interpolate(escapeHtml(text), htmlParams)}</p>`),
+    ...(message.paragraphs ?? []).map(
+      (paragraph) => `<p style="white-space: pre-line">${escapeHtml(paragraph)}</p>`,
+    ),
     message.list?.length
       ? `<ul>${message.list
           .map(
@@ -72,8 +75,9 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
     .join('\n');
 
   const text = [
-    copy.heading,
+    interpolate(copy.heading!, params),
     ...paragraphs.map(({ text: paragraph }) => interpolate(paragraph, params)),
+    ...(message.paragraphs ?? []),
     ...(message.list ?? []).map((item) => `${item.label}: ${item.title}\n${item.link}`),
     link ? `${copy.action ?? ''}: ${link}` : '',
     emails.layout.signature,

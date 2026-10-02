@@ -66,27 +66,28 @@ model User {
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles              UserRole[]               @relation("UserRoles")
-  rolesGranted       UserRole[]               @relation("RolesGrantedBy")
-  sessions           Session[]
-  devices            Device[]
-  mfaFactors         MfaFactor[]
-  recoveryCodes      RecoveryCode[]
-  authTokens         AuthToken[]
-  profile            Profile?
-  membership         Membership?
-  applications       VerificationRequest[]
-  files              StoredFile[]
-  newsAuthored       News[]
-  eventRegistrations EventRegistration[]
-  scheduleItems      ScheduleItem[]
-  eventAttendances   EventAttendance[]
-  eventReminders     EventReminder[]
-  examAnswers        ExamAnswer[]
-  notifications      Notification[]
-  notificationPrefs  NotificationPreference[]
-  announcementReads  AnnouncementRead[]
-  notificationState  NotificationState?
+  roles               UserRole[]               @relation("UserRoles")
+  rolesGranted        UserRole[]               @relation("RolesGrantedBy")
+  sessions            Session[]
+  devices             Device[]
+  mfaFactors          MfaFactor[]
+  recoveryCodes       RecoveryCode[]
+  authTokens          AuthToken[]
+  profile             Profile?
+  membership          Membership?
+  applications        VerificationRequest[]
+  files               StoredFile[]
+  newsAuthored        News[]
+  eventRegistrations  EventRegistration[]
+  scheduleItems       ScheduleItem[]
+  eventAttendances    EventAttendance[]
+  eventReminders      EventReminder[]
+  examAnswers         ExamAnswer[]
+  notifications       Notification[]
+  notificationPrefs   NotificationPreference[]
+  announcementReads   AnnouncementRead[]
+  notificationState   NotificationState?
+  broadcastDeliveries BroadcastDelivery[]
 
   @@map("users")
 }
@@ -1662,4 +1663,77 @@ model NotificationState {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notification_state")
+}
+
+// ---------------------------------------------------------------------------
+// Broadcasts (M7 plan §2.6): a message an admin writes and a different admin approves.
+// ---------------------------------------------------------------------------
+
+/// DRAFT → PENDING_APPROVAL → SENT, or REJECTED (back to its author, who may edit and resubmit).
+enum BroadcastStatus {
+  DRAFT
+  PENDING_APPROVAL
+  SENT
+  REJECTED
+
+  @@map("broadcast_status")
+}
+
+model Broadcast {
+  id             String          @id @db.Uuid
+  status         BroadcastStatus @default(DRAFT)
+  createdBy      String          @map("created_by") @db.Uuid
+  /// True: every active member. False: the membership types in type_ids.
+  audienceAll    Boolean         @default(true) @map("audience_all")
+  typeIds        String[]        @default([]) @map("type_ids") @db.Uuid
+  submittedAt    DateTime?       @map("submitted_at") @db.Timestamptz(6)
+  /// Who approved or rejected it. Never the author (a database check).
+  decidedBy      String?         @map("decided_by") @db.Uuid
+  decidedAt      DateTime?       @map("decided_at") @db.Timestamptz(6)
+  rejectReason   String?         @map("reject_reason") @db.VarChar(1000)
+  sentAt         DateTime?       @map("sent_at") @db.Timestamptz(6)
+  /// How many people it reached, fixed when it was sent.
+  recipientCount Int?            @map("recipient_count")
+  /// From the Idempotency-Key header: sending the same request twice creates one broadcast.
+  idempotencyKey String?         @map("idempotency_key") @db.VarChar(100)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  translations BroadcastTranslation[]
+  deliveries   BroadcastDelivery[]
+
+  @@unique([createdBy, idempotencyKey])
+  @@index([status, createdAt(sort: Desc)])
+  @@map("broadcasts")
+}
+
+model BroadcastTranslation {
+  broadcastId String @map("broadcast_id") @db.Uuid
+  locale      String @db.VarChar(8)
+  title       String @db.VarChar(200)
+  /// Plain text; blank lines separate paragraphs.
+  body        String @db.VarChar(5000)
+
+  broadcast Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+
+  @@id([broadcastId, locale])
+  @@map("broadcast_translations")
+}
+
+/// One row per person a broadcast reached: nobody receives it twice, also when sending is
+/// retried, and only these people can read it.
+model BroadcastDelivery {
+  broadcastId String    @map("broadcast_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  /// Set when the email was handed to the mailer, or when the person had email switched off.
+  emailedAt   DateTime? @map("emailed_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  broadcast Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([broadcastId, userId])
+  @@index([emailedAt])
+  @@index([userId])
+  @@map("broadcast_deliveries")
 }

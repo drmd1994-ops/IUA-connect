@@ -23,6 +23,8 @@ export interface Notice<T extends EmailTemplate = EmailTemplate> {
   locale: Locale;
   template: T;
   params: EmailTemplates[T];
+  /** Free text for the email (a broadcast's paragraphs). */
+  paragraphs?: string[];
 }
 
 /**
@@ -61,30 +63,42 @@ export class Notifier {
         this.logger.warn({ err: error, template: notice.template }, 'Notice in the app failed');
       }
     }
-    if (wants.EMAIL) {
-      await this.mailer.send({
-        to: notice.to,
-        locale: notice.locale,
-        template: notice.template,
-        params: notice.params,
-        // An email the person can switch off says how, in one step.
-        ...(NOTIFICATION_DEFAULTS[notice.kind].locked
-          ? {}
-          : {
-              unsubscribe: {
-                link: unsubscribeUrl(
-                  this.env.APP_BASE_URL,
-                  notice.locale,
-                  await this.tokens.issue(notice.userId, notice.kind),
-                ),
-                preferencesLink: new URL(
-                  `/${notice.locale}/account/notifications/preferences`,
-                  this.env.APP_BASE_URL,
-                ).toString(),
-              },
-            }),
-      });
-    }
+    if (wants.EMAIL) await this.deliverEmail(notice);
+  }
+
+  /**
+   * The email channel alone, for a notice whose line in the app is written elsewhere (a
+   * broadcast). Returns whether the person has email switched on for this kind.
+   */
+  async email<T extends EmailTemplate>(notice: Notice<T>): Promise<boolean> {
+    const wants = await this.channels(notice.userId, notice.kind);
+    if (wants.EMAIL) await this.deliverEmail(notice);
+    return wants.EMAIL;
+  }
+
+  private async deliverEmail<T extends EmailTemplate>(notice: Notice<T>): Promise<void> {
+    // An email the person can switch off says how, in one step.
+    const unsubscribe = NOTIFICATION_DEFAULTS[notice.kind].locked
+      ? undefined
+      : {
+          link: unsubscribeUrl(
+            this.env.APP_BASE_URL,
+            notice.locale,
+            await this.tokens.issue(notice.userId, notice.kind),
+          ),
+          preferencesLink: new URL(
+            `/${notice.locale}/account/notifications/preferences`,
+            this.env.APP_BASE_URL,
+          ).toString(),
+        };
+    await this.mailer.send({
+      to: notice.to,
+      locale: notice.locale,
+      template: notice.template,
+      params: notice.params,
+      ...(notice.paragraphs ? { paragraphs: notice.paragraphs } : {}),
+      ...(unsubscribe ? { unsubscribe } : {}),
+    });
   }
 
   /** Which channels a kind reaches this person through. */

@@ -151,5 +151,11 @@
     "heading": "New on IUA Connect",
     "body": "Published since your last summary:",
     "action": "Choose what you receive"
+  },
+  "broadcast": {
+    "subject": "{title}",
+    "heading": "{title}",
+    "body": "A message from the association to its members:",
+    "action": "Read it on IUA Connect"
   }
 }

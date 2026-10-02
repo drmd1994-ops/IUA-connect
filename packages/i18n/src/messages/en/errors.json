@@ -122,6 +122,14 @@
     "examSummaryRequired": "Write the short topic summary in Hebrew before submitting.",
     "unknownOption": "This question has no such option.",
     "notificationAlwaysOn": "This kind of notification is always on.",
-    "unsubscribeLinkInvalid": "This link is no longer valid. You can change what you receive in your notification preferences."
+    "unsubscribeLinkInvalid": "This link is no longer valid. You can change what you receive in your notification preferences.",
+    "broadcastNotEditable": "This message can no longer be changed.",
+    "broadcastNotYours": "Only the person who wrote this message can change or submit it.",
+    "broadcastStepNotAllowed": "This step isn’t possible in the message’s current state.",
+    "broadcastOwn": "You wrote this message, so a different administrator must decide on it.",
+    "broadcastHebrewRequired": "A Hebrew title and text are required before submitting.",
+    "broadcastUnknownType": "Please choose membership types from the list.",
+    "broadcastChanged": "This message was changed by someone else. Reload and try again.",
+    "broadcastNoRecipients": "Nobody matches this audience right now, so there is nothing to send."
   }
 }
