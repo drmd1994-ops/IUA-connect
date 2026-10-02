@@ -93,7 +93,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                 <SiteNotice />
               </section>
               <SiteHeader />
-              <main id="main" className="flex-1">
+              <main id="main" className="min-h-[85dvh] flex-1">
                 {children}
               </main>
               <SiteFooter />

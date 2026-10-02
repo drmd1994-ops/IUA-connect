@@ -82,18 +82,17 @@ export function EventList() {
             { value: 'past', label: t('events.list.past') },
           ]}
         />
-        {categories.length > 0 && (
-          <SelectField
-            label={t('events.list.category')}
-            placeholder={t('events.list.allCategories')}
-            value={category}
-            onChange={(event) => {
-              setCategory(event.target.value);
-              setPage(1);
-            }}
-            options={categories.map((c) => ({ value: c.key, label: name(c) }))}
-          />
-        )}
+        {/* Always there, also before the categories arrive, so the list below doesn't jump. */}
+        <SelectField
+          label={t('events.list.category')}
+          placeholder={t('events.list.allCategories')}
+          value={category}
+          onChange={(event) => {
+            setCategory(event.target.value);
+            setPage(1);
+          }}
+          options={categories.map((c) => ({ value: c.key, label: name(c) }))}
+        />
       </div>
       {error !== null && <Alert tone="error">{errorMessage(error, t)}</Alert>}
       {!list && error === null && <p role="status">{t('membership.common.loading')}</p>}
@@ -113,6 +112,7 @@ export function EventList() {
                     variant="thumb"
                     alt=""
                     className="aspect-video w-full object-cover"
+                    placeholder
                   />
                 )}
                 <div className="flex flex-1 flex-col gap-2 p-5">
