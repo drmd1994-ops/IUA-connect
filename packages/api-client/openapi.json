@@ -5942,6 +5942,37 @@
           "notifications"
         ]
       }
+    },
+    "/api/v1/notifications/unsubscribe": {
+      "post": {
+        "operationId": "UnsubscribeController_unsubscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnsubscribeInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnsubscribeResultDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "notifications"
+        ]
+      }
     }
   },
   "info": {
@@ -17401,6 +17432,45 @@
         },
         "required": [
           "items"
+        ],
+        "additionalProperties": false
+      },
+      "UnsubscribeInputDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "additionalProperties": false
+      },
+      "UnsubscribeResultDto": {
+        "type": "object",
+        "properties": {
+          "kinds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "ACCOUNT",
+                "MY_EVENTS",
+                "ASSOCIATION",
+                "NEWS",
+                "NEW_EVENTS",
+                "EDUCATION",
+                "GUIDELINES",
+                "WORK"
+              ]
+            }
+          }
+        },
+        "required": [
+          "kinds"
         ],
         "additionalProperties": false
       }

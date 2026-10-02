@@ -7,7 +7,7 @@ import { type RequestMeta } from '../../common/request-meta';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type Prisma } from '../../generated/prisma/client';
-import { Notifier } from '../notifications';
+import { ContentAnnouncer, Notifier } from '../notifications';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
@@ -57,6 +57,7 @@ export class EducationAdminService {
     private readonly files: FilesService,
     private readonly audit: AuditService,
     private readonly notifier: Notifier,
+    private readonly announcer: ContentAnnouncer,
   ) {}
 
   async list(query: AdminEducationListQueryDto): Promise<AdminEducationListDto> {
@@ -299,6 +300,18 @@ export class EducationAdminService {
     });
     if (action === 'SEND_BACK') await this.notifyAuthor(row, 'educationSentBack', input.comment);
     if (action === 'PUBLISH') await this.notifyAuthor(row, 'educationPublished');
+    // Only the first publication is announced, not one after a take-down.
+    if (action === 'PUBLISH' && !row.publishedAt) {
+      await this.announcer.announce({
+        entityType: 'education',
+        entityId: id,
+        kind: 'EDUCATION',
+        type: 'contentEducation',
+        translations: row.translations,
+        link: `/education/${row.slug}`,
+        accessTier: row.accessTier,
+      });
+    }
     return this.get(id);
   }
 

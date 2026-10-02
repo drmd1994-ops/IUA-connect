@@ -85,6 +85,8 @@ model User {
   examAnswers        ExamAnswer[]
   notifications      Notification[]
   notificationPrefs  NotificationPreference[]
+  announcementReads  AnnouncementRead[]
+  notificationState  NotificationState?
 
   @@map("users")
 }
@@ -1605,4 +1607,59 @@ model NotificationPreference {
 
   @@id([userId, kind, channel])
   @@map("notification_preferences")
+}
+
+/// Something newly published that people are told about once (M7 plan §2.3): a notice in the app
+/// and a line in the next daily summary email. One row per item, not per person: who sees it is
+/// worked out when a person opens their notices (their switches, their membership), so publishing
+/// costs the same however many accounts there are. Publishing an item again tells nobody twice. The access tier is kept as it was when the item was published.
+model ContentAnnouncement {
+  id         String           @id @db.Uuid
+  /// "news", "event", "education", "guideline" or "guideline_version".
+  entityType String           @map("entity_type") @db.VarChar(40)
+  entityId   String           @map("entity_id") @db.Uuid
+  kind       NotificationKind
+  /// The message key of the notice, e.g. "contentNews".
+  type       String           @db.VarChar(60)
+  titleHe    String?          @map("title_he") @db.VarChar(300)
+  titleEn    String?          @map("title_en") @db.VarChar(300)
+  /// A path inside the site, without the language prefix.
+  link       String           @db.VarChar(500)
+  accessTier AccessTier       @map("access_tier")
+  /// The membership types that may read it, when the tier is TYPES.
+  typeIds    String[]         @default([]) @map("type_ids") @db.Uuid
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Set when a daily summary took it; null means the next summary lists it.
+  digestedAt DateTime?        @map("digested_at") @db.Timestamptz(6)
+
+  reads AnnouncementRead[]
+
+  @@unique([entityType, entityId])
+  @@index([digestedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("content_announcements")
+}
+
+/// An announcement a person marked as read.
+model AnnouncementRead {
+  userId         String   @map("user_id") @db.Uuid
+  announcementId String   @map("announcement_id") @db.Uuid
+  readAt         DateTime @default(now()) @map("read_at") @db.Timestamptz(6)
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  announcement ContentAnnouncement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  @@id([userId, announcementId])
+  @@index([announcementId])
+  @@map("announcement_reads")
+}
+
+/// "Mark all as read" for announcements: everything up to this moment counts as read.
+model NotificationState {
+  userId                 String   @id @map("user_id") @db.Uuid
+  announcementsReadUntil DateTime @map("announcements_read_until") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_state")
 }

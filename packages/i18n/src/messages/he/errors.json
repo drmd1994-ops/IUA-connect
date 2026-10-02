@@ -121,6 +121,7 @@
     "examExplanationRequired": "לכל תשובה אפשרית נדרש הסבר בעברית: מדוע היא נכונה, או מדוע היא שגויה.",
     "examSummaryRequired": "יש לכתוב את סיכום הנושא הקצר בעברית לפני ההגשה.",
     "unknownOption": "אין לשאלה הזאת תשובה כזאת.",
-    "notificationAlwaysOn": "סוג ההתראות הזה פועל תמיד."
+    "notificationAlwaysOn": "סוג ההתראות הזה פועל תמיד.",
+    "unsubscribeLinkInvalid": "הקישור הזה כבר אינו תקף. אפשר לשנות מה מתקבל בהעדפות ההתראות."
   }
 }

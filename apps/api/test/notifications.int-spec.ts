@@ -48,9 +48,23 @@ describe('notifications and preferences (integration)', () => {
       .expect(200);
     return created.body as { id: string; slug: string };
   }
-  async function person(label = 'notified') {
+  /**
+   * A signed-in person. The events these tests publish are also announced to everyone as new
+   * content (content-notices.int-spec.ts); `quiet` switches that kind off, so the lists here
+   * hold the person's own notices only.
+   */
+  async function person(label = 'notified', quiet = true) {
     const email = await createVerifiedUser(h, label);
-    return { email, token: (await signIn(h, email)).accessToken };
+    const token = (await signIn(h, email)).accessToken;
+    if (quiet) {
+      await h
+        .http()
+        .put('/api/v1/me/notification-preferences')
+        .set(bearer(token))
+        .send({ items: [{ kind: 'NEW_EVENTS', app: false, email: false }] })
+        .expect(200);
+    }
+    return { email, token };
   }
   const register = (e: { slug: string }, token: string) =>
     h
@@ -89,7 +103,7 @@ describe('notifications and preferences (integration)', () => {
   });
 
   it('starts with the agreed settings', async () => {
-    const p = await person();
+    const p = await person('fresh', false);
     expect(await preferences(p.token)).toEqual([
       { kind: 'ACCOUNT', app: true, email: true, locked: true },
       { kind: 'MY_EVENTS', app: true, email: true, locked: false },

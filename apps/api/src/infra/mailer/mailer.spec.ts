@@ -20,6 +20,42 @@ describe('renderEmail', () => {
     expect(email.text).toContain('token=abc');
   });
 
+  it('lists the items of a summary and ends with how to stop these emails', () => {
+    const email = renderEmail({
+      to: 'x@example.test',
+      locale: 'en',
+      template: 'contentDigest',
+      params: { count: 1, link: 'http://localhost:3001/en/account/notifications/preferences' },
+      list: [
+        { label: 'News', title: 'A <b>bold</b> title', link: 'http://localhost:3001/en/news/a' },
+      ],
+      unsubscribe: {
+        link: 'http://localhost:3001/en/notifications/unsubscribe?t=abc',
+        preferencesLink: 'http://localhost:3001/en/account/notifications/preferences',
+      },
+    });
+    expect(email.html).toContain('<li>News: <a href="http://localhost:3001/en/news/a">');
+    // Titles are text, never markup.
+    expect(email.html).toContain('A &lt;b&gt;bold&lt;/b&gt; title');
+    expect(email.html).toContain('unsubscribe?t=abc');
+    expect(email.html).toContain('Stop emails of this kind');
+    expect(email.text).toContain('News: A <b>bold</b> title\nhttp://localhost:3001/en/news/a');
+    expect(email.text).toContain(
+      'Stop emails of this kind: http://localhost:3001/en/notifications',
+    );
+  });
+
+  it('adds no unsubscribe line to an email that is always sent', () => {
+    const email = renderEmail({
+      to: 'x@example.test',
+      locale: 'en',
+      template: 'passwordChanged',
+      params: {},
+    });
+    expect(email.html).not.toContain('Stop emails of this kind');
+    expect(email.text).not.toContain('Stop emails of this kind');
+  });
+
   it('renders English left-to-right and fills parameters', () => {
     const email = renderEmail({
       to: 'x@example.test',

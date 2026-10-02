@@ -28,6 +28,8 @@ export interface EmailTemplates {
   eventCancelled: { title: string; reason: string; link: string };
   eventChanged: { title: string; when: string; place: string; link: string };
   eventReminder: { title: string; when: string; place: string; link: string };
+  // Notifications (M7). The daily summary of new content; its items are the message's list.
+  contentDigest: { count: number; link: string };
 }
 
 export type EmailTemplate = keyof EmailTemplates;
@@ -37,6 +39,17 @@ export interface EmailMessage<T extends EmailTemplate = EmailTemplate> {
   locale: Locale;
   template: T;
   params: EmailTemplates[T];
+  /** Lines listed under the text, each with its own link (the daily summary). */
+  list?: EmailListItem[];
+  /** For emails a switch controls: how to turn this kind off, and where all switches are. */
+  unsubscribe?: { link: string; preferencesLink: string };
+}
+
+export interface EmailListItem {
+  /** What it is, in the recipient's language ("News", "Event"). */
+  label: string;
+  title: string;
+  link: string;
 }
 
 /**

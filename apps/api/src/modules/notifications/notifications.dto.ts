@@ -55,6 +55,18 @@ export class NotificationPreferencesDto extends createZodDto(
   }),
 ) {}
 
+/** The token from a "stop these emails" link. */
+export class UnsubscribeInputDto extends createZodDto(
+  z.strictObject({ token: z.string().min(1).max(2000) }),
+) {}
+
+export class UnsubscribeResultDto extends createZodDto(
+  z.strictObject({
+    /** The kinds whose email was switched off. */
+    kinds: z.array(kind),
+  }),
+) {}
+
 /** The switches to store. Kinds left out keep their current setting. */
 export class NotificationPreferencesInputDto extends createZodDto(
   z.strictObject({ items: z.array(preference).max(NOTIFICATION_PREFERENCE_KINDS.length) }),

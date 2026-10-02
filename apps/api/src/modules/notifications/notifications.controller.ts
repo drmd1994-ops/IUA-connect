@@ -12,7 +12,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { Authenticated } from '../../common/decorators/access.decorators';
+import { Authenticated, Public } from '../../common/decorators/access.decorators';
+import { RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import {
   NotificationListDto,
@@ -20,6 +21,8 @@ import {
   NotificationPreferencesDto,
   NotificationPreferencesInputDto,
   UnreadCountDto,
+  UnsubscribeInputDto,
+  UnsubscribeResultDto,
 } from './notifications.dto';
 import { NotificationsService } from './notifications.service';
 
@@ -84,5 +87,27 @@ export class NotificationPreferencesController {
     @Meta() meta: RequestMeta,
   ): Promise<NotificationPreferencesDto> {
     return this.notifications.setPreferences(principalOf(req), body, meta);
+  }
+}
+
+/**
+ * The "stop these emails" link (M7 plan §2.5). Public: the signed token names the person and
+ * the kind; it switches off email for that kind and does nothing else.
+ */
+@ApiTags('notifications')
+@Controller('notifications/unsubscribe')
+export class UnsubscribeController {
+  constructor(private readonly notifications: NotificationsService) {}
+
+  @Post()
+  @Public()
+  @RateLimit({ name: 'unsubscribe-ip', limit: 30, windowSec: 60, by: 'ip' })
+  @HttpCode(200)
+  @ApiOkResponse({ type: UnsubscribeResultDto })
+  unsubscribe(
+    @Body() body: UnsubscribeInputDto,
+    @Meta() meta: RequestMeta,
+  ): Promise<UnsubscribeResultDto> {
+    return this.notifications.unsubscribe(body.token, meta);
   }
 }

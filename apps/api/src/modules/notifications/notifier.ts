@@ -1,13 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { type Locale } from '@iua/i18n';
 import {
+  NOTIFICATION_DEFAULTS,
   type NotificationChannel,
   type NotificationKind,
   notificationEnabled,
   uuidv7,
 } from '@iua/shared';
+import { APP_CONFIG } from '../../config/config.module';
+import { type Env } from '../../config/env.schema';
 import { type EmailTemplate, type EmailTemplates, Mailer } from '../../infra/mailer/mailer';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { unsubscribeUrl } from './content-announcer';
+import { UnsubscribeTokens } from './unsubscribe-tokens';
 
 /** A message to one person: a notice in the app and an email, each if the person wants it. */
 export interface Notice<T extends EmailTemplate = EmailTemplate> {
@@ -31,8 +36,10 @@ export class Notifier {
   private readonly logger = new Logger(Notifier.name);
 
   constructor(
+    @Inject(APP_CONFIG) private readonly env: Env,
     private readonly prisma: PrismaService,
     private readonly mailer: Mailer,
+    private readonly tokens: UnsubscribeTokens,
   ) {}
 
   async send<T extends EmailTemplate>(notice: Notice<T>): Promise<void> {
@@ -60,6 +67,22 @@ export class Notifier {
         locale: notice.locale,
         template: notice.template,
         params: notice.params,
+        // An email the person can switch off says how, in one step.
+        ...(NOTIFICATION_DEFAULTS[notice.kind].locked
+          ? {}
+          : {
+              unsubscribe: {
+                link: unsubscribeUrl(
+                  this.env.APP_BASE_URL,
+                  notice.locale,
+                  await this.tokens.issue(notice.userId, notice.kind),
+                ),
+                preferencesLink: new URL(
+                  `/${notice.locale}/account/notifications/preferences`,
+                  this.env.APP_BASE_URL,
+                ).toString(),
+              },
+            }),
       });
     }
   }

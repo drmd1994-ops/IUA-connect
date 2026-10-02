@@ -2,7 +2,15 @@
   "layout": {
     "signature": "The IUA Connect team",
     "demoNotice": "This message was sent by a demo version of IUA Connect. All people and data in it are fictional.",
-    "ignore": "If you didn’t request this, you can ignore this message."
+    "ignore": "If you didn’t request this, you can ignore this message.",
+    "unsubscribe": "Stop emails of this kind",
+    "preferences": "Choose what you receive",
+    "digestLabels": {
+      "NEWS": "News",
+      "NEW_EVENTS": "Event",
+      "EDUCATION": "Education",
+      "GUIDELINES": "Guideline"
+    }
   },
   "verifyEmail": {
     "subject": "Verify your email address for IUA Connect",
@@ -137,5 +145,11 @@
     "heading": "Published",
     "body": "“{title}” is now published on IUA Connect.",
     "action": "View it"
+  },
+  "contentDigest": {
+    "subject": "New on IUA Connect",
+    "heading": "New on IUA Connect",
+    "body": "Published since your last summary:",
+    "action": "Choose what you receive"
   }
 }
