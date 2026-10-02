@@ -42,6 +42,9 @@ export default defineConfig({
       reuseExistingServer: !isCI,
       timeout: 180_000,
       cwd: '../..',
+      // The suite signs in dozens of times a minute from one address, more than the real
+      // limit (20) allows. The limits themselves are tested in the API's integration suite.
+      env: { RATE_LIMIT_SCALE: '10' },
     },
     {
       command: isCI ? 'pnpm --filter @iua/web start' : 'pnpm --filter @iua/web dev',

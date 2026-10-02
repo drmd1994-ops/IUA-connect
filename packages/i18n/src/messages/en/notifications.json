@@ -1,0 +1,142 @@
+{
+  "nav": "Notifications",
+  "bell": {
+    "unread": "{count, plural, =0 {Notifications, nothing new} one {Notifications, # new} other {Notifications, # new}}"
+  },
+  "list": {
+    "title": "Notifications",
+    "intro": "What happened that concerns you, newest first. Notifications are kept for 180 days.",
+    "empty": "No notifications yet.",
+    "summary": "{unread, plural, =0 {Nothing new} one {# new} other {# new}} · {total, plural, one {# notification} other {# notifications}}",
+    "markAll": "Mark all as read",
+    "markRead": "Mark as read",
+    "new": "New",
+    "preferences": "Choose what you receive"
+  },
+  "kinds": {
+    "ACCOUNT": "Account and membership",
+    "MY_EVENTS": "My events",
+    "ASSOCIATION": "Messages from the association",
+    "NEWS": "News",
+    "NEW_EVENTS": "New events",
+    "EDUCATION": "Education",
+    "GUIDELINES": "Guidelines",
+    "WORK": "Your work"
+  },
+  "kindHints": {
+    "ACCOUNT": "Decisions about your application and changes to your membership.",
+    "MY_EVENTS": "Events you registered for: confirmation, a place from the waiting list, reminders, changes.",
+    "ASSOCIATION": "Messages the association sends to its members.",
+    "NEWS": "A news item was published.",
+    "NEW_EVENTS": "An event was published.",
+    "EDUCATION": "An education item was published.",
+    "GUIDELINES": "A guideline was added or got a new version."
+  },
+  "items": {
+    "eventRegistered": "You are registered for “{title}”.",
+    "eventWaitlisted": "You are on the waiting list for “{title}”.",
+    "eventPromoted": "A place opened: you are now registered for “{title}”.",
+    "eventCancelled": "“{title}” was cancelled.",
+    "eventChanged": "The time or place of “{title}” changed.",
+    "eventReminder": "Reminder: “{title}” takes place {when}.",
+    "membershipApplicationReceived": "We received your membership application ({typeName}).",
+    "membershipDirectorApproved": "Your department director approved your application ({typeName}). It now waits for the association.",
+    "membershipApproved": "Your membership was approved ({typeName}).",
+    "membershipRejected": "Your membership application ({typeName}) wasn’t approved.",
+    "newsSentBack": "“{title}” was sent back to you for changes.",
+    "newsPublished": "“{title}” was published.",
+    "educationSentBack": "“{title}” was sent back to you for changes.",
+    "educationPublished": "“{title}” was published.",
+    "contentNews": "News: {title}",
+    "contentEvent": "New event: {title}",
+    "contentEducation": "New in education: {title}",
+    "contentGuideline": "New guideline: {title}",
+    "contentGuidelineVersion": "A guideline has a new version: {title}",
+    "broadcast": "A message from the association: {title}",
+    "unknown": "You have a new notification."
+  },
+  "preferences": {
+    "title": "Notification preferences",
+    "intro": "Choose, for each kind, whether you want it in the app, by email, both or neither.",
+    "kind": "Kind",
+    "app": "In the app",
+    "email": "By email",
+    "appFor": "{kind}: in the app",
+    "emailFor": "{kind}: by email",
+    "alwaysOn": "Always on",
+    "save": "Save",
+    "saved": "Saved.",
+    "digestNote": "Email about news, new events, education and guidelines arrives as one summary each morning, and only when there is something new.",
+    "securityNote": "Security emails (verifying your address, resetting your password, a sign-in from a new device) are always sent.",
+    "back": "Back to notifications"
+  },
+  "message": {
+    "back": "Back to notifications",
+    "from": "A message from the association",
+    "sentAt": "Sent {when}"
+  },
+  "unsubscribe": {
+    "title": "Email preferences",
+    "working": "One moment…",
+    "done": "Done. You will no longer get emails of this kind:",
+    "missing": "This link is incomplete. You can change what you receive in your notification preferences.",
+    "preferences": "Open my notification preferences",
+    "signInNote": "You need to sign in to see all your preferences."
+  },
+  "admin": {
+    "title": "Messages to members",
+    "intro": "A message reaches members only after a different administrator approves it.",
+    "new": "Write a message",
+    "back": "Back to messages",
+    "status": "Status",
+    "allStatuses": "All",
+    "statuses": {
+      "DRAFT": "Draft",
+      "PENDING_APPROVAL": "Waiting for approval",
+      "SENT": "Sent",
+      "REJECTED": "Sent back"
+    },
+    "empty": "No messages match.",
+    "total": "{total, plural, one {# message} other {# messages}}",
+    "colTitle": "Title",
+    "colStatus": "Status",
+    "colAudience": "To",
+    "colAuthor": "Written by",
+    "colUpdated": "Last change",
+    "untitled": "(no title)",
+    "unknownPerson": "An administrator",
+    "editor": {
+      "newTitle": "New message",
+      "editTitle": "Message to members",
+      "language": "Language of the text",
+      "hebrew": "Hebrew",
+      "english": "English",
+      "titleLabel": "Title",
+      "body": "Text",
+      "bodyHint": "Plain text. Leave an empty line between paragraphs.",
+      "audience": "Who receives it",
+      "audienceAll": "All active members",
+      "audienceTypes": "Only these membership types",
+      "types": "Membership types",
+      "save": "Save",
+      "saved": "Saved.",
+      "delete": "Delete",
+      "readOnly": "This message can no longer be changed.",
+      "notYours": "Only the person who wrote this message can change or submit it.",
+      "submit": "Submit for approval",
+      "submitHint": "After you submit it, a different administrator approves it. You can’t approve your own message."
+    },
+    "review": {
+      "title": "Approval",
+      "audienceCount": "{count, plural, =0 {Nobody matches this audience right now.} one {It would reach # person if sent now.} other {It would reach # people if sent now.}}",
+      "ownHint": "You wrote this message. A different administrator must approve it.",
+      "approve": "Approve and send",
+      "approveHint": "Approving sends it at once. This can’t be undone.",
+      "reason": "Reason for sending it back",
+      "reject": "Send back",
+      "rejected": "Sent back by {name}: {reason}",
+      "sent": "Sent {when} to {count, plural, one {# person} other {# people}}. Approved by {name}.",
+      "waiting": "Waiting for approval since {when}."
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "nav": "Member directory",
+  "list": {
+    "title": "Member directory",
+    "intro": "Members who chose to be listed. Each member decides what is shown about them.",
+    "search": "Search by name",
+    "searchButton": "Search",
+    "hospital": "Hospital",
+    "allHospitals": "All hospitals",
+    "subspecialty": "Subspecialty",
+    "allSubspecialties": "All subspecialties",
+    "empty": "No listed members match.",
+    "total": "{total, plural, one {# member} other {# members}}",
+    "membersOnly": "The directory is open to members with an active membership.",
+    "joinHint": "Not listed yourself? You can join the directory from your profile.",
+    "profileLink": "Open my profile"
+  },
+  "member": {
+    "back": "Back to the directory",
+    "nameOnly": "This member shares their name only.",
+    "position": "Position",
+    "institution": "Institution",
+    "subspecialties": "Subspecialties",
+    "bio": "Biography",
+    "researchInterests": "Research interests",
+    "orcid": "ORCID",
+    "languages": "Languages",
+    "contactEmail": "Email",
+    "contactPhone": "Phone",
+    "photoAlt": "Photo of {name}"
+  },
+  "optIn": {
+    "title": "Member directory",
+    "explain": "The directory is seen only by members with an active membership. If you join, your first and last name become visible to them. Every other field is shown only if you set it to “Members” or “Everyone” above.",
+    "off": "You are not listed in the member directory.",
+    "on": "You are listed in the member directory since {date}.",
+    "join": "List me in the directory",
+    "leave": "Remove me from the directory",
+    "joined": "You are now listed.",
+    "left": "You are no longer listed.",
+    "view": "Open the directory"
+  }
+}

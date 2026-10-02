@@ -10,6 +10,7 @@ import { TextField } from '@/components/ui/text-field';
 import { TextareaField } from '@/components/ui/textarea-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
+import { DirectoryOptIn } from '@/features/directory/directory-opt-in';
 import { errorMessage } from '@/lib/api-errors';
 import { PhotoSection } from './photo-section';
 import { useDepartments, useLocalName, useReference } from './reference';
@@ -68,6 +69,7 @@ function ProfileEditor() {
         <>
           <PhotoSection initialFileId={profile.photoFileId} />
           <ProfileForm initial={profile} onSaved={setProfile} />
+          <DirectoryOptIn />
         </>
       ) : (
         loadError === null && <p role="status">{t('membership.common.loading')}</p>

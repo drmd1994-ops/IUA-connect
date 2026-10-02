@@ -109,7 +109,7 @@ Access tiers are enforced on every read. Items the caller may not see are omitte
 
 ### Notifications
 
-`GET /notifications`, `POST /notifications/{id}/read`, `POST /notifications/read-all`
+`GET /notifications`, `GET /notifications/unread-count`, `POST /notifications/{id}/read`, `POST /notifications/read-all`, `POST /notifications/unsubscribe` (public; the signed token from an email), `GET /broadcasts/{id}` (a sent message, for its recipients)
 
 ### Files
 
@@ -144,6 +144,7 @@ Access tiers are enforced on every read. Items the caller may not see are omitte
 | `/auth/login`, `/auth/mfa/verify`         | 5/min per account + 20/min per IP, with exponential lockout |
 | `/auth/register`, `/auth/password/forgot` | 5/hour per IP                                               |
 | `/members` (directory)                    | 30/min per user                                             |
+| `/search`                                 | 60/min per IP and per user; with members, also the directory limit |
 | `/card/verify`                            | 60/min per IP                                               |
 
 ## 6. Client generation

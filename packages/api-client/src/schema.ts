@@ -612,6 +612,54 @@ export interface paths {
         patch: operations["ProfilesController_update"];
         trace?: never;
     };
+    "/api/v1/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DirectoryController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DirectoryController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/consents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConsentsController_get"];
+        put?: never;
+        post: operations["ConsentsController_set"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/memberships/import": {
         parameters: {
             query?: never;
@@ -1812,6 +1860,230 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationsController_unread"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NotificationsController_readAll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NotificationsController_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationPreferencesController_get"];
+        put: operations["NotificationPreferencesController_set"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/unsubscribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UnsubscribeController_unsubscribe"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/broadcasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BroadcastsAdminController_list"];
+        put?: never;
+        post: operations["BroadcastsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/broadcasts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BroadcastsAdminController_get"];
+        put: operations["BroadcastsAdminController_update"];
+        post?: never;
+        delete: operations["BroadcastsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/broadcasts/{id}/audience": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BroadcastsAdminController_audience"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/broadcasts/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BroadcastsAdminController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/broadcasts/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BroadcastsAdminController_approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/broadcasts/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BroadcastsAdminController_reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/broadcasts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BroadcastsController_read"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SearchController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2228,6 +2500,89 @@ export interface components {
                 /** @enum {string} */
                 PHOTO?: "PRIVATE" | "MEMBERS" | "PUBLIC";
             };
+        };
+        DirectoryListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                firstName: string | null;
+                lastName: string | null;
+                nameHe: string | null;
+                nameEn: string | null;
+                title: string | null;
+                position: string | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                }[];
+                photoFileId: string | null;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        DirectoryMemberDto: {
+            /** Format: uuid */
+            id: string;
+            firstName: string | null;
+            lastName: string | null;
+            nameHe: string | null;
+            nameEn: string | null;
+            title: string | null;
+            position: string | null;
+            hospital: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            department: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            subspecialties: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            }[];
+            photoFileId: string | null;
+            bio: string | null;
+            researchInterests: string | null;
+            orcid: string | null;
+            languages: string[];
+            contactEmail: string | null;
+            contactPhone: string | null;
+        };
+        ConsentsDto: {
+            directory: {
+                granted: boolean;
+                version: string;
+                grantedAt: string | null;
+            };
+        };
+        ConsentInputDto: {
+            /** @enum {string} */
+            kind: "DIRECTORY";
+            granted: boolean;
         };
         ImportDryRunDto: {
             fileName?: string;
@@ -3950,6 +4305,189 @@ export interface components {
                 lastAnsweredAt: string;
             }[];
         };
+        NotificationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK";
+                type: string;
+                params: {
+                    [key: string]: string | number;
+                };
+                link: string | null;
+                readAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            total: number;
+            unread: number;
+            page: number;
+            pageSize: number;
+        };
+        UnreadCountDto: {
+            unread: number;
+        };
+        NotificationPreferencesDto: {
+            items: {
+                /** @enum {string} */
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                app: boolean;
+                email: boolean;
+                locked: boolean;
+            }[];
+        };
+        NotificationPreferencesInputDto: {
+            items: {
+                /** @enum {string} */
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                app: boolean;
+                email: boolean;
+            }[];
+        };
+        UnsubscribeInputDto: {
+            token: string;
+        };
+        UnsubscribeResultDto: {
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK")[];
+        };
+        AdminBroadcastListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: "DRAFT" | "PENDING_APPROVAL" | "SENT" | "REJECTED";
+                audience: {
+                    all: boolean;
+                    typeIds: string[];
+                };
+                translations: {
+                    he?: {
+                        title: string;
+                        body: string;
+                    };
+                    en?: {
+                        title: string;
+                        body: string;
+                    };
+                };
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string | null;
+                };
+                decidedBy: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string | null;
+                } | null;
+                decidedAt: string | null;
+                rejectReason: string | null;
+                submittedAt: string | null;
+                sentAt: string | null;
+                recipientCount: number | null;
+                mine: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        BroadcastInputDto: {
+            audience: {
+                all: boolean;
+                /** @default [] */
+                typeIds: string[];
+            };
+            translations: {
+                he?: {
+                    title: string;
+                    /** @default  */
+                    body: string;
+                };
+                en?: {
+                    title: string;
+                    /** @default  */
+                    body: string;
+                };
+            };
+        };
+        AdminBroadcastDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "DRAFT" | "PENDING_APPROVAL" | "SENT" | "REJECTED";
+            audience: {
+                all: boolean;
+                typeIds: string[];
+            };
+            translations: {
+                he?: {
+                    title: string;
+                    body: string;
+                };
+                en?: {
+                    title: string;
+                    body: string;
+                };
+            };
+            author: {
+                /** Format: uuid */
+                id: string;
+                name: string | null;
+            };
+            decidedBy: {
+                /** Format: uuid */
+                id: string;
+                name: string | null;
+            } | null;
+            decidedAt: string | null;
+            rejectReason: string | null;
+            submittedAt: string | null;
+            sentAt: string | null;
+            recipientCount: number | null;
+            mine: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        BroadcastAudienceDto: {
+            count: number;
+        };
+        BroadcastRejectDto: {
+            reason: string;
+        };
+        BroadcastMessageDto: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            paragraphs: string[];
+            /** @enum {string} */
+            locale: "he" | "en";
+            /** Format: date-time */
+            sentAt: string;
+        };
+        SearchResultsDto: {
+            groups: {
+                /** @enum {string} */
+                type: "news" | "events" | "education" | "guidelines" | "members";
+                total: number;
+                items: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    excerpt: string | null;
+                    link: string;
+                    locale: string;
+                }[];
+            }[];
+            page: number;
+            pageSize: number;
+        };
     };
     responses: never;
     parameters: never;
@@ -4889,6 +5427,93 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileDto"];
+                };
+            };
+        };
+    };
+    DirectoryController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                hospitalId?: string;
+                subspecialtyId?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectoryListDto"];
+                };
+            };
+        };
+    };
+    DirectoryController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectoryMemberDto"];
+                };
+            };
+        };
+    };
+    ConsentsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentsDto"];
+                };
+            };
+        };
+    };
+    ConsentsController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentsDto"];
                 };
             };
         };
@@ -7230,6 +7855,397 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExamResultsDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_list: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationListDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_unread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnreadCountDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_readAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NotificationsController_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NotificationPreferencesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesDto"];
+                };
+            };
+        };
+    };
+    NotificationPreferencesController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPreferencesInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesDto"];
+                };
+            };
+        };
+    };
+    UnsubscribeController_unsubscribe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UnsubscribeInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnsubscribeResultDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "PENDING_APPROVAL" | "SENT" | "REJECTED";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastListDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Sending the same request again with the same key creates nothing new. */
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BroadcastInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BroadcastInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastsAdminController_audience: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastAudienceDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_approve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastDto"];
+                };
+            };
+        };
+    };
+    BroadcastsAdminController_reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BroadcastRejectDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBroadcastDto"];
+                };
+            };
+        };
+    };
+    BroadcastsController_read: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastMessageDto"];
+                };
+            };
+        };
+    };
+    SearchController_search: {
+        parameters: {
+            query: {
+                q: string;
+                types?: string;
+                locale?: "he" | "en";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResultsDto"];
                 };
             };
         };

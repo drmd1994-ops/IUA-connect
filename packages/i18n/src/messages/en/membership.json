@@ -27,7 +27,7 @@
   },
   "profile": {
     "title": "My profile",
-    "intro": "Your professional details. Each field is visible only to you unless you choose otherwise. The member directory arrives later.",
+    "intro": "Your professional details. Each field is visible only to you unless you choose otherwise.",
     "sections": {
       "names": "Names",
       "work": "Work",

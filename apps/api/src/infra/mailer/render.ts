@@ -42,8 +42,19 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
     '<!doctype html>',
     `<html lang="${message.locale}" dir="${dir}"><head><meta charset="utf-8"><title>${escapeHtml(subject)}</title></head>`,
     '<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #131a1e; max-width: 560px; margin: 24px auto; padding: 0 16px">',
-    `<h1 style="font-size: 22px; color: #0c2d3d">${escapeHtml(copy.heading!)}</h1>`,
+    `<h1 style="font-size: 22px; color: #0c2d3d">${interpolate(escapeHtml(copy.heading!), htmlParams)}</h1>`,
     ...paragraphs.map(({ text }) => `<p>${interpolate(escapeHtml(text), htmlParams)}</p>`),
+    ...(message.paragraphs ?? []).map(
+      (paragraph) => `<p style="white-space: pre-line">${escapeHtml(paragraph)}</p>`,
+    ),
+    message.list?.length
+      ? `<ul>${message.list
+          .map(
+            (item) =>
+              `<li>${escapeHtml(item.label)}: <a href="${escapeHtml(item.link)}">${escapeHtml(item.title)}</a></li>`,
+          )
+          .join('')}</ul>`
+      : '',
     link && copy.action
       ? `<p><a href="${escapeHtml(link)}" style="display: inline-block; background: #134d67; color: #ffffff; padding: 10px 18px; border-radius: 6px; text-decoration: none">${escapeHtml(copy.action)}</a></p>`
       : '',
@@ -54,6 +65,9 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
       ? `<p style="font-size: 13px; color: #4c5a63">${escapeHtml(emails.layout.ignore)}</p>`
       : '',
     `<p>${escapeHtml(emails.layout.signature)}</p>`,
+    message.unsubscribe
+      ? `<p style="font-size: 13px; color: #4c5a63"><a href="${escapeHtml(message.unsubscribe.link)}">${escapeHtml(emails.layout.unsubscribe)}</a> · <a href="${escapeHtml(message.unsubscribe.preferencesLink)}">${escapeHtml(emails.layout.preferences)}</a></p>`
+      : '',
     `<hr><p style="font-size: 12px; color: #4c5a63">${escapeHtml(emails.layout.demoNotice)}</p>`,
     '</body></html>',
   ]
@@ -61,10 +75,15 @@ export function renderEmail<T extends EmailTemplate>(message: EmailMessage<T>): 
     .join('\n');
 
   const text = [
-    copy.heading,
+    interpolate(copy.heading!, params),
     ...paragraphs.map(({ text: paragraph }) => interpolate(paragraph, params)),
+    ...(message.paragraphs ?? []),
+    ...(message.list ?? []).map((item) => `${item.label}: ${item.title}\n${item.link}`),
     link ? `${copy.action ?? ''}: ${link}` : '',
     emails.layout.signature,
+    message.unsubscribe
+      ? `${emails.layout.unsubscribe}: ${message.unsubscribe.link}\n${emails.layout.preferences}: ${message.unsubscribe.preferencesLink}`
+      : '',
     emails.layout.demoNotice,
   ]
     .filter(Boolean)

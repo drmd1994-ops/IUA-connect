@@ -66,23 +66,29 @@ model User {
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles              UserRole[]            @relation("UserRoles")
-  rolesGranted       UserRole[]            @relation("RolesGrantedBy")
-  sessions           Session[]
-  devices            Device[]
-  mfaFactors         MfaFactor[]
-  recoveryCodes      RecoveryCode[]
-  authTokens         AuthToken[]
-  profile            Profile?
-  membership         Membership?
-  applications       VerificationRequest[]
-  files              StoredFile[]
-  newsAuthored       News[]
-  eventRegistrations EventRegistration[]
-  scheduleItems      ScheduleItem[]
-  eventAttendances   EventAttendance[]
-  eventReminders     EventReminder[]
-  examAnswers        ExamAnswer[]
+  roles               UserRole[]               @relation("UserRoles")
+  rolesGranted        UserRole[]               @relation("RolesGrantedBy")
+  sessions            Session[]
+  devices             Device[]
+  mfaFactors          MfaFactor[]
+  recoveryCodes       RecoveryCode[]
+  authTokens          AuthToken[]
+  profile             Profile?
+  membership          Membership?
+  applications        VerificationRequest[]
+  files               StoredFile[]
+  newsAuthored        News[]
+  eventRegistrations  EventRegistration[]
+  scheduleItems       ScheduleItem[]
+  eventAttendances    EventAttendance[]
+  eventReminders      EventReminder[]
+  examAnswers         ExamAnswer[]
+  notifications       Notification[]
+  notificationPrefs   NotificationPreference[]
+  announcementReads   AnnouncementRead[]
+  notificationState   NotificationState?
+  broadcastDeliveries BroadcastDelivery[]
+  consents            Consent[]
 
   @@map("users")
 }
@@ -418,6 +424,9 @@ model Profile {
   contactPhone      String?  @map("contact_phone") @db.VarChar(32)
   /// Profile photo (M3): an image file the member uploaded.
   photoFileId       String?  @unique @map("photo_file_id") @db.Uuid
+  /// Listed in the member directory (D9). Off until the member switches it on; the consent is
+  /// recorded in consents.
+  directoryOptIn    Boolean  @default(false) @map("directory_opt_in")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
@@ -1541,4 +1550,225 @@ model ExamAnswer {
   @@index([userId, at(sort: Desc)])
   @@index([questionId])
   @@map("exam_answers")
+}
+
+// ---------------------------------------------------------------------------
+// Notifications (M7). DATABASE_DESIGN.md §3; docs/plans/M7-notifications-search.md.
+// ---------------------------------------------------------------------------
+
+/// What a notice is about; the person sets each kind per channel (M7 plan §2.2).
+enum NotificationKind {
+  ACCOUNT
+  MY_EVENTS
+  ASSOCIATION
+  NEWS
+  NEW_EVENTS
+  EDUCATION
+  GUIDELINES
+  /// Staff work (an item sent back or published). Always on; not in the preferences.
+  WORK
+
+  @@map("notification_kind")
+}
+
+enum NotificationChannel {
+  APP
+  EMAIL
+
+  @@map("notification_channel")
+}
+
+/// A notice in the app. Stored as a type and its details, and worded in the reader's language
+/// when shown. Deleted after 180 days, and with the account.
+model Notification {
+  id        String           @id @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  kind      NotificationKind
+  /// The message key, e.g. "eventReminder".
+  type      String           @db.VarChar(60)
+  /// The values the message needs (titles, dates). No secrets and no links with tokens.
+  params    Json             @default("{}")
+  /// A path inside the site, without the language prefix.
+  link      String?          @db.VarChar(500)
+  readAt    DateTime?        @map("read_at") @db.Timestamptz(6)
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+/// A switch the person set. A missing row means the starting setting of the kind.
+model NotificationPreference {
+  userId    String              @map("user_id") @db.Uuid
+  kind      NotificationKind
+  channel   NotificationChannel
+  enabled   Boolean
+  updatedAt DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, kind, channel])
+  @@map("notification_preferences")
+}
+
+/// Something newly published that people are told about once (M7 plan §2.3): a notice in the app
+/// and a line in the next daily summary email. One row per item, not per person: who sees it is
+/// worked out when a person opens their notices (their switches, their membership), so publishing
+/// costs the same however many accounts there are. Publishing an item again tells nobody twice. The access tier is kept as it was when the item was published.
+model ContentAnnouncement {
+  id         String           @id @db.Uuid
+  /// "news", "event", "education", "guideline" or "guideline_version".
+  entityType String           @map("entity_type") @db.VarChar(40)
+  entityId   String           @map("entity_id") @db.Uuid
+  kind       NotificationKind
+  /// The message key of the notice, e.g. "contentNews".
+  type       String           @db.VarChar(60)
+  titleHe    String?          @map("title_he") @db.VarChar(300)
+  titleEn    String?          @map("title_en") @db.VarChar(300)
+  /// A path inside the site, without the language prefix.
+  link       String           @db.VarChar(500)
+  accessTier AccessTier       @map("access_tier")
+  /// The membership types that may read it, when the tier is TYPES.
+  typeIds    String[]         @default([]) @map("type_ids") @db.Uuid
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Set when a daily summary took it; null means the next summary lists it.
+  digestedAt DateTime?        @map("digested_at") @db.Timestamptz(6)
+
+  reads AnnouncementRead[]
+
+  @@unique([entityType, entityId])
+  @@index([digestedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("content_announcements")
+}
+
+/// An announcement a person marked as read.
+model AnnouncementRead {
+  userId         String   @map("user_id") @db.Uuid
+  announcementId String   @map("announcement_id") @db.Uuid
+  readAt         DateTime @default(now()) @map("read_at") @db.Timestamptz(6)
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  announcement ContentAnnouncement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  @@id([userId, announcementId])
+  @@index([announcementId])
+  @@map("announcement_reads")
+}
+
+/// "Mark all as read" for announcements: everything up to this moment counts as read.
+model NotificationState {
+  userId                 String   @id @map("user_id") @db.Uuid
+  announcementsReadUntil DateTime @map("announcements_read_until") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_state")
+}
+
+// ---------------------------------------------------------------------------
+// Broadcasts (M7 plan §2.6): a message an admin writes and a different admin approves.
+// ---------------------------------------------------------------------------
+
+/// DRAFT → PENDING_APPROVAL → SENT, or REJECTED (back to its author, who may edit and resubmit).
+enum BroadcastStatus {
+  DRAFT
+  PENDING_APPROVAL
+  SENT
+  REJECTED
+
+  @@map("broadcast_status")
+}
+
+model Broadcast {
+  id             String          @id @db.Uuid
+  status         BroadcastStatus @default(DRAFT)
+  createdBy      String          @map("created_by") @db.Uuid
+  /// True: every active member. False: the membership types in type_ids.
+  audienceAll    Boolean         @default(true) @map("audience_all")
+  typeIds        String[]        @default([]) @map("type_ids") @db.Uuid
+  submittedAt    DateTime?       @map("submitted_at") @db.Timestamptz(6)
+  /// Who approved or rejected it. Never the author (a database check).
+  decidedBy      String?         @map("decided_by") @db.Uuid
+  decidedAt      DateTime?       @map("decided_at") @db.Timestamptz(6)
+  rejectReason   String?         @map("reject_reason") @db.VarChar(1000)
+  sentAt         DateTime?       @map("sent_at") @db.Timestamptz(6)
+  /// How many people it reached, fixed when it was sent.
+  recipientCount Int?            @map("recipient_count")
+  /// From the Idempotency-Key header: sending the same request twice creates one broadcast.
+  idempotencyKey String?         @map("idempotency_key") @db.VarChar(100)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  translations BroadcastTranslation[]
+  deliveries   BroadcastDelivery[]
+
+  @@unique([createdBy, idempotencyKey])
+  @@index([status, createdAt(sort: Desc)])
+  @@map("broadcasts")
+}
+
+model BroadcastTranslation {
+  broadcastId String @map("broadcast_id") @db.Uuid
+  locale      String @db.VarChar(8)
+  title       String @db.VarChar(200)
+  /// Plain text; blank lines separate paragraphs.
+  body        String @db.VarChar(5000)
+
+  broadcast Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+
+  @@id([broadcastId, locale])
+  @@map("broadcast_translations")
+}
+
+/// One row per person a broadcast reached: nobody receives it twice, also when sending is
+/// retried, and only these people can read it.
+model BroadcastDelivery {
+  broadcastId String    @map("broadcast_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  /// Set when the email was handed to the mailer, or when the person had email switched off.
+  emailedAt   DateTime? @map("emailed_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  broadcast Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([broadcastId, userId])
+  @@index([emailedAt])
+  @@index([userId])
+  @@map("broadcast_deliveries")
+}
+
+// ---------------------------------------------------------------------------
+// Consents (M7 plan §2.8). DATABASE_DESIGN.md §3.
+// ---------------------------------------------------------------------------
+
+enum ConsentKind {
+  TERMS
+  PRIVACY
+  /// Being listed in the member directory.
+  DIRECTORY
+  EMAIL_MARKETING
+
+  @@map("consent_kind")
+}
+
+/// A consent a person gave, with the wording version they saw. Kept as history: withdrawing sets
+/// withdrawn_at, and giving it again adds a row. Deleted with the account.
+model Consent {
+  id          String      @id @db.Uuid
+  userId      String      @map("user_id") @db.Uuid
+  kind        ConsentKind
+  /// The version of the wording shown, e.g. "directory-2026-10".
+  version     String      @db.VarChar(40)
+  grantedAt   DateTime    @default(now()) @map("granted_at") @db.Timestamptz(6)
+  withdrawnAt DateTime?   @map("withdrawn_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, kind, grantedAt(sort: Desc)])
+  @@map("consents")
 }

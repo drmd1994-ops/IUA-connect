@@ -6,6 +6,7 @@ import { type RequestMeta } from '../../common/request-meta';
 import { type Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { ContentAnnouncer } from '../notifications';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import {
@@ -44,6 +45,7 @@ export class GuidelinesService {
     private readonly prisma: PrismaService,
     private readonly access: AccessService,
     private readonly audit: AuditService,
+    private readonly announcer: ContentAnnouncer,
   ) {}
 
   // --- Admin --------------------------------------------------------------------------------
@@ -127,6 +129,17 @@ export class GuidelinesService {
       await this.access.setRules(tx, 'guideline', id, input.accessTier, input.typeIds);
     });
     await this.record('guideline.create', id, actor);
+    if (input.status === 'CURRENT') {
+      await this.announcer.announce({
+        entityType: 'guideline',
+        entityId: id,
+        kind: 'GUIDELINES',
+        type: 'contentGuideline',
+        translations: translations(input),
+        link: `/guidelines/${id}`,
+        accessTier: input.accessTier,
+      });
+    }
     return this.adminGet(id);
   }
 
@@ -168,12 +181,16 @@ export class GuidelinesService {
     input: GuidelineVersionInputDto,
     actor: GuidelineActor,
   ): Promise<AdminGuidelineDto> {
-    const found = await this.prisma.guideline.findUnique({ where: { id }, select: { id: true } });
+    const found = await this.prisma.guideline.findUnique({
+      where: { id },
+      select: { status: true, accessTier: true, translations: true },
+    });
     if (!found) throw new AppException('NOT_FOUND');
+    const versionId = uuidv7();
     try {
       await this.prisma.$transaction([
         this.prisma.guidelineVersion.create({
-          data: { id: uuidv7(), guidelineId: id, ...versionColumns(input) },
+          data: { id: versionId, guidelineId: id, ...versionColumns(input) },
         }),
         // Touch the guideline so lists ordered by last change show it first.
         this.prisma.guideline.update({ where: { id }, data: { updatedAt: new Date() } }),
@@ -185,6 +202,18 @@ export class GuidelinesService {
       throw error;
     }
     await this.record('guideline.version.add', id, actor, { version: input.version });
+    if (found.status === 'CURRENT') {
+      await this.announcer.announce({
+        entityType: 'guideline_version',
+        entityId: versionId,
+        kind: 'GUIDELINES',
+        type: 'contentGuidelineVersion',
+        translations: found.translations,
+        link: `/guidelines/${id}`,
+        accessTier: found.accessTier,
+        rules: { entity: 'guideline', id },
+      });
+    }
     return this.adminGet(id);
   }
 

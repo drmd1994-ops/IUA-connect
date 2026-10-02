@@ -123,8 +123,9 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `applicant.rejected@demo.test`                             | Application the director didn't approve, with the reason            |
 | `editor@demo.test`                                         | Content editor: writes news, education items and exam questions     |
 | `events@demo.test`                                         | Event admin: creates events, sees registrations and attendance (M5) |
+| `admin2@demo.test`                                         | A second IUA admin, so a message to members can be approved (M7)    |
 
-The admin, the directors, the editor and the event admin must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
+The admins, the directors, the editor and the event admin must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
 
 - **Membership (M2):** the account menu has **My profile** (each field has its own "who can see this"), **My membership** (apply, status, history) and **Membership card** (a QR code that changes every 4 minutes; scanning it opens `/card/verify`). Directors also see **Applications to review**, and admins see **Administration** (`/admin`).
 - **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
@@ -132,6 +133,11 @@ The admin, the directors, the editor and the event admin must set up two-step ve
 - **Imported sample (M4):** `pnpm db:seed` also loads a small sample of the IUA website from committed fixtures: 8 news items (title, date and a link to the source) and 9 guideline entries (details and the publisher's link). No network is needed. `pnpm import:remove` takes the sample out again. To change the sample, edit `tools/importer/sources.json`, run `pnpm import:fetch` and review the fixtures before committing them. The owner has confirmed permission to show this content (O4 in `PROJECT_STATUS.md`).
 - **Education (M6):** `/education` is public. The seed adds ten fictional library items of every type (one members-only, one waiting for review, one draft, one archived) and a course of four lessons. Videos, webinars and podcasts are links to where they are hosted (ADR 0008). The editor writes at `/admin/education`; the admin reviews there. On a database seeded before M6, run `pnpm db:seed` again.
 - **Exam questions (M6):** `/education/exam` asks one multiple-choice question at a time; after the answer it shows the right option, why each option is right or wrong, and a short summary of the topic. Signed-in people find their score under **My exam results** in the account menu. The seed loads ten sample urology questions **waiting for review**: nothing is shown until the admin has checked each one at `/admin/education/questions` and published it.
+- **Notifications (M7):** the bell in the header opens **Notifications**; **Choose what you receive** there has a switch per kind of content for the app and for email. Email about new content is one summary a day, sent in the morning; to see it at once run `pnpm job:run notifications.content-digest` and look in `outbox/`.
+- **Messages to members (M7):** `/admin/broadcasts`. A message is sent only after a different admin approves it: the seed leaves one written by `admin2@demo.test` waiting, which `admin@demo.test` can approve. The emails go out within a minute.
+- **Member directory (M7):** `/members`, for members with an active membership. A member joins from **My profile**; the seed lists three demo members showing different fields.
+- **Search (M7):** the field in the header, or `/search`. Try a Hebrew word with a prefix, for example "בכנס".
+- On a database seeded before M7, run `pnpm db:seed` again.
 - **CSV import:** `/admin/import` takes a file with the header `email,first_name,last_name,membership_type[,identifier,end_date,payment_status,locale]`. Run the dry run first, then apply the same file.
 
 ### Troubleshooting

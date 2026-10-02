@@ -7,7 +7,7 @@ import { type RequestMeta } from '../../common/request-meta';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type Prisma } from '../../generated/prisma/client';
-import { Mailer } from '../../infra/mailer/mailer';
+import { ContentAnnouncer, Notifier } from '../notifications';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
@@ -51,7 +51,8 @@ export class NewsAdminService {
     private readonly access: AccessService,
     private readonly files: FilesService,
     private readonly audit: AuditService,
-    private readonly mailer: Mailer,
+    private readonly notifier: Notifier,
+    private readonly announcer: ContentAnnouncer,
   ) {}
 
   // --- Reading --------------------------------------------------------------------------------
@@ -306,6 +307,7 @@ export class NewsAdminService {
     });
     if (action === 'SEND_BACK') await this.notifyAuthor(row, 'newsSentBack', input.comment ?? '');
     if (action === 'PUBLISH') await this.notifyAuthor(row, 'newsPublished');
+    if (action === 'PUBLISH' && !row.revisionOfId) await this.announce(row);
     return this.get(row.revisionOfId ?? id);
   }
 
@@ -343,8 +345,22 @@ export class NewsAdminService {
         entityId: row.id,
       });
       await this.notifyAuthor(row, 'newsPublished');
+      await this.announce(row);
     }
     return published;
+  }
+
+  /** Tells readers about a newly published item, once (M7 plan §2.3). */
+  private async announce(row: NewsRow): Promise<void> {
+    await this.announcer.announce({
+      entityType: 'news',
+      entityId: row.id,
+      kind: 'NEWS',
+      type: 'contentNews',
+      translations: row.translations,
+      link: `/news/${row.slug}`,
+      accessTier: row.accessTier,
+    });
   }
 
   // --- internals ------------------------------------------------------------------------------
@@ -540,14 +556,18 @@ export class NewsAdminService {
     const link = new URL(path, this.env.APP_BASE_URL).toString();
     try {
       if (template === 'newsSentBack') {
-        await this.mailer.send({
+        await this.notifier.send({
+          userId: author.id,
+          kind: 'WORK',
           to: author.email,
           locale,
           template,
           params: { title: text?.title ?? '', reason, link },
         });
       } else {
-        await this.mailer.send({
+        await this.notifier.send({
+          userId: author.id,
+          kind: 'WORK',
           to: author.email,
           locale,
           template,

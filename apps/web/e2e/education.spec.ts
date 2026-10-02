@@ -197,7 +197,7 @@ test('an exam question is written, corrected and published → readers answer it
   // The reviewer corrects an explanation and publishes what is on the screen.
   await reviewer.goto('/en/admin/education/questions');
   await reviewer.getByLabel('Search in the question text').fill(suffix);
-  await reviewer.getByRole('button', { name: 'Search', exact: true }).click();
+  await reviewer.getByRole('main').getByRole('button', { name: 'Search', exact: true }).click();
   await expectAccessible(reviewer);
   await reviewer.getByTestId('questions-table').getByRole('link', { name: stem }).click();
   await reviewer.getByRole('tab', { name: 'English' }).click();

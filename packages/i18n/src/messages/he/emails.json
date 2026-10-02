@@ -2,7 +2,15 @@
   "layout": {
     "signature": "צוות IUA Connect",
     "demoNotice": "הודעה זו נשלחה מגרסת הדגמה של IUA Connect. כל האנשים והנתונים בה בדויים.",
-    "ignore": "אם לא ביקשת זאת, אפשר להתעלם מהודעה זו."
+    "ignore": "אם לא ביקשת זאת, אפשר להתעלם מהודעה זו.",
+    "unsubscribe": "הפסקת הודעות דוא״ל מהסוג הזה",
+    "preferences": "בחירה מה לקבל",
+    "digestLabels": {
+      "NEWS": "חדשות",
+      "NEW_EVENTS": "אירוע",
+      "EDUCATION": "הדרכה",
+      "GUIDELINES": "הנחיה"
+    }
   },
   "verifyEmail": {
     "subject": "אימות כתובת הדוא״ל שלך ב־IUA Connect",
@@ -137,5 +145,17 @@
     "heading": "פורסם",
     "body": "״{title}״ פורסם עכשיו ב־IUA Connect.",
     "action": "לצפייה"
+  },
+  "contentDigest": {
+    "subject": "חדש ב־IUA Connect",
+    "heading": "חדש ב־IUA Connect",
+    "body": "פורסם מאז הסיכום הקודם:",
+    "action": "בחירה מה לקבל"
+  },
+  "broadcast": {
+    "subject": "{title}",
+    "heading": "{title}",
+    "body": "הודעה מהאיגוד לחבריו:",
+    "action": "לקריאה ב־IUA Connect"
   }
 }

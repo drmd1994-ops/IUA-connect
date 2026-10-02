@@ -35,6 +35,13 @@ const PAGES = [
   '/account/exam-results',
   '/admin/education',
   '/admin/education/questions',
+  // M7 (the signed-in and filled views are checked in notifications.spec.ts)
+  '/search',
+  '/members',
+  '/account/notifications',
+  '/account/notifications/preferences',
+  '/notifications/unsubscribe',
+  '/admin/broadcasts',
 ];
 
 for (const locale of ['he', 'en'] as const) {

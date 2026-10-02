@@ -8,9 +8,10 @@ import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type Prisma } from '../../generated/prisma/client';
 import { FieldCipher, SecretHasher } from '../../infra/crypto/secrets';
-import { type EmailMessage, type EmailTemplate, Mailer } from '../../infra/mailer/mailer';
+import { type EmailTemplate } from '../../infra/mailer/mailer';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { type Notice, Notifier } from '../notifications';
 import { AuditService } from '../audit';
 import {
   type ApplicationDto,
@@ -48,7 +49,7 @@ export class ApplicationsService {
     private readonly prisma: PrismaService,
     private readonly cipher: FieldCipher,
     private readonly hasher: SecretHasher,
-    private readonly mailer: Mailer,
+    private readonly notifier: Notifier,
     private readonly audit: AuditService,
     private readonly memberships: MembershipsService,
   ) {}
@@ -340,7 +341,14 @@ export class ApplicationsService {
           ? { ...base, reason: extra.reason ?? '' }
           : base;
     try {
-      await this.mailer.send({ to: row.user.email, locale, template, params } as EmailMessage);
+      await this.notifier.send({
+        userId: row.userId,
+        kind: 'ACCOUNT',
+        to: row.user.email,
+        locale,
+        template,
+        params,
+      } as Notice);
     } catch (error) {
       this.logger.error({ err: error, template, requestId: row.id }, 'Membership email failed');
     }

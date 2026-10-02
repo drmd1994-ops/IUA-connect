@@ -10,6 +10,7 @@ import { AuditService } from '../audit';
 import { FilesService } from '../files';
 import { parseIfMatch, sanitizeMarkdown, slugify, uniqueSlug } from '../news';
 import { cancelProblem, publishProblem } from './event-rules';
+import { ContentAnnouncer } from '../notifications';
 import { RegistrationsService } from './registrations.service';
 import {
   type AdminEventDto,
@@ -52,6 +53,7 @@ export class EventsAdminService {
     private readonly files: FilesService,
     private readonly audit: AuditService,
     private readonly registrations: RegistrationsService,
+    private readonly announcer: ContentAnnouncer,
   ) {}
 
   async list(query: AdminEventListQueryDto): Promise<AdminEventListDto> {
@@ -191,6 +193,15 @@ export class EventsAdminService {
     });
     if (count === 0) throw new AppException('CONFLICT', [{ code: 'eventChanged' }]);
     await this.record('event.publish', id, actor);
+    await this.announcer.announce({
+      entityType: 'event',
+      entityId: id,
+      kind: 'NEW_EVENTS',
+      type: 'contentEvent',
+      translations: row.translations,
+      link: `/events/${row.slug}`,
+      accessTier: row.accessTier,
+    });
     return this.get(id);
   }
 

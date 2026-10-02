@@ -6,7 +6,7 @@ _Last updated: 2026-10-02_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: built 2026-10-02**, on `feat/education` (draft pull request #8), waiting for the owner's checkpoint test of the demo and for the merge. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: built 2026-10-02**, on `feat/notifications-search` (draft pull request #9), waiting for the owner's checkpoint test of the demo and for the merge. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -383,8 +383,61 @@ No new libraries.
 
 - **Checkpoint test of the demo** (asked for on 2026-10-02): the whole product so far, M1 to M6.
 - **Review the ten sample exam questions** at `/admin/education/questions` as `admin@demo.test`: correct what needs correcting, publish the ones that are right, send back or leave the rest.
-- Merge pull request #8 when satisfied.
+- ~~Merge pull request #8~~ merged at the owner's request on 2026-10-02 (CI green).
+
+## M7 Notifications and search (2026-10-02)
+
+Plan: [`docs/plans/M7-notifications-search.md`](docs/plans/M7-notifications-search.md), approved by the owner on 2026-10-02. Owner decisions (plan §11):
+
+- **Choosing what is sent:** the member chooses which kinds of content are sent as notifications, and turns each kind on or off for the app and for email.
+- **Email about new content:** one daily summary, only to members who switched it on, and only when there is something new.
+- **Starting settings:** email for new content starts off; notices in the app start on; account, my events and messages from the association start on for both.
+- **Broadcast audience:** all active members, or chosen membership types.
+- **Directory:** signed-in active members only (D9).
+
+No new libraries.
+
+### Delivered
+
+- **Notices in the app:** a bell in the header with the number of new notices, refreshed about once a minute; a notifications page with "mark as read" and "mark all as read". Notices are kept 180 days.
+- **Preferences:** a switch per kind (account and membership, my events, messages from the association, news, new events, education, guidelines) for the app and for email. "Account and membership" is always on. Security emails are not notifications and are always sent.
+- **Existing emails** (membership decisions, the person's event registrations, staff work) now also leave a notice in the app, and follow the switches.
+- **New content:** a published news item, event, education item or guideline (and a new guideline version) is announced once to everyone who may read it.
+- **Daily summary email** for new content, with a signed link that switches those emails off in one step without signing in. Every email that a switch controls carries such a link.
+- **Broadcasts (`/admin/broadcasts`):** an admin writes a message for all active members or for chosen membership types; a different admin approves or sends it back with a reason. The database refuses a decision by the author, and a sent message can't be changed or deleted. Recipients read it in the app; emails follow within a minute. Every step is audited.
+- **Member directory (`/members`):** opt-in from "My profile", with the consent recorded (wording version, date, history). Only active members read it; the name is always shown and every other field only when its owner made it visible to members. 20 per page, no export, 30 requests a minute per person.
+- **Search (`/search`, and a field in the header):** news, events (also by session titles), education, guidelines and listed members, grouped by type. Hebrew-aware: vowel marks and final letters are ignored, a word matches from its start, a word is tried with and without a one-letter prefix, and a small typing mistake in a title word is forgiven. Built on PostgreSQL behind a `SearchProvider` interface.
+- **`pnpm job:run <job>`:** runs a scheduled job now (for the demo: the daily summary without waiting for the morning).
+- **Demo seed:** a second admin (`admin2@demo.test`), three members in the directory showing different fields, notices of every kind, one broadcast waiting for approval and one sent.
+
+### Verified
+
+- API: **257 unit and 319 integration tests** in total, all passing.
+- **Exit criteria:** anti-enumeration (not listed, suspended, expired and never existed give the same answer; private fields are never sent, searched or filtered on), rate limits (directory, search, and search with members, against the real limits), and Hebrew relevance spot checks (title above text, prefixes, word starts, vowel marks, final letters, a typing mistake, an English query).
+- Every admin route for broadcasts has the anonymous 401, member 403 and admin-without-MFA 403 tests.
+- Playwright (Chromium, local): the four **exit tests** pass (preferences → notice → summary email → unsubscribe; a broadcast approved by a second admin and read by a member; joining the directory and finding a member in Hebrew; a visitor's Hebrew search), with axe WCAG 2.2 AA checks on every page they visit, plus all 62 public-page checks in he and en.
+
+### Deviations and findings
+
+- **A published item is stored once, not once per person.** Who sees it is worked out when a person opens their notices (their switches, the item's access tier, their membership). Publishing therefore costs the same however many accounts there are. A person sees announcements made since their account exists.
+- **The access tier of an announcement is the one the item had when it was published.** Changing the tier later doesn't change who was told.
+- **The daily summary takes its items before the emails go out**, so nothing is listed twice; if a run is interrupted, the items it took are not listed again.
+- **The directory's name search compares normalised text directly**, without the extra index the plan mentioned; the directory holds hundreds of rows, not millions.
+- **The first end-to-end test uses a guideline**, not a news article as the plan said: one admin can add a guideline, while news needs an editor and a reviewer. The mechanism is the same.
+- **Typo tolerance applies per word and to title words only**, for words of four letters or more. Applied to the whole query it matched unrelated titles that shared one word.
+- **Search has no word stemming:** "stones" doesn't find "stone" except through the typo tolerance. Hebrew inflection beyond one-letter prefixes isn't handled. Another engine can replace PostgreSQL later behind the interface.
+- **The directory limit is counted per person after sign-in**, in the route; the rate-limit guard runs before authentication and can't know who is asking.
+- **CI:** the browser suite had started to hit the real sign-in limit (20 a minute per address) once M6's tests were added, and failed depending on timing. The suite now runs with the limits multiplied (`RATE_LIMIT_SCALE`), which the API refuses in production; the limits themselves are covered by the integration tests.
+- **The demo needs two admins** to show a broadcast, so the seed adds `admin2@demo.test`.
+- **The bell refreshes about once a minute.** No live connection.
+
+### Open for the owner
+
+- **Checkpoint test of the demo** (still open from M6): now M1 to M7. For M7: the bell and "Choose what you receive" as a member; `/admin/broadcasts` as `admin@demo.test` (approve the waiting message); `/members` as a member; the search field with a Hebrew word.
+- **Review the ten sample exam questions** at `/admin/education/questions` (still open from M6).
+- Merge pull request #9 when satisfied.
+- The wording of the directory consent (`directory-2026-10`) should be read by whoever does the legal review before real data.
 
 ## Next step
 
-The owner's checkpoint test. After it and the merge of M6: the plan for **M7** (`DEVELOPMENT_ROADMAP.md`), written and approved before any code.
+The owner's checkpoint test. After it and the merge of M7: the plan for **M8** (admin portal completion and dashboard), written and approved before any code.

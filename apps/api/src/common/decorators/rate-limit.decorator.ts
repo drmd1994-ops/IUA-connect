@@ -9,9 +9,10 @@ export interface RateLimitRule {
   windowSec: number;
   /**
    * What is counted: the client IP, or the account named in the request body (`email`, or the
-   * MFA challenge token), so one account can't be attacked from many IPs.
+   * MFA challenge token), so one account can't be attacked from many IPs; or the signed-in
+   * person, counted by the route itself once it knows who is asking (hitUserLimit).
    */
-  by: 'ip' | 'account';
+  by: 'ip' | 'account' | 'user';
 }
 
 /** Route-specific limits, applied in addition to the global per-IP limit (API_DESIGN.md §5). */
@@ -24,4 +25,7 @@ export const RATE_LIMITS = {
   accountCreationPerIp: { name: 'account-email-ip', limit: 5, windowSec: 3600, by: 'ip' },
   cardVerifyPerIp: { name: 'card-verify-ip', limit: 60, windowSec: 60, by: 'ip' },
   uploadPerIp: { name: 'upload-ip', limit: 30, windowSec: 60, by: 'ip' },
+  directoryPerUser: { name: 'directory-user', limit: 30, windowSec: 60, by: 'user' },
+  searchPerIp: { name: 'search-ip', limit: 60, windowSec: 60, by: 'ip' },
+  searchPerUser: { name: 'search-user', limit: 60, windowSec: 60, by: 'user' },
 } as const satisfies Record<string, RateLimitRule>;

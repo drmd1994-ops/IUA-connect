@@ -9,7 +9,8 @@
     "news": "News",
     "guidelines": "Guidelines",
     "events": "Events",
-    "education": "Education"
+    "education": "Education",
+    "broadcasts": "Messages"
   },
   "notAllowed": "This area is for association administrators, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",
