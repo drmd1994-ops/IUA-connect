@@ -78,7 +78,7 @@ What this does not show is how the system behaves under many simultaneous users.
 
 **What would fix it.** Have the server fetch public content and send the finished page (news, events, education, guidelines, an article). This is a real change to how the public pages are built, not a tweak: it touches every public page and how signed-in members get their members-only items on the same lists. It was not in the M9 plan and was not done. It is a sensible first task after the pitch, and it would also let search engines read the public pages.
 
-**Not tried: letting browsers keep public API answers.** The plan listed caching headers as a possible fix. They would speed up a second visit, not the first one that is measured here, and the same addresses answer differently for signed-in members (members-only items), so a mistake there could show a member's list to someone else. Left out on purpose.
+**Not done: letting browsers keep public API answers.** The plan listed caching headers as a possible fix. They would speed up a second visit, not the first one that is measured here, and the same addresses answer differently for signed-in members (members-only items), so a mistake there could show a member's list to someone else. The opposite was done: API answers now tell browsers and proxies to keep nothing (see `docs/security/ZAP_BASELINE.md`). The numbers above were measured before that change; it does not affect a first visit.
 
 **A small jump remains (0.031 on every page):** the page body moves slightly once, shortly after the first paint. It is under the limit; its cause was not tracked down.
 

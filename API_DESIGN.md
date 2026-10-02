@@ -8,13 +8,14 @@ REST over HTTPS, JSON, base path **`/api/v1`**. OpenAPI 3.1 is generated from th
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Resource names | Plural, kebab-case: `/news`, `/events/{slug}/sessions`, `/verification-requests`                                                                                             |
 | IDs in URLs    | Slugs for public content, UUIDs for everything else                                                                                                                          |
-| Locale         | `Accept-Language: he` or `en`, or `?locale=`. Responses include `Content-Language`.                                                                                          |
-| Pagination     | Cursor-based: `?limit=20&cursor=...` → `{ data: [...], page: { nextCursor, hasMore } }`. Admin tables may use `?page=&pageSize=` with a total count. Maximum `limit` is 100. |
+| Locale | `Accept-Language: he` or `en`, or `?locale=`. Content says which language it is in (`locale` on each item), because an item written only in Hebrew is served in Hebrew to English readers. (A `Content-Language` header was planned and is not sent.) |
+| Pagination | `?page=&pageSize=` → `{ items: [...], total }` on the lists that page. (Cursor-based paging was planned; it was not built.) |
 | Filtering      | Explicit allow-listed query params (`?status=published&category=...`). No generic filter language.                                                                           |
-| Sorting        | `?sort=-publishedAt,title` (allow-listed fields only)                                                                                                                        |
+| Sorting | Each list has a fixed order, for example newest first for news and soonest first for upcoming events. (A `?sort=` parameter was planned and is not built.) |
 | Dates          | ISO 8601 UTC. Events also carry an IANA `timezone` (`Asia/Jerusalem`).                                                                                                       |
-| Idempotency    | `Idempotency-Key` header supported on POSTs that create registrations, broadcasts and (later) payments                                                                       |
+| Idempotency | `Idempotency-Key` on creating a broadcast only. (It was also planned for event registrations; payments come later.) |
 | Concurrency    | `ETag` / `If-Match` on editable content to prevent lost updates in the CMS                                                                                                   |
+| Caching | Every answer says `Cache-Control: no-store`, because answers hold personal or members-only data. Two exceptions: the public reference lists (five minutes) and a file fetched through its signed address (five minutes, in that person's browser only). |
 | Versioning     | Breaking changes go to `/api/v2`. Additive changes are allowed within v1.                                                                                                    |
 
 ## 2. Error envelope (spec §55)

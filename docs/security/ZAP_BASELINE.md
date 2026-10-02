@@ -33,9 +33,18 @@ The site: 52 addresses, 60 rules passed, 7 warned, none failed.
 
 **One thing to know about accepting a rule:** ZAP can only switch a rule off as a whole. With 10010 off, the scan would not notice a new cookie that should be HttpOnly and isn't. The integration test above covers the cookies that matter today; a new cookie needs its own test.
 
-## The API
+## Second run, after the fixes (2 October 2026)
 
-The API is scanned as a second step. On the first run the site's step failed first, so the API's step did not run. Its results are added below once it has.
+- **The site:** 51 addresses, 61 rules passed, the six accepted rules above, no warnings.
+- **The API:** 7 addresses, 66 rules passed, one accepted rule, no warnings. The scan reaches little of the API, because it follows links and an API has none; the API's own rules (who may read what, rate limits, error format) are proven by the integration tests, not by this scan.
+
+### The API's finding
+
+| Rule                         | What ZAP saw                                                                               | What was done                                                                                                                                                                                                                                                                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 10049 Storable and cacheable | The API's answers carried no caching instruction, so a browser or a proxy could keep them. | **Fixed, although the rule was already on the accepted list for the site:** every API answer now says `Cache-Control: no-store`, because answers hold personal or members-only data and the same address answers differently for different people. The public reference lists (hospitals, membership types) still allow five minutes. A unit test checks the default. |
+
+The rule stays on the accepted list for the site's pages, for the reason given above.
 
 ## Reading a run
 
