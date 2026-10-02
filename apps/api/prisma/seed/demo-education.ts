@@ -8,9 +8,10 @@ import { type Prisma, type PrismaClient } from '../../src/generated/prisma/clien
 /**
  * Demo education (M6 plan §2.11): library items of every type and in every state, one course, and
  * the sample exam questions. The library items are fictional and say so; they carry no medical
- * content. The exam questions are real teaching questions drafted for the demo: they are loaded
- * waiting for review, never published, so nothing medical is shown before a urologist has checked
- * it (owner answer §11.5).
+ * content. The exam questions are real teaching questions drafted for the demo. They were loaded
+ * waiting for review until the owner, a urologist, read them and found them fine (2026-10-02);
+ * since then they are loaded published, at the owner's request. A question added to the fixture
+ * later needs the same check before it goes in.
  * Development only (the seed runner refuses production). Runs once: skipped when the demo course
  * exists. It follows the content layer, whose editor is the author and whose admin is the reviewer.
  */
@@ -247,6 +248,9 @@ interface QuestionSeed {
 const REVIEW_NOTE =
   'שאלה לדוגמה שנוסחה עבור ההדגמה. יש לבדוק אותה מבחינה רפואית לפני פרסום. / ' +
   'A sample question drafted for the demo. It needs a urologist’s check before it is published.';
+const PUBLISH_NOTE =
+  'נבדקה על ידי אורולוג (בעל הפרויקט) ב־2 באוקטובר 2026. / ' +
+  'Checked by a urologist (the project owner) on 2 October 2026.';
 
 export async function seedDemoEducation(prisma: PrismaClient): Promise<void> {
   if (await prisma.educationItem.findUnique({ where: { slug: COURSE_SLUG } })) {
@@ -353,7 +357,8 @@ export async function seedDemoEducation(prisma: PrismaClient): Promise<void> {
         await tx.examQuestion.create({
           data: {
             id,
-            status: 'IN_REVIEW',
+            status: 'PUBLISHED',
+            publishedAt: new Date(now - HOUR),
             level: question.level,
             subspecialtyId: subspecialtyOf(question.subspecialty),
             authorUserId: editor,
@@ -385,7 +390,7 @@ export async function seedDemoEducation(prisma: PrismaClient): Promise<void> {
                   fromStatus: null,
                   toStatus: 'DRAFT',
                   actorUserId: editor,
-                  at: new Date(now - 2 * HOUR),
+                  at: new Date(now - 3 * HOUR),
                 },
                 {
                   id: uuidv7(),
@@ -394,6 +399,15 @@ export async function seedDemoEducation(prisma: PrismaClient): Promise<void> {
                   toStatus: 'IN_REVIEW',
                   actorUserId: editor,
                   comment: REVIEW_NOTE,
+                  at: new Date(now - 2 * HOUR),
+                },
+                {
+                  id: uuidv7(),
+                  action: 'PUBLISH',
+                  fromStatus: 'IN_REVIEW',
+                  toStatus: 'PUBLISHED',
+                  actorUserId: admin,
+                  comment: PUBLISH_NOTE,
                   at: new Date(now - HOUR),
                 },
               ],
@@ -405,7 +419,7 @@ export async function seedDemoEducation(prisma: PrismaClient): Promise<void> {
     { timeout: 60_000 },
   );
   console.log(
-    `seed: demo education created (${ITEMS.length} items, 1 course, ${questions.length} exam questions waiting for review)`,
+    `seed: demo education created (${ITEMS.length} items, 1 course, ${questions.length} exam questions, published)`,
   );
 }
 

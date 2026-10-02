@@ -85,13 +85,13 @@ The heart of the membership process: the department director confirms, then the 
 
 As `admin@demo.test`.
 
-| Do                                                         | The audience sees                                                            | Say                                                                                      |
-| ---------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| **חדשות**: one item is waiting. Open it → **פרסום עכשיו**. | The state becomes "פורסם".                                                   | "The editor wrote it; a second person publishes it. The editor can't publish their own." |
-| **הדרכה** → **שאלות מבחן**.                                | Ten urology questions, all "ממתין לבדיקה".                                   | "Exam questions are written, then checked by a urologist before any member sees them."   |
-| Open one.                                                  | The question, four answers, an explanation for each, a summary of the topic. | "After answering, the member sees why each answer is right or wrong."                    |
+| Do                                                         | The audience sees                                                            | Say                                                                                                            |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **חדשות**: one item is waiting. Open it → **פרסום עכשיו**. | The state becomes "פורסם".                                                   | "The editor wrote it; a second person publishes it. The editor can't publish their own."                       |
+| **הדרכה** → **שאלות מבחן**.                                | Ten urology questions, all "פורסם".                                          | "Exam questions are written, then checked by a urologist before any member sees them. These ten were checked." |
+| Open one.                                                  | The question, four answers, an explanation for each, a summary of the topic. | "After answering, the member sees why each answer is right or wrong."                                          |
 
-Publish a question here only if you have reviewed it yourself. To show the member's side, publish one you approved, then open **הדרכה → תרגול שאלות מבחן** as the member.
+The ten questions are loaded published, because the owner reviewed them. To show the member's side, open **הדרכה → תרגול שאלות מבחן** as the member. Publish a new question here only if you have reviewed it yourself.
 
 ### 5. A message to all members (1½ minutes)
 
