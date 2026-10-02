@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth';
+import { NotificationsModule } from '../notifications';
 import { ApplicationsService } from './applications.service';
 import { CardTokenController, CardVerifyController } from './card.controller';
 import { CardService } from './card.service';
@@ -12,7 +13,7 @@ import { MembershipsService } from './memberships.service';
 
 /** Memberships, the application workflow, admin management, the digital card and CSV import (M2). */
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, NotificationsModule],
   controllers: [
     ImportController,
     MyMembershipController,

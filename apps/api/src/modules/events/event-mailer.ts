@@ -2,8 +2,9 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
-import { type EmailTemplates, Mailer } from '../../infra/mailer/mailer';
+import { type EmailTemplates } from '../../infra/mailer/mailer';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { Notifier } from '../notifications';
 
 type EventTemplate =
   | 'eventRegistered'
@@ -14,7 +15,8 @@ type EventTemplate =
   | 'eventReminder';
 
 /**
- * Emails about one event to one person, in their language (M5 plan §2.7). The event's time is
+ * Notices about one event to one person, in the app and by email as they chose, in their
+ * language (M5 plan §2.7; M7 plan §2.4). The event's time is
  * written in the event's own time zone. A failed email never undoes the action that caused it.
  */
 @Injectable()
@@ -24,7 +26,7 @@ export class EventMailer {
   constructor(
     @Inject(APP_CONFIG) private readonly env: Env,
     private readonly prisma: PrismaService,
-    private readonly mailer: Mailer,
+    private readonly notifier: Notifier,
   ) {}
 
   async send(
@@ -55,7 +57,9 @@ export class EventMailer {
         reason: extra.reason ?? '',
         link: new URL(`/${locale}/events/${event.slug}`, this.env.APP_BASE_URL).toString(),
       };
-      await this.mailer.send({
+      await this.notifier.send({
+        userId,
+        kind: 'MY_EVENTS',
         to: user.email,
         locale,
         template,

@@ -7,7 +7,7 @@ import { type RequestMeta } from '../../common/request-meta';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type Prisma } from '../../generated/prisma/client';
-import { Mailer } from '../../infra/mailer/mailer';
+import { Notifier } from '../notifications';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
@@ -51,7 +51,7 @@ export class NewsAdminService {
     private readonly access: AccessService,
     private readonly files: FilesService,
     private readonly audit: AuditService,
-    private readonly mailer: Mailer,
+    private readonly notifier: Notifier,
   ) {}
 
   // --- Reading --------------------------------------------------------------------------------
@@ -540,14 +540,18 @@ export class NewsAdminService {
     const link = new URL(path, this.env.APP_BASE_URL).toString();
     try {
       if (template === 'newsSentBack') {
-        await this.mailer.send({
+        await this.notifier.send({
+          userId: author.id,
+          kind: 'WORK',
           to: author.email,
           locale,
           template,
           params: { title: text?.title ?? '', reason, link },
         });
       } else {
-        await this.mailer.send({
+        await this.notifier.send({
+          userId: author.id,
+          kind: 'WORK',
           to: author.email,
           locale,
           template,

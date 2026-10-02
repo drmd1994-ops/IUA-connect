@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AccessModule } from '../access';
 import { AuthModule } from '../auth';
 import { FilesModule } from '../files';
+import { NotificationsModule } from '../notifications';
 import { NewsAdminController } from './news-admin.controller';
 import { NewsAdminService } from './news-admin.service';
 import { NewsCategoriesService } from './news-categories.service';
@@ -11,7 +12,7 @@ import { NewsPublishJob } from './news-publish.job';
 
 /** News: editing, review workflow, scheduled publishing and public reads (M3). */
 @Module({
-  imports: [AccessModule, AuthModule, FilesModule],
+  imports: [AccessModule, AuthModule, FilesModule, NotificationsModule],
   controllers: [NewsAdminController, NewsPublicController],
   providers: [NewsAdminService, NewsCategoriesService, NewsPublicService, NewsPublishJob],
   exports: [NewsAdminService],

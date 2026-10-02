@@ -120,6 +120,7 @@
     "examOptionTextRequired": "לכל תשובה אפשרית נדרש טקסט בעברית.",
     "examExplanationRequired": "לכל תשובה אפשרית נדרש הסבר בעברית: מדוע היא נכונה, או מדוע היא שגויה.",
     "examSummaryRequired": "יש לכתוב את סיכום הנושא הקצר בעברית לפני ההגשה.",
-    "unknownOption": "אין לשאלה הזאת תשובה כזאת."
+    "unknownOption": "אין לשאלה הזאת תשובה כזאת.",
+    "notificationAlwaysOn": "סוג ההתראות הזה פועל תמיד."
   }
 }

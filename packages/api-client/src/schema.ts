@@ -1812,6 +1812,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationsController_unread"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NotificationsController_readAll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NotificationsController_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationPreferencesController_get"];
+        put: operations["NotificationPreferencesController_set"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3948,6 +4028,46 @@ export interface components {
                 attempts: number;
                 /** Format: date-time */
                 lastAnsweredAt: string;
+            }[];
+        };
+        NotificationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK";
+                type: string;
+                params: {
+                    [key: string]: string | number;
+                };
+                link: string | null;
+                readAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            total: number;
+            unread: number;
+            page: number;
+            pageSize: number;
+        };
+        UnreadCountDto: {
+            unread: number;
+        };
+        NotificationPreferencesDto: {
+            items: {
+                /** @enum {string} */
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                app: boolean;
+                email: boolean;
+                locked: boolean;
+            }[];
+        };
+        NotificationPreferencesInputDto: {
+            items: {
+                /** @enum {string} */
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                app: boolean;
+                email: boolean;
             }[];
         };
     };
@@ -7230,6 +7350,125 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExamResultsDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_list: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationListDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_unread: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnreadCountDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_readAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NotificationsController_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NotificationPreferencesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesDto"];
+                };
+            };
+        };
+    };
+    NotificationPreferencesController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPreferencesInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesDto"];
                 };
             };
         };

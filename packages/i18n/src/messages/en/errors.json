@@ -120,6 +120,7 @@
     "examOptionTextRequired": "Every option needs its Hebrew text.",
     "examExplanationRequired": "Every option needs a Hebrew explanation: why it is right, or why it is wrong.",
     "examSummaryRequired": "Write the short topic summary in Hebrew before submitting.",
-    "unknownOption": "This question has no such option."
+    "unknownOption": "This question has no such option.",
+    "notificationAlwaysOn": "This kind of notification is always on."
   }
 }
