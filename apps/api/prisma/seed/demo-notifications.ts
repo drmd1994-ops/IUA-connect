@@ -258,11 +258,11 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
       const sent = await broadcast(tx, admin, sentAt, {
         he: {
           title: 'תזכורת: חידוש החברות לשנה הבאה (הדגמה)',
-          body: `${NOTE_HE}\n\nחידוש החברות לשנה הבאה נפתח. אפשר לחדש מתוך ״החברות שלי״.\n\nבברכה,\nמזכירות האיגוד`,
+          body: `${NOTE_HE}\n\nהחברות לשנה הבאה מתחדשת בינואר. את מצב החברות אפשר לראות ב״החברות שלי״.\n\nבברכה,\nמזכירות האיגוד`,
         },
         en: {
           title: 'Reminder: renewing your membership for next year (demo)',
-          body: `${NOTE_EN}\n\nRenewal for next year is open. You can renew from “My membership”.\n\nRegards,\nThe association office`,
+          body: `${NOTE_EN}\n\nMemberships for next year are renewed in January. You can see the state of yours under “My membership”.\n\nRegards,\nThe association office`,
         },
       });
       if (recipients.length > 0) {

@@ -4,6 +4,23 @@
 
 > **Status:** private pitch application, **demo data only**. Not affiliated with or endorsed by the Israeli Urological Association (IUA) or the Israeli Medical Association (IMA). No real personal data may be loaded before a professional legal review (see `SECURITY_MODEL.md`).
 
+## Showing the demo
+
+```powershell
+pnpm demo:reset   # rebuilds the demo from nothing (asks first; deletes the development data)
+pnpm dev          # then open http://localhost:3001
+```
+
+| For the pitch                                                      | What it holds                                                    |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| [`docs/demo/DEMO_SCRIPT.md`](docs/demo/DEMO_SCRIPT.md)             | The walk-through, step by step, with the accounts to use         |
+| [`docs/demo/KNOWN_LIMITATIONS.md`](docs/demo/KNOWN_LIMITATIONS.md) | What it does not do, so nothing is promised by mistake           |
+| [`docs/demo/PERFORMANCE.md`](docs/demo/PERFORMANCE.md)             | Page-speed measurements, before and after                        |
+| [`docs/demo/NVDA_CHECKLIST.md`](docs/demo/NVDA_CHECKLIST.md)       | The screen-reader check, for a person to do                      |
+| [`docs/security/ZAP_BASELINE.md`](docs/security/ZAP_BASELINE.md)   | The automated security scan: what it found and what was accepted |
+
+## For developers
+
 | Read first                                                        | What it holds                                |
 | ----------------------------------------------------------------- | -------------------------------------------- |
 | [`PROJECT_STATUS.md`](PROJECT_STATUS.md)                          | Decisions, open questions, current milestone |
@@ -126,7 +143,7 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `admin2@demo.test`                                         | A second IUA admin, so a message to members can be approved (M7)    |
 | `super@demo.test`                                          | Super admin: gives and removes roles, changes the settings (M8)     |
 
-The admins, the directors, the editor and the event admin must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
+The admins, the directors, the editor and the event admin must have two-step verification, because their roles require it. After `pnpm db:seed` alone, each sets it up at first sign-in (a passkey or an authenticator app). After **`pnpm demo:reset`** it is already set up, with one shared authenticator entry for all of them, so a pitch isn't interrupted: the reset writes `outbox/demo-authenticator.svg`; open it and scan it once with an authenticator app. The entry's secret is `DEMO_TOTP_SECRET` in `.env` (not in the repository), and it applies to `@demo.test` accounts only.
 
 - **Membership (M2):** the account menu has **My profile** (each field has its own "who can see this"), **My membership** (apply, status, history) and **Membership card** (a QR code that changes every 4 minutes; scanning it opens `/card/verify`). Directors also see **Applications to review**, and admins see **Administration** (`/admin`).
 - **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
@@ -163,6 +180,8 @@ The admins, the directors, the editor and the event admin must set up two-step v
 | `pnpm test`                                    | Unit tests (all packages), including the deny-by-default route gate       |
 | `pnpm test:integration`                        | API integration tests against `iua_connect_test`                          |
 | `pnpm --filter @iua/web e2e`                   | Playwright end-to-end + accessibility tests (see TESTING.md)              |
+| `pnpm demo:reset`                              | Development only: rebuild the demo from nothing (**deletes dev data**)    |
+| `pnpm job:run <job>`                           | Run one background job now, e.g. `notifications.content-digest`           |
 | `pnpm admin:create --email <address>`          | Development only: create a fictional administrator                        |
 | `pnpm import:fetch`                            | Development only: read the hand-picked IUA website pages into fixtures    |
 | `pnpm import:remove`                           | Development only: delete everything the content import created            |

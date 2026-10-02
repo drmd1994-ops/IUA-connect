@@ -101,8 +101,10 @@ Access tokens are JWTs signed with EdDSA, 10-minute lifetime. Claims: `sub`, `si
 | POST/DELETE | /events/{slug}/registration                        |
 | GET         | /me/schedule · /me/schedule.ics                    |
 | GET         | /events/{slug}.ics                                 |
-| GET         | /education · /education/{id}                       |
+| GET         | /education · /education/{slug} · /me/exam-results  |
 | GET         | /guidelines · /guidelines/{id}                     |
+| GET         | /exam-questions/next                               |
+| POST        | /exam-questions/{id}/answer                        |
 | GET         | /search?q=&types=news,events,...                   |
 
 Access tiers are enforced on every read. Items the caller may not see are omitted from lists and return 404 on direct fetch.
@@ -121,12 +123,13 @@ Access tiers are enforced on every read. Items the caller may not see are omitte
 ### Admin (`/admin/...`, requires an admin role **and** `mfa=true` in the session)
 
 - `/admin/users` (list, detail, disable, enable, unlock, end sessions; roles are given with `POST /{id}/roles` and removed with `POST /{id}/roles/remove`, each with a reason)
-- `/admin/roles`, `/admin/permissions` (super admin)
+- `/admin/roles` (the list of roles; they are fixed in code, so there is no route to change them or their permissions)
 - `/admin/memberships` (create, renew, suspend, expire, CSV import with dry-run)
 - `/admin/institutions` (hospitals, departments, assign directors)
 - `/admin/news` (full CRUD, workflow transitions `POST /admin/news/{id}/transitions`)
 - `/admin/events`, `/admin/events/{id}/sessions`, `/admin/speakers`, `/admin/events/{id}/attendance` (QR scan endpoint)
 - `/admin/education`, `/admin/guidelines`
+- `/admin/exam-questions` (write, review with `POST /{id}/transitions`, history)
 - `/admin/broadcasts` (create, then `POST /{id}/approve` by a **different** admin)
 - `/admin/audit-logs` (read-only, filterable)
 - `/admin/dashboard` (counts: pending approvals, members by status, upcoming events)

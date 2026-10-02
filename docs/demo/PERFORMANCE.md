@@ -53,7 +53,24 @@ Median of five requests on the development computer, demo data, signed out:
 | Guidelines list  | 6 ms |
 | Search ("כנס")   | 4 ms |
 
-Nothing is slow. **This says little about a full association:** the demo holds a few dozen items and a few dozen people, and at that size the database reads whole tables whatever indexes exist, so query plans taken now would not show how it behaves with thousands of members. The indexes were chosen for the queries the code makes (see `DATABASE_DESIGN.md`), but they have not been proven under load. No load test was run (it is listed in `KNOWN_LIMITATIONS.md`).
+Nothing is slow, but the demo holds a few dozen items and a few dozen people, and at that size the database reads whole tables whatever indexes exist. So the timings say little about a full association.
+
+**Query plans.** To see what would happen with far more data, the database was asked for its plan for each main query with whole-table reads discouraged (`EXPLAIN` with `enable_seqscan = off`):
+
+| Query                               | Index it uses                                  |
+| ----------------------------------- | ---------------------------------------------- |
+| News list, newest first             | `news (status, published_at)`                  |
+| Upcoming events                     | `events (status, start_at)`                    |
+| Education list                      | `education_items (status, published_at)`       |
+| Search, by words                    | the full-text index on each translations table |
+| Search, a typing mistake in a title | the trigram index on the title                 |
+| One person's notices                | `notifications (user_id, created_at)`          |
+| The member directory, by name       | the index over listed profiles only            |
+| **The audit log, newest first**     | **none: it would read and sort the whole log** |
+
+The audit log is the table that grows fastest and is never trimmed, so that one mattered. **Fixed:** migration `20261003000000_audit_log_time_index` adds an index on `(at, id)`, newest first, which the page now uses with or without filters.
+
+What this does not show is how the system behaves under many simultaneous users. No load test was run (listed in `KNOWN_LIMITATIONS.md`).
 
 ## What is left
 
@@ -61,7 +78,9 @@ Nothing is slow. **This says little about a full association:** the demo holds a
 
 **What would fix it.** Have the server fetch public content and send the finished page (news, events, education, guidelines, an article). This is a real change to how the public pages are built, not a tweak: it touches every public page and how signed-in members get their members-only items on the same lists. It was not in the M9 plan and was not done. It is a sensible first task after the pitch, and it would also let search engines read the public pages.
 
-**The small jump that remains (0.031 on every page)** comes from the header and notices settling once the site knows whether the visitor is signed in. It is under the limit.
+**Not tried: letting browsers keep public API answers.** The plan listed caching headers as a possible fix. They would speed up a second visit, not the first one that is measured here, and the same addresses answer differently for signed-in members (members-only items), so a mistake there could show a member's list to someone else. Left out on purpose.
+
+**A small jump remains (0.031 on every page):** the page body moves slightly once, shortly after the first paint. It is under the limit; its cause was not tracked down.
 
 ## Repeating the measurement
 

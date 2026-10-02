@@ -105,6 +105,15 @@
 - **Settings:** only a super admin reads and changes them; visitors get the contact details, and the notice only while it is switched on; values that don't fit are refused; the database accepts only the known keys.
 - **End to end (Playwright, `admin-portal.spec.ts`):** an admin follows a dashboard tile to its list, disables an account (which is signed out and can't sign in), finds the action in the audit log with its reason, enables the account and gives it a role; a super admin switches a notice on and every page shows it, with the contact details in the footer; a member lands on their dashboard, where the "Coming soon" actions are neither links nor buttons. Axe checks run on every page visited.
 
+## What the M9 (Pitch readiness) checks prove
+
+- **Accessibility audit (Playwright + axe, `a11y-audit.spec.ts`):** no WCAG 2.2 AA violations on every page a signed-in member sees and on every admin page, in Hebrew and English; every control can be reached with the keyboard and shows where the focus is; the skip link, the account menu (Escape closes it and returns the focus) and an exam question work without a mouse; no page scrolls sideways at 320 px, which is what 400% zoom gives.
+- **What automated checks can't prove:** how the site sounds. The screen-reader check is for a person, with `docs/demo/NVDA_CHECKLIST.md`.
+- **Demo reset (unit, `demo-reset-rules.spec.ts`):** `pnpm demo:reset` accepts only the development database on this machine; it refuses production, the test database, any other database, a database on another machine, and missing or unreadable settings. The reset itself (drop, migrate, seed, two-step set-up) was run by hand on a scratch database; no automated test runs it.
+- **Error format (unit, `packages/api-client`):** the hand-written check that recognises the API's error envelope in the browser agrees with the shared schema on valid and malformed bodies.
+- **Security scan (CI job `zap`):** the OWASP ZAP baseline reads the running site and API passively on every change. A new warning fails the build unless it is listed with a reason (`docs/security/ZAP_BASELINE.md`). It is not a penetration test.
+- **Performance** is measured by hand with Lighthouse, not in CI; the numbers are in `docs/demo/PERFORMANCE.md`.
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

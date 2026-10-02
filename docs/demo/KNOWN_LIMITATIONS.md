@@ -28,7 +28,7 @@ Last updated: 2 October 2026 (end of the MVP, milestones M0 to M9).
 
 These are in the original specification and are **not** in the demo:
 
-- **Payments** and invoices. Membership has a "payment status" field that is set by hand.
+- **Payments** and invoices. Membership has a "payment status" field that is set by hand. The early planning documents said the database tables and a connection point for a payment provider would be prepared in advance; they were not, and neither were the planned connection points for push notifications, a video provider, an outside sign-in service and the Medical Association's member list. Each is work for the milestone that needs it.
 - **CME tracking and certificates.** Events and education items can show CME points; nothing is counted or credited.
 - **A mobile app.** The site works in a phone's browser. There are no push notifications.
 - **Community, case discussions, research collaboration, publications, jobs, mentorship, messaging between members, a surgical logbook, calculators, AI features, governance and voting.** Four of these appear on the member's dashboard as "Coming soon", and can't be clicked.

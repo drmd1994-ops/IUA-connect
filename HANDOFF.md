@@ -2,6 +2,8 @@
 
 You are picking up a project that was planned in a Claude chat session. This file is the full context you need. Read it, then read the planning documents it references, **before doing anything**.
 
+> **This file describes the starting point (27 September 2026) and is kept as written.** Since then milestones M0 to M9 have been built: the repository exists and is on GitHub, the open questions O1 to O5 below were answered, and section 6 ("Next step: M0") is done. For where things stand **now**, read `PROJECT_STATUS.md` (each milestone has its own section, with what was delivered, what was verified and what is open for the owner). For showing the demo, read `docs/demo/DEMO_SCRIPT.md` and `docs/demo/KNOWN_LIMITATIONS.md`. The owner's decisions in section 4 and the working rules in section 7 still hold; every milestone also has an approved plan in `docs/plans/`.
+
 ## 1. What this project is
 
 **IUA Connect — "The Digital Home of Israeli Urology."** A web platform (mobile later) for the Israeli Urological Association: membership, news, events, education, notifications, search and an admin portal in the MVP, growing later into CME, community, cases, research, messaging, AI and more.
