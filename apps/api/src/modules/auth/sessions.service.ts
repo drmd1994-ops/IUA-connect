@@ -28,7 +28,9 @@ export type RevokeReason =
   | 'refresh_reuse'
   | 'password_changed'
   | 'password_reset'
-  | 'account_disabled';
+  | 'account_disabled'
+  /** An administrator ended the person's sessions (M8). */
+  | 'admin_revoked';
 
 /** Permissions a session actually holds: MFA-requiring roles count only after MFA. */
 export function effectivePermissions(profile: AccessProfile, mfa: boolean): Set<PermissionKey> {
