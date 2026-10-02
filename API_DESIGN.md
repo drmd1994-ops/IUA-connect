@@ -120,7 +120,7 @@ Access tiers are enforced on every read. Items the caller may not see are omitte
 
 ### Admin (`/admin/...`, requires an admin role **and** `mfa=true` in the session)
 
-- `/admin/users` (list, detail, disable, unlock, roles)
+- `/admin/users` (list, detail, disable, enable, unlock, end sessions; roles are given with `POST /{id}/roles` and removed with `POST /{id}/roles/remove`, each with a reason)
 - `/admin/roles`, `/admin/permissions` (super admin)
 - `/admin/memberships` (create, renew, suspend, expire, CSV import with dry-run)
 - `/admin/institutions` (hospitals, departments, assign directors)

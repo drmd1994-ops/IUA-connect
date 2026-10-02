@@ -1,0 +1,256 @@
+{
+  "home": {
+    "greeting": "Welcome back",
+    "membership": {
+      "title": "My membership",
+      "active": "{type}: active until {date}.",
+      "SUSPENDED": "{type}: suspended.",
+      "EXPIRED": "{type}: expired on {date}.",
+      "none": "You don’t have a membership yet.",
+      "apply": "Apply for membership",
+      "open": "Open my membership",
+      "card": "My membership card"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "empty": "Nothing new.",
+      "all": "All notifications"
+    },
+    "events": {
+      "title": "Upcoming events",
+      "empty": "No upcoming events.",
+      "registered": "You are registered",
+      "cancelled": "Cancelled",
+      "all": "All events"
+    },
+    "news": {
+      "title": "News",
+      "empty": "No news yet.",
+      "all": "All news"
+    },
+    "education": {
+      "title": "Education",
+      "empty": "No education items yet.",
+      "all": "The education library"
+    },
+    "actions": {
+      "title": "Quick actions",
+      "findColleague": "Find a colleague",
+      "guidelines": "Browse guidelines",
+      "exam": "Practise exam questions",
+      "search": "Search the site",
+      "laterTitle": "Planned for later",
+      "comingSoon": "Coming soon",
+      "createCase": "Create a case",
+      "postResearch": "Post research",
+      "askCommunity": "Ask the community",
+      "openCalculator": "Open a calculator"
+    }
+  },
+  "footer": {
+    "contact": "Contact the association",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Dashboard",
+      "intro": "What is waiting, counted when this page opened.",
+      "nothing": "Nothing here needs you right now. Use the tabs above.",
+      "applications": {
+        "title": "Membership applications",
+        "waitingAssociation": "{count, plural, one {# waiting for the association} other {# waiting for the association}}",
+        "waitingDirector": "{count, plural, one {# waiting for a department director} other {# waiting for a department director}}",
+        "link": "Open the applications"
+      },
+      "members": {
+        "title": "Members",
+        "active": "{count} active",
+        "suspended": "{count} suspended",
+        "expired": "{count} expired",
+        "byType": "Active members by type",
+        "link": "Open the members"
+      },
+      "review": {
+        "title": "Waiting for review",
+        "news": "{count, plural, one {# news item} other {# news items}}",
+        "education": "{count, plural, one {# education item} other {# education items}}",
+        "examQuestions": "{count, plural, one {# exam question} other {# exam questions}}"
+      },
+      "broadcasts": {
+        "title": "Messages to members",
+        "waiting": "{count, plural, =0 {None waiting for approval} one {# waiting for approval} other {# waiting for approval}}",
+        "link": "Open the messages"
+      },
+      "events": {
+        "title": "Events in the next 30 days",
+        "none": "None.",
+        "registered": "{count, plural, one {# registered} other {# registered}}",
+        "more": "{count, plural, one {and # more} other {and # more}}",
+        "link": "Open the events"
+      },
+      "accounts": {
+        "title": "Accounts",
+        "locked": "{count, plural, one {# locked} other {# locked}}",
+        "disabled": "{count, plural, one {# disabled} other {# disabled}}",
+        "link": "Open the accounts"
+      }
+    },
+    "users": {
+      "title": "Accounts",
+      "intro": "Every account, with its state and roles. Memberships are on the Members tab.",
+      "search": "Search by email or name",
+      "searchButton": "Search",
+      "status": "State",
+      "role": "Role",
+      "all": "All",
+      "rolesLink": "What each role may do",
+      "empty": "No accounts match.",
+      "total": "{total, plural, one {# account} other {# accounts}}",
+      "colEmail": "Email",
+      "colName": "Name",
+      "colStatus": "State",
+      "colRoles": "Roles",
+      "colTwoStep": "Two-step",
+      "colLastLogin": "Last sign-in",
+      "never": "Never",
+      "yes": "Yes",
+      "no": "No",
+      "noRoles": "None",
+      "statuses": {
+        "ACTIVE": "Active",
+        "LOCKED": "Locked",
+        "DISABLED": "Disabled"
+      },
+      "lockedNow": "Locked now",
+      "back": "Back to accounts",
+      "detail": {
+        "title": "Account",
+        "email": "Email",
+        "verified": "Address verified",
+        "notVerified": "Address not verified",
+        "status": "State",
+        "lockedUntil": "Locked after failed sign-ins until {when}.",
+        "twoStep": "Two-step verification",
+        "twoStepOn": "Set up",
+        "twoStepOff": "Not set up",
+        "lastLogin": "Last sign-in",
+        "created": "Created",
+        "sessions": "Open sessions",
+        "membership": "Membership",
+        "noMembership": "None",
+        "membershipLink": "{type}, {status}, until {date}",
+        "actions": "Actions",
+        "reason": "Reason",
+        "reasonHint": "It is written to the audit log.",
+        "disable": "Disable the account",
+        "disableHint": "The person is signed out at once and can’t sign in.",
+        "enable": "Enable the account",
+        "unlock": "End the lock",
+        "endSessions": "Sign out everywhere",
+        "done": "Done.",
+        "self": "This is your own account. Another administrator must change it.",
+        "roles": "Roles",
+        "noRoles": "This account has no roles.",
+        "since": "since {date}",
+        "scoped": "assigned on the hospitals screen",
+        "removeRole": "Remove {role}",
+        "addRole": "Give a role",
+        "chooseRole": "Choose a role",
+        "give": "Give",
+        "rolesHint": "Roles are given and removed by super administrators. A role that needs two-step verification opens nothing until the person sets it up.",
+        "auditLink": "This account in the audit log"
+      },
+      "rolesPage": {
+        "title": "Roles",
+        "intro": "Roles are fixed. This table shows what each one may do.",
+        "role": "Role",
+        "holders": "Accounts",
+        "twoStep": "Needs two-step verification",
+        "scope": "Limited to",
+        "scopes": {
+          "NONE": "Everything",
+          "DEPARTMENT": "One department",
+          "SUBSPECIALTY": "One subspecialty"
+        },
+        "permissions": "May do",
+        "none": "Nothing yet (its features come later)"
+      }
+    },
+    "roles": {
+      "SUPER_ADMIN": "Super administrator",
+      "IUA_ADMIN": "Association administrator",
+      "CONTENT_EDITOR": "Content editor",
+      "EVENT_ADMIN": "Event administrator",
+      "DEPARTMENT_DIRECTOR": "Department director",
+      "RESEARCH_ADMIN": "Research administrator",
+      "SUBSPECIALTY_ADMIN": "Subspecialty administrator",
+      "CME_ADMIN": "CME administrator"
+    },
+    "permissions": {
+      "users_read": "See accounts",
+      "users_manage": "Disable, enable and unlock accounts",
+      "roles_manage": "Give and remove roles",
+      "membership_read": "See members",
+      "membership_manage": "Manage memberships and import members",
+      "membership_approve_department": "Approve applications of their department",
+      "membership_approve_final": "Give the association’s approval to applications",
+      "institutions_manage": "Manage hospitals, departments and directors",
+      "news_create": "Write news",
+      "news_review": "Review news",
+      "news_publish": "Publish news",
+      "events_manage": "Manage events",
+      "education_manage": "Write education items and exam questions",
+      "education_review": "Review and publish education",
+      "guidelines_manage": "Manage guidelines",
+      "files_upload": "Upload files",
+      "broadcasts_create": "Write messages to members",
+      "broadcasts_approve": "Approve messages to members",
+      "audit_read": "Read the audit log",
+      "settings_manage": "Change the site settings"
+    },
+    "audit": {
+      "title": "Audit log",
+      "intro": "What was done, by whom and when. It can only be read; nobody can change or remove an entry. Looking at it is recorded too.",
+      "action": "What was done",
+      "actionHint": "For example account.disable, or account. for every account action.",
+      "actor": "Who",
+      "actorHint": "Part of an email address.",
+      "entityType": "On what kind of thing",
+      "entityId": "Its id",
+      "from": "From",
+      "to": "Until",
+      "filter": "Filter",
+      "clear": "Clear",
+      "empty": "No entries match.",
+      "total": "{total, plural, one {# entry} other {# entries}}",
+      "colWhen": "When",
+      "colWho": "Who",
+      "colWhat": "What",
+      "colOn": "On",
+      "colFrom": "From address",
+      "colDetails": "Details",
+      "system": "The system",
+      "unknownActor": "A deleted account",
+      "noDetails": "None"
+    },
+    "settings": {
+      "title": "Settings",
+      "intro": "What visitors see on every page.",
+      "contact": "The association’s contact details",
+      "contactHint": "Shown at the bottom of every page. Leave a field empty to hide it.",
+      "email": "Email",
+      "phone": "Phone",
+      "addressHe": "Address in Hebrew",
+      "addressEn": "Address in English",
+      "notice": "Notice at the top of every page",
+      "noticeEnabled": "Show the notice",
+      "noticeHe": "Notice in Hebrew",
+      "noticeEn": "Notice in English",
+      "noticeHint": "A short message, for example a planned maintenance time. English readers see the Hebrew text when there is no English one.",
+      "save": "Save",
+      "saved": "Saved."
+    }
+  }
+}

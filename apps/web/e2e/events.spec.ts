@@ -63,8 +63,16 @@ test('admin publishes an event → member registers, schedules, downloads, check
   await admin.getByRole('button', { name: 'Add a passkey' }).click();
   await expect(admin.getByText('Passkey added.')).toBeVisible();
 
-  // An event admin sees only Events in the admin area.
+  // An event admin's admin area: the dashboard with the events tile, and Events, not Members.
   await admin.goto('/en/admin');
+  await expect(
+    admin.getByTestId('admin-dashboard').getByRole('heading', {
+      name: 'Events in the next 30 days',
+    }),
+  ).toBeVisible();
+  const adminNav = admin.getByRole('navigation', { name: 'Administration sections' });
+  await expect(adminNav.getByRole('link', { name: 'Members', exact: true })).toHaveCount(0);
+  await adminNav.getByRole('link', { name: 'Events', exact: true }).click();
   await expect(admin).toHaveURL(/\/en\/admin\/events$/);
   await expectAccessible(admin);
 

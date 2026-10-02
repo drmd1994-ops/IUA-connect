@@ -1772,3 +1772,17 @@ model Consent {
   @@index([userId, kind, grantedAt(sort: Desc)])
   @@map("consents")
 }
+
+// ---------------------------------------------------------------------------
+// Site settings (M8 plan §2.5). The allowed keys and the shape of each value are fixed in code.
+// ---------------------------------------------------------------------------
+
+model Setting {
+  /// "contact" or "notice".
+  key       String   @id @db.VarChar(40)
+  value     Json
+  updatedBy String?  @map("updated_by") @db.Uuid
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("settings")
+}

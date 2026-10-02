@@ -6,7 +6,7 @@ _Last updated: 2026-10-02_
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: built 2026-10-02**, on `feat/notifications-search` (draft pull request #9), waiting for the owner's checkpoint test of the demo and for the merge. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: built 2026-10-02**, on `feat/admin-dashboard` (draft pull request #10), waiting for the owner's checkpoint test of the demo and for the merge. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -435,9 +435,54 @@ No new libraries.
 
 - **Checkpoint test of the demo** (still open from M6): now M1 to M7. For M7: the bell and "Choose what you receive" as a member; `/admin/broadcasts` as `admin@demo.test` (approve the waiting message); `/members` as a member; the search field with a Hebrew word.
 - **Review the ten sample exam questions** at `/admin/education/questions` (still open from M6).
-- Merge pull request #9 when satisfied.
+- ~~Merge pull request #9~~ merged at the owner's request on 2026-10-02 (CI green).
 - The wording of the directory consent (`directory-2026-10`) should be read by whoever does the legal review before real data.
+
+## M8 Admin portal completion and dashboards (2026-10-02)
+
+Plan: [`docs/plans/M8-admin-dashboard.md`](docs/plans/M8-admin-dashboard.md), approved by the owner on 2026-10-02. Owner decisions (plan §11):
+
+- **Roles:** super admins only give and remove roles.
+- **Settings:** the association's contact details in the footer, and a notice banner. Opening and closing sign-ups was not chosen.
+- **Member dashboard:** the home page after sign-in; visitors keep the public home page.
+
+No new libraries.
+
+### Delivered
+
+- **Admin dashboard (`/admin`):** applications waiting, members by state and type, items waiting for review, messages waiting for approval, events in the next 30 days, locked and disabled accounts. Each person sees only the parts they may act on, and each number links to the list it counts.
+- **Accounts (`/admin/users`):** a list with search and filters; an account page with its state, roles, two-step verification, last sign-in, open sessions and membership. Actions: disable and enable, end a lock, sign out everywhere. Each needs a reason and is audited. Passwords and second factors are never shown or changed here.
+- **Roles:** super admins give and remove roles on the account page; a table shows what each role may do. Nobody changes their own account or roles, only a super admin acts on a super admin, and the last super admin can't be disabled or lose the role.
+- **Audit log (`/admin/audit`):** read-only, filtered by action, person, subject and dates. Each look at the log is itself recorded.
+- **Settings (`/admin/settings`, super admins):** the association's contact details, shown in the footer of every page, and a notice shown at the top of every page while it is switched on.
+- **Member dashboard:** after sign-in the home page shows the membership, new notifications, upcoming events (the person's own first), the newest news and education, and quick actions. Create a case, post research, ask the community and open a calculator are shown as "Coming soon": labelled, and neither links nor buttons.
+- **The public home page** now lists membership as available (it has worked since M2) and no longer has an "On the way" section.
+- **Demo seed:** a super admin (`super@demo.test`), fictional contact details, and a sample notice written but switched off.
+
+### Verified
+
+- API: **265 unit and 344 integration tests** in total, all passing.
+- **Exit criterion:** the sweep reads every admin route from the running application (more than 80) and checks that each declares a permission and refuses an anonymous caller (401), a member (403) and an administrator without two-step verification (403). That an administrator in a verified session gets through is tested per screen.
+- Playwright (Chromium, local): the three **exit tests** pass (dashboard → disable an account → audit log → give a role; settings shown on every page; the member dashboard with its "Coming soon" actions), with axe WCAG 2.2 AA checks on every page they visit. The whole suite was run: 89 of 90 passed, and the one failure (an older events test) was fixed and re-run.
+
+### Deviations and findings
+
+- **No `GET /me/dashboard`.** The member dashboard is put together in the page from the routes that already exist (membership, notifications, events, news, education), so each part follows the same access rules as its own page and nothing is duplicated.
+- **Roles are given and removed with two POST routes**, each carrying a reason, instead of a DELETE.
+- **Removing a role ends the person's sessions**, so nothing stays open under the old role.
+- **A new access rule, `@RequireAnyPermission`,** for the dashboard: it is open to anyone who works in the admin area. The deny-by-default check and the sweep know it.
+- **The admin area now opens on the dashboard** for everyone, where it used to jump to the person's first screen. Two older browser tests were updated.
+- **Fixed on the way (from M5):** the venue check-in page could send its request twice and then show "already recorded" for a first check-in. It now sends it once.
+- **A locked account answers a sign-in like a wrong password** (so nobody learns it is locked); the accounts screen is where an admin sees the lock.
+- **The dashboard's numbers are counted when the page opens.** No charts and no history.
+- **The demo notice is switched off** in the seed; switch it on in Settings to see it.
+
+### Open for the owner
+
+- **Checkpoint test of the demo** (still open): now M1 to M8. For M8: `/admin` as `admin@demo.test`; an account page and the audit log; roles and Settings as `super@demo.test`; the home page as `member.full@demo.test`.
+- **Review the ten sample exam questions** at `/admin/education/questions` (still open from M6).
+- Merge pull request #10 when satisfied.
 
 ## Next step
 
-The owner's checkpoint test. After it and the merge of M7: the plan for **M8** (admin portal completion and dashboard), written and approved before any code.
+The owner's checkpoint test. After it and the merge of M8: the plan for **M9** (pitch readiness: accessibility audit, performance, security scan, demo script), written and approved before any code.

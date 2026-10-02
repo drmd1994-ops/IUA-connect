@@ -1,0 +1,256 @@
+{
+  "home": {
+    "greeting": "ברוכים השבים",
+    "membership": {
+      "title": "החברות שלי",
+      "active": "{type}: פעילה עד {date}.",
+      "SUSPENDED": "{type}: מושעית.",
+      "EXPIRED": "{type}: פקעה בתאריך {date}.",
+      "none": "עדיין אין לך חברות.",
+      "apply": "הגשת בקשת חברות",
+      "open": "פתיחת החברות שלי",
+      "card": "כרטיס החבר שלי"
+    },
+    "notifications": {
+      "title": "התראות",
+      "empty": "אין חדש.",
+      "all": "כל ההתראות"
+    },
+    "events": {
+      "title": "אירועים קרובים",
+      "empty": "אין אירועים קרובים.",
+      "registered": "נרשמת",
+      "cancelled": "בוטל",
+      "all": "כל האירועים"
+    },
+    "news": {
+      "title": "חדשות",
+      "empty": "עדיין אין חדשות.",
+      "all": "כל החדשות"
+    },
+    "education": {
+      "title": "הדרכה",
+      "empty": "עדיין אין פריטי הדרכה.",
+      "all": "ספריית ההדרכה"
+    },
+    "actions": {
+      "title": "פעולות מהירות",
+      "findColleague": "חיפוש עמית/ה",
+      "guidelines": "עיון בהנחיות",
+      "exam": "תרגול שאלות מבחן",
+      "search": "חיפוש באתר",
+      "laterTitle": "מתוכנן להמשך",
+      "comingSoon": "בקרוב",
+      "createCase": "יצירת תיאור מקרה",
+      "postResearch": "פרסום מחקר",
+      "askCommunity": "שאלה לקהילה",
+      "openCalculator": "פתיחת מחשבון"
+    }
+  },
+  "footer": {
+    "contact": "יצירת קשר עם האיגוד",
+    "email": "דוא״ל",
+    "phone": "טלפון",
+    "address": "כתובת"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "לוח בקרה",
+      "intro": "מה ממתין, כפי שנספר כשהדף נפתח.",
+      "nothing": "אין כאן כרגע דבר שממתין לך. אפשר להשתמש בלשוניות למעלה.",
+      "applications": {
+        "title": "בקשות חברות",
+        "waitingAssociation": "{count, plural, one {אחת ממתינה לאיגוד} other {# ממתינות לאיגוד}}",
+        "waitingDirector": "{count, plural, one {אחת ממתינה למנהל/ת מחלקה} other {# ממתינות למנהל/ת מחלקה}}",
+        "link": "פתיחת הבקשות"
+      },
+      "members": {
+        "title": "חברים",
+        "active": "{count} פעילים",
+        "suspended": "{count} מושעים",
+        "expired": "{count} שחברותם פקעה",
+        "byType": "חברים פעילים לפי סוג",
+        "link": "פתיחת החברים"
+      },
+      "review": {
+        "title": "ממתין לבדיקה",
+        "news": "{count, plural, one {ידיעה אחת} other {# ידיעות}}",
+        "education": "{count, plural, one {פריט הדרכה אחד} other {# פריטי הדרכה}}",
+        "examQuestions": "{count, plural, one {שאלת מבחן אחת} other {# שאלות מבחן}}"
+      },
+      "broadcasts": {
+        "title": "הודעות לחברים",
+        "waiting": "{count, plural, =0 {אין הודעות שממתינות לאישור} one {אחת ממתינה לאישור} other {# ממתינות לאישור}}",
+        "link": "פתיחת ההודעות"
+      },
+      "events": {
+        "title": "אירועים ב־30 הימים הקרובים",
+        "none": "אין.",
+        "registered": "{count, plural, one {נרשם/ה אחד/ת} other {# נרשמים}}",
+        "more": "{count, plural, one {ועוד אחד} other {ועוד #}}",
+        "link": "פתיחת האירועים"
+      },
+      "accounts": {
+        "title": "חשבונות",
+        "locked": "{count, plural, one {אחד נעול} other {# נעולים}}",
+        "disabled": "{count, plural, one {אחד מושבת} other {# מושבתים}}",
+        "link": "פתיחת החשבונות"
+      }
+    },
+    "users": {
+      "title": "חשבונות",
+      "intro": "כל החשבונות, עם המצב והתפקידים שלהם. החברויות נמצאות בלשונית ״חברים״.",
+      "search": "חיפוש לפי דוא״ל או שם",
+      "searchButton": "חיפוש",
+      "status": "מצב",
+      "role": "תפקיד",
+      "all": "הכול",
+      "rolesLink": "מה כל תפקיד רשאי לעשות",
+      "empty": "אין חשבונות מתאימים.",
+      "total": "{total, plural, one {חשבון אחד} other {# חשבונות}}",
+      "colEmail": "דוא״ל",
+      "colName": "שם",
+      "colStatus": "מצב",
+      "colRoles": "תפקידים",
+      "colTwoStep": "אימות דו־שלבי",
+      "colLastLogin": "כניסה אחרונה",
+      "never": "אף פעם",
+      "yes": "כן",
+      "no": "לא",
+      "noRoles": "אין",
+      "statuses": {
+        "ACTIVE": "פעיל",
+        "LOCKED": "נעול",
+        "DISABLED": "מושבת"
+      },
+      "lockedNow": "נעול כעת",
+      "back": "חזרה לחשבונות",
+      "detail": {
+        "title": "חשבון",
+        "email": "דוא״ל",
+        "verified": "הכתובת אומתה",
+        "notVerified": "הכתובת לא אומתה",
+        "status": "מצב",
+        "lockedUntil": "נעול אחרי ניסיונות כניסה כושלים עד {when}.",
+        "twoStep": "אימות דו־שלבי",
+        "twoStepOn": "מוגדר",
+        "twoStepOff": "לא מוגדר",
+        "lastLogin": "כניסה אחרונה",
+        "created": "נוצר",
+        "sessions": "חיבורים פתוחים",
+        "membership": "חברות",
+        "noMembership": "אין",
+        "membershipLink": "{type}, {status}, עד {date}",
+        "actions": "פעולות",
+        "reason": "סיבה",
+        "reasonHint": "הסיבה נרשמת ביומן הביקורת.",
+        "disable": "השבתת החשבון",
+        "disableHint": "האדם מנותק מיד ואינו יכול להיכנס.",
+        "enable": "הפעלת החשבון",
+        "unlock": "ביטול הנעילה",
+        "endSessions": "ניתוק מכל המכשירים",
+        "done": "בוצע.",
+        "self": "זהו החשבון שלך. מנהל/ת אחר/ת צריך/ה לשנות אותו.",
+        "roles": "תפקידים",
+        "noRoles": "לחשבון הזה אין תפקידים.",
+        "since": "מאז {date}",
+        "scoped": "ניתן במסך בתי החולים",
+        "removeRole": "הסרת {role}",
+        "addRole": "מתן תפקיד",
+        "chooseRole": "בחירת תפקיד",
+        "give": "מתן",
+        "rolesHint": "תפקידים ניתנים ומוסרים על ידי מנהלי־על. תפקיד שדורש אימות דו־שלבי אינו פותח דבר עד שהאדם מגדיר אותו.",
+        "auditLink": "החשבון הזה ביומן הביקורת"
+      },
+      "rolesPage": {
+        "title": "תפקידים",
+        "intro": "התפקידים קבועים. הטבלה מראה מה כל אחד מהם רשאי לעשות.",
+        "role": "תפקיד",
+        "holders": "חשבונות",
+        "twoStep": "דורש אימות דו־שלבי",
+        "scope": "מוגבל ל",
+        "scopes": {
+          "NONE": "הכול",
+          "DEPARTMENT": "מחלקה אחת",
+          "SUBSPECIALTY": "תת־התמחות אחת"
+        },
+        "permissions": "רשאי/ת",
+        "none": "עדיין כלום (היכולות שלו יגיעו בהמשך)"
+      }
+    },
+    "roles": {
+      "SUPER_ADMIN": "מנהל/ת־על",
+      "IUA_ADMIN": "מנהל/ת האיגוד",
+      "CONTENT_EDITOR": "עורך/ת תוכן",
+      "EVENT_ADMIN": "מנהל/ת אירועים",
+      "DEPARTMENT_DIRECTOR": "מנהל/ת מחלקה",
+      "RESEARCH_ADMIN": "מנהל/ת מחקר",
+      "SUBSPECIALTY_ADMIN": "מנהל/ת תת־התמחות",
+      "CME_ADMIN": "מנהל/ת CME"
+    },
+    "permissions": {
+      "users_read": "לראות חשבונות",
+      "users_manage": "להשבית, להפעיל ולבטל נעילה של חשבונות",
+      "roles_manage": "לתת ולהסיר תפקידים",
+      "membership_read": "לראות חברים",
+      "membership_manage": "לנהל חברויות ולייבא חברים",
+      "membership_approve_department": "לאשר בקשות של המחלקה שלו/ה",
+      "membership_approve_final": "לתת את אישור האיגוד לבקשות",
+      "institutions_manage": "לנהל בתי חולים, מחלקות ומנהלים",
+      "news_create": "לכתוב חדשות",
+      "news_review": "לבדוק חדשות",
+      "news_publish": "לפרסם חדשות",
+      "events_manage": "לנהל אירועים",
+      "education_manage": "לכתוב פריטי הדרכה ושאלות מבחן",
+      "education_review": "לבדוק ולפרסם הדרכה",
+      "guidelines_manage": "לנהל הנחיות",
+      "files_upload": "להעלות קבצים",
+      "broadcasts_create": "לכתוב הודעות לחברים",
+      "broadcasts_approve": "לאשר הודעות לחברים",
+      "audit_read": "לקרוא את יומן הביקורת",
+      "settings_manage": "לשנות את הגדרות האתר"
+    },
+    "audit": {
+      "title": "יומן ביקורת",
+      "intro": "מה נעשה, על ידי מי ומתי. אפשר רק לקרוא אותו; אף אחד אינו יכול לשנות או להסיר רשומה. גם הצפייה בו נרשמת.",
+      "action": "מה נעשה",
+      "actionHint": "למשל account.disable, או account. לכל הפעולות על חשבונות.",
+      "actor": "מי",
+      "actorHint": "חלק מכתובת דוא״ל.",
+      "entityType": "על איזה סוג דבר",
+      "entityId": "המזהה שלו",
+      "from": "מתאריך",
+      "to": "עד תאריך",
+      "filter": "סינון",
+      "clear": "ניקוי",
+      "empty": "אין רשומות מתאימות.",
+      "total": "{total, plural, one {רשומה אחת} other {# רשומות}}",
+      "colWhen": "מתי",
+      "colWho": "מי",
+      "colWhat": "מה",
+      "colOn": "על מה",
+      "colFrom": "מכתובת",
+      "colDetails": "פרטים",
+      "system": "המערכת",
+      "unknownActor": "חשבון שנמחק",
+      "noDetails": "אין"
+    },
+    "settings": {
+      "title": "הגדרות",
+      "intro": "מה שמבקרים רואים בכל דף.",
+      "contact": "פרטי הקשר של האיגוד",
+      "contactHint": "מוצגים בתחתית כל דף. שדה ריק אינו מוצג.",
+      "email": "דוא״ל",
+      "phone": "טלפון",
+      "addressHe": "כתובת בעברית",
+      "addressEn": "כתובת באנגלית",
+      "notice": "הודעה בראש כל דף",
+      "noticeEnabled": "הצגת ההודעה",
+      "noticeHe": "ההודעה בעברית",
+      "noticeEn": "ההודעה באנגלית",
+      "noticeHint": "הודעה קצרה, למשל מועד תחזוקה מתוכנן. כשאין נוסח באנגלית, קוראי האנגלית רואים את הנוסח העברי.",
+      "save": "שמירה",
+      "saved": "נשמר."
+    }
+  }
+}

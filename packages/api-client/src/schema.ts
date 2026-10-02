@@ -2084,6 +2084,214 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminDashboardController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AccountsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AccountsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountsController_disable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountsController_enable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountsController_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/sessions/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountsController_endSessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountsController_grantRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{id}/roles/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountsController_removeRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RolesController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/audit-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AuditLogController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminSettingsController_get"];
+        put: operations["AdminSettingsController_set"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings/public": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PublicSettingsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4487,6 +4695,163 @@ export interface components {
             }[];
             page: number;
             pageSize: number;
+        };
+        AdminDashboardDto: {
+            applications: {
+                waitingDirector: number;
+                waitingAssociation: number;
+            } | null;
+            members: {
+                active: number;
+                suspended: number;
+                expired: number;
+                byType: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                    active: number;
+                }[];
+            } | null;
+            review: {
+                news: number | null;
+                education: number | null;
+                examQuestions: number | null;
+            } | null;
+            broadcasts: {
+                waitingApproval: number;
+            } | null;
+            events: {
+                upcoming: {
+                    /** Format: uuid */
+                    id: string;
+                    titleHe: string | null;
+                    titleEn: string | null;
+                    /** Format: date-time */
+                    startAt: string;
+                    registered: number;
+                }[];
+                upcomingTotal: number;
+            } | null;
+            accounts: {
+                locked: number;
+                disabled: number;
+            } | null;
+        };
+        AccountListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                email: string;
+                name: string | null;
+                /** @enum {string} */
+                status: "ACTIVE" | "LOCKED" | "DISABLED";
+                lockedNow: boolean;
+                emailVerified: boolean;
+                roles: string[];
+                twoStep: boolean;
+                lastLoginAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        AccountDto: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            name: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "LOCKED" | "DISABLED";
+            lockedNow: boolean;
+            emailVerified: boolean;
+            roles: string[];
+            twoStep: boolean;
+            lastLoginAt: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            lockedUntil: string | null;
+            openSessions: number;
+            roleGrants: {
+                role: string;
+                scope: string;
+                /** Format: date-time */
+                grantedAt: string;
+                removable: boolean;
+            }[];
+            membership: {
+                /** Format: uuid */
+                id: string;
+                status: string;
+                typeKey: string;
+                endDate: string;
+            } | null;
+        };
+        AccountActionDto: {
+            reason: string;
+        };
+        RoleChangeDto: {
+            role: string;
+            reason: string;
+        };
+        RoleListDto: {
+            items: {
+                key: string;
+                requiresTwoStep: boolean;
+                scope: string;
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "audit.read" | "settings.manage")[];
+                holders: number;
+            }[];
+        };
+        AuditLogListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                at: string;
+                actor: {
+                    /** Format: uuid */
+                    id: string;
+                    email: string | null;
+                } | null;
+                actorIp: string | null;
+                action: string;
+                entityType: string | null;
+                entityId: string | null;
+                changes: {
+                    [key: string]: unknown;
+                } | null;
+                correlationId: string;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        SettingsDto: {
+            contact: {
+                email: "" | string;
+                phone: "" | string;
+                addressHe: string;
+                addressEn: string;
+            };
+            notice: {
+                enabled: boolean;
+                textHe: string;
+                textEn: string;
+            };
+        };
+        PublicSettingsDto: {
+            contact: {
+                email: "" | string;
+                phone: "" | string;
+                addressHe: string;
+                addressEn: string;
+            };
+            notice: {
+                textHe: string;
+                textEn: string;
+            } | null;
         };
     };
     responses: never;
@@ -8246,6 +8611,329 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResultsDto"];
+                };
+            };
+        };
+    };
+    AdminDashboardController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDashboardDto"];
+                };
+            };
+        };
+    };
+    AccountsController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                status?: "ACTIVE" | "LOCKED" | "DISABLED";
+                role?: "SUPER_ADMIN" | "IUA_ADMIN" | "CONTENT_EDITOR" | "EVENT_ADMIN" | "DEPARTMENT_DIRECTOR" | "RESEARCH_ADMIN" | "SUBSPECIALTY_ADMIN" | "CME_ADMIN";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountListDto"];
+                };
+            };
+        };
+    };
+    AccountsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    AccountsController_disable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    AccountsController_enable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    AccountsController_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    AccountsController_endSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    AccountsController_grantRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleChangeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    AccountsController_removeRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoleChangeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDto"];
+                };
+            };
+        };
+    };
+    RolesController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleListDto"];
+                };
+            };
+        };
+    };
+    AuditLogController_list: {
+        parameters: {
+            query?: {
+                action?: string;
+                actor?: string;
+                entityType?: string;
+                entityId?: string;
+                from?: string;
+                to?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditLogListDto"];
+                };
+            };
+        };
+    };
+    AdminSettingsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsDto"];
+                };
+            };
+        };
+    };
+    AdminSettingsController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsDto"];
+                };
+            };
+        };
+    };
+    PublicSettingsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSettingsDto"];
                 };
             };
         };

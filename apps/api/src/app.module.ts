@@ -15,6 +15,7 @@ import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
 import { StorageModule } from './infra/storage/storage.module';
 import { AuditModule } from './modules/audit';
 import { AccessModule } from './modules/access';
+import { AdminModule } from './modules/admin';
 import { AuthModule } from './modules/auth';
 import { EducationModule } from './modules/education';
 import { EventsModule } from './modules/events';
@@ -68,6 +69,7 @@ export class AppModule {
         EducationModule,
         NotificationsModule,
         SearchModule,
+        AdminModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };
