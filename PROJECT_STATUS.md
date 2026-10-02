@@ -1,14 +1,14 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-02_
+_Last updated: 2026-10-02 (M9)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). Next: M9 Pitch readiness; the plan was approved on 2026-10-02 and the work is under way on `feat/pitch-readiness`. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: built on `feat/pitch-readiness` (pull request #11), waiting for the owner's walk-through and screen-reader check** before it is merged. |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
-| Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, not pushed; the owner pushes). |
+| Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
 | Team                      | 1 developer now; planned 2–3                                                                                                                                                                                         |
 | Dev environment           | Windows, native (no Docker). PostgreSQL 16.10, portable install (`C:\Users\PC\tools\pgsql`, data `C:\Users\PC\pgdata`, started with `pg_ctl`, not a Windows service). Node 24.21.0 LTS, portable (`C:\Users\PC\tools\node-v24.21.0-win-x64`, on the user PATH), with pnpm 10.34.5. Node 22.23 remains on disk but is no longer on PATH. |
@@ -483,6 +483,63 @@ No new libraries.
 - **Review the ten sample exam questions** at `/admin/education/questions` (still open from M6).
 - ~~Merge pull request #10~~ merged at the owner's request on 2026-10-02 (CI green).
 
+## M9 Pitch readiness (2026-10-02)
+
+Plan: [`docs/plans/M9-pitch-readiness.md`](docs/plans/M9-pitch-readiness.md), approved by the owner on 2026-10-02. Owner decisions (plan §9):
+
+- **Two-step verification in the pitch:** one fixed authenticator secret for the demo staff accounts, kept in `.env`, not in the repository.
+- **Screen-reader check:** the owner does it, with a checklist.
+- **Security scan:** in CI on GitHub (one pinned action, `zaproxy/action-baseline`, approved).
+- **Measuring speed:** Lighthouse from the command line (`npx`, not added to the project).
+
+No new libraries in the application.
+
+**State: the work is done except the two steps that are the owner's** (the screen-reader check and the walk-through). The milestone is not closed until they are.
+
+### Delivered
+
+- **`pnpm demo:reset`:** rebuilds the demo from nothing (database, seed, outbox, uploaded files) and sets up two-step verification for the demo staff with one shared authenticator entry. It asks for the database name before deleting, and refuses anything but the development database on this machine.
+- **Demo script** (`docs/demo/DEMO_SCRIPT.md`): a 15-minute walk-through and a 5-minute one, with the accounts to use and what to do when something goes wrong.
+- **Accessibility:** an audit of every page in both languages (axe, keyboard, 320 px width), the fixes it led to, an accessibility statement at `/accessibility`, and a checklist for the screen-reader check (`docs/demo/NVDA_CHECKLIST.md`).
+- **Performance** (`docs/demo/PERFORMANCE.md`): measured before and after. A third less script on every page, layout jumps removed, and an index for the audit log page.
+- **Security scan:** the OWASP ZAP baseline runs in CI on every change (`docs/security/ZAP_BASELINE.md`). One finding fixed, six accepted with reasons.
+- **Known limitations** (`docs/demo/KNOWN_LIMITATIONS.md`): what is demo-only, what is not reviewed, what is not built, what is rough, and the decisions waiting for the association.
+- **Documents brought in line with the code:** README (a pitch section first), HANDOFF, ARCHITECTURE, API_DESIGN, DATABASE_DESIGN, DEPLOYMENT (a readiness checklist with an owner for each line), TESTING, SECURITY_MODEL.
+- **Seeded texts read through** in Hebrew and English; three slips corrected.
+
+### Verified
+
+- **CI is green on the branch** (run 37050661686, commit `801bc9d`): lint, type check, unit, integration, the browser suite, the secret and dependency scan, the ZAP scan and the build.
+- API: **271 unit and 344 integration tests**, all passing. Browser suite (Chromium, production builds): **97 tests**, all passing, including the accessibility audit.
+- **Accessibility audit:** no WCAG 2.2 AA violations (axe) on every member page and every admin page in Hebrew and English; every control reachable by keyboard with a visible focus; no sideways scrolling at 320 px.
+- **ZAP baseline:** the site (51 addresses) and the API (7 addresses): no failures and no warnings, with six accepted rules listed and explained.
+- **Lighthouse** (mobile, simulated slow 4G, production builds, one run per page, on this computer): the before and after table is in `docs/demo/PERFORMANCE.md`.
+- **`pnpm demo:reset`:** run from start to finish on a scratch database (since removed), and the demo script was walked through on that reset database. Its safety check has unit tests.
+- **Not verified by anyone yet:** how the site sounds with a screen reader, and `pnpm demo:reset` on the real development database.
+
+### Deviations and findings
+
+- **The speed target is met only in part.** Layout jumps and blocking are within the targets on every public page. The main content appears at about 3.0 s on Lighthouse's simulated slow phone (the article at 3.5 s), against a target of 2.5 s; before the work it was 3.0 to 3.9 s. On the computer itself it is 0.1 to 0.25 s. The fix is to have the server send public pages complete, which changes how every public page is built; it was not in the plan and is proposed as the first task after the pitch.
+- **Caching headers on public API answers were not added**, although the plan listed them as a possible fix: they don't help a first visit, and the same addresses answer differently for members.
+- **Planned "interface only" items were never created, and no earlier milestone recorded it.** The planning documents (decisions D2, D4, D8 and D13, and the architecture's adapter table) said that the `payments` and `invoices` tables and the `PaymentProvider`, `VideoProvider`, `PushProvider`, `IdentityProvider` and `MembershipSource` interfaces would exist in the MVP. None do. The documents now say so; nothing was built in M9, because it is not in the M9 plan. **The owner decides** whether to add them now or with the feature that needs each one (see "Open for the owner").
+- **An index was missing for the audit log page** (newest first). Found with `EXPLAIN`, added as a migration.
+- **"Not found" pages for file-like addresses had no Content-Security-Policy.** Found by the scan, fixed.
+- **`pnpm demo:reset` was run on a scratch database, not on the development database.** Emptying the development database is the owner's to do; the first real run is theirs.
+- **The older `pnpm db:reset` was not checked.** Prisma refuses to let an AI agent run it without the owner's consent. Use `pnpm demo:reset`.
+- **The demo's department directors are fictional people at real hospitals** (Rambam, Sheba), as decided in M2. In a pitch, say that they are invented.
+- **The remaining layout jump (0.031 on every page)** is under the limit; its cause was not tracked down.
+
+### Open for the owner
+
+1. **Run `pnpm demo:reset` and walk through the demo from the script** (`docs/demo/DEMO_SCRIPT.md`). This is the milestone's checkpoint test, and it replaces the earlier open "checkpoint test of the demo, M1 to M8".
+2. **The screen-reader check** with `docs/demo/NVDA_CHECKLIST.md` (about an hour). The accessibility statement says it has not been done; it is updated with what you find.
+3. **Review the ten sample exam questions** at `/admin/education/questions` (open since M6). Nothing medical is shown until you publish them.
+4. **Decide about the "interface only" items** above: build the payment tables and the five interfaces now, or leave each to its feature.
+5. **Confirm the "who" column** of the readiness checklist in `DEPLOYMENT.md`.
+6. **Merge pull request #11** when you are satisfied.
+
 ## Next step
 
-**M9 Pitch readiness:** the plan [`docs/plans/M9-pitch-readiness.md`](docs/plans/M9-pitch-readiness.md) was approved by the owner on 2026-10-02; the work is under way on `feat/pitch-readiness`. The owner's checkpoint test of the demo and the review of the ten sample exam questions are still open.
+**M9 is waiting for the owner:** run `pnpm demo:reset`, walk through `docs/demo/DEMO_SCRIPT.md`, do the screen-reader check, then merge pull request #11. With that the MVP (M0 to M9) is complete.
+
+**After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
