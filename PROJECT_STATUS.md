@@ -533,7 +533,7 @@ No new libraries in the application.
 
 1. **Run `pnpm demo:reset` and walk through the demo from the script** (`docs/demo/DEMO_SCRIPT.md`). This is the milestone's checkpoint test, and it replaces the earlier open "checkpoint test of the demo, M1 to M8".
 2. **The screen-reader check** with `docs/demo/NVDA_CHECKLIST.md` (about an hour). The accessibility statement says it has not been done; it is updated with what you find.
-3. **Review the ten sample exam questions** at `/admin/education/questions` (open since M6). Nothing medical is shown until you publish them.
+3. ~~Review the ten sample exam questions~~ **Done 2026-10-02:** the owner (a urologist) read the ten questions and found them fine. The seed still loads them waiting for review, so after each `pnpm demo:reset` they are unpublished until someone publishes them at `/admin/education/questions`; whether the seed should load them published is the owner's decision.
 4. **Decide about the "interface only" items** above: build the payment tables and the five interfaces now, or leave each to its feature.
 5. **Confirm the "who" column** of the readiness checklist in `DEPLOYMENT.md`.
 6. **Merge pull request #11** when you are satisfied.

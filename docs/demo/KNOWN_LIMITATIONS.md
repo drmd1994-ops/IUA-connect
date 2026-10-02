@@ -21,7 +21,7 @@ Last updated: 2 October 2026 (end of the MVP, milestones M0 to M9).
 - **No legal review.** There are no terms of use and no privacy notice yet, and the wording of the directory consent was written by the developer, not by a lawyer. Israeli privacy law (and the Privacy Protection Authority's rules on notifying about incidents) needs a professional reading.
 - **No penetration test.** A passive scan (OWASP ZAP baseline) runs on every change; nobody has tried to break in.
 - **No screen-reader check by a person yet.** Automated accessibility checks, keyboard checks and narrow-screen checks pass on every page. The NVDA check is prepared (`NVDA_CHECKLIST.md`). The accessibility statement on the site says this.
-- **The ten sample exam questions were written by an AI system, not by a urologist.** They are loaded unpublished. Each must be read and corrected by a urologist before a member sees it.
+- **The ten sample exam questions were written by an AI system and checked by one urologist** (the project owner, on 2 October 2026, who found them fine). They are loaded unpublished and shown only after an administrator publishes them. Before real members rely on them, the association should name who reviews medical content.
 - **No load test.** It has only been used by one person at a time.
 
 ## 3. Not built
