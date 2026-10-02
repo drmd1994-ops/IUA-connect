@@ -10,6 +10,7 @@ import { type PermissionKey } from '@iua/shared';
 import {
   IS_AUTHENTICATED_KEY,
   IS_PUBLIC_KEY,
+  ANY_PERMISSIONS_KEY,
   PERMISSIONS_KEY,
 } from '../decorators/access.decorators';
 import { AppException } from '../errors/app.exception';
@@ -20,6 +21,7 @@ import { PrincipalResolver, type RequestWithPrincipal } from '../auth/principal'
  * - @Public()                → allowed;
  * - @Authenticated()         → 401 without a valid session;
  * - @RequirePermission(...)  → 401 without a valid session, 403 unless it holds every permission;
+ * - @RequireAnyPermission(…) → 401 without a valid session, 403 unless it holds one of them;
  * - none of these            → 403. Such a route is also caught by the route-declaration test.
  */
 @Injectable()
@@ -45,7 +47,11 @@ export class PermissionGuard implements CanActivate {
       PERMISSIONS_KEY,
       targets,
     );
-    if (!authenticatedOnly && !required?.length) {
+    const anyOf = this.reflector.getAllAndOverride<PermissionKey[] | undefined>(
+      ANY_PERMISSIONS_KEY,
+      targets,
+    );
+    if (!authenticatedOnly && !required?.length && !anyOf?.length) {
       this.logger.error(
         { handler: `${context.getClass().name}.${context.getHandler().name}` },
         'Route has no access declaration (@Public, @Authenticated or @RequirePermission); denied',
@@ -62,6 +68,9 @@ export class PermissionGuard implements CanActivate {
       throw new AppException('UNAUTHENTICATED');
     }
     if (required?.length && !required.every((key) => principal.permissions.has(key))) {
+      throw new AppException('FORBIDDEN');
+    }
+    if (anyOf?.length && !anyOf.some((key) => principal.permissions.has(key))) {
       throw new AppException('FORBIDDEN');
     }
     return true;

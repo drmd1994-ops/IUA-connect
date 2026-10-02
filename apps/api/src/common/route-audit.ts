@@ -2,6 +2,7 @@ import { RequestMethod } from '@nestjs/common';
 import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
 import { type DiscoveryService, type MetadataScanner, type Reflector } from '@nestjs/core';
 import {
+  ANY_PERMISSIONS_KEY,
   IS_AUTHENTICATED_KEY,
   IS_PUBLIC_KEY,
   PERMISSIONS_KEY,
@@ -36,8 +37,11 @@ export function findUndeclaredRoutes(
       const targets = [handler, metatype];
       const isPublic = reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, targets);
       const isAuthenticated = reflector.getAllAndOverride<boolean>(IS_AUTHENTICATED_KEY, targets);
-      const permissions = reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets);
-      if (!isPublic && !isAuthenticated && !permissions?.length) {
+      const permissions = [
+        ...(reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets) ?? []),
+        ...(reflector.getAllAndOverride<string[]>(ANY_PERMISSIONS_KEY, targets) ?? []),
+      ];
+      if (!isPublic && !isAuthenticated && !permissions.length) {
         undeclared.push({ controller: metatype.name, handler: methodName });
       }
     }
@@ -77,7 +81,8 @@ export function listRoutes(
       const targets = [handler, metatype];
       const access = reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, targets)
         ? 'public'
-        : reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets)?.length
+        : reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets)?.length ||
+            reflector.getAllAndOverride<string[]>(ANY_PERMISSIONS_KEY, targets)?.length
           ? 'permission'
           : reflector.getAllAndOverride<boolean>(IS_AUTHENTICATED_KEY, targets)
             ? 'authenticated'
