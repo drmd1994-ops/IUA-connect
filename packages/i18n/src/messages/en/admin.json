@@ -2,6 +2,7 @@
   "title": "Administration",
   "navLabel": "Administration sections",
   "nav": {
+    "dashboard": "Dashboard",
     "applications": "Applications",
     "members": "Members",
     "institutions": "Hospitals and directors",
@@ -10,7 +11,10 @@
     "guidelines": "Guidelines",
     "events": "Events",
     "education": "Education",
-    "broadcasts": "Messages"
+    "broadcasts": "Messages",
+    "users": "Accounts",
+    "audit": "Audit log",
+    "settings": "Settings"
   },
   "notAllowed": "This area is for association administrators, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",

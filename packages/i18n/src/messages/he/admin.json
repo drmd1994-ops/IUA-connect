@@ -2,6 +2,7 @@
   "title": "ניהול",
   "navLabel": "אזורי ניהול",
   "nav": {
+    "dashboard": "לוח בקרה",
     "applications": "בקשות",
     "members": "חברים",
     "institutions": "בתי חולים ומנהלים",
@@ -10,7 +11,10 @@
     "guidelines": "הנחיות קליניות",
     "events": "אירועים",
     "education": "הדרכה",
-    "broadcasts": "הודעות"
+    "broadcasts": "הודעות",
+    "users": "חשבונות",
+    "audit": "יומן ביקורת",
+    "settings": "הגדרות"
   },
   "notAllowed": "האזור מיועד למנהלי האיגוד, בחיבור עם אימות דו־שלבי.",
   "setUpMfa": "הגדרת אימות דו־שלבי",

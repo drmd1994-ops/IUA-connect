@@ -124,6 +124,7 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `editor@demo.test`                                         | Content editor: writes news, education items and exam questions     |
 | `events@demo.test`                                         | Event admin: creates events, sees registrations and attendance (M5) |
 | `admin2@demo.test`                                         | A second IUA admin, so a message to members can be approved (M7)    |
+| `super@demo.test`                                          | Super admin: gives and removes roles, changes the settings (M8)     |
 
 The admins, the directors, the editor and the event admin must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
 
@@ -138,6 +139,9 @@ The admins, the directors, the editor and the event admin must set up two-step v
 - **Member directory (M7):** `/members`, for members with an active membership. A member joins from **My profile**; the seed lists three demo members showing different fields.
 - **Search (M7):** the field in the header, or `/search`. Try a Hebrew word with a prefix, for example "בכנס".
 - On a database seeded before M7, run `pnpm db:seed` again.
+- **Admin portal (M8):** `/admin` opens on a dashboard of what is waiting. **Accounts** lists every account (disable, enable, unlock, sign out everywhere; each with a reason). **Audit log** shows what was done, by whom and when. As `super@demo.test`: roles are given and removed on an account's page, and **Settings** holds the contact details in the footer and a notice banner (written by the seed, switched off).
+- **Member dashboard (M8):** after sign-in the home page shows the member's membership, new notifications, upcoming events, news, education and quick actions. Features planned for later appear as "Coming soon" and can't be used.
+- On a database seeded before M8, run `pnpm db:seed` again.
 - **CSV import:** `/admin/import` takes a file with the header `email,first_name,last_name,membership_type[,identifier,end_date,payment_status,locale]`. Run the dry run first, then apply the same file.
 
 ### Troubleshooting

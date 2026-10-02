@@ -17,14 +17,21 @@ const ADMIN_PERMISSIONS = [
   'events.manage',
   'education.manage',
   'broadcasts.create',
+  'users.read',
+  'audit.read',
+  'settings.manage',
 ];
 
 export function isAdmin(me: Me | null): boolean {
   return !!me && me.permissions.some((permission) => ADMIN_PERMISSIONS.includes(permission));
 }
 
-/** Each section and the permission that opens it (content editors see only News). */
+/**
+ * Each section and the permission that opens it (content editors see only News). The dashboard
+ * is for everyone in the admin area: it shows each person their own part.
+ */
 export const ADMIN_SECTIONS = [
+  { href: '/admin', key: 'dashboard', permission: null },
   { href: '/admin/applications', key: 'applications', permission: 'membership.approve.final' },
   { href: '/admin/members', key: 'members', permission: 'membership.read' },
   { href: '/admin/institutions', key: 'institutions', permission: 'institutions.manage' },
@@ -34,6 +41,9 @@ export const ADMIN_SECTIONS = [
   { href: '/admin/events', key: 'events', permission: 'events.manage' },
   { href: '/admin/education', key: 'education', permission: 'education.manage' },
   { href: '/admin/broadcasts', key: 'broadcasts', permission: 'broadcasts.create' },
+  { href: '/admin/users', key: 'users', permission: 'users.read' },
+  { href: '/admin/audit', key: 'audit', permission: 'audit.read' },
+  { href: '/admin/settings', key: 'settings', permission: 'settings.manage' },
 ] as const;
 
 /**
@@ -50,10 +60,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <PageFrame wide>
             <nav aria-label={t('navLabel')} className="border-b border-border">
               <ul className="flex flex-wrap gap-1">
-                {ADMIN_SECTIONS.filter((section) =>
-                  me.permissions.includes(section.permission),
+                {ADMIN_SECTIONS.filter(
+                  (section) =>
+                    section.permission === null || me.permissions.includes(section.permission),
                 ).map((section) => {
-                  const current = pathname.startsWith(section.href);
+                  const current =
+                    section.href === '/admin'
+                      ? pathname === '/admin'
+                      : pathname.startsWith(section.href);
                   return (
                     <li key={section.key}>
                       <Link

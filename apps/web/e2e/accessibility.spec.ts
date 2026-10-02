@@ -42,6 +42,11 @@ const PAGES = [
   '/account/notifications/preferences',
   '/notifications/unsubscribe',
   '/admin/broadcasts',
+  // M8 (the signed-in views are checked in admin-portal.spec.ts)
+  '/admin/users',
+  '/admin/users/roles',
+  '/admin/audit',
+  '/admin/settings',
 ];
 
 for (const locale of ['he', 'en'] as const) {

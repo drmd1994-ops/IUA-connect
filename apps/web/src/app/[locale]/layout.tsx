@@ -13,6 +13,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { DemoBanner } from '@/components/demo-banner';
 import { AuthProvider } from '@/features/auth/auth-context';
+import { SiteNotice, SiteSettingsProvider } from '@/features/site/site-settings';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { routing } from '@/i18n/routing';
@@ -56,6 +57,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     notifications,
     directory,
     search,
+    portal,
   } = getMessages(locale);
 
   return (
@@ -80,15 +82,19 @@ export default async function LocaleLayout({ children, params }: Props) {
             notifications,
             directory,
             search,
+            portal,
           }}
         >
           <AuthProvider>
-            <DemoBanner />
-            <SiteHeader />
-            <main id="main" className="flex-1">
-              {children}
-            </main>
-            <SiteFooter />
+            <SiteSettingsProvider>
+              <DemoBanner />
+              <SiteNotice />
+              <SiteHeader />
+              <main id="main" className="flex-1">
+                {children}
+              </main>
+              <SiteFooter />
+            </SiteSettingsProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

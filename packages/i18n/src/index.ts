@@ -9,6 +9,7 @@ import enEvents from './messages/en/events.json';
 import enDirectory from './messages/en/directory.json';
 import enMembership from './messages/en/membership.json';
 import enNotifications from './messages/en/notifications.json';
+import enPortal from './messages/en/portal.json';
 import enSearch from './messages/en/search.json';
 import heAdmin from './messages/he/admin.json';
 import heAuth from './messages/he/auth.json';
@@ -21,6 +22,7 @@ import heEvents from './messages/he/events.json';
 import heDirectory from './messages/he/directory.json';
 import heMembership from './messages/he/membership.json';
 import heNotifications from './messages/he/notifications.json';
+import hePortal from './messages/he/portal.json';
 import heSearch from './messages/he/search.json';
 
 /**
@@ -56,6 +58,7 @@ export type Messages = {
   notifications: typeof heNotifications;
   directory: typeof heDirectory;
   search: typeof heSearch;
+  portal: typeof hePortal;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -72,6 +75,7 @@ const MESSAGES: Record<Locale, Messages> = {
     notifications: heNotifications,
     directory: heDirectory,
     search: heSearch,
+    portal: hePortal,
   },
   en: {
     common: enCommon,
@@ -86,6 +90,7 @@ const MESSAGES: Record<Locale, Messages> = {
     notifications: enNotifications,
     directory: enDirectory,
     search: enSearch,
+    portal: enPortal,
   },
 };
 

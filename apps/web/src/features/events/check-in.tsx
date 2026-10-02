@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
@@ -31,16 +31,20 @@ function Recording({ slug, token }: { slug: string; token: string }) {
   const [result, setResult] = useState<'done' | 'already' | null>(null);
   const [error, setError] = useState<unknown>(null);
 
+  // The code is sent once. A second request for the same code would answer "already recorded"
+  // and could replace the first answer on the screen (effects run twice in development, and
+  // again whenever the session is refreshed).
+  const sent = useRef<string | null>(null);
+
   useEffect(() => {
-    let active = true;
+    const key = `${slug}|${token}`;
+    if (sent.current === key) return;
+    sent.current = key;
     call(() =>
       api.POST('/api/v1/events/{slug}/check-in', { params: { path: { slug } }, body: { token } }),
     )
-      .then((response) => active && setResult(response.recorded ? 'done' : 'already'))
-      .catch((caught: unknown) => active && setError(caught));
-    return () => {
-      active = false;
-    };
+      .then((response) => setResult(response.recorded ? 'done' : 'already'))
+      .catch((caught: unknown) => setError(caught));
   }, [api, call, slug, token]);
 
   return (

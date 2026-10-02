@@ -93,9 +93,11 @@ test('editor writes → reviewer schedules → the article appears; members-only
   const reviewerEmail = uniqueEmail('m3-reviewer');
   await signInAndAddPasskey(reviewer, reviewerEmail, createAdmin(reviewerEmail));
 
-  // The editor sees only News in the admin area, and writes two articles.
+  // The editor's admin area has the dashboard and their own screens, not Members.
   await editor.goto('/en/admin');
-  await expect(editor).toHaveURL(/\/en\/admin\/news$/);
+  await expect(editor.getByRole('heading', { name: 'Dashboard', level: 1 })).toBeVisible();
+  const adminNav = editor.getByRole('navigation', { name: 'Administration sections' });
+  await expect(adminNav.getByRole('link', { name: 'News', exact: true })).toBeVisible();
   await expect(editor.getByRole('link', { name: 'Members', exact: true })).toHaveCount(0);
   await editor.goto('/en/admin/news/new');
   await expectAccessible(editor);
