@@ -1,2 +1,8 @@
 # ZAP baseline rules: <rule id>	<IGNORE|WARN|FAIL>	<reason>. Every IGNORE is explained in
 # docs/security/ZAP_BASELINE.md. A rule that is not listed fails the scan when it warns.
+10010	IGNORE	(Cookie No HttpOnly Flag) NEXT_LOCALE holds only "he" or "en"; the session cookie is HttpOnly and tested
+10019	IGNORE	(Content-Type Header Missing) only on redirects, which have no body
+10049	IGNORE	(Non-Storable Content) informational; pages are per-request because of the CSP nonce
+10055	IGNORE	(CSP: style-src unsafe-inline) accepted and documented; scripts stay nonce-only
+10109	IGNORE	(Modern Web Application) informational
+90004	IGNORE	(Cross-Origin-Embedder-Policy) not needed: no cross-origin isolation features are used
