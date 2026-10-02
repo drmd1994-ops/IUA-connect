@@ -2068,6 +2068,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SearchController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4454,6 +4470,23 @@ export interface components {
             locale: "he" | "en";
             /** Format: date-time */
             sentAt: string;
+        };
+        SearchResultsDto: {
+            groups: {
+                /** @enum {string} */
+                type: "news" | "events" | "education" | "guidelines" | "members";
+                total: number;
+                items: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    excerpt: string | null;
+                    link: string;
+                    locale: string;
+                }[];
+            }[];
+            page: number;
+            pageSize: number;
         };
     };
     responses: never;
@@ -8189,6 +8222,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BroadcastMessageDto"];
+                };
+            };
+        };
+    };
+    SearchController_search: {
+        parameters: {
+            query: {
+                q: string;
+                types?: string;
+                locale?: "he" | "en";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResultsDto"];
                 };
             };
         };

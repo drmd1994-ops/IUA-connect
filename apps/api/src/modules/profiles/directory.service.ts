@@ -132,6 +132,32 @@ export class DirectoryService implements OnModuleInit {
     };
   }
 
+  /**
+   * Listed members by name, for the global search. The caller has already checked that the
+   * person searching is an active member.
+   */
+  async find(
+    q: string,
+    limit: number,
+    offset: number,
+  ): Promise<{ items: ReturnType<typeof summary>[]; total: number }> {
+    const where: Prisma.ProfileWhereInput = {
+      ...this.listed(),
+      userId: { in: await this.matching(q) },
+    };
+    const [rows, total] = await Promise.all([
+      this.prisma.profile.findMany({
+        where,
+        include: INCLUDE,
+        orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }, { userId: 'asc' }],
+        skip: offset,
+        take: Math.min(limit, DIRECTORY_PAGE_SIZE),
+      }),
+      this.prisma.profile.count({ where }),
+    ]);
+    return { items: rows.map((row) => summary(row)), total };
+  }
+
   // --- Consent --------------------------------------------------------------------------------
 
   async consents(userId: string): Promise<ConsentsDto> {

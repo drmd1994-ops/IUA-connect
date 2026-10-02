@@ -26,6 +26,7 @@ import { MembershipModule } from './modules/membership';
 import { NewsModule } from './modules/news';
 import { NotificationsModule } from './modules/notifications';
 import { ProfilesModule } from './modules/profiles';
+import { SearchModule } from './modules/search';
 
 /**
  * Global request pipeline (ARCHITECTURE.md §3): guards → pipes → handler → interceptors → filter.
@@ -66,6 +67,7 @@ export class AppModule {
         EventsModule,
         EducationModule,
         NotificationsModule,
+        SearchModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };
