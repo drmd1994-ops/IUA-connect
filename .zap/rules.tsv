@@ -1,0 +1,2 @@
+# ZAP baseline rules: <rule id>	<IGNORE|WARN|FAIL>	<reason>. Every IGNORE is explained in
+# docs/security/ZAP_BASELINE.md. A rule that is not listed fails the scan when it warns.
