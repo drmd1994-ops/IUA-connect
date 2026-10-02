@@ -40,6 +40,18 @@ describe('parseEnv', () => {
     expect(problems).toContain('RATE_LIMIT_STORE');
   });
 
+  it('keeps the rate limits unscaled by default, and refuses a scale in production', () => {
+    expect(parseEnv(valid).RATE_LIMIT_SCALE).toBe(1);
+    expect(parseEnv({ ...valid, RATE_LIMIT_SCALE: '10' }).RATE_LIMIT_SCALE).toBe(10);
+    expect(parseError({ ...valid, RATE_LIMIT_SCALE: '0' }).message).toContain('RATE_LIMIT_SCALE');
+    const problems = parseError({
+      ...valid,
+      NODE_ENV: 'production',
+      RATE_LIMIT_SCALE: '10',
+    }).problems.join('\n');
+    expect(problems).toContain('RATE_LIMIT_SCALE');
+  });
+
   it('rejects adapters that are not implemented', () => {
     expect(parseError({ ...valid, MALWARE_SCANNER: 'clamav' }).message).toContain(
       'MALWARE_SCANNER',

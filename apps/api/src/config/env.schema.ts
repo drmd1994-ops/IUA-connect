@@ -82,6 +82,12 @@ export const envSchema = z
     MAILER_ADAPTER: z.enum(['console']).default('console'),
     MALWARE_SCANNER: z.enum(['noop']).default('noop'),
     RATE_LIMIT_STORE: z.enum(['memory']).default('memory'),
+    /**
+     * Multiplies every rate limit. 1 everywhere people use the app; the browser test suite sets
+     * it higher, because it signs in dozens of times a minute from one address. Must be 1 in
+     * production.
+     */
+    RATE_LIMIT_SCALE: z.coerce.number().int().min(1).max(100).default(1),
     /** pgboss: jobs run on schedule (ADR 0003). manual: only when triggered (tests, tools). */
     JOB_QUEUE: z.enum(['pgboss', 'manual']).default('pgboss'),
 
@@ -133,6 +139,13 @@ export const envSchema = z
         code: 'custom',
         path: ['WEBAUTHN_RP_ID'],
         message: 'passkeys need the real domain in production, not localhost',
+      });
+    }
+    if (env.RATE_LIMIT_SCALE !== 1) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['RATE_LIMIT_SCALE'],
+        message: "rate limits can't be scaled in production",
       });
     }
     for (const key of ['JWT_KEY_ID', 'FIELD_ENCRYPTION_KEY_ID'] as const) {
