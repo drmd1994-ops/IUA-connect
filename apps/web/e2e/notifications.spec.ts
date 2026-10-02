@@ -247,7 +247,7 @@ test('a member joins the directory; another member finds people by name in Hebre
 test('a visitor searches in Hebrew from the header and opens a result', async ({ browser }) => {
   const visitor = await newPage(browser);
   await visitor.goto('/he');
-  await visitor.getByLabel('חיפוש באתר').fill('בכנס');
+  await visitor.getByRole('searchbox', { name: 'חיפוש באתר' }).fill('בכנס');
   await visitor.getByRole('banner').getByRole('button', { name: 'חיפוש', exact: true }).click();
   await expect(visitor).toHaveURL(/\/he\/search\?q=/);
   const news = visitor.getByTestId('search-group-news');

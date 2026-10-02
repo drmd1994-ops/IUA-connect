@@ -27,7 +27,7 @@ export function TextField({
   const ltr = ['email', 'password', 'tel'].includes(type) || rest.inputMode === 'numeric';
 
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
+    <div className={`flex min-w-0 flex-col gap-1.5 ${className}`}>
       <label htmlFor={inputId} className="font-semibold text-text">
         {label}
       </label>
@@ -43,7 +43,7 @@ export function TextField({
         dir={ltr ? 'ltr' : undefined}
         aria-invalid={errors.length ? true : undefined}
         aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
-        className={`rounded-md border bg-surface px-3 py-2.5 text-base text-text ${
+        className={`min-w-0 rounded-md border bg-surface px-3 py-2.5 text-base text-text ${
           errors.length ? 'border-danger-700' : 'border-neutral-400'
         } ${ltr ? 'text-start' : ''}`}
       />

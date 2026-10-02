@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { isAdmin } from '@/features/admin/admin-shell';
 import { useAuth } from '@/features/auth/auth-context';
 import { Link, useRouter } from '@/i18n/navigation';
@@ -14,6 +14,23 @@ export function AccountMenu() {
   const { status, me, signOut } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // While open: a press or a focus anywhere outside closes it. (Not on blur: some browsers
+  // don't focus a link when it is clicked, and the menu would close before the click arrives.)
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: Event) => {
+      if (!menuRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('focusin', outside);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('focusin', outside);
+    };
+  }, [open]);
 
   if (status === 'loading') return <span className="inline-block w-24" aria-hidden="true" />;
 
@@ -37,16 +54,29 @@ export function AccountMenu() {
   }
 
   return (
-    <div className="relative">
+    // Escape closes the menu and returns the focus to its button; moving the focus out of the
+    // menu (Tab, or a click elsewhere) closes it too, so it never covers what has the focus.
+    <div
+      ref={menuRef}
+      className="relative min-w-0"
+      onKeyDown={(event) => {
+        if (event.key !== 'Escape' || !open) return;
+        setOpen(false);
+        buttonRef.current?.focus();
+      }}
+    >
       <button
+        ref={buttonRef}
         type="button"
         aria-expanded={open}
         aria-controls="account-menu"
         aria-label={`${t('accountMenu')}: ${me.email}`}
         onClick={() => setOpen((value) => !value)}
-        className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-surface-muted"
+        className="max-w-full rounded-md border border-border px-3 py-1.5 text-sm hover:bg-surface-muted"
       >
-        <span dir="ltr">{me.email}</span>
+        <span dir="ltr" className="block max-w-56 truncate">
+          {me.email}
+        </span>
       </button>
       {open && (
         <ul

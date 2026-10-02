@@ -440,7 +440,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
                 type="file"
                 accept="image/jpeg,image/png"
                 onChange={(event) => void addImage(event)}
-                className="text-sm"
+                className="max-w-full text-sm"
               />
             </div>
             {uploading && <p role="status">{e('uploading')}</p>}

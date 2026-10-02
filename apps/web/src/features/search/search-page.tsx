@@ -79,7 +79,12 @@ export function SearchPage({ q, type }: { q: string; type: string | null }) {
         <h1 className="text-3xl font-semibold text-brand-900">{s('title')}</h1>
         <p className="mt-2 text-text-muted">{s('intro')}</p>
       </div>
-      <form role="search" onSubmit={submit} className="flex flex-wrap items-end gap-3">
+      <form
+        role="search"
+        aria-label={s('title')}
+        onSubmit={submit}
+        className="flex flex-wrap items-end gap-3"
+      >
         <TextField
           label={t('search.box.label')}
           type="search"

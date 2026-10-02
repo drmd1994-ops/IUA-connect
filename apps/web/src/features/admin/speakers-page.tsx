@@ -320,7 +320,7 @@ function SpeakerForm({
             type="file"
             accept="image/jpeg,image/png"
             onChange={(e) => void addPhoto(e)}
-            className="text-sm"
+            className="max-w-full text-sm"
           />
         </div>
       </div>

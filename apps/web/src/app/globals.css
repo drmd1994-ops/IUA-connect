@@ -20,6 +20,22 @@
     border-radius: var(--radius-sm);
   }
 
+  /* A file field is as wide as its button and file name; it and the box around it may shrink,
+     so narrow screens (and high zoom) never need sideways scrolling. */
+  input[type='file'] {
+    max-width: 100%;
+    min-width: 0;
+  }
+  :where(div, form, label):has(> input[type='file']) {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Browsers give a fieldset the width of its widest content; let it shrink like a div. */
+  fieldset {
+    min-width: 0;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

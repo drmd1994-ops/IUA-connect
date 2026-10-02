@@ -22,7 +22,7 @@ export function SelectField({
   const selectId = id ?? generated;
   const hintId = hint ? `${selectId}-hint` : undefined;
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
+    <div className={`flex min-w-0 flex-col gap-1.5 ${className}`}>
       <label htmlFor={selectId} className="font-semibold text-text">
         {label}
       </label>
@@ -35,7 +35,7 @@ export function SelectField({
         {...rest}
         id={selectId}
         aria-describedby={hintId}
-        className="rounded-md border border-neutral-400 bg-surface px-3 py-2.5 text-base text-text"
+        className="min-w-0 rounded-md border border-neutral-400 bg-surface px-3 py-2.5 text-base text-text"
       >
         {placeholder !== undefined && <option value="">{placeholder}</option>}
         {options.map((option) => (
