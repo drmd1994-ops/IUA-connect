@@ -519,6 +519,7 @@ No new libraries in the application.
 
 ### Deviations and findings
 
+- **One dependency advisory is accepted in the audit (2026-10-03).** A new high-severity advisory for `braces` (lint tooling only, no fixed version yet) turned the security job red. With the owner's agreement it is listed as an exception with its reason (`pnpm-workspace.yaml`, `SECURITY.md`). **To do later:** remove the entry when a fixed version exists.
 - **Where sign-in lands changed after the owner's walk-through (2026-10-03).** In M8 the owner chose the home page after sign-in for the personal dashboard, and every account landed there. The owner found that confusing for staff, so an account that may use the admin area now lands on the admin dashboard; everyone else still lands on the home page, and staff still see the personal one at the home page. A browser test checks it.
 - **The speed target is met only in part.** Layout jumps and blocking are within the targets on every public page. The main content appears at about 3.0 s on Lighthouse's simulated slow phone (the article at 3.5 s), against a target of 2.5 s; before the work it was 3.0 to 3.9 s. On the computer itself it is 0.1 to 0.25 s. The fix is to have the server send public pages complete, which changes how every public page is built; it was not in the plan and is proposed as the first task after the pitch.
 - **Caching headers on public API answers were not added**, although the plan listed them as a possible fix: they don't help a first visit, and the same addresses answer differently for members.
