@@ -519,6 +519,7 @@ No new libraries in the application.
 
 ### Deviations and findings
 
+- **Where sign-in lands changed after the owner's walk-through (2026-10-03).** In M8 the owner chose the home page after sign-in for the personal dashboard, and every account landed there. The owner found that confusing for staff, so an account that may use the admin area now lands on the admin dashboard; everyone else still lands on the home page, and staff still see the personal one at the home page. A browser test checks it.
 - **The speed target is met only in part.** Layout jumps and blocking are within the targets on every public page. The main content appears at about 3.0 s on Lighthouse's simulated slow phone (the article at 3.5 s), against a target of 2.5 s; before the work it was 3.0 to 3.9 s. On the computer itself it is 0.1 to 0.25 s. The fix is to have the server send public pages complete, which changes how every public page is built; it was not in the plan and is proposed as the first task after the pitch.
 - **Caching headers on public API answers were not added**, although the plan listed them as a possible fix: they don't help a first visit, and the same addresses answer differently for members.
 - **Planned "interface only" items were never created, and no earlier milestone recorded it.** The planning documents (decisions D2, D4, D8 and D13, and the architecture's adapter table) said that the `payments` and `invoices` tables and the `PaymentProvider`, `VideoProvider`, `PushProvider`, `IdentityProvider` and `MembershipSource` interfaces would exist in the MVP. None do. The documents now say so; nothing was built in M9, because it is not in the M9 plan. **The owner decides** whether to add them now or with the feature that needs each one (see "Open for the owner").
@@ -531,7 +532,7 @@ No new libraries in the application.
 
 ### Open for the owner
 
-1. **Run `pnpm demo:reset` and walk through the demo from the script** (`docs/demo/DEMO_SCRIPT.md`). This is the milestone's checkpoint test, and it replaces the earlier open "checkpoint test of the demo, M1 to M8".
+1. ~~Run `pnpm demo:reset` and walk through the demo from the script~~ **Done 2026-10-03:** the owner reset the demo and walked through the script. One finding: a staff account landed on the personal home page after signing in, and the script wrongly said the admin area opens by itself. At the owner's request staff now land on the admin dashboard (see "Deviations and findings").
 2. **The screen-reader check** with `docs/demo/NVDA_CHECKLIST.md` (about an hour). The accessibility statement says it has not been done; it is updated with what you find.
 3. ~~Review the ten sample exam questions~~ **Done 2026-10-02:** the owner (a urologist) read the ten questions and found them fine, and asked that the demo load them published. The seed does so since then, with a history entry naming the review. A database seeded earlier keeps them waiting for review until the next `pnpm demo:reset`.
 4. **Decide about the "interface only" items** above: build the payment tables and the five interfaces now, or leave each to its feature.

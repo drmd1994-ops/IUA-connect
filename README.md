@@ -157,6 +157,7 @@ The admins, the directors, the editor and the event admin must have two-step ver
 - **Search (M7):** the field in the header, or `/search`. Try a Hebrew word with a prefix, for example "בכנס".
 - On a database seeded before M7, run `pnpm db:seed` again.
 - **Admin portal (M8):** `/admin` opens on a dashboard of what is waiting. **Accounts** lists every account (disable, enable, unlock, sign out everywhere; each with a reason). **Audit log** shows what was done, by whom and when. As `super@demo.test`: roles are given and removed on an account's page, and **Settings** holds the contact details in the footer and a notice banner (written by the seed, switched off).
+- **Where sign-in lands:** staff accounts open on the admin dashboard (`/admin`); everyone else opens on the home page. Staff reach the admin area from anywhere through the account menu.
 - **Member dashboard (M8):** after sign-in the home page shows the member's membership, new notifications, upcoming events, news, education and quick actions. Features planned for later appear as "Coming soon" and can't be used.
 - On a database seeded before M8, run `pnpm db:seed` again.
 - **CSV import:** `/admin/import` takes a file with the header `email,first_name,last_name,membership_type[,identifier,end_date,payment_status,locale]`. Run the dry run first, then apply the same file.

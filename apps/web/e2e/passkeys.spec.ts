@@ -42,6 +42,9 @@ test('an administrator adds a passkey, then signs in with it alone', async ({ pa
   await page.goto('/en/login');
   await page.getByRole('button', { name: 'Sign in with a passkey' }).click();
   await expectSignedIn(page, email);
+  // Staff land on the admin dashboard, not on the personal home page.
+  await expect(page).toHaveURL(/\/en\/admin$/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
   // The passkey now shows a last-used date.
   await page.goto('/en/account/security');

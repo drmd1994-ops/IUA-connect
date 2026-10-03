@@ -77,12 +77,11 @@ The heart of the membership process: the department director confirms, then the 
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | Private window: sign in as `director.rambam@demo.test` (with the code).       |                                                                              | "Staff accounts need a second step. Always."                                      |
 | Account menu → **בקשות לבדיקה** → on "Tamar Levin" press **אישור**.           | "הבקשה אושרה."                                                               | "The director confirms that the applicant works in the department. Nothing more." |
-| Sign out. Sign in as `admin@demo.test` (wait for a new code).                 | The same home page every signed-in person gets.                              |                                                                                   |
-| Account menu (the email address, top of the page) → **ניהול**.                | The admin area opens on **לוח בקרה**: what is waiting, as numbers.           | "The association sees at a glance what needs it."                                 |
+| Sign out. Sign in as `admin@demo.test` (wait for a new code).                 | The admin area opens on **לוח בקרה**: what is waiting, as numbers.           | "The association sees at a glance what needs it."                                 |
 | On the tile "בקשות חברות" follow the link → on "Tamar Levin" press **אישור**. | "הבקשה אושרה."                                                               | "Two approvals, both recorded with who and when."                                 |
 | First window: sign out, sign in as `applicant.director@demo.test`.            | The dashboard shows an active membership; the bell shows "החברות שלך אושרה". | "She is told in the site and by email, and her card works from this moment."      |
 
-**Where the admin area is.** After signing in, every account lands on the same home page. Staff reach their tools from the account menu (the email address at the top of the page) → **ניהול**. The sections named below (**חדשות**, **הדרכה**, **הודעות**, **אירועים**, **חשבונות**) are the menu of the admin area, not the site's main menu.
+**Where the admin area is.** A staff account lands on the admin area straight after signing in; everyone else lands on their personal home page. From anywhere else, staff get back to it from the account menu (the email address at the top of the page) → **ניהול**. The sections named below (**חדשות**, **הדרכה**, **הודעות**, **אירועים**, **חשבונות**) are the menu of the admin area, not the site's main menu.
 
 ### 4. Content is reviewed (2 minutes)
 
@@ -108,7 +107,7 @@ As `admin@demo.test`.
 
 ### 6. An event at the venue (1 minute)
 
-Sign in as `events@demo.test` (new code), then account menu → **ניהול**.
+Sign in as `events@demo.test` (new code). The admin area opens.
 
 | Do                                | The audience sees                     | Say                                                                                             |
 | --------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -117,7 +116,7 @@ Sign in as `events@demo.test` (new code), then account menu → **ניהול**.
 
 ### 7. Control and accountability (1½ minutes)
 
-Sign in as `super@demo.test` (new code), then account menu → **ניהול**.
+Sign in as `super@demo.test` (new code). The admin area opens.
 
 | Do                                                                                   | The audience sees                                         | Say                                                                         |
 | ------------------------------------------------------------------------------------ | --------------------------------------------------------- | --------------------------------------------------------------------------- |
