@@ -28,12 +28,13 @@ Last updated: 2 October 2026 (end of the MVP, milestones M0 to M9).
 
 These are in the original specification and are **not** in the demo:
 
-- **Payments** and invoices. Membership has a "payment status" field that is set by hand. The early planning documents said the database tables and a connection point for a payment provider would be prepared in advance; they were not, and neither were the planned connection points for push notifications, a video provider, an outside sign-in service and the Medical Association's member list. Each is work for the milestone that needs it.
+- **Payments** and invoices. Membership has a "payment status" field that is set by hand. The early planning documents said the database tables and a connection point for a payment provider would be prepared in advance; they were not, and neither were the planned connection points for an outside sign-in service and the Medical Association's member list. Each is work for the milestone that needs it.
 - **CME tracking and certificates.** Events and education items can show CME points; nothing is counted or credited.
-- **A mobile app.** The site works in a phone's browser. There are no push notifications.
+- **A mobile app.** The site works in a phone's browser. There are no push notifications: the place to plug a push service in exists in the code (since M10), but nothing is plugged in and nothing is sent.
 - **Community, case discussions, research collaboration, publications, jobs, mentorship, messaging between members, a surgical logbook, calculators, AI features, governance and voting.** Four of these appear on the member's dashboard as "Coming soon", and can't be clicked.
 - **A full question bank.** The exam section asks one question at a time and remembers answers; there are no timed exams, no question sets and no statistics for teachers.
 - **Video hosting.** A video is a link to where it is already hosted (YouTube, Vimeo). Restricting a video to members has to be done on that host.
+- **A video service.** The place to plug one in exists in the code (since M10); what is plugged in is "links", as described above.
 - **Integration with the Israeli Medical Association's systems.** Members come in through applications or a CSV file.
 - **Arabic and Russian.** The site is in Hebrew and English; adding a language is translation work, not a rebuild.
 - **Analytics.** The admin dashboard shows numbers as they are now, with no charts or history.

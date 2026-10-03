@@ -11,6 +11,7 @@ import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type EmailTemplate, type EmailTemplates, Mailer } from '../../infra/mailer/mailer';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { PushProvider } from '../../infra/push/push-provider';
 import { unsubscribeUrl } from './content-announcer';
 import { UnsubscribeTokens } from './unsubscribe-tokens';
 
@@ -42,25 +43,42 @@ export class Notifier {
     private readonly prisma: PrismaService,
     private readonly mailer: Mailer,
     private readonly tokens: UnsubscribeTokens,
+    private readonly push: PushProvider,
   ) {}
 
   async send<T extends EmailTemplate>(notice: Notice<T>): Promise<void> {
     const wants = await this.channels(notice.userId, notice.kind);
     if (wants.APP) {
+      const { link, ...values } = notice.params as Record<string, unknown>;
+      const params = values as Record<string, string | number>;
+      const path = typeof link === 'string' ? sitePath(link) : null;
       try {
-        const { link, ...values } = notice.params as Record<string, unknown>;
         await this.prisma.notification.create({
           data: {
             id: uuidv7(),
             userId: notice.userId,
             kind: notice.kind,
             type: notice.template,
-            params: values as Record<string, string | number>,
-            link: typeof link === 'string' ? sitePath(link) : null,
+            params,
+            link: path,
           },
         });
       } catch (error) {
         this.logger.warn({ err: error, template: notice.template }, 'Notice in the app failed');
+      }
+      // Push follows the notice in the app: the same switch, the same words, the same link.
+      if (this.push.enabled) {
+        try {
+          await this.push.send({
+            userId: notice.userId,
+            locale: notice.locale,
+            type: notice.template,
+            params,
+            link: path,
+          });
+        } catch (error) {
+          this.logger.warn({ err: error, template: notice.template }, 'Push notice failed');
+        }
       }
     }
     if (wants.EMAIL) await this.deliverEmail(notice);

@@ -11,8 +11,10 @@ import { JobsModule } from './infra/jobs/jobs.module';
 import { LoggerModule } from './infra/logger/logger.module';
 import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
+import { PushModule } from './infra/push/push.module';
 import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
 import { StorageModule } from './infra/storage/storage.module';
+import { VideoModule } from './infra/video/video.module';
 import { AuditModule } from './modules/audit';
 import { AccessModule } from './modules/access';
 import { AdminModule } from './modules/admin';
@@ -54,6 +56,8 @@ export class AppModule {
         MailerModule,
         RateLimitModule,
         StorageModule,
+        VideoModule,
+        PushModule,
         JobsModule.forRoot(env),
         AuditModule,
         HealthModule,

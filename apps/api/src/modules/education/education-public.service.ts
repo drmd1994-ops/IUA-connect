@@ -3,6 +3,7 @@ import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { VideoProvider } from '../../infra/video/video-provider';
 import { AccessService, type Viewer } from '../access';
 import { FilesService } from '../files';
 import {
@@ -30,6 +31,7 @@ export class EducationPublicService implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly access: AccessService,
     private readonly files: FilesService,
+    private readonly video: VideoProvider,
   ) {}
 
   /** An item's cover and files are readable by whoever may read the item. */
@@ -102,7 +104,10 @@ export class EducationPublicService implements OnModuleInit {
       ...summary(row, locale),
       description: pick(row, locale).description,
       archived: row.status === 'ARCHIVED',
-      externalUrl: row.externalUrl,
+      // Where the recording is played is the provider's answer (today: the stored link itself).
+      externalUrl: row.externalUrl
+        ? this.video.playback(row.externalUrl, { userId: principal?.userId ?? null }).url
+        : null,
       videoStatus: row.videoStatus,
       files: row.files.map(({ file }) => ({
         id: file.id,

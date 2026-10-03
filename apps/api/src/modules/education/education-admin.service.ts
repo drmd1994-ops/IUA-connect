@@ -9,6 +9,7 @@ import { type Env } from '../../config/env.schema';
 import { type Prisma } from '../../generated/prisma/client';
 import { ContentAnnouncer, Notifier } from '../notifications';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { VideoProvider } from '../../infra/video/video-provider';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import { FilesService } from '../files';
@@ -58,6 +59,7 @@ export class EducationAdminService {
     private readonly audit: AuditService,
     private readonly notifier: Notifier,
     private readonly announcer: ContentAnnouncer,
+    private readonly video: VideoProvider,
   ) {}
 
   async list(query: AdminEducationListQueryDto): Promise<AdminEducationListDto> {
@@ -325,6 +327,14 @@ export class EducationAdminService {
 
   private async validate(input: EducationInputDto): Promise<void> {
     if (input.slug === RESERVED_SLUG) throw invalid('slug', 'slugTaken');
+    // The provider decides what it can play (today: any web link).
+    if (
+      LINKED_TYPES.includes(input.type) &&
+      input.externalUrl &&
+      !this.video.accepts(input.externalUrl)
+    ) {
+      throw invalid('externalUrl', 'educationLinkRefused');
+    }
     if (input.subspecialtyId) {
       const found = await this.prisma.subspecialty.findFirst({
         where: { id: input.subspecialtyId, active: true },

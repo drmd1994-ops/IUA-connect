@@ -80,13 +80,13 @@ Every external dependency sits behind an interface with a demo implementation th
 | `ObjectStorage`    | Local disk (`./storage`, outside the web root)                  | S3-compatible                                |
 | `MalwareScanner`   | `NoopScanner`. Marks files `UNSCANNED`; only admins can upload. | ClamAV (native Windows or Linux)             |
 | `Mailer`           | Console / file outbox                                           | SMTP / provider                              |
-| `PushProvider` | **Not built** (no code yet) | Expo Push / FCM / APNs, with the mobile app |
-| `VideoProvider` | **Not built.** A video is a link to where it is hosted (ADR 0008) | A provider chosen after the pitch |
+| `PushProvider` | `DisabledPushProvider`: sends nothing. The notifier hands it each notice in the app (M10). No devices are registered and there is no push switch yet | Expo Push / FCM / APNs, with the mobile app |
+| `VideoProvider` | `LinkVideoProvider`: a recording is a link to where it is hosted (ADR 0008). Education asks it what may be attached and how it is played (M10) | A hosted video service, chosen after the pitch |
 | `PaymentProvider` | **Not built** (no code yet) | Israeli payment processor with hosted fields |
 | `MembershipSource` | Manual (admin screens and CSV import). **Not a separate interface in the code** | IMA integration |
 | `SearchProvider`   | Postgres full-text search                                       | OpenSearch                                   |
 
-The six interfaces that exist in the code are `JobQueue`, `RateLimitStore`, `ObjectStorage`, `MalwareScanner`, `Mailer` and `SearchProvider`. The other rows were planned as "interface only" and were not written; each is added with the feature that needs it.
+The eight interfaces that exist in the code are `JobQueue`, `RateLimitStore`, `ObjectStorage`, `MalwareScanner`, `Mailer`, `SearchProvider`, and since M10 `VideoProvider` and `PushProvider`. The remaining rows (`IdentityProvider`, `PaymentProvider`, `MembershipSource`) were planned as "interface only" and were not written; each is added with the feature that needs it.
 
 Adapters are selected with environment variables and validated at startup. The app refuses to start with an invalid combination, e.g. `NoopScanner` while `NODE_ENV=production`.
 

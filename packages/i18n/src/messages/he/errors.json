@@ -103,6 +103,7 @@
     "educationChanged": "מישהו שינה את הפריט בינתיים. נא לטעון אותו מחדש ולנסות שוב.",
     "educationNotEditable": "אי אפשר לערוך את הפריט עכשיו. טיוטות נערכות בידי עורכים; פריט בבדיקה בידי בודק/ת.",
     "educationTypeFixed": "אי אפשר לשנות את סוג הפריט. יש ליצור פריט חדש.",
+    "educationLinkRefused": "אי אפשר להשתמש בקישור הזה להקלטה. יש להזין כתובת אינטרנט מלאה, לדוגמה https://example.org/lecture.",
     "educationNotDeletable": "אפשר למחוק רק טיוטה שמעולם לא פורסמה.",
     "educationNotACourse": "רק לקורס יש שיעורים.",
     "educationActionNotAllowed": "אין לך הרשאה לשלב הזה.",
