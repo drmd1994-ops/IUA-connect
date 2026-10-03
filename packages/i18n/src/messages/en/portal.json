@@ -255,7 +255,7 @@
   },
   "accessibility": {
     "title": "Accessibility statement",
-    "updated": "Last updated: 2 October 2026.",
+    "updated": "Last updated: 3 October 2026.",
     "aimTitle": "What we aim for",
     "aim": "IUA Connect is built to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, which the Israeli standard IS 5568 follows. It works in Hebrew, right to left, and in English.",
     "doneTitle": "What was checked",
@@ -265,8 +265,8 @@
       "Narrow screens and high zoom: at a width of 320 pixels (the same as 400% zoom) pages need no sideways scrolling.",
       "By hand: headings, landmarks, form labels and error messages, colour contrast, and the language and direction of mixed Hebrew and English text."
     ],
-    "notDoneTitle": "What was not checked yet",
-    "notDone": "A full check with a screen reader (NVDA) by a person has not been completed yet. Automated checks find only a part of the problems, so this statement makes no claim of full compliance.",
+    "notDoneTitle": "The screen-reader check, and what was not checked",
+    "notDone": "One person, the project owner, went through the site with a screen reader (NVDA) on 3 October 2026, following a list of 19 journeys in Hebrew and English, and noted no problems. The site has not been tried by people who rely on a screen reader every day, and no outside accessibility audit was done. One person’s check and automated checks do not find everything, so this statement makes no claim of full compliance.",
     "gapsTitle": "Known gaps",
     "gaps": [
       "A session ends after a period without activity, without a warning beforehand.",

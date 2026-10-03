@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-02 (M9)_
+_Last updated: 2026-10-03 (M9 merged; the MVP is complete)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: built on `feat/pitch-readiness` (pull request #11), waiting for the owner's walk-through and screen-reader check** before it is merged. |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -494,7 +494,7 @@ Plan: [`docs/plans/M9-pitch-readiness.md`](docs/plans/M9-pitch-readiness.md), ap
 
 No new libraries in the application.
 
-**State: the work is done except the two steps that are the owner's** (the screen-reader check and the walk-through). The milestone is not closed until they are.
+**State: complete.** The owner walked through the demo and did the screen-reader check on 2026-10-03, and asked for pull request #11 to be merged the same day.
 
 ### Delivered
 
@@ -515,7 +515,7 @@ No new libraries in the application.
 - **ZAP baseline:** the site (51 addresses) and the API (7 addresses): no failures and no warnings, with six accepted rules listed and explained.
 - **Lighthouse** (mobile, simulated slow 4G, production builds, one run per page, on this computer): the before and after table is in `docs/demo/PERFORMANCE.md`.
 - **`pnpm demo:reset`:** run from start to finish on a scratch database (since removed), and the demo script was walked through on that reset database. Its safety check has unit tests.
-- **Not verified by anyone yet:** how the site sounds with a screen reader, and `pnpm demo:reset` on the real development database.
+- **The owner's part (2026-10-03):** `pnpm demo:reset` on the development database, the walk-through of the demo script (one finding, fixed: where staff land after signing in), and the screen-reader check with NVDA (no problems noted).
 
 ### Deviations and findings
 
@@ -534,14 +534,14 @@ No new libraries in the application.
 ### Open for the owner
 
 1. ~~Run `pnpm demo:reset` and walk through the demo from the script~~ **Done 2026-10-03:** the owner reset the demo and walked through the script. One finding: a staff account landed on the personal home page after signing in, and the script wrongly said the admin area opens by itself. At the owner's request staff now land on the admin dashboard (see "Deviations and findings").
-2. **The screen-reader check** with `docs/demo/NVDA_CHECKLIST.md` (about an hour). The accessibility statement says it has not been done; it is updated with what you find.
+2. ~~The screen-reader check~~ **Done 2026-10-03:** the owner went through `docs/demo/NVDA_CHECKLIST.md` and noted no problems. The accessibility statement now says so.
 3. ~~Review the ten sample exam questions~~ **Done 2026-10-02:** the owner (a urologist) read the ten questions and found them fine, and asked that the demo load them published. The seed does so since then, with a history entry naming the review. A database seeded earlier keeps them waiting for review until the next `pnpm demo:reset`.
 4. **Decide about the "interface only" items** above: build the payment tables and the five interfaces now, or leave each to its feature.
 5. **Confirm the "who" column** of the readiness checklist in `DEPLOYMENT.md`.
-6. **Merge pull request #11** when you are satisfied.
+6. ~~Merge pull request #11~~ merged at the owner's request on 2026-10-03 (CI green).
 
 ## Next step
 
-**M9 is waiting for the owner:** run `pnpm demo:reset`, walk through `docs/demo/DEMO_SCRIPT.md`, do the screen-reader check, then merge pull request #11. With that the MVP (M0 to M9) is complete.
+**The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

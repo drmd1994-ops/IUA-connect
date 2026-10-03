@@ -108,7 +108,7 @@
 ## What the M9 (Pitch readiness) checks prove
 
 - **Accessibility audit (Playwright + axe, `a11y-audit.spec.ts`):** no WCAG 2.2 AA violations on every page a signed-in member sees and on every admin page, in Hebrew and English; every control can be reached with the keyboard and shows where the focus is; the skip link, the account menu (Escape closes it and returns the focus) and an exam question work without a mouse; no page scrolls sideways at 320 px, which is what 400% zoom gives.
-- **What automated checks can't prove:** how the site sounds. The screen-reader check is for a person, with `docs/demo/NVDA_CHECKLIST.md`.
+- **What automated checks can't prove:** how the site sounds. The screen-reader check is for a person, with `docs/demo/NVDA_CHECKLIST.md`; the owner did it on 2026-10-03 and noted no problems.
 - **Demo reset (unit, `demo-reset-rules.spec.ts`):** `pnpm demo:reset` accepts only the development database on this machine; it refuses production, the test database, any other database, a database on another machine, and missing or unreadable settings. The reset itself (drop, migrate, seed, two-step set-up) was run by hand on a scratch database; no automated test runs it.
 - **Error format (unit, `packages/api-client`):** the hand-written check that recognises the API's error envelope in the browser agrees with the shared schema on valid and malformed bodies.
 - **Security scan (CI job `zap`):** the OWASP ZAP baseline reads the running site and API passively on every change. A new warning fails the build unless it is listed with a reason (`docs/security/ZAP_BASELINE.md`). It is not a penetration test.
