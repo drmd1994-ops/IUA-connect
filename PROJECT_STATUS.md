@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-03 (M9 merged; the MVP is complete)_
+_Last updated: 2026-10-03 (M10 built, waiting for merge)_
 
 ## Summary
 
@@ -536,12 +536,48 @@ No new libraries in the application.
 1. ~~Run `pnpm demo:reset` and walk through the demo from the script~~ **Done 2026-10-03:** the owner reset the demo and walked through the script. One finding: a staff account landed on the personal home page after signing in, and the script wrongly said the admin area opens by itself. At the owner's request staff now land on the admin dashboard (see "Deviations and findings").
 2. ~~The screen-reader check~~ **Done 2026-10-03:** the owner went through `docs/demo/NVDA_CHECKLIST.md` and noted no problems. The accessibility statement now says so.
 3. ~~Review the ten sample exam questions~~ **Done 2026-10-02:** the owner (a urologist) read the ten questions and found them fine, and asked that the demo load them published. The seed does so since then, with a history entry naming the review. A database seeded earlier keeps them waiting for review until the next `pnpm demo:reset`.
-4. **Decide about the "interface only" items** above: build the payment tables and the five interfaces now, or leave each to its feature.
+4. **Decide about the "interface only" items** above: build the payment tables and the five interfaces now, or leave each to its feature. **2026-10-03:** the owner asked for video and push; they are built in M10. The other three are still open.
 5. **Confirm the "who" column** of the readiness checklist in `DEPLOYMENT.md`.
 6. ~~Merge pull request #11~~ merged at the owner's request on 2026-10-03 (CI green).
+
+## M10 Video and push connection points (2026-10-03)
+
+Plan: [`docs/plans/M10-video-push-interfaces.md`](docs/plans/M10-video-push-interfaces.md), approved by the owner on 2026-10-03. The owner asked for two of the five unbuilt "interface only" items (M9, "Deviations and findings"): video and push. Owner decisions (plan §6): **interface only** for both, with no video service and no real push.
+
+No new libraries. No database change.
+
+### Delivered
+
+- **`VideoProvider`** (`apps/api/src/infra/video/`): the place a video service plugs in. Its one implementation, `LinkVideoProvider`, is what the app did before: a recording is a link to where it is hosted (ADR 0008). Education now asks the provider whether a link may be attached and what address a viewer gets.
+- **`PushProvider`** (`apps/api/src/infra/push/`): the place a push service plugs in. Its one implementation, `DisabledPushProvider`, sends nothing. The notifier hands it each notice in the app, in the person's language, with a link inside the site.
+- **Settings:** `VIDEO_PROVIDER=links` and `PUSH_PROVIDER=disabled`, checked at start-up; both are allowed in production.
+
+**Nothing a visitor or a member sees has changed.** There is still no video hosting and there are still no push notifications.
+
+### Verified
+
+- API: **286 unit and 351 integration tests**, all passing locally.
+- With a stand-in for a hosted video service: education refuses a recording the provider does not take, stores the reference and not a viewer's address, and gives each viewer the address the provider returns.
+- With a recording push provider: a notice reaches it only for the right person and only when that kind is switched on in the app; when the push service fails, the notice in the app and the email are still delivered.
+- The existing education and notification tests pass unchanged.
+
+### Deviations and findings
+
+- **One commit for both providers** instead of one each, because they share the settings, the app wiring and the test harness.
+- **The link provider accepts `http` as well as `https`,** because the education form already did; the plan's first draft said `https` only. Nothing was tightened, so no existing item is affected.
+- **A new error text** (he/en) for a recording the provider refuses. With the link provider it can't appear, because the form's own check comes first; it exists for a provider that is choosier.
+- **Push follows the "in the app" switch.** There is no separate push switch, no list of a person's devices and no route for a phone to register. They come with whatever can actually deliver.
+- **These interfaces are a best guess.** No real service was chosen, so they may change when one is plugged in.
+
+### Open for the owner
+
+- **Merge the pull request** when you are satisfied. There is nothing new to click: the demo is that the site behaves as before.
+- Still open from M9: whether the remaining three items (payment tables and `PaymentProvider`, `IdentityProvider`, `MembershipSource`) are built now or each with its feature; and the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
+
+**M10 (video and push connection points)** is built on `feat/video-push-interfaces` and waits for the owner to merge its pull request.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
