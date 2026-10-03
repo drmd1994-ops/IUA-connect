@@ -222,5 +222,13 @@ describe('HTTP pipeline', () => {
       expect(res.headers['x-content-type-options']).toBe('nosniff');
       expect(res.headers['x-powered-by']).toBeUndefined();
     });
+
+    it('tells browsers and proxies to keep nothing, also for errors', async () => {
+      const ok = await request(app.getHttpServer()).get('/api/v1/fixture/public');
+      expect(ok.headers['cache-control']).toBe('no-store');
+      const missing = await request(app.getHttpServer()).get('/api/v1/nothing-here');
+      expect(missing.status).toBe(404);
+      expect(missing.headers['cache-control']).toBe('no-store');
+    });
   });
 });

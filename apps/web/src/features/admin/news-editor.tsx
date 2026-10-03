@@ -555,7 +555,7 @@ function FilePicker({
         accept={accept}
         aria-describedby={hint ? `${id}-hint` : undefined}
         onChange={onChange}
-        className="text-sm"
+        className="max-w-full text-sm"
       />
     </div>
   );

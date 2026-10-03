@@ -44,6 +44,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   // (a statically rendered page would carry a stale nonce and its scripts would be blocked).
   await headers();
   const t = await getTranslations('common.a11y');
+  const notices = await getTranslations('portal.accessibility');
   // The browser needs UI text only; email templates stay on the server.
   const {
     common,
@@ -87,10 +88,12 @@ export default async function LocaleLayout({ children, params }: Props) {
         >
           <AuthProvider>
             <SiteSettingsProvider>
-              <DemoBanner />
-              <SiteNotice />
+              <section aria-label={notices('notices')}>
+                <DemoBanner />
+                <SiteNotice />
+              </section>
               <SiteHeader />
-              <main id="main" className="flex-1">
+              <main id="main" className="min-h-[85dvh] flex-1">
                 {children}
               </main>
               <SiteFooter />

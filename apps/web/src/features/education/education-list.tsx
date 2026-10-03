@@ -157,6 +157,7 @@ export function EducationList() {
                     variant="thumb"
                     alt=""
                     className="aspect-video w-full object-cover"
+                    placeholder
                   />
                 )}
                 <div className="flex flex-1 flex-col gap-2 p-5">

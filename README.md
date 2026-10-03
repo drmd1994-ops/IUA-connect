@@ -4,6 +4,23 @@
 
 > **Status:** private pitch application, **demo data only**. Not affiliated with or endorsed by the Israeli Urological Association (IUA) or the Israeli Medical Association (IMA). No real personal data may be loaded before a professional legal review (see `SECURITY_MODEL.md`).
 
+## Showing the demo
+
+```powershell
+pnpm demo:reset   # rebuilds the demo from nothing (asks first; deletes the development data)
+pnpm dev          # then open http://localhost:3001
+```
+
+| For the pitch                                                      | What it holds                                                    |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| [`docs/demo/DEMO_SCRIPT.md`](docs/demo/DEMO_SCRIPT.md)             | The walk-through, step by step, with the accounts to use         |
+| [`docs/demo/KNOWN_LIMITATIONS.md`](docs/demo/KNOWN_LIMITATIONS.md) | What it does not do, so nothing is promised by mistake           |
+| [`docs/demo/PERFORMANCE.md`](docs/demo/PERFORMANCE.md)             | Page-speed measurements, before and after                        |
+| [`docs/demo/NVDA_CHECKLIST.md`](docs/demo/NVDA_CHECKLIST.md)       | The screen-reader check, for a person to do                      |
+| [`docs/security/ZAP_BASELINE.md`](docs/security/ZAP_BASELINE.md)   | The automated security scan: what it found and what was accepted |
+
+## For developers
+
 | Read first                                                        | What it holds                                |
 | ----------------------------------------------------------------- | -------------------------------------------- |
 | [`PROJECT_STATUS.md`](PROJECT_STATUS.md)                          | Decisions, open questions, current milestone |
@@ -126,20 +143,21 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `admin2@demo.test`                                         | A second IUA admin, so a message to members can be approved (M7)    |
 | `super@demo.test`                                          | Super admin: gives and removes roles, changes the settings (M8)     |
 
-The admins, the directors, the editor and the event admin must set up two-step verification (a passkey or an authenticator app) at their first sign-in, because their roles require it.
+The admins, the directors, the editor and the event admin must have two-step verification, because their roles require it. After `pnpm db:seed` alone, each sets it up at first sign-in (a passkey or an authenticator app). After **`pnpm demo:reset`** it is already set up, with one shared authenticator entry for all of them, so a pitch isn't interrupted: the reset writes `outbox/demo-authenticator.svg`; open it and scan it once with an authenticator app. The entry's secret is `DEMO_TOTP_SECRET` in `.env` (not in the repository), and it applies to `@demo.test` accounts only.
 
 - **Membership (M2):** the account menu has **My profile** (each field has its own "who can see this"), **My membership** (apply, status, history) and **Membership card** (a QR code that changes every 4 minutes; scanning it opens `/card/verify`). Directors also see **Applications to review**, and admins see **Administration** (`/admin`).
 - **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
 - **Events (M5):** `/events` is public. The seed adds five fictional events: an annual meeting with a programme, a one-place workshop with a waiting list, a members-only meeting, a cancelled one and a past one with attendance. `member.full@demo.test` is registered for the annual meeting with two overlapping sessions (see **My schedule** in the account menu). The event admin works at `/admin/events`: the event page there has the programme, the registrations and the attendance, including the QR code to show at the venue. On a database seeded before M5, run `pnpm db:seed` again.
 - **Imported sample (M4):** `pnpm db:seed` also loads a small sample of the IUA website from committed fixtures: 8 news items (title, date and a link to the source) and 9 guideline entries (details and the publisher's link). No network is needed. `pnpm import:remove` takes the sample out again. To change the sample, edit `tools/importer/sources.json`, run `pnpm import:fetch` and review the fixtures before committing them. The owner has confirmed permission to show this content (O4 in `PROJECT_STATUS.md`).
 - **Education (M6):** `/education` is public. The seed adds ten fictional library items of every type (one members-only, one waiting for review, one draft, one archived) and a course of four lessons. Videos, webinars and podcasts are links to where they are hosted (ADR 0008). The editor writes at `/admin/education`; the admin reviews there. On a database seeded before M6, run `pnpm db:seed` again.
-- **Exam questions (M6):** `/education/exam` asks one multiple-choice question at a time; after the answer it shows the right option, why each option is right or wrong, and a short summary of the topic. Signed-in people find their score under **My exam results** in the account menu. The seed loads ten sample urology questions **waiting for review**: nothing is shown until the admin has checked each one at `/admin/education/questions` and published it.
+- **Exam questions (M6):** `/education/exam` asks one multiple-choice question at a time; after the answer it shows the right option, why each option is right or wrong, and a short summary of the topic. Signed-in people find their score under **My exam results** in the account menu. The seed loads ten sample urology questions **published**: the owner, a urologist, read them and found them fine on 2 October 2026. A question written in the app still goes through review at `/admin/education/questions` before anyone is asked it.
 - **Notifications (M7):** the bell in the header opens **Notifications**; **Choose what you receive** there has a switch per kind of content for the app and for email. Email about new content is one summary a day, sent in the morning; to see it at once run `pnpm job:run notifications.content-digest` and look in `outbox/`.
 - **Messages to members (M7):** `/admin/broadcasts`. A message is sent only after a different admin approves it: the seed leaves one written by `admin2@demo.test` waiting, which `admin@demo.test` can approve. The emails go out within a minute.
 - **Member directory (M7):** `/members`, for members with an active membership. A member joins from **My profile**; the seed lists three demo members showing different fields.
 - **Search (M7):** the field in the header, or `/search`. Try a Hebrew word with a prefix, for example "בכנס".
 - On a database seeded before M7, run `pnpm db:seed` again.
 - **Admin portal (M8):** `/admin` opens on a dashboard of what is waiting. **Accounts** lists every account (disable, enable, unlock, sign out everywhere; each with a reason). **Audit log** shows what was done, by whom and when. As `super@demo.test`: roles are given and removed on an account's page, and **Settings** holds the contact details in the footer and a notice banner (written by the seed, switched off).
+- **Where sign-in lands:** staff accounts open on the admin dashboard (`/admin`); everyone else opens on the home page. Staff reach the admin area from anywhere through the account menu.
 - **Member dashboard (M8):** after sign-in the home page shows the member's membership, new notifications, upcoming events, news, education and quick actions. Features planned for later appear as "Coming soon" and can't be used.
 - On a database seeded before M8, run `pnpm db:seed` again.
 - **CSV import:** `/admin/import` takes a file with the header `email,first_name,last_name,membership_type[,identifier,end_date,payment_status,locale]`. Run the dry run first, then apply the same file.
@@ -163,6 +181,8 @@ The admins, the directors, the editor and the event admin must set up two-step v
 | `pnpm test`                                    | Unit tests (all packages), including the deny-by-default route gate       |
 | `pnpm test:integration`                        | API integration tests against `iua_connect_test`                          |
 | `pnpm --filter @iua/web e2e`                   | Playwright end-to-end + accessibility tests (see TESTING.md)              |
+| `pnpm demo:reset`                              | Development only: rebuild the demo from nothing (**deletes dev data**)    |
+| `pnpm job:run <job>`                           | Run one background job now, e.g. `notifications.content-digest`           |
 | `pnpm admin:create --email <address>`          | Development only: create a fictional administrator                        |
 | `pnpm import:fetch`                            | Development only: read the hand-picked IUA website pages into fixtures    |
 | `pnpm import:remove`                           | Development only: delete everything the content import created            |

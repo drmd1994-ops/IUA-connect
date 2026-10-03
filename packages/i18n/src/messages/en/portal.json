@@ -252,5 +252,34 @@
       "save": "Save",
       "saved": "Saved."
     }
+  },
+  "accessibility": {
+    "title": "Accessibility statement",
+    "updated": "Last updated: 3 October 2026.",
+    "aimTitle": "What we aim for",
+    "aim": "IUA Connect is built to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, which the Israeli standard IS 5568 follows. It works in Hebrew, right to left, and in English.",
+    "doneTitle": "What was checked",
+    "done": [
+      "Every page, in both languages, with an automated checker (axe) for WCAG 2.2 AA. The checks run again on every change.",
+      "Using the site with the keyboard only: every control can be reached, the focus is always visible, and nothing traps it.",
+      "Narrow screens and high zoom: at a width of 320 pixels (the same as 400% zoom) pages need no sideways scrolling.",
+      "By hand: headings, landmarks, form labels and error messages, colour contrast, and the language and direction of mixed Hebrew and English text."
+    ],
+    "notDoneTitle": "The screen-reader check, and what was not checked",
+    "notDone": "One person, the project owner, went through the site with a screen reader (NVDA) on 3 October 2026, following a list of 19 journeys in Hebrew and English, and noted no problems. The site has not been tried by people who rely on a screen reader every day, and no outside accessibility audit was done. One person’s check and automated checks do not find everything, so this statement makes no claim of full compliance.",
+    "gapsTitle": "Known gaps",
+    "gaps": [
+      "A session ends after a period without activity, without a warning beforehand.",
+      "Wide tables in the administration area scroll sideways inside their frame on narrow screens.",
+      "Documents that editors attach (PDF, presentations) are published as they were uploaded and may not be accessible.",
+      "Videos open on the site that hosts them; captions depend on that site.",
+      "Switching language on the search page returns to an empty search."
+    ],
+    "contactTitle": "Tell us about a problem",
+    "contact": "If something on the site doesn’t work for you, please tell us what you were trying to do and which page you were on.",
+    "noContact": "The association’s contact details are not set in this demo.",
+    "demo": "This is a demo version with fictional data.",
+    "footerLink": "Accessibility statement",
+    "notices": "Site notices"
   }
 }

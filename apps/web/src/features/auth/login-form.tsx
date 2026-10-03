@@ -7,6 +7,7 @@ import { AuthCard } from '@/components/ui/auth-card';
 import { Button } from '@/components/ui/button';
 import { TextField } from '@/components/ui/text-field';
 import { Link, useRouter } from '@/i18n/navigation';
+import { isAdmin } from '@/features/admin/admin-shell';
 import { errorMessage, isApiError } from '@/lib/api-errors';
 import { unwrap, useAuth } from './auth-context';
 import {
@@ -43,7 +44,9 @@ export function LoginForm() {
 
   async function finish(accessToken: string) {
     const me = await completeSignIn(accessToken);
-    router.push(me.mfaEnrollmentRequired ? '/account/security' : '/');
+    // Staff land on the admin dashboard, everyone else on their personal one (the home page).
+    // Staff still reach the personal one from the site's name in the header.
+    router.push(me.mfaEnrollmentRequired ? '/account/security' : isAdmin(me) ? '/admin' : '/');
   }
 
   /** Passkey sign-in (button or autofill). A closed prompt is not an error worth showing. */

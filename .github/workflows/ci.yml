@@ -1,6 +1,6 @@
 name: CI
 
-# lint → typecheck → unit → integration → security + e2e → build (DEVELOPMENT_ROADMAP.md §2)
+# lint → typecheck → unit → integration → security + e2e + zap → build (DEVELOPMENT_ROADMAP.md §2)
 on:
   push:
     branches: [main]
@@ -168,8 +168,66 @@ jobs:
           path: apps/web/playwright-report
           retention-days: 7
 
+  # OWASP ZAP baseline (M9): a passive scan of the running site and API. It spiders the pages and
+  # reads the responses (headers, cookies, leaks); it attacks nothing. Rules that are accepted
+  # are listed, each with its reason, in .zap/rules.tsv and docs/security/ZAP_BASELINE.md.
+  zap:
+    needs: integration
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Set up the environment
+        run: |
+          cp .env.example .env
+          sed -i 's#^PG_SUPERUSER_URL=.*#PG_SUPERUSER_URL=postgresql://postgres:postgres@localhost:5432/postgres#' .env
+          pnpm setup:dev
+      - run: pnpm build
+      - name: Start the API and the web app (production builds)
+        run: |
+          pnpm --filter @iua/api start > api.log 2>&1 &
+          pnpm --filter @iua/web start > web.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:4000/health/ready > /dev/null && curl -sf http://localhost:3001/he > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat api.log web.log
+          exit 1
+      - name: ZAP baseline, the web app
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
+        with:
+          target: http://localhost:3001
+          rules_file_name: .zap/rules.tsv
+          allow_issue_writing: false
+          fail_action: true
+          artifact_name: zap-web
+      - name: ZAP baseline, the API
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
+        with:
+          target: http://localhost:4000/api/v1/news
+          rules_file_name: .zap/rules.tsv
+          allow_issue_writing: false
+          fail_action: true
+          artifact_name: zap-api
+
   build:
-    needs: [security, e2e]
+    needs: [security, e2e, zap]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0

@@ -17,7 +17,12 @@ export function SearchBox() {
   }
 
   return (
-    <form role="search" onSubmit={submit} className="flex items-center gap-1">
+    <form
+      role="search"
+      aria-label={t('label')}
+      onSubmit={submit}
+      className="flex items-center gap-1"
+    >
       <label className="sr-only" htmlFor="site-search">
         {t('label')}
       </label>

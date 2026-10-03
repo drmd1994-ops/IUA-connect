@@ -2,7 +2,7 @@ import { type INestApplication, RequestMethod } from '@nestjs/common';
 import { DocumentBuilder, type OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { type NestExpressApplication } from '@nestjs/platform-express';
-import { type Application } from 'express';
+import { type Application, type NextFunction, type Request, type Response } from 'express';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
@@ -25,6 +25,13 @@ export function configureApp(app: INestApplication, env: Env): void {
       contentSecurityPolicy: env.NODE_ENV === 'production' ? undefined : false,
     }),
   );
+  // Answers hold personal or members-only data, and the same address answers differently for
+  // different people: nothing is kept by browsers or proxies unless a route says otherwise
+  // (the reference lists do).
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
+  });
   app.enableCors({ origin: env.WEB_ORIGIN, credentials: true });
   app.setGlobalPrefix(API_PREFIX, {
     exclude: [

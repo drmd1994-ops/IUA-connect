@@ -49,20 +49,30 @@ export function useUpload() {
     );
 }
 
-/** An image served through a signed address. Renders nothing until the address is known. */
+/**
+ * An image served through a signed address. Until the address is known it renders nothing, or,
+ * with `placeholder`, an empty box of the same size, so what follows doesn't jump when the
+ * picture arrives (the classes must then give the box its size, e.g. an aspect ratio).
+ */
 export function StoredImage({
   fileId,
   alt,
   variant = 'full',
   className = '',
+  placeholder = false,
 }: {
   fileId: string;
   alt: string;
   variant?: 'full' | 'thumb';
   className?: string;
+  placeholder?: boolean;
 }) {
   const url = useFileUrl(fileId, variant);
-  if (!url) return null;
+  if (!url) {
+    return placeholder ? (
+      <div aria-hidden="true" className={`bg-surface-muted ${className}`} />
+    ) : null;
+  }
   // Signed, short-lived addresses can't go through the framework's image optimiser.
   // eslint-disable-next-line @next/next/no-img-element
   return <img src={url} alt={alt} className={className} />;

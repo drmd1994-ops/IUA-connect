@@ -94,3 +94,35 @@ export function FooterContact() {
     </address>
   );
 }
+
+/** On the accessibility statement: where to report a problem. */
+export function StatementContact() {
+  const t = useTranslations('portal');
+  const settings = useContext(SiteSettingsContext);
+  if (!settings) return null;
+  const { email, phone } = settings.contact;
+  if (!email && !phone) {
+    return <p className="mt-2 text-text-muted">{t('accessibility.noContact')}</p>;
+  }
+  return (
+    <ul className="mt-2 flex flex-col gap-1" data-testid="statement-contact">
+      {email && (
+        <li>
+          {t('footer.email')}:{' '}
+          <a
+            href={`mailto:${email}`}
+            className="font-semibold text-primary underline underline-offset-4"
+            dir="ltr"
+          >
+            {email}
+          </a>
+        </li>
+      )}
+      {phone && (
+        <li>
+          {t('footer.phone')}: <span dir="ltr">{phone}</span>
+        </li>
+      )}
+    </ul>
+  );
+}

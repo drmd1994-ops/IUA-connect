@@ -47,6 +47,8 @@ const PAGES = [
   '/admin/users/roles',
   '/admin/audit',
   '/admin/settings',
+  // M9
+  '/accessibility',
 ];
 
 for (const locale of ['he', 'en'] as const) {

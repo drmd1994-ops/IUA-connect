@@ -54,15 +54,16 @@ Why not microservices: one developer, demo mode, and a Windows-native environmen
 | Membership                                                                                         | ✅           | Types, status, history, **verification workflow**, digital card                       |
 | Institutions                                                                                       | ✅           | Hospitals, departments, directors (supports verification)                             |
 | News                                                                                               | ✅           | CMS workflow, translations, access tier                                               |
+| Guidelines | ✅ | Links to official guidelines with versions; no files copied |
 | Events                                                                                             | ✅           | Events, sessions, speakers, registration, attendance QR, ICS export                   |
-| Education                                                                                          | ✅           | Content library, levels, access tier. Video provider is an interface only.            |
+| Education | ✅ | Content library, courses, levels, access tier, and exam-question practice (one question at a time). A video is a link to its host. |
 | Notifications                                                                                      | ✅           | In-app and email. Push later. Per-user preferences.                                   |
 | Search                                                                                             | ✅           | Postgres full-text search behind a `SearchProvider` interface                         |
 | Files                                                                                              | ✅           | Upload, validation, storage adapter, signed download URLs, scan status                |
 | Audit                                                                                              | ✅           | Append-only log                                                                       |
 | Admin                                                                                              | ✅           | Aggregated admin endpoints (dashboard, approvals queue)                               |
 | Import                                                                                             | ✅ (tooling) | One-off CLI to import the curated sample from urology.ima.org.il into seed data       |
-| Payments                                                                                           | ⛔ interface | Schema plus `PaymentProvider` interface only                                          |
+| Payments | ⛔ not built | Membership has a `payment_status` field set by hand. No payment tables or provider interface yet (planned as "schema plus interface"; not done). |
 | Community, Cases, CME, Research, Publications, Jobs, Mentorship, Messaging, Logbook, Question Bank | Phase 2      |                                                                                       |
 | AI, Calculators, Journal Club, Conference Mode+                                                    | Phase 3      |                                                                                       |
 | Governance / Voting                                                                                | Later        | Voting via an external provider, pending legal review                                 |
@@ -73,17 +74,19 @@ Every external dependency sits behind an interface with a demo implementation th
 
 | Interface          | Demo implementation                                             | Later                                        |
 | ------------------ | --------------------------------------------------------------- | -------------------------------------------- |
-| `IdentityProvider` | Local (Argon2id, TOTP, JWT)                                     | External OIDC (Keycloak, Entra, etc.)        |
+| `IdentityProvider` | Local (Argon2id, TOTP, passkeys, JWT). **Not a separate interface in the code**: sign-in lives in the Auth module | External OIDC (Keycloak, Entra, etc.) |
 | `JobQueue`         | pg-boss (Postgres)                                              | Keep, or BullMQ + Redis                      |
 | `RateLimitStore`   | In memory                                                       | Redis                                        |
 | `ObjectStorage`    | Local disk (`./storage`, outside the web root)                  | S3-compatible                                |
 | `MalwareScanner`   | `NoopScanner`. Marks files `UNSCANNED`; only admins can upload. | ClamAV (native Windows or Linux)             |
 | `Mailer`           | Console / file outbox                                           | SMTP / provider                              |
-| `PushProvider`     | Disabled                                                        | Expo Push / FCM / APNs                       |
-| `VideoProvider`    | Interface only                                                  | **Decide at the milestone** (D8)             |
-| `PaymentProvider`  | Interface only                                                  | Israeli payment processor with hosted fields |
-| `MembershipSource` | Manual (admin)                                                  | IMA integration                              |
+| `PushProvider` | **Not built** (no code yet) | Expo Push / FCM / APNs, with the mobile app |
+| `VideoProvider` | **Not built.** A video is a link to where it is hosted (ADR 0008) | A provider chosen after the pitch |
+| `PaymentProvider` | **Not built** (no code yet) | Israeli payment processor with hosted fields |
+| `MembershipSource` | Manual (admin screens and CSV import). **Not a separate interface in the code** | IMA integration |
 | `SearchProvider`   | Postgres full-text search                                       | OpenSearch                                   |
+
+The six interfaces that exist in the code are `JobQueue`, `RateLimitStore`, `ObjectStorage`, `MalwareScanner`, `Mailer` and `SearchProvider`. The other rows were planned as "interface only" and were not written; each is added with the feature that needs it.
 
 Adapters are selected with environment variables and validated at startup. The app refuses to start with an invalid combination, e.g. `NoopScanner` while `NODE_ENV=production`.
 

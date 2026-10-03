@@ -48,7 +48,7 @@
 - Zod validation on every input; unknown keys are rejected.
 - Prisma parameterized queries. Raw SQL is only allowed in reviewed repository files using `Prisma.sql`.
 - Rich text is sanitized server-side (allow-list) on write and rendered without `dangerouslySetInnerHTML` except for sanitized content.
-- Security headers: strict CSP (nonce-based), HSTS, `X-Content-Type-Options`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`, and `frame-ancestors 'none'`.
+- Security headers: strict CSP (nonce-based), HSTS, `X-Content-Type-Options`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`, and `frame-ancestors 'none'`. One exception in the CSP: inline styles are allowed (`style-src 'unsafe-inline'`), because the interface components set style attributes that can't carry a nonce; scripts are nonce-only. A passive OWASP ZAP scan runs in CI; what it found and what was accepted is in `docs/security/ZAP_BASELINE.md`.
 
 ### Files
 

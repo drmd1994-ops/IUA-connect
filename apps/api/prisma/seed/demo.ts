@@ -44,7 +44,7 @@ const people = {
     lastName: 'Karmeli',
     nameHe: 'ד״ר אבי כרמלי',
     nameEn: 'Dr. Avi Karmeli',
-    title: 'Prof.',
+    title: 'Dr.',
     position: 'Head of Department',
     hospital: 'rambam',
   },

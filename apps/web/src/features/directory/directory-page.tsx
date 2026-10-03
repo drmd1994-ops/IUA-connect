@@ -95,6 +95,7 @@ function Directory() {
       </div>
       <form
         role="search"
+        aria-label={d('title')}
         className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-end"
         onSubmit={(event) => {
           event.preventDefault();

@@ -407,7 +407,7 @@ function SessionForm({
             accept=".pdf,.docx,.pptx"
             aria-describedby={`${fileId}-hint`}
             onChange={(e) => void addMaterial(e)}
-            className="text-sm"
+            className="max-w-full text-sm"
           />
         </div>
       </div>

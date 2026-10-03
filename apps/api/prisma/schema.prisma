@@ -34,6 +34,8 @@ model AuditLog {
 
   @@index([entityType, entityId, at(sort: Desc)])
   @@index([actorUserId, at(sort: Desc)])
+  /// The admin's audit log page: newest first, with or without filters.
+  @@index([at(sort: Desc), id(sort: Desc)])
   @@map("audit_logs")
 }
 

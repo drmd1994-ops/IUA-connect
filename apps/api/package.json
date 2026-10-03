@@ -19,6 +19,7 @@
     "admin:create": "tsx prisma/scripts/create-admin.ts",
     "import:remove": "tsx prisma/scripts/remove-import.ts",
     "job:run": "pnpm run build && node dist/job-run.js",
+    "demo:reset": "tsx prisma/scripts/demo-reset.ts",
     "openapi:export": "node dist/openapi-export.js ../../packages/api-client/openapi.json"
   },
   "dependencies": {

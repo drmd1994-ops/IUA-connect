@@ -84,7 +84,7 @@ export function PhotoSection({ initialFileId }: { initialFileId: string | null }
         ) : (
           <p className="text-text-muted">{t('content.photo.none')}</p>
         )}
-        <form onSubmit={upload} noValidate className="flex flex-col gap-3">
+        <form onSubmit={upload} noValidate className="flex min-w-0 max-w-full flex-col gap-3">
           <div className="flex flex-col gap-1.5">
             <label htmlFor={inputId} className="font-semibold">
               {t('content.photo.choose')}
@@ -94,7 +94,7 @@ export function PhotoSection({ initialFileId }: { initialFileId: string | null }
               type="file"
               accept="image/jpeg,image/png"
               onChange={(event) => setChosen(event.target.files?.[0] ?? null)}
-              className="text-sm"
+              className="max-w-full text-sm"
             />
           </div>
           <div className="flex flex-wrap gap-3">

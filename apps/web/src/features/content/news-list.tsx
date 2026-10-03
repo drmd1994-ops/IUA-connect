@@ -65,19 +65,18 @@ export function NewsList() {
         <h1 className="text-3xl font-semibold text-brand-900">{t('content.news.title')}</h1>
         <p className="mt-2 text-text-muted">{t('content.news.intro')}</p>
       </div>
-      {categories.length > 0 && (
-        <SelectField
-          className="max-w-xs"
-          label={t('content.news.category')}
-          placeholder={t('content.news.allCategories')}
-          value={category}
-          onChange={(event) => {
-            setCategory(event.target.value);
-            setPage(1);
-          }}
-          options={categories.map((c) => ({ value: c.key, label: name(c) }))}
-        />
-      )}
+      {/* Always there, also before the categories arrive, so the list below doesn't jump. */}
+      <SelectField
+        className="max-w-xs"
+        label={t('content.news.category')}
+        placeholder={t('content.news.allCategories')}
+        value={category}
+        onChange={(event) => {
+          setCategory(event.target.value);
+          setPage(1);
+        }}
+        options={categories.map((c) => ({ value: c.key, label: name(c) }))}
+      />
       {error !== null && <Alert tone="error">{errorMessage(error, t)}</Alert>}
       {!list && error === null && <p role="status">{t('membership.common.loading')}</p>}
       {list && list.items.length === 0 && (
@@ -94,6 +93,7 @@ export function NewsList() {
                     variant="thumb"
                     alt=""
                     className="aspect-video w-full object-cover"
+                    placeholder
                   />
                 )}
                 <div className="flex flex-1 flex-col gap-2 p-5">

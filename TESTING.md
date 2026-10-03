@@ -79,7 +79,7 @@
 - **Library (integration):** editors write and submit, reviewers publish, send back with a comment, take down and archive; saves need the current version (`If-Match`); lists and pages follow the access tiers; a course lists its lessons in order and shows a lesson the reader can't open as locked, without its title; a course can't be a lesson; files are readable by whoever may read the item, and by nobody else; the history can't be changed at the database level.
 - **Exam questions (integration):** the same review steps; a question is never asked before it is published; the right answer and the explanations are sent only after an answer; a visitor's answer isn't stored; a signed-in person's answers are stored, the first one counts, and only they can read their results; a question with two right options is refused; the history can't be changed at the database level.
 - **End to end (Playwright, `education.spec.ts`):** the exit tests. An editor writes an article and a course, a reviewer publishes them and a visitor reads the course and its lesson in both languages. An editor writes an exam question, a reviewer corrects an explanation and publishes it, a visitor answers it and sees the right answer, why each option is right or wrong and the summary, and a signed-in reader finds the answer in their results. Axe checks run on every page visited.
-- **The sample exam questions** in `apps/api/prisma/fixtures/demo-exam-questions.json` are loaded waiting for review. No test publishes them; the tests write their own filler questions.
+- **The sample exam questions** in `apps/api/prisma/fixtures/demo-exam-questions.json` are loaded published since the owner reviewed them (2026-10-02). The tests don't depend on them: they write their own filler questions and find them by their text.
 
 ## What the M7 (Notifications and search) suites prove
 
@@ -104,6 +104,15 @@
 - **Dashboard:** each person gets only the parts they may act on; after adding a member, a suspended member, an item for review, a message for approval, an event and a disabled account, each number rises by exactly one.
 - **Settings:** only a super admin reads and changes them; visitors get the contact details, and the notice only while it is switched on; values that don't fit are refused; the database accepts only the known keys.
 - **End to end (Playwright, `admin-portal.spec.ts`):** an admin follows a dashboard tile to its list, disables an account (which is signed out and can't sign in), finds the action in the audit log with its reason, enables the account and gives it a role; a super admin switches a notice on and every page shows it, with the contact details in the footer; a member lands on their dashboard, where the "Coming soon" actions are neither links nor buttons. Axe checks run on every page visited.
+
+## What the M9 (Pitch readiness) checks prove
+
+- **Accessibility audit (Playwright + axe, `a11y-audit.spec.ts`):** no WCAG 2.2 AA violations on every page a signed-in member sees and on every admin page, in Hebrew and English; every control can be reached with the keyboard and shows where the focus is; the skip link, the account menu (Escape closes it and returns the focus) and an exam question work without a mouse; no page scrolls sideways at 320 px, which is what 400% zoom gives.
+- **What automated checks can't prove:** how the site sounds. The screen-reader check is for a person, with `docs/demo/NVDA_CHECKLIST.md`; the owner did it on 2026-10-03 and noted no problems.
+- **Demo reset (unit, `demo-reset-rules.spec.ts`):** `pnpm demo:reset` accepts only the development database on this machine; it refuses production, the test database, any other database, a database on another machine, and missing or unreadable settings. The reset itself (drop, migrate, seed, two-step set-up) was run by hand on a scratch database; no automated test runs it.
+- **Error format (unit, `packages/api-client`):** the hand-written check that recognises the API's error envelope in the browser agrees with the shared schema on valid and malformed bodies.
+- **Security scan (CI job `zap`):** the OWASP ZAP baseline reads the running site and API passively on every change. A new warning fails the build unless it is listed with a reason (`docs/security/ZAP_BASELINE.md`). It is not a penetration test.
+- **Performance** is measured by hand with Lighthouse, not in CI; the numbers are in `docs/demo/PERFORMANCE.md`.
 
 ## Integration test database
 

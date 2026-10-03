@@ -12,7 +12,8 @@ export function SiteHeader() {
   const education = useTranslations('education');
   return (
     <header className="border-b border-border bg-surface">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+      {/* Wraps on narrow screens (and at high zoom), so nothing needs sideways scrolling. */}
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-3 rounded-sm">
           <span
             aria-hidden="true"
@@ -24,7 +25,7 @@ export function SiteHeader() {
         </Link>
         <nav
           aria-label={t('a11y.mainNavigation')}
-          className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2"
+          className="flex min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2"
         >
           <Link
             href="/news"

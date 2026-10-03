@@ -154,9 +154,9 @@ const EVENTS: EventSeed[] = [
     cme: true,
     place: 'מרכז הכנסים לדוגמה',
     address: 'רחוב הדוגמה 1, תל אביב',
-    he: { title: 'מפגש חורף שהתקיים (הדגמה)', summary: 'אירוע שהתקיים, עם רישום נוכחות.' },
+    he: { title: 'מפגש שכבר התקיים (הדגמה)', summary: 'אירוע שהתקיים, עם רישום נוכחות.' },
     en: {
-      title: 'A past winter meeting (demo)',
+      title: 'A past meeting (demo)',
       summary: 'An event that took place, with attendance recorded.',
     },
     sessions: [{ from: 0, to: 2, room: 'אולם א', he: 'הרצאות', en: 'Lectures', speakers: [1] }],

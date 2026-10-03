@@ -122,7 +122,7 @@ jobs (pg-boss's own schema: pgboss.*)
 
 ### Reserved for later (schema stubs or documented only)
 
-- **payments**, **invoices** (D4). Created in the MVP as empty tables with the full shape, so memberships can reference them later.
+- **payments**, **invoices** (D4). Planned as empty tables in the MVP; **not created**. Memberships carry a `payment_status` set by hand. The tables come with the payments milestone.
 - Phase 2+: `cme_*`, `cases*`, `community_*`, `research_*`, `publications`, `conversations`/`messages`, `jobs`, `fellowships`, `mentors`, `logbook_entries`, `questions`, `governance_*`, `ai_*`. **Not** created until their milestone. Adding them as migrations later is cheap, and empty tables mislead.
 
 ## 4. Indexes (initial)
@@ -130,7 +130,7 @@ jobs (pg-boss's own schema: pgboss.*)
 - `users(email)`, `memberships(user_id, status)`, `verification_requests(state, department_id)`
 - `news(status, published_at desc)`, `events(start_at)`, `education_items(type, level, subspecialty_id)`
 - GIN on each `*_translations.search_vector`; `pg_trgm` GIN on normalized titles
-- `audit_logs(entity_type, entity_id, at desc)`, `audit_logs(actor_user_id, at desc)`
+- `audit_logs(entity_type, entity_id, at desc)`, `audit_logs(actor_user_id, at desc)`, `audit_logs(at desc, id desc)` (added in M9 for the audit log page)
 
 ## 5. Search columns
 
@@ -153,3 +153,34 @@ jobs (pg-boss's own schema: pgboss.*)
 | Sessions / refresh tokens      | Purged 30 days after expiry                                                                         |
 | Rejected verification requests | 1 year                                                                                              |
 | Deleted account                | Profile hard-deleted after a 30-day grace period. Audit entries keep the pseudonymous user ID only. |
+
+## 8. As built (end of the MVP, M9)
+
+Sections 2 to 5 are the design written before the code. **The schema that runs is `apps/api/prisma/schema.prisma` and the migrations beside it**; where they differ from the design above, they win. Each milestone's plan (`docs/plans/`) explains its tables. The differences worth knowing:
+
+**Columns named differently from the design**
+
+| Design (section 3)                                                         | As built                                                                                                                              |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `membership_types.requires_specialist_cert`                                | `identifier` (none, specialist certificate, medical licence), `self_apply`, `director_approval`                                        |
+| `specialist_certificate_no_enc`, `specialist_certificate_no_hash`          | `identifier_enc`, `identifier_hash` (the number may be a certificate or a licence number; still encrypted, with a keyed hash)          |
+| `verification_requests.requested_type_id`                                  | `type_id`                                                                                                                             |
+| `notifications` (`category`, `title_key`)                                  | `kind`, `type`, `params`: a notice is stored as a type and its details and worded in the reader's language when shown                 |
+| `broadcasts` (`approved_by`, `audience_filter jsonb`)                      | `decided_by` (never the author; a database check), `audience_all` plus chosen membership types; texts in `broadcast_translations`      |
+
+**Tables added while building**
+
+| Table                                                                                                                | What it holds                                                                                                             |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `import_batches`                                                                                                     | A CSV membership import: the dry-run report and a keyed hash of the file, never the file                                  |
+| `news_categories`, `event_categories`                                                                                | Categories with Hebrew and English names                                                                                  |
+| `news_history`, `education_history`, `exam_question_history`                                                         | Who moved an item through review, when and with what comment. Append-only at the database level                           |
+| `speaker_translations`, `session_materials`                                                                          | A speaker's texts per language; files attached to a session                                                               |
+| `schedule_items`                                                                                                     | Sessions a registered member put in their personal schedule                                                               |
+| `event_reminders`                                                                                                    | A reminder that was sent, written before the email goes out, so none is sent twice                                        |
+| `course_items`                                                                                                       | The lessons of a course, in order (a course is never a lesson; a trigger checks it)                                       |
+| `exam_questions`, `exam_question_translations`, `exam_options`, `exam_option_translations`                           | Multiple-choice questions: exactly one right option, each option with its explanation, and a summary                      |
+| `exam_answers`                                                                                                       | A signed-in person's answers, visible only to them and deleted with their account                                         |
+| `content_announcements`, `announcement_reads`, `notification_state`                                                  | Newly published items announced once (one row per item, not per person), and what each person has read                    |
+| `broadcast_translations`, `broadcast_deliveries`                                                                     | A message's texts per language; one row per person it reached, so nobody receives it twice                                |
+| `settings`                                                                                                           | Site settings (contact details, notice banner); the database accepts only the known keys                                  |

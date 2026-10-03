@@ -430,7 +430,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
                 type="file"
                 accept="image/jpeg,image/png"
                 onChange={(event) => void addFile(event, 'cover')}
-                className="text-sm"
+                className="max-w-full text-sm"
               />
             </div>
           </section>
@@ -472,7 +472,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
                   accept=".pdf,.docx,.pptx"
                   aria-describedby={`${fileId}-hint`}
                   onChange={(event) => void addFile(event, 'file')}
-                  className="text-sm"
+                  className="max-w-full text-sm"
                 />
               </div>
             </section>

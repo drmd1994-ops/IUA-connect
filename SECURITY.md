@@ -22,6 +22,7 @@ Please report suspected vulnerabilities privately to the repository owner (GitHu
 - Security headers (helmet on the API; nonce-based CSP, frame denial and related headers on the web app).
 - The API refuses to start in production with demo adapters.
 - CI: gitleaks, Semgrep, `pnpm audit --audit-level=high`; GitHub Actions pinned to commit SHAs.
+- **Accepted audit exception (2026-10-03):** `GHSA-vfj7-8cjw-p6xm` in `braces` (a crash on deeply nested patterns), for which no fixed version exists. It is reached only by the lint tooling, on patterns from this repository's own configuration, never on a visitor's input. Listed with its reason in `pnpm-workspace.yaml` (`auditConfig`); remove the entry when a fixed version is published. Every other advisory still fails the job.
 - Supply chain: pnpm refuses packages published less than 7 days ago, non-registry transitive sources and publisher-trust downgrades.
 
 ## Controls added in M1 (Identity)
