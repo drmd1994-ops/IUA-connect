@@ -123,7 +123,8 @@ jobs (pg-boss's own schema: pgboss.*)
 ### Reserved for later (schema stubs or documented only)
 
 - **payments**, **invoices** (D4). Planned as empty tables in the MVP; **not created**. Memberships carry a `payment_status` set by hand. The tables come with the payments milestone.
-- Phase 2+: `cme_*`, `cases*`, `community_*`, `research_*`, `publications`, `conversations`/`messages`, `jobs`, `fellowships`, `mentors`, `logbook_entries`, `questions`, `governance_*`, `ai_*`. **Not** created until their milestone. Adding them as migrations later is cheap, and empty tables mislead.
+- `conversations`/`messages` were created in M11 (private chat); see section 8.
+- Phase 2+: `cme_*`, `cases*`, `community_*`, `research_*`, `publications`, `jobs`, `fellowships`, `mentors`, `logbook_entries`, `questions`, `governance_*`, `ai_*`. **Not** created until their milestone. Adding them as migrations later is cheap, and empty tables mislead.
 
 ## 4. Indexes (initial)
 
@@ -153,8 +154,9 @@ jobs (pg-boss's own schema: pgboss.*)
 | Sessions / refresh tokens      | Purged 30 days after expiry                                                                         |
 | Rejected verification requests | 1 year                                                                                              |
 | Deleted account                | Profile hard-deleted after a 30-day grace period. Audit entries keep the pseudonymous user ID only. |
+| Chat messages (M11)            | Kept until a person deletes them or the account is deleted; **no automatic deletion yet**. The period is for the legal review. The copy of messages kept with a report is erased 90 days after the report is closed. |
 
-## 8. As built (end of the MVP, M9)
+## 8. As built (end of the MVP, M9, and chat in M11)
 
 Sections 2 to 5 are the design written before the code. **The schema that runs is `apps/api/prisma/schema.prisma` and the migrations beside it**; where they differ from the design above, they win. Each milestone's plan (`docs/plans/`) explains its tables. The differences worth knowing:
 
@@ -184,3 +186,20 @@ Sections 2 to 5 are the design written before the code. **The schema that runs i
 | `content_announcements`, `announcement_reads`, `notification_state`                                                  | Newly published items announced once (one row per item, not per person), and what each person has read                    |
 | `broadcast_translations`, `broadcast_deliveries`                                                                     | A message's texts per language; one row per person it reached, so nobody receives it twice                                |
 | `settings`                                                                                                           | Site settings (contact details, notice banner); the database accepts only the known keys                                  |
+
+**Chat (M11)**
+
+Private conversations and the later rooms share these tables; a room adds a kind and its own columns in M12. Nothing existing was changed by the migration.
+
+| Table                                         | What it holds                                                                                                                                                                                              |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `conversations`                               | A conversation. For a direct one: its two people, smaller id first, with a unique index (one conversation per pair). `last_seq` numbers the messages; the next message takes the next number under a row lock |
+| `conversation_members`                        | A person in a conversation: how far they have read and received (**two numbers per person, not a row per message**), "marked unread", mute and archive                                                      |
+| `messages`                                    | Plain text, its number inside the conversation (`unique (conversation_id, seq)`, which serves paging and the unread count), the message it replies to, edited and deleted times, and a search column maintained by a trigger. Deleting for everyone erases the text and keeps the row |
+| `message_hides`                               | "Delete for me": a row only for a message a person hid from their own side                                                                                                                                 |
+| `chat_blocks`                                 | Who blocked whom                                                                                                                                                                                           |
+| `chat_preferences`                            | Who can write to me, read status, typing, and when the last "messages are waiting" email went out. A missing row means the starting settings                                                               |
+| `chat_report_categories`, `chat_reports`      | The reasons for reporting (rows, seeded), and reports with a kept copy of the reported message and the five on each side                                                                                   |
+| `chat_suspensions`                            | A person staff suspended from sending in chat, from when until when, and who lifted it                                                                                                                     |
+
+Typing is never stored. Reactions, attachments, pins and room bans have no tables yet: each comes with the milestone that uses it.

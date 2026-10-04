@@ -32,6 +32,9 @@ export interface EmailTemplates {
   contentDigest: { count: number; link: string };
   // A broadcast from the association; its text is the message's paragraphs.
   broadcast: { title: string; link: string };
+  // Chat (M11): unread private messages are waiting, in this many conversations. Never the
+  // text of a message or who sent it.
+  chatUnread: { count: number; link: string };
 }
 
 export type EmailTemplate = keyof EmailTemplates;

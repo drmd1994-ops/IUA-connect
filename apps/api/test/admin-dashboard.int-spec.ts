@@ -61,6 +61,7 @@ describe('admin: dashboard and settings (integration)', () => {
         'broadcasts',
         'events',
         'accounts',
+        'chat',
       ]) {
         expect(full[part]).not.toBeNull();
       }
@@ -78,6 +79,7 @@ describe('admin: dashboard and settings (integration)', () => {
         broadcasts: null,
         events: null,
         accounts: null,
+        chat: null,
       });
 
       const eventAdmin = await signInWithMfa(h, 'dashboard-events', (email) =>

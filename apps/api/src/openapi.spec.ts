@@ -64,4 +64,31 @@ describe('OpenAPI document', () => {
     walk(path.join(__dirname));
     expect(offenders.filter((file) => !file.endsWith('nullable-string.ts'))).toEqual([]);
   });
+
+  /**
+   * The document names a schema after its DTO class, so two classes with one name become one
+   * schema: the later one silently replaces the earlier, and the web compiles against the
+   * wrong shape (found in M11, when chat added a second UnreadCountDto).
+   */
+  it('names every DTO class once', () => {
+    const seen = new Map<string, string>();
+    const twice: string[] = [];
+    const walk = (dir: string) => {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          if (entry.name !== 'generated') walk(full);
+        } else if (entry.name.endsWith('.ts') && !entry.name.endsWith('.spec.ts')) {
+          const source = readFileSync(full, 'utf8');
+          for (const [, name] of source.matchAll(/export class (\w+Dto)\b/g)) {
+            const first = seen.get(name!);
+            if (first) twice.push(`${name}: ${first} and ${full}`);
+            else seen.set(name!, full);
+          }
+        }
+      }
+    };
+    walk(path.join(__dirname));
+    expect(twice).toEqual([]);
+  });
 });

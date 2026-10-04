@@ -48,6 +48,9 @@ const MEMBER_PAGES = [
   '/account/notifications',
   '/account/notifications/preferences',
   '/account/security',
+  // The chat pages themselves keep a connection open, so they never go quiet; chat.spec.ts
+  // runs axe on them.
+  '/account/chat',
   '/members',
   '/education/exam',
   '/search?q=demo',
@@ -90,6 +93,7 @@ const ADMIN_PAGES: { path: string; openFirst?: string }[] = [
   { path: '/admin/education/questions/new' },
   { path: '/admin/broadcasts', openFirst: 'broadcasts-table' },
   { path: '/admin/broadcasts/new' },
+  { path: '/admin/chat/reports', openFirst: 'chat-reports-table' },
   { path: '/admin/users', openFirst: 'accounts-table' },
   { path: '/admin/users/roles' },
   { path: '/admin/audit' },

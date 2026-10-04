@@ -35,6 +35,7 @@ export class AdminDashboardController {
     'education.review',
     'broadcasts.create',
     'broadcasts.approve',
+    'chat.moderate',
     'users.read',
     'audit.read',
     'settings.manage',

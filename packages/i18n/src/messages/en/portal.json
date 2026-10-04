@@ -83,6 +83,11 @@
         "waiting": "{count, plural, =0 {None waiting for approval} one {# waiting for approval} other {# waiting for approval}}",
         "link": "Open the messages"
       },
+      "chat": {
+        "title": "Chat reports",
+        "open": "{count, plural, =0 {None waiting for a decision} one {# waiting for a decision} other {# waiting for a decision}}",
+        "link": "Open the reports"
+      },
       "events": {
         "title": "Events in the next 30 days",
         "none": "None.",

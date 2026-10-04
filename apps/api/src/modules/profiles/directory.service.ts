@@ -34,6 +34,15 @@ const INCLUDE = {
 } satisfies Prisma.ProfileInclude;
 type Row = Prisma.ProfileGetPayload<{ include: typeof INCLUDE }>;
 
+/** A person as the other side of a conversation sees them. */
+export interface PersonCard {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  photoFileId: string | null;
+  listed: boolean;
+}
+
 /** What members see of each other: the fields set to "members" or "everyone". */
 const SHOWN = ['MEMBERS', 'PUBLIC'] as const;
 
@@ -156,6 +165,61 @@ export class DirectoryService implements OnModuleInit {
       this.prisma.profile.count({ where }),
     ]);
     return { items: rows.map((row) => summary(row)), total };
+  }
+
+  /**
+   * How people appear to someone they are in a conversation with (chat, M11): the first and
+   * last name, and the photo only while they are listed and show it to members. `listed` says
+   * whether their directory page can be opened. People without a profile are left out.
+   */
+  async cards(userIds: readonly string[]): Promise<Map<string, PersonCard>> {
+    const ids = [...new Set(userIds)];
+    if (ids.length === 0) return new Map();
+    const [rows, listed] = await Promise.all([
+      this.prisma.profile.findMany({
+        where: { userId: { in: ids } },
+        select: {
+          userId: true,
+          firstName: true,
+          lastName: true,
+          photoFileId: true,
+          visibility: { where: { field: 'PHOTO' }, select: { visibility: true } },
+        },
+      }),
+      this.prisma.profile.findMany({
+        where: { ...this.listed(), userId: { in: ids } },
+        select: { userId: true },
+      }),
+    ]);
+    const listedIds = new Set(listed.map((row) => row.userId));
+    return new Map(
+      rows.map((row) => {
+        const isListed = listedIds.has(row.userId);
+        const showsPhoto = row.visibility.some((v) =>
+          (SHOWN as readonly string[]).includes(v.visibility),
+        );
+        return [
+          row.userId,
+          {
+            id: row.userId,
+            firstName: row.firstName,
+            lastName: row.lastName,
+            photoFileId: isListed && showsPhoto ? row.photoFileId : null,
+            listed: isListed,
+          },
+        ];
+      }),
+    );
+  }
+
+  /** Whether these people are listed today (opted in, usable account, active membership). */
+  async listedAmong(userIds: readonly string[]): Promise<Set<string>> {
+    if (userIds.length === 0) return new Set();
+    const rows = await this.prisma.profile.findMany({
+      where: { ...this.listed(), userId: { in: [...userIds] } },
+      select: { userId: true },
+    });
+    return new Set(rows.map((row) => row.userId));
   }
 
   // --- Consent --------------------------------------------------------------------------------

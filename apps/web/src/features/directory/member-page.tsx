@@ -6,6 +6,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
+import { MemberChatActions } from '@/features/chat/member-chat-actions';
 import { StoredImage } from '@/features/content/files';
 import { useLocalName } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
@@ -123,6 +124,7 @@ function MemberView({ id }: { id: string }) {
             {member.title && <p className="mt-1 text-text-muted">{member.title}</p>}
           </div>
         </div>
+        <MemberChatActions userId={member.id} name={shown} />
         {nameOnly && <p className="text-text-muted">{m('nameOnly')}</p>}
         {rows.length > 0 && (
           <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-[auto_1fr]">

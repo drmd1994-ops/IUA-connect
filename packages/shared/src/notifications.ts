@@ -22,6 +22,8 @@ export const NOTIFICATION_KINDS = [
   'GUIDELINES',
   /** Staff work: an item was sent back or published. Not shown in the preferences. */
   'WORK',
+  /** Private messages in chat: the number on the Chat link, and one email a day at most. */
+  'MESSAGES',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -43,6 +45,7 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   EDUCATION: { app: true, email: false, locked: false },
   GUIDELINES: { app: true, email: false, locked: false },
   WORK: { app: true, email: true, locked: true },
+  MESSAGES: { app: true, email: true, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -50,6 +53,7 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   'ACCOUNT',
   'MY_EVENTS',
   'ASSOCIATION',
+  'MESSAGES',
   'NEWS',
   'NEW_EVENTS',
   'EDUCATION',

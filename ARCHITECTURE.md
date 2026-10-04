@@ -63,8 +63,9 @@ Why not microservices: one developer, demo mode, and a Windows-native environmen
 | Audit                                                                                              | ✅           | Append-only log                                                                       |
 | Admin                                                                                              | ✅           | Aggregated admin endpoints (dashboard, approvals queue)                               |
 | Import                                                                                             | ✅ (tooling) | One-off CLI to import the curated sample from urology.ima.org.il into seed data       |
+| Chat | ✅ (M11, private chat only) | One-to-one conversations between members: messages, read and delivered markers, blocking, reports and staff review, live through an event stream (ADR 0009). Rooms, attachments and group chats are later milestones; the tables are shared |
 | Payments | ⛔ not built | Membership has a `payment_status` field set by hand. No payment tables or provider interface yet (planned as "schema plus interface"; not done). |
-| Community, Cases, CME, Research, Publications, Jobs, Mentorship, Messaging, Logbook, Question Bank | Phase 2      |                                                                                       |
+| Community (public chat rooms: M12), Cases, CME, Research, Publications, Jobs, Mentorship, Logbook, Question Bank | Phase 2      |                                                                                       |
 | AI, Calculators, Journal Club, Conference Mode+                                                    | Phase 3      |                                                                                       |
 | Governance / Voting                                                                                | Later        | Voting via an external provider, pending legal review                                 |
 
@@ -82,11 +83,12 @@ Every external dependency sits behind an interface with a demo implementation th
 | `Mailer`           | Console / file outbox                                           | SMTP / provider                              |
 | `PushProvider` | `DisabledPushProvider`: sends nothing. The notifier hands it each notice in the app (M10). No devices are registered and there is no push switch yet | Expo Push / FCM / APNs, with the mobile app |
 | `VideoProvider` | `LinkVideoProvider`: a recording is a link to where it is hosted (ADR 0008). Education asks it what may be attached and how it is played (M10) | A hosted video service, chosen after the pitch |
+| `RealtimeBus` | PostgreSQL `NOTIFY`/`LISTEN`: passes chat events between API processes, so an event stream connected to one process hears what another wrote (M11, ADR 0009). Allowed in production | Redis pub/sub |
 | `PaymentProvider` | **Not built** (no code yet) | Israeli payment processor with hosted fields |
 | `MembershipSource` | Manual (admin screens and CSV import). **Not a separate interface in the code** | IMA integration |
 | `SearchProvider`   | Postgres full-text search                                       | OpenSearch                                   |
 
-The eight interfaces that exist in the code are `JobQueue`, `RateLimitStore`, `ObjectStorage`, `MalwareScanner`, `Mailer`, `SearchProvider`, and since M10 `VideoProvider` and `PushProvider`. The remaining rows (`IdentityProvider`, `PaymentProvider`, `MembershipSource`) were planned as "interface only" and were not written; each is added with the feature that needs it.
+The nine interfaces that exist in the code are `JobQueue`, `RateLimitStore`, `ObjectStorage`, `MalwareScanner`, `Mailer`, `SearchProvider`, since M10 `VideoProvider` and `PushProvider`, and since M11 `RealtimeBus`. The remaining rows (`IdentityProvider`, `PaymentProvider`, `MembershipSource`) were planned as "interface only" and were not written; each is added with the feature that needs it.
 
 Adapters are selected with environment variables and validated at startup. The app refuses to start with an invalid combination, e.g. `NoopScanner` while `NODE_ENV=production`.
 

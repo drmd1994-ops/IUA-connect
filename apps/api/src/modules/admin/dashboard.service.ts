@@ -20,7 +20,7 @@ export class DashboardService {
   async get(principal: Principal, now = new Date()): Promise<AdminDashboardDto> {
     const can = (permission: Parameters<Principal['permissions']['has']>[0]) =>
       principal.permissions.has(permission);
-    const [applications, members, review, broadcasts, events, accounts] = await Promise.all([
+    const [applications, members, review, broadcasts, events, accounts, chat] = await Promise.all([
       can('membership.approve.final') ? this.applications() : null,
       can('membership.read') ? this.members() : null,
       can('news.review') || can('education.review')
@@ -29,8 +29,13 @@ export class DashboardService {
       can('broadcasts.approve') ? this.broadcasts() : null,
       can('events.manage') ? this.events(now) : null,
       can('users.read') ? this.accounts(now) : null,
+      can('chat.moderate') ? this.chat() : null,
     ]);
-    return { applications, members, review, broadcasts, events, accounts };
+    return { applications, members, review, broadcasts, events, accounts, chat };
+  }
+
+  private async chat() {
+    return { openReports: await this.prisma.chatReport.count({ where: { status: 'OPEN' } }) };
   }
 
   private async applications() {

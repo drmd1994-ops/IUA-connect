@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { ChatLink } from '@/features/chat/chat-link';
 import { NotificationBell } from '@/features/notifications/notification-bell';
 import { SearchBox } from '@/features/search/search-box';
 import { Link } from '@/i18n/navigation';
@@ -51,6 +52,7 @@ export function SiteHeader() {
           >
             {nav('guidelines')}
           </Link>
+          <ChatLink />
           <SearchBox />
           <LocaleSwitcher />
           <NotificationBell />

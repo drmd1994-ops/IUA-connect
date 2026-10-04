@@ -108,6 +108,7 @@ describe('notifications and preferences (integration)', () => {
       { kind: 'ACCOUNT', app: true, email: true, locked: true },
       { kind: 'MY_EVENTS', app: true, email: true, locked: false },
       { kind: 'ASSOCIATION', app: true, email: true, locked: false },
+      { kind: 'MESSAGES', app: true, email: true, locked: false },
       { kind: 'NEWS', app: true, email: false, locked: false },
       { kind: 'NEW_EVENTS', app: true, email: false, locked: false },
       { kind: 'EDUCATION', app: true, email: false, locked: false },

@@ -11,7 +11,8 @@
 | Admin and director accounts             | Can approve members, publish content, and message every member                                           |
 | Content integrity                       | Members rely on IUA content being authentic                                                              |
 | Audit trail                             | Evidence of who did what                                                                                 |
-| (Later) patient-adjacent content        | Cases, logbook, messaging. The highest sensitivity; out of the MVP.                                      |
+| Private messages between members (M11)  | Correspondence between doctors. Sensitive in itself, and the place where a patient's details could be typed against the rules. |
+| (Later) patient-adjacent content        | Cases, logbook. The highest sensitivity; out of the MVP. Chat between doctors and patients is not planned. |
 
 ## 2. Threat model (MVP, STRIDE summary)
 
@@ -24,6 +25,10 @@
 | Denial of service                               | Login floods; huge uploads                                                | Rate limits; upload size caps; pagination caps; timeouts                                                                 |
 | Elevation of privilege                          | Member calls `/admin/*`; director approves outside their department       | Permission guard on every route (deny by default); scoped roles; admin requires `mfa=true`; tests for every admin route  |
 | **Admin account takeover → phishing broadcast** | Attacker messages all members                                             | Mandatory MFA for admins; two-admin approval for broadcasts; new-device alerts; short admin sessions                     |
+
+| **Reading someone else's conversation**         | Changing a conversation or message id in a request; listening to the event stream | Every chat route finds the caller's own membership of the conversation first; anything else is 404, tested per route; stream events carry ids only |
+| **Staff reading private messages**              | An administrator browses conversations                                    | No such route exists. A report carries the reported message and five on each side; each look is audited                  |
+| **Harassment or spam in chat**                  | Unwanted messages; mass first contact                                     | Only listed members can be written to, and each can choose "nobody"; blocking; per-person limits; reports; suspension    |
 
 ## 3. Controls by area
 
@@ -57,6 +62,17 @@
 - Images are re-encoded and **all metadata (EXIF, GPS) is stripped**.
 - Stored outside the web root under random keys. Downloads only through short-lived signed URLs after an access check. `Content-Disposition: attachment` for documents.
 - `scan_status` is tracked. In demo mode uploads are admin-only and marked UNSCANNED. The app **refuses to start in production with the no-op scanner**.
+
+### Chat (M11)
+
+- **Who may read:** only the two people of a conversation. The service looks up the caller's membership of the conversation on every route; a conversation or message the caller has no part in answers "not found", like one that never existed. Administrators have no way in.
+- **Who may write to whom:** an active member, to a member listed in the directory who has not chosen "nobody". Not listed, not active, "nobody" and blocked all look like nobody.
+- **Text is plain text.** No HTML and no Markdown; the page shows it as text, so nothing typed can run in another person's browser. Web addresses become links with `rel="noopener noreferrer nofollow"`.
+- **Blocking** stops messages in both directions; the blocked person gets a neutral refusal and is not told.
+- **Reports and staff:** `chat.moderate` (IUA admins, in a session with two-step verification). A report keeps the reported message and the five before and after it; staff see nothing else of the conversation. Nobody decides on a report they are part of. Every look and every decision is in the audit log, without message text. The kept copy is erased 90 days after the report is closed.
+- **The event stream** is authenticated like every route, carries ids only, ends after ten minutes (the life of an access token) and is limited to three per person.
+- **Email and push** about messages never carry the text or the sender.
+- **Not protected:** messages are **not end-to-end encrypted**; whoever can read the database can read them. Nothing technical stops a person from typing a patient's details: there is a standing note, a report reason, and staff can delete. This needs the legal review before real use.
 
 ### Secrets and cryptography
 

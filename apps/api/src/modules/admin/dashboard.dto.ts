@@ -51,5 +51,7 @@ export class AdminDashboardDto extends createZodDto(
       })
       .nullable(),
     accounts: z.strictObject({ locked: count, disabled: count }).nullable(),
+    /** Chat reports waiting for a decision (M11). */
+    chat: z.strictObject({ openReports: count }).nullable(),
   }),
 ) {}
