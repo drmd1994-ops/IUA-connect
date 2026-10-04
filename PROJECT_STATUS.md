@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M11 built on `feat/chat`, not merged)_
+_Last updated: 2026-10-05 (M11 merged)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: built on `feat/chat` (2026-10-05), not merged.** |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -588,7 +588,7 @@ Plan: [`docs/plans/M11-chat.md`](docs/plans/M11-chat.md), approved by the owner 
 
 No new libraries.
 
-**State: built, on branch `feat/chat`, pull request #14 open with green CI. Waiting for the owner's checkpoint test and for the merge.**
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #14, squash commit `8c2b494`), with green CI. The owner's checkpoint test is still to come.
 
 ### Delivered
 
@@ -651,7 +651,7 @@ No new libraries.
 ### Open for the owner
 
 1. **Checkpoint test of the demo:** `pnpm demo:reset`, then `pnpm dev`. Two windows: `member.full@demo.test` and, in a private window, `member.honorary@demo.test`. Write to each other; mute, archive, block; report a message; then `admin@demo.test` at "Chat reports". The demo script has a chat section (8).
-2. **Merge pull request #14** (CI green), or ask Claude to. It is opened from `feat/chat` into `main`, as the plan said.
+2. ~~Merge pull request #14~~ merged at the owner's request on 2026-10-05 (CI green).
 3. **The session bug above:** fix it now (a few seconds' grace for the previous refresh token), or leave it.
 4. **The wording of the Hebrew chat texts** (`packages/i18n/src/messages/he/chat.json`) is Claude's and should be read by the owner.
 5. **M12 (public rooms)** needs its own plan when the owner wants it.
@@ -663,6 +663,6 @@ No new libraries.
 
 **M10 (video and push connection points)** was merged on 2026-10-04 (pull request #12).
 
-**M11 (private chat)** is built on branch `feat/chat` and waits for the owner's checkpoint test and for the pull request (see "Open for the owner" in its section). **M12 (public rooms) and M13 (files, online status)** follow, each with its own approved plan.
+**M11 (private chat)** was merged on 2026-10-05 (pull request #14). The owner's checkpoint test is still open (see "Open for the owner" in its section). **M12 (public rooms) and M13 (files, online status)** follow, each with its own approved plan.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
