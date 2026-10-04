@@ -21,6 +21,7 @@ export const PERMISSIONS = [
   'files.upload',
   'broadcasts.create',
   'broadcasts.approve',
+  'chat.moderate',
   'audit.read',
   'settings.manage',
 ] as const;

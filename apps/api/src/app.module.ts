@@ -13,12 +13,14 @@ import { MailerModule } from './infra/mailer/mailer.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { PushModule } from './infra/push/push.module';
 import { RateLimitModule } from './infra/rate-limit/rate-limit.module';
+import { RealtimeModule } from './infra/realtime/realtime.module';
 import { StorageModule } from './infra/storage/storage.module';
 import { VideoModule } from './infra/video/video.module';
 import { AuditModule } from './modules/audit';
 import { AccessModule } from './modules/access';
 import { AdminModule } from './modules/admin';
 import { AuthModule } from './modules/auth';
+import { ChatModule } from './modules/chat';
 import { EducationModule } from './modules/education';
 import { EventsModule } from './modules/events';
 import { FilesModule } from './modules/files';
@@ -58,6 +60,7 @@ export class AppModule {
         StorageModule,
         VideoModule,
         PushModule,
+        RealtimeModule,
         JobsModule.forRoot(env),
         AuditModule,
         HealthModule,
@@ -73,6 +76,7 @@ export class AppModule {
         EducationModule,
         NotificationsModule,
         SearchModule,
+        ChatModule,
         AdminModule,
       ],
       providers: PIPELINE_PROVIDERS,

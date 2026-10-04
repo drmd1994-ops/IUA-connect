@@ -34,6 +34,7 @@ export const ROLES = {
       'files.upload',
       'broadcasts.create',
       'broadcasts.approve',
+      'chat.moderate',
       'audit.read',
     ],
     requiresMfa: true,

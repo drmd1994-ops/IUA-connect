@@ -28,4 +28,15 @@ export const RATE_LIMITS = {
   directoryPerUser: { name: 'directory-user', limit: 30, windowSec: 60, by: 'user' },
   searchPerIp: { name: 'search-ip', limit: 60, windowSec: 60, by: 'ip' },
   searchPerUser: { name: 'search-user', limit: 60, windowSec: 60, by: 'user' },
+  // Chat (M11 plan §3)
+  chatMessagesPerUser: { name: 'chat-messages-user', limit: 30, windowSec: 60, by: 'user' },
+  chatConversationsPerUser: {
+    name: 'chat-conversations-user',
+    limit: 10,
+    windowSec: 3600,
+    by: 'user',
+  },
+  chatReportsPerUser: { name: 'chat-reports-user', limit: 10, windowSec: 3600, by: 'user' },
+  chatSearchPerUser: { name: 'chat-search-user', limit: 60, windowSec: 60, by: 'user' },
+  chatTypingPerUser: { name: 'chat-typing-user', limit: 1, windowSec: 3, by: 'user' },
 } as const satisfies Record<string, RateLimitRule>;

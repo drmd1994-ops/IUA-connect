@@ -91,6 +91,17 @@ model User {
   notificationState   NotificationState?
   broadcastDeliveries BroadcastDelivery[]
   consents            Consent[]
+  conversationsLow    Conversation[]           @relation("ConversationUserLow")
+  conversationsHigh   Conversation[]           @relation("ConversationUserHigh")
+  conversationMembers ConversationMember[]
+  messages            Message[]
+  messageHides        MessageHide[]
+  chatBlocksMade      ChatBlock[]              @relation("ChatBlocker")
+  chatBlocksReceived  ChatBlock[]              @relation("ChatBlocked")
+  chatPreference      ChatPreference?
+  chatReportsMade     ChatReport[]             @relation("ChatReporter")
+  chatReportsReceived ChatReport[]             @relation("ChatReported")
+  chatSuspensions     ChatSuspension[]
 
   @@map("users")
 }
@@ -1569,6 +1580,8 @@ enum NotificationKind {
   GUIDELINES
   /// Staff work (an item sent back or published). Always on; not in the preferences.
   WORK
+  /// Private messages in chat (M11): the number on the Chat link, and one email a day at most.
+  MESSAGES
 
   @@map("notification_kind")
 }
@@ -1787,4 +1800,247 @@ model Setting {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("settings")
+}
+
+// ---------------------------------------------------------------------------
+// Chat (M11). docs/plans/M11-chat.md §4. Private conversations now; rooms (M12) and group chats
+// use the same tables, with their own kinds and columns added by their milestones.
+// ---------------------------------------------------------------------------
+
+enum ConversationKind {
+  /// Two people. One conversation per pair.
+  DIRECT
+
+  @@map("conversation_kind")
+}
+
+enum ConversationMemberRole {
+  MEMBER
+
+  @@map("conversation_member_role")
+}
+
+/// Who may start a conversation with a person (M11 plan §3).
+enum ChatAudience {
+  /// Active members, while the person is listed in the member directory.
+  LISTED
+  NOBODY
+
+  @@map("chat_audience")
+}
+
+enum ChatReportStatus {
+  OPEN
+  DISMISSED
+  UPHELD
+
+  @@map("chat_report_status")
+}
+
+/// What a reviewer did about a report.
+enum ChatReportAction {
+  NONE
+  MESSAGE_DELETED
+  SUSPENDED
+
+  @@map("chat_report_action")
+}
+
+/// A conversation. Messages are numbered inside it (last_seq), so their order, paging and the
+/// unread count never depend on clocks. The pair columns hold the two people of a direct
+/// conversation, smaller id first; a database check keeps the order and the unique index keeps
+/// one conversation per pair.
+model Conversation {
+  id            String           @id @db.Uuid
+  kind          ConversationKind @default(DIRECT)
+  userLowId     String?          @map("user_low_id") @db.Uuid
+  userHighId    String?          @map("user_high_id") @db.Uuid
+  /// The number of the newest message; the next message gets last_seq + 1 under a row lock.
+  lastSeq       Int              @default(0) @map("last_seq")
+  /// When the newest message was sent: the list shows the newest activity first.
+  lastMessageAt DateTime?        @map("last_message_at") @db.Timestamptz(6)
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  userLow  User?                @relation("ConversationUserLow", fields: [userLowId], references: [id], onDelete: SetNull)
+  userHigh User?                @relation("ConversationUserHigh", fields: [userHighId], references: [id], onDelete: SetNull)
+  members  ConversationMember[]
+  messages Message[]
+  reports  ChatReport[]
+
+  @@unique([userLowId, userHighId])
+  @@index([userHighId])
+  @@map("conversations")
+}
+
+/// A person in a conversation, with what is theirs alone: how far they have read and received,
+/// and whether they muted or archived it. Read and delivered are two numbers per person, not a
+/// row per message.
+model ConversationMember {
+  conversationId   String                 @map("conversation_id") @db.Uuid
+  userId           String                 @map("user_id") @db.Uuid
+  role             ConversationMemberRole @default(MEMBER)
+  joinedAt         DateTime               @default(now()) @map("joined_at") @db.Timestamptz(6)
+  /// The number of the last message this person has read.
+  lastReadSeq      Int                    @default(0) @map("last_read_seq")
+  /// The number of the last message this person's app has received.
+  lastDeliveredSeq Int                    @default(0) @map("last_delivered_seq")
+  /// "Mark as unread": shown as unread until the person opens it again.
+  markedUnread     Boolean                @default(false) @map("marked_unread")
+  muted            Boolean                @default(false)
+  /// When a timed mute ends; null with muted = true means until switched back.
+  mutedUntil       DateTime?              @map("muted_until") @db.Timestamptz(6)
+  archivedAt       DateTime?              @map("archived_at") @db.Timestamptz(6)
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId, archivedAt])
+  @@map("conversation_members")
+}
+
+/// A message. Plain text. Deleting for everyone erases the text and keeps the row, so the
+/// conversation shows that something was there. A deleted account's messages stay for the other
+/// person, without a sender.
+model Message {
+  id             String                   @id @db.Uuid
+  conversationId String                   @map("conversation_id") @db.Uuid
+  /// The message's number inside its conversation, from 1.
+  seq            Int
+  senderId       String?                  @map("sender_id") @db.Uuid
+  body           String                   @db.VarChar(4000)
+  replyToId      String?                  @map("reply_to_id") @db.Uuid
+  /// From the Idempotency-Key header: a retried request never sends the message twice.
+  idempotencyKey String?                  @map("idempotency_key") @db.VarChar(100)
+  editedAt       DateTime?                @map("edited_at") @db.Timestamptz(6)
+  deletedAt      DateTime?                @map("deleted_at") @db.Timestamptz(6)
+  createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Maintained by a trigger: the text after the Hebrew normalisation, as for news.
+  searchVector   Unsupported("tsvector")? @map("search_vector")
+
+  conversation Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User?         @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  replyTo      Message?      @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      Message[]     @relation("MessageReplies")
+  hides        MessageHide[]
+  reports      ChatReport[]
+
+  @@unique([conversationId, seq])
+  @@unique([senderId, idempotencyKey])
+  @@index([replyToId])
+  @@index([searchVector], map: "messages_search_idx", type: Gin)
+  @@map("messages")
+}
+
+/// "Delete for me": a row only for a message a person hid from their own side.
+model MessageHide {
+  userId    String   @map("user_id") @db.Uuid
+  messageId String   @map("message_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([userId, messageId])
+  @@index([messageId])
+  @@map("message_hides")
+}
+
+/// One person blocked another: neither can send to the other while the row exists.
+model ChatBlock {
+  blockerId String   @map("blocker_id") @db.Uuid
+  blockedId String   @map("blocked_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  blocker User @relation("ChatBlocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("ChatBlocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@id([blockerId, blockedId])
+  @@index([blockedId])
+  @@map("chat_blocks")
+}
+
+/// A person's chat settings. A missing row means the starting settings.
+model ChatPreference {
+  userId          String       @id @map("user_id") @db.Uuid
+  audience        ChatAudience @default(LISTED)
+  /// Show others when I have read their messages (and see it for theirs).
+  readReceipts    Boolean      @default(true) @map("read_receipts")
+  /// Show others when I am typing.
+  typing          Boolean      @default(true)
+  /// When the last "messages are waiting" email went out: at most one a day.
+  unreadEmailedAt DateTime?    @map("unread_emailed_at") @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("chat_preferences")
+}
+
+/// The reasons a person can choose when reporting. Rows, not code, so they can be edited.
+model ChatReportCategory {
+  id        String  @id @db.Uuid
+  key       String  @unique @db.VarChar(40)
+  nameHe    String  @map("name_he") @db.VarChar(120)
+  nameEn    String  @map("name_en") @db.VarChar(120)
+  sortOrder Int     @default(0) @map("sort_order")
+  active    Boolean @default(true)
+
+  reports ChatReport[]
+
+  @@map("chat_report_categories")
+}
+
+/// A report about a person or a message. The snapshot keeps the reported message and the few
+/// around it as they were, so a later deletion doesn't empty the report; it is erased 90 days
+/// after the report is closed.
+model ChatReport {
+  id             String           @id @db.Uuid
+  reporterId     String?          @map("reporter_id") @db.Uuid
+  reportedUserId String?          @map("reported_user_id") @db.Uuid
+  conversationId String?          @map("conversation_id") @db.Uuid
+  messageId      String?          @map("message_id") @db.Uuid
+  categoryId     String           @map("category_id") @db.Uuid
+  description    String?          @db.VarChar(2000)
+  snapshot       Json?
+  status         ChatReportStatus @default(OPEN)
+  action         ChatReportAction @default(NONE)
+  reviewedBy     String?          @map("reviewed_by") @db.Uuid
+  reviewedAt     DateTime?        @map("reviewed_at") @db.Timestamptz(6)
+  /// The reviewer's reason for the decision.
+  resolution     String?          @db.VarChar(1000)
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  reporter     User?              @relation("ChatReporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  reportedUser User?              @relation("ChatReported", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  conversation Conversation?      @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  message      Message?           @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  category     ChatReportCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([reportedUserId])
+  @@index([reporterId])
+  @@index([messageId])
+  @@index([conversationId])
+  @@map("chat_reports")
+}
+
+/// A person staff suspended from sending in chat. They can still read, and keep the rest of the
+/// site. In force from starts_at until ends_at (null: until lifted), unless lifted.
+model ChatSuspension {
+  id        String    @id @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  createdBy String    @map("created_by") @db.Uuid
+  reason    String    @db.VarChar(1000)
+  reportId  String?   @map("report_id") @db.Uuid
+  startsAt  DateTime  @default(now()) @map("starts_at") @db.Timestamptz(6)
+  endsAt    DateTime? @map("ends_at") @db.Timestamptz(6)
+  liftedAt  DateTime? @map("lifted_at") @db.Timestamptz(6)
+  liftedBy  String?   @map("lifted_by") @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, startsAt(sort: Desc)])
+  @@map("chat_suspensions")
 }
