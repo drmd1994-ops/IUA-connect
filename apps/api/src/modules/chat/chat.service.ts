@@ -6,7 +6,9 @@ import { Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { DirectoryService, type PersonCard } from '../profiles';
+import { prepareQuery } from '../search';
 import { ChatAccess } from './chat-access';
+import { ChatNotifier } from './chat-notifier';
 import {
   type MuteChoice,
   canEdit,
@@ -26,6 +28,8 @@ import {
   type MessageDto,
   type MessageListDto,
   type MessageListQueryDto,
+  type MessageSearchDto,
+  type MessageSearchQueryDto,
 } from './chat.dto';
 
 interface ConversationRow {
@@ -74,6 +78,7 @@ export class ChatService {
     private readonly access: ChatAccess,
     private readonly directory: DirectoryService,
     private readonly stream: ChatStream,
+    private readonly notifier: ChatNotifier,
   ) {}
 
   // --- Conversations --------------------------------------------------------------------------
@@ -237,9 +242,13 @@ export class ChatService {
     });
   }
 
-  /** How many conversations hold something unread, for the number on the Chat link. */
+  /**
+   * How many conversations hold something unread, for the number on the Chat link. Nothing
+   * for a person who switched "Private messages" off in the app.
+   */
   async unreadCount(principal: Principal): Promise<number> {
     const me = principal.userId;
+    if (!(await this.notifier.wantsInApp(me))) return 0;
     const rows = await this.prisma.$queryRaw<{ count: number }[]>`
       SELECT count(*)::int AS count
       FROM conversation_members m
@@ -379,6 +388,7 @@ export class ChatService {
       messageId: row.id,
       seq: row.seq,
     });
+    await this.notifier.messageSent(id, others);
     return { message: messageView(row, me), created: true };
   }
 
@@ -450,6 +460,84 @@ export class ChatService {
     ]);
     if (!settings.get(me)!.typing || state !== 'none') return;
     await this.stream.publish(others, { type: 'typing', conversationId: id, userId: me });
+  }
+
+  /**
+   * Finds messages by their text, in one of the reader's conversations or in all of them,
+   * newest first. Hebrew-aware like the site search: vowel marks and final letters are
+   * ignored, a word matches from its start and with or without a one-letter prefix. Deleted
+   * messages and the ones the reader deleted for themselves are never found.
+   */
+  async search(principal: Principal, query: MessageSearchQueryDto): Promise<MessageSearchDto> {
+    const me = principal.userId;
+    if (query.conversationId) await this.member(query.conversationId, me);
+    const prepared = prepareQuery(query.q);
+    if (!prepared) return { items: [] };
+    const found = await this.prisma.$queryRaw<{ id: string }[]>`
+      SELECT x.id
+      FROM messages x
+      JOIN conversation_members m
+        ON m.conversation_id = x.conversation_id AND m.user_id = ${me}::uuid
+      WHERE x.search_vector @@ to_tsquery('simple', ${prepared.tsquery})
+        AND x.deleted_at IS NULL
+        AND NOT EXISTS (
+          SELECT 1 FROM message_hides h WHERE h.message_id = x.id AND h.user_id = ${me}::uuid
+        )
+        ${
+          query.conversationId
+            ? Prisma.sql`AND x.conversation_id = ${query.conversationId}::uuid`
+            : Prisma.empty
+        }
+      ORDER BY x.created_at DESC, x.id DESC
+      LIMIT ${query.limit}`;
+    if (found.length === 0) return { items: [] };
+    const ids = found.map((row) => row.id);
+    const [rows, members] = await Promise.all([
+      this.prisma.message.findMany({ where: { id: { in: ids } }, select: MESSAGE_SELECT }),
+      this.prisma.conversationMember.findMany({
+        where: { conversation: { messages: { some: { id: { in: ids } } } }, userId: { not: me } },
+        select: { conversationId: true, userId: true },
+      }),
+    ]);
+    const otherOf = new Map(members.map((row) => [row.conversationId, row.userId]));
+    const cards = await this.directory.cards([...otherOf.values()]);
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    return {
+      items: ids.flatMap((id) => {
+        const row = byId.get(id);
+        if (!row) return [];
+        const otherId = otherOf.get(row.conversationId) ?? null;
+        return [
+          {
+            message: messageView(row, me),
+            other: personView(otherId, otherId ? cards.get(otherId) : undefined),
+          },
+        ];
+      }),
+    };
+  }
+
+  /**
+   * Staff delete a reported message (the reports service calls this after its own checks).
+   * The same as the sender deleting it for everyone.
+   */
+  async removeAsStaff(messageId: string): Promise<boolean> {
+    const message = await this.prisma.message.findUnique({
+      where: { id: messageId },
+      select: { conversationId: true, seq: true, deletedAt: true },
+    });
+    if (!message || message.deletedAt) return false;
+    await this.prisma.message.update({
+      where: { id: messageId },
+      data: { body: '', deletedAt: new Date(), editedAt: null },
+    });
+    await this.stream.publish(await this.memberIds(message.conversationId), {
+      type: 'message.deleted',
+      conversationId: message.conversationId,
+      messageId,
+      seq: message.seq,
+    });
+    return true;
   }
 
   // --- Internals ------------------------------------------------------------------------------

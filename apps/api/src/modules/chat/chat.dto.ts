@@ -159,6 +159,166 @@ export class SendMessageDto extends createZodDto(
 
 export class EditMessageDto extends createZodDto(z.strictObject({ body: messageBody })) {}
 
+export class MessageSearchQueryDto extends createZodDto(
+  z.strictObject({
+    /** Words to find, at least 2 characters. */
+    q: z.string().trim().min(2).max(100),
+    /** Only in this conversation; in all of the reader's conversations when left out. */
+    conversationId: z.uuid().optional(),
+    limit: z.coerce.number().int().min(1).max(50).default(30),
+  }),
+) {}
+
+export class MessageSearchDto extends createZodDto(
+  z.strictObject({
+    /** Newest first. */
+    items: z.array(z.strictObject({ message, other: person })),
+  }),
+) {}
+
+// --- Reports and suspensions (M11 plan §2.11, §2.14) --------------------------------------------
+
+export class ReportCategoriesDto extends createZodDto(
+  z.strictObject({
+    items: z.array(
+      z.strictObject({ id: z.uuid(), key: z.string(), nameHe: z.string(), nameEn: z.string() }),
+    ),
+  }),
+) {}
+
+export class ReportInputDto extends createZodDto(
+  z
+    .strictObject({
+      /** The message being reported; its sender is the person reported. */
+      messageId: z.uuid().optional(),
+      /** The person being reported, when no single message is. */
+      userId: z.uuid().optional(),
+      categoryId: z.uuid(),
+      description: z.string().trim().max(2000).optional(),
+    })
+    .refine((input) => (input.messageId === undefined) !== (input.userId === undefined), {
+      message: 'name a message or a person, not both',
+    }),
+) {}
+
+export class ReportCreatedDto extends createZodDto(z.strictObject({ id: z.uuid() })) {}
+
+export const REPORT_STATUSES = ['OPEN', 'DISMISSED', 'UPHELD'] as const;
+export const REPORT_ACTIONS = ['NONE', 'MESSAGE_DELETED', 'SUSPENDED'] as const;
+export const REPORTS_PAGE_SIZE = 20;
+
+/** A person as staff see them in a report: the name and the account. */
+const reportPerson = z.strictObject({
+  id: nullableString(),
+  firstName: nullableString(),
+  lastName: nullableString(),
+});
+
+const snapshotMessage = z.strictObject({
+  seq: z.number().int(),
+  senderId: nullableString(),
+  body: z.string(),
+  deleted: z.boolean(),
+  createdAt: z.iso.datetime(),
+  /** The message the report is about. */
+  reported: z.boolean(),
+});
+export type SnapshotMessage = z.infer<typeof snapshotMessage>;
+
+const reportSummary = z.strictObject({
+  id: z.uuid(),
+  status: z.enum(REPORT_STATUSES),
+  action: z.enum(REPORT_ACTIONS),
+  category: z.strictObject({ key: z.string(), nameHe: z.string(), nameEn: z.string() }),
+  reporter: reportPerson,
+  reported: reportPerson,
+  /** About a message (true) or about a person as such. */
+  aboutMessage: z.boolean(),
+  createdAt: z.iso.datetime(),
+  reviewedAt: z.iso.datetime().nullable(),
+});
+
+export class AdminReportListQueryDto extends createZodDto(
+  z.strictObject({
+    status: z.enum(REPORT_STATUSES).optional(),
+    page: z.coerce.number().int().min(1).max(500).default(1),
+  }),
+) {}
+
+export class AdminReportListDto extends createZodDto(
+  z.strictObject({
+    items: z.array(reportSummary),
+    total: z.number().int(),
+    page: z.number().int(),
+    pageSize: z.number().int(),
+  }),
+) {}
+
+export class AdminReportDto extends createZodDto(
+  reportSummary.extend({
+    description: nullableString(),
+    /**
+     * The reported message and up to five before and after it, as they were when it was
+     * reported. Empty for a report about a person, and once the kept copy has been erased.
+     */
+    messages: z.array(snapshotMessage),
+    reviewer: reportPerson,
+    resolution: nullableString(),
+    /** The reported person is suspended from chat now. */
+    reportedSuspended: z.boolean(),
+    /** The reader may decide on it: it is open, and they are neither of its two people. */
+    canResolve: z.boolean(),
+  }),
+) {}
+
+const reason = z.string().trim().min(3).max(1000);
+/** How long a suspension lasts; null means until it is lifted. */
+const suspensionDays = z.number().int().min(1).max(365).nullable();
+
+export class ResolveReportDto extends createZodDto(
+  z
+    .strictObject({
+      decision: z.enum(['dismiss', 'deleteMessage', 'suspend']),
+      reason,
+      days: suspensionDays.optional(),
+    })
+    .refine((input) => (input.decision === 'suspend') === (input.days !== undefined), {
+      message: 'days go with a suspension, and only with one',
+    }),
+) {}
+
+const suspension = z.strictObject({
+  id: z.uuid(),
+  user: reportPerson,
+  reason: z.string(),
+  startsAt: z.iso.datetime(),
+  endsAt: z.iso.datetime().nullable(),
+  liftedAt: z.iso.datetime().nullable(),
+  /** In force now. */
+  active: z.boolean(),
+});
+
+export class AdminSuspensionListQueryDto extends createZodDto(
+  z.strictObject({ page: z.coerce.number().int().min(1).max(500).default(1) }),
+) {}
+
+export class AdminSuspensionListDto extends createZodDto(
+  z.strictObject({
+    items: z.array(suspension),
+    total: z.number().int(),
+    page: z.number().int(),
+    pageSize: z.number().int(),
+  }),
+) {}
+
+export class AdminSuspensionDto extends createZodDto(suspension) {}
+
+export class SuspendInputDto extends createZodDto(
+  z.strictObject({ userId: z.uuid(), reason, days: suspensionDays }),
+) {}
+
+export class LiftSuspensionDto extends createZodDto(z.strictObject({ reason })) {}
+
 /** A person's chat settings (M11 plan §2.12). */
 export class ChatSettingsDto extends createZodDto(
   z.strictObject({

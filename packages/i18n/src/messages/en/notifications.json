@@ -21,7 +21,8 @@
     "NEW_EVENTS": "New events",
     "EDUCATION": "Education",
     "GUIDELINES": "Guidelines",
-    "WORK": "Your work"
+    "WORK": "Your work",
+    "MESSAGES": "Private messages"
   },
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
@@ -30,7 +31,8 @@
     "NEWS": "A news item was published.",
     "NEW_EVENTS": "An event was published.",
     "EDUCATION": "An education item was published.",
-    "GUIDELINES": "A guideline was added or got a new version."
+    "GUIDELINES": "A guideline was added or got a new version.",
+    "MESSAGES": "Chat messages from other members. In the app: the number on the Chat link. By email: at most one message a day saying that unread messages are waiting, without their text."
   },
   "items": {
     "eventRegistered": "You are registered for “{title}”.",
@@ -53,6 +55,7 @@
     "contentGuideline": "New guideline: {title}",
     "contentGuidelineVersion": "A guideline has a new version: {title}",
     "broadcast": "A message from the association: {title}",
+    "chatMessage": "You have a new private message.",
     "unknown": "You have a new notification."
   },
   "preferences": {

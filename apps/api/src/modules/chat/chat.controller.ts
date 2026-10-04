@@ -41,6 +41,8 @@ import {
   MessageDto,
   MessageListDto,
   MessageListQueryDto,
+  MessageSearchDto,
+  MessageSearchQueryDto,
   ReadDto,
   SendMessageDto,
   StartConversationDto,
@@ -104,6 +106,19 @@ export class ChatController {
   @ApiOkResponse({ description: 'Server-sent events; each one is a JSON object with a "type".' })
   events(@Req() req: RequestWithPrincipal): Observable<MessageEvent> {
     return this.stream.open(principalOf(req).userId).pipe(map((event) => ({ data: event })));
+  }
+
+  /** Finds messages by their text, in one conversation or in all of the reader's. */
+  @Get('search')
+  @ApiOkResponse({ type: MessageSearchDto })
+  async search(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: MessageSearchQueryDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<MessageSearchDto> {
+    const principal = principalOf(req);
+    await hitUserLimit(this.limits, RATE_LIMITS.chatSearchPerUser, principal.userId, res);
+    return this.chat.search(principal, query);
   }
 
   @Get('conversations/:id')

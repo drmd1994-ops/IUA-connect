@@ -157,5 +157,11 @@
     "heading": "{title}",
     "body": "A message from the association to its members:",
     "action": "Read it on IUA Connect"
+  },
+  "chatUnread": {
+    "subject": "Private messages are waiting for you",
+    "heading": "Unread private messages",
+    "body": "You have private messages on IUA Connect that you haven’t read. To keep them private, this email doesn’t show them or who sent them.",
+    "action": "Open chat"
   }
 }

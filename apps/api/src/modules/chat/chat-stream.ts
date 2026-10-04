@@ -17,6 +17,8 @@ export type ChatEvent =
   /** Someone's read or delivered marker moved, or their own settings of the conversation. */
   | { type: 'markers'; conversationId: string; userId: string }
   | { type: 'typing'; conversationId: string; userId: string }
+  /** Something about the reader's own chat changed (a suspension): ask again. */
+  | { type: 'refresh' }
   /** Sent regularly, so both ends notice a dead connection. */
   | { type: 'ping' };
 

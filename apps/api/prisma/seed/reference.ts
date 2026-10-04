@@ -1,6 +1,12 @@
 import { PERMISSIONS, ROLES, ROLE_KEYS, uuidv7 } from '@iua/shared';
 import { type PrismaClient } from '../../src/generated/prisma/client';
-import { HOSPITALS, MEMBERSHIP_TYPES, SUBSPECIALTIES, UROLOGY_DEPARTMENT } from './reference-data';
+import {
+  CHAT_REPORT_CATEGORIES,
+  HOSPITALS,
+  MEMBERSHIP_TYPES,
+  SUBSPECIALTIES,
+  UROLOGY_DEPARTMENT,
+} from './reference-data';
 
 /**
  * Reference layer: permissions, roles and the role → permission mapping, from the catalogue in
@@ -41,6 +47,19 @@ export async function seedReference(prisma: PrismaClient): Promise<void> {
     `seed: reference layer — ${PERMISSIONS.length} permissions, ${ROLE_KEYS.length} roles`,
   );
   await seedInstitutions(prisma);
+  await seedChat(prisma);
+}
+
+/** The reasons a person can choose when reporting in chat (M11): inserted when missing. */
+async function seedChat(prisma: PrismaClient): Promise<void> {
+  for (const [index, category] of CHAT_REPORT_CATEGORIES.entries()) {
+    await prisma.chatReportCategory.upsert({
+      where: { key: category.key },
+      update: {},
+      create: { id: uuidv7(), ...category, sortOrder: index + 1 },
+    });
+  }
+  console.log(`seed: reference layer — ${CHAT_REPORT_CATEGORIES.length} chat report categories`);
 }
 
 /** Membership types, subspecialties, hospitals and their urology departments (M2). */

@@ -237,3 +237,16 @@ export const UROLOGY_DEPARTMENT = {
   nameHe: 'המחלקה האורולוגית',
   nameEn: 'Department of Urology',
 };
+
+/** Chat report reasons (M11 plan §2.11). Rows, not code, so admins can edit them later. */
+export const CHAT_REPORT_CATEGORIES: { key: string; nameHe: string; nameEn: string }[] = [
+  { key: 'HARASSMENT', nameHe: 'הטרדה או פגיעה', nameEn: 'Harassment or abuse' },
+  { key: 'SPAM', nameHe: 'ספאם או פרסום', nameEn: 'Spam or advertising' },
+  {
+    key: 'PATIENT_INFORMATION',
+    nameHe: 'פרטים מזהים של מטופל',
+    nameEn: 'Details that identify a patient',
+  },
+  { key: 'IMPERSONATION', nameHe: 'התחזות', nameEn: 'Impersonation' },
+  { key: 'OTHER', nameHe: 'אחר', nameEn: 'Something else' },
+];
