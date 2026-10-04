@@ -123,6 +123,20 @@
 - **Settings (unit):** unknown provider names are refused at start-up; `links` and `disabled` are allowed in production.
 - **Nothing visible changed,** so the browser suite runs as it was.
 
+## What the M11 (Private chat) suites prove
+
+- **Rules (unit, `chat-rules.spec.ts`; web `chat-model.test.ts`):** the 15-minute edit window; what a mute stores and when it is over; one ordering of a pair whoever starts; previews; sent, delivered and read from the two markers; text cut into plain pieces and links; an event read from the stream.
+- **Nobody outside a conversation can read it (integration, `chat.int-spec.ts`; the exit criterion):** a third member, who knows both ids and has a conversation of their own, gets the same "not found" as for an invented id on every chat route (read, messages, send, read marker, typing, settings, edit, delete, hide), can't quote a message of that conversation in a reply, and finds nothing of it in their list. An administrator has no way in either.
+- **Conversations and messages:** one conversation per pair, also when both start at the same moment; only listed members can be written to, and everyone else looks like nobody; a member whose membership ended reads and can't send; messages are numbered in order when both send at once; empty, over-long and malformed input is refused and HTML is kept as plain text; a repeated request with one `Idempotency-Key` sends once; only the sender edits (15 minutes) and deletes; "delete for me" hides on one side.
+- **Read, delivered, unread:** two markers per person, never a row per message; "mark as unread"; mute and archive, and a new message bringing an archived conversation back unless it is muted.
+- **Size:** a conversation of 10,000 messages pages from newest to oldest with no gap and no repeat, and both the paging query and the unread count go through the `(conversation, seq)` index (`EXPLAIN`).
+- **Live:** events reach the two people of a conversation and nobody else, and carry ids only; "is typing" is not stored; a person has at most three streams.
+- **Blocking and settings (`chat-settings.int-spec.ts`):** not listed, not active, "nobody" and blocked give the same answer; a block stops messages both ways and the blocked person sees nothing that names it; read status off on either side hides it for both; the limits per person (messages, new conversations, searches, typing) against the real counters.
+- **Search, notices, reports (`chat-reports.int-spec.ts`):** Hebrew-aware search in the caller's own messages only, never deleted or hidden ones; one "messages are waiting" email a day at most, without the text or the sender, and none for read, muted or archived conversations or with the switch off; push is handed a notice without text; a report keeps the message and five on each side after the sender deletes it; the admin access pattern on every admin chat route; deleting and suspending; nobody decides on their own report; the kept copy is erased after 90 days.
+- **One existing test was changed:** the list of notification kinds now has "Private messages", and the dashboard has a chat part. Everything else runs as it was.
+- **A new guard (`openapi.spec.ts`):** two DTO classes with one name become one schema in the API document, and the web then compiles against the wrong shape. The test now refuses a second class with a name already used.
+- **End to end (Playwright, `chat.spec.ts`):** two members in two windows, one in Hebrew: "is typing", a message arriving within two seconds without refreshing, read status, reply, edit, delete for me, delete for everyone, and the number on the Chat link; mute, archive, mark as unread, search and chat settings; a third member refused at the conversation's address; report, block and the refused message; staff delete a reported message and suspend and reinstate a person, seen live by both; the phone layout at 320 px by keyboard. Axe runs on every chat page and dialog.
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.
@@ -141,6 +155,7 @@ pnpm --filter @iua/web e2e
 - Locally the tests reuse `pnpm dev` if it's running (API on 4000, web on 3001), or start it. They run in **Chromium and Microsoft Edge**; Edge skips the journeys that create accounts.
 - Emails are read from the `outbox/` folder, and administrators are created with `pnpm admin:create`, so the dev database must be set up (`pnpm setup:dev`).
 - **Registration is limited to 5 per IP per hour**, and every local run comes from `localhost`. Each full run registers 2 accounts, so after two or three runs in an hour the sign-up test fails with "Too many attempts". Restart the API (`pnpm dev`) to reset the in-memory counters.
+- **If a local run loses its sign-ins halfway,** the API restarted under it: in `pnpm dev` the API restarts whenever a file it watches changes. Run against the builds instead, as CI does: `pnpm build`, stop `pnpm dev`, then `$env:CI = '1'; pnpm --filter @iua/web e2e` (found in M11).
 - In CI the e2e job runs `pnpm setup:dev` on a fresh database, builds, and runs Chromium against the production builds. On failure the Playwright report is attached to the run.
 
 ## Conventions

@@ -124,6 +124,21 @@ Sign in as `super@demo.test` (new code). The admin area opens.
 | **החשבון הזה ביומן הביקורת**.                                                        | The action, who did it, when, from where, and the reason. | "Everything that matters is recorded, and nobody can change the record."    |
 | **הגדרות** → tick **הצגת ההודעה** → **שמירה**. Then open the home page.              | A notice across the top of every page.                    | "The association can tell everyone something at once, without a developer." |
 
+### 8. Chat between members (2 minutes, optional; added in M11)
+
+Two windows: `member.full@demo.test` in the first, and in a private window `member.honorary@demo.test`. Neither needs a code.
+
+| Do                                                                                   | The audience sees                                                                               | Say                                                                                                     |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| First window: **צ׳אט** in the top menu (it carries a number).                        | The member's conversations; one has unread messages, one is marked "מושתקת".                    | "Private messages between members. Only members who chose to be in the directory can be written to."    |
+| Open the conversation with Ruth Golan.                                               | Messages in Hebrew and English, and above the message box: "אין לכתוב פרטים שמזהים מטופל."      | "It is for colleagues. Patient details don't belong here, and the page says so."                        |
+| Second window: **Chat** → the conversation with Noa Bar-Lev → type a message, Enter. | In the first window: "Ruth Golan מקליד/ה…", then the message appears by itself.                 | "Messages arrive at once. Nobody refreshes anything."                                                   |
+| First window: answer. Look at the ticks under your message.                          | One tick, then two, then two coloured ones when the other window shows it.                      | "Sent, delivered, read. Each member can switch 'read' off."                                             |
+| First window: the three dots beside a message of hers → **דיווח** (don't send it).   | A short form: a reason, and what staff will see.                                                | "A member can report a message. Staff see that message and the five around it, never the conversation." |
+| As `admin@demo.test`: **דיווחי צ׳אט** → open the waiting report.                     | The reported message, marked, with the one after it; the decision: dismiss, delete, or suspend. | "Staff can't browse conversations. Every look at a report is written to the audit log."                 |
+
+The seed leaves one report waiting (a sample advertisement, between two other demo members). `pnpm demo:reset` puts everything back.
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).
@@ -146,4 +161,4 @@ Sign in as `super@demo.test` (new code). The admin area opens.
 
 ## What not to promise
 
-See [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). In short: this is a demo on one computer with fictional data. There is no payment, no CME tracking, no mobile app yet, and nothing has been through a legal or security review for real members' data.
+See [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). In short: this is a demo on one computer with fictional data. There is no payment, no CME tracking, no mobile app yet, chat is private one-to-one only and not end-to-end encrypted, and nothing has been through a legal or security review for real members' data.

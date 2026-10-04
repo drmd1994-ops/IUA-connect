@@ -86,7 +86,9 @@ Spec §48 names `DATABASE.md`, `API.md` and `AI.md`, while spec §61 names `DATA
 | **M8**  | Admin portal completion & dashboard | Admin dashboard, audit-log viewer, settings, member dashboard with "Coming soon" quick actions                                                                                                                                                     | Every admin route passes the 401/403/403/2xx test pattern                                                                |
 | **M9**  | Pitch readiness                     | Accessibility audit (axe + manual NVDA), performance pass, OWASP ZAP baseline, demo script and seeded demo accounts per role, README polish                                                                                                        | Demo runs end to end on the owner's machine. Known limitations documented.                                               |
 
-**After the MVP (pending the pitch outcome):** a real-data readiness gate (legal review, pen test, hosting in an Israeli region, backups and monitoring) → **Expo app** → Phase 2 (CME, community, cases, research, publications, jobs, mentorship, messaging, logbook with MedOps-compatible export, question bank) → Phase 3 (AI, calculators, journal club, conference mode) → governance / voting.
+**Added after the MVP, at the owner's request:** M10, connection points for a video service and a push service (2026-10-04). **M11, private chat** between members (2026-10-05, `docs/plans/M11-chat.md`), the first of three chat milestones: **M12** public rooms and their moderation, **M13** files in messages and online status (files only after the legal review). Each needs its own approved plan.
+
+**After the MVP (pending the pitch outcome):** a real-data readiness gate (legal review, pen test, hosting in an Israeli region, backups and monitoring) → **Expo app** → Phase 2 (CME, community, cases, research, publications, jobs, mentorship, the rest of chat, logbook with MedOps-compatible export, question bank) → Phase 3 (AI, calculators, journal club, conference mode) → governance / voting.
 
 ## 4. How work flows (ready for 2–3 developers)
 

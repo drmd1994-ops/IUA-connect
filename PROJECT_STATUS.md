@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-04 (M10 merged)_
+_Last updated: 2026-10-05 (M11 built on `feat/chat`, not merged)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: built on `feat/chat` (2026-10-05), not merged.** |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -574,10 +574,95 @@ No new libraries. No database change.
 - ~~Merge the pull request~~ merged at the owner's request on 2026-10-04 (pull request #12, CI green). There was nothing new to click: the demo is that the site behaves as before.
 - Still open from M9: whether the remaining three items (payment tables and `PaymentProvider`, `IdentityProvider`, `MembershipSource`) are built now or each with its feature; and the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
+## M11 Private chat (2026-10-05)
+
+Plan: [`docs/plans/M11-chat.md`](docs/plans/M11-chat.md), approved by the owner on 2026-10-04 with the recommended answer to every question (plan §12). The owner's request is `chat.md.txt` (private chat and public rooms, about a hundred capabilities). Owner decisions:
+
+- **Three milestones.** M11 is the shared foundation and private chat; M12 public rooms and their moderation; M13 files and online status.
+- **Live messages with what the project already has.** No new library ([ADR 0009](docs/adr/0009-live-updates-by-event-stream.md)).
+- **Who can be written to:** members listed in the directory, each of whom can choose "nobody".
+- **Staff** see only a reported message with the five before and after it, and every look is recorded. **Messages are kept** until deleted; the real period is for the legal review.
+- **No files or images** in M11.
+- **Read status and "is typing…"** are on at the start; each person can switch theirs off.
+- **Doctor/patient chats** are not planned at all (patient information is not allowed in this project).
+
+No new libraries.
+
+**State: built, on branch `feat/chat`. Waiting for the owner's checkpoint test and for the pull request to be merged.**
+
+### Delivered
+
+- **Chat in the top menu** for members, with the number of conversations that hold unread messages. `/chat` lists the conversations; `/chat/[id]` is one conversation. Side by side on a wide screen, a screen each on a phone, right to left in Hebrew.
+- **Conversations:** "New conversation" finds listed members by name; "Send a message" is also on a member's directory page. One conversation per pair.
+- **Messages:** plain text up to 4,000 characters, Enter to send. Reply with a quote, edit for 15 minutes, delete for everyone, delete for me, copy. Each message's menu lists only what that person may do. Web addresses become links.
+- **Sent, delivered, read** on your own messages; unread counts; "mark as unread".
+- **Live:** new, edited and deleted messages, read status and "is typing…" arrive without refreshing. If the connection can't be opened, the page asks every ten seconds.
+- **Per conversation:** mute (8 hours, a week, until switched back), archive, search inside it. Search across all of a person's conversations, Hebrew-aware like the site search.
+- **Blocking and reporting:** block from the conversation or from a directory page; report a message or a person, with a reason from a list kept in the database.
+- **Chat settings (`/account/chat`):** who can write to me, read status, typing, and the people I blocked.
+- **Notifications:** a new kind, "Private messages". In the app it is the number on the Chat link. By email it is at most one message a day saying that unread messages are waiting, without their text or sender. The push connection point is handed a notice (it still sends nothing).
+- **Staff (`/admin/chat/reports`, permission `chat.moderate`, IUA admins):** the reports, open ones first; a report with the kept messages; dismiss, delete the message, or suspend the person from sending (for days, or until lifted); the list of suspensions. A tile on the admin dashboard counts open reports. There is no screen for reading conversations.
+- **A standing note** above the message box: "Do not write details that identify a patient."
+- **Demo seed:** three conversations between the listed demo members (Hebrew and English, unread messages, one muted), one blocked pair and one report waiting.
+- **Database:** nine tables, shared by private chat and the later rooms. The migration only adds.
+
+### Verified
+
+- API: **294 unit and 408 integration tests**, all passing (57 of the integration tests are chat's).
+- **Exit criteria:**
+  - Nobody outside a conversation can read it or learn that it exists: tested on every chat route, with the same answer as for an invented id.
+  - A message appears on the other person's open page within two seconds, with no refresh: checked by the browser test, against the built servers on this computer.
+  - A conversation of 10,000 messages pages correctly, and the paging and unread queries use their index.
+  - The admin access pattern on every admin chat route (also covered by the sweep of all admin routes).
+  - No WCAG 2.2 AA violations (axe) on the chat pages and dialogs, in Hebrew and English.
+- Playwright (Chromium, production builds, local): the four chat tests pass; the whole suite: **101 tests, all passing**.
+- Lint, type check and the formatting check are clean.
+- Before any chat code: an event stream was sent through the built web server's forwarding of `/api/v1` and arrived piece by piece, with the sign-in header.
+- The chat list, a conversation, sending and the message menu were also looked at in a browser by Claude.
+
+### Not verified
+
+- **CI on GitHub** has not run yet: the branch is not pushed. The ZAP scan in particular has not seen the new pages.
+- **The owner's checkpoint test** (two windows) is still to do.
+- **The screen-reader check** was not repeated for the chat pages; only the automated checks ran.
+- **How many open connections one server holds** was not tested.
+- **The demo script's new chat section** was written from the screens, not walked through start to finish.
+
+### Deviations and findings
+
+- **Messages are numbered inside their conversation** (`seq`), and the read and delivered markers are numbers, not message ids as the plan said. The project's ids are ordered by time only to the millisecond, so two messages sent in the same millisecond could have changed places.
+- **Reading one's own conversations needs only a signed-in account;** starting a conversation and sending need an active membership (the plan's rule that an ended membership can read and not send). The Chat link is shown to active members and to people who already have conversations.
+- **The writer needs a first and last name** before starting a conversation, because the person written to sees it, also when the writer is not listed in the directory.
+- **A person can block only someone they have a conversation with, or a listed member.** Any other id answers "not found", so blocking can't be used to test who has an account.
+- **The blocked person's page shows nothing about the block:** for them the conversation looks open, and their message is refused with "This message can't be delivered."
+- **The email goes out when a message has waited half an hour unread,** checked every half hour, at most once a day, and never again for the same message.
+- **One decision per report** (dismiss, delete the message, or suspend). To do both, staff decide on the report and suspend from the list.
+- **The copy of messages kept with a report is erased 90 days after it is closed,** by a daily job.
+- **Staff can suspend a person directly,** without a report; the plan listed the route.
+- **A new event, "refresh",** tells a person's open pages to ask again (after a suspension). The plan's list of events did not have it.
+- **Two existing tests were changed,** not only added to: the list of notification kinds now has "Private messages", and the dashboard has a chat part. The plan said the existing suites would pass unchanged; these two could not.
+- **A real bug found on the way:** chat's "unread count" answer had the same class name as the notifications one. The API document then held one schema for both, and the bell's types were wrong until the web was type-checked. Renamed, and a test now refuses two DTO classes with one name.
+- **A window opened with the browser's own dialog closed itself in development,** because React mounts a component twice there and the dialog's "close" event came from the first one. The window now closes on Escape through "cancel" instead. Found by the browser tests.
+- **Local browser tests against `pnpm dev` lost their sign-ins** when the API restarted under them. They pass against the builds, as in CI. Written into `TESTING.md`. What makes the watcher restart during a run was not tracked down.
+- **Seen in development, not caused by chat and not fixed:** when a page reloads while it is renewing the session, the server has already changed the refresh token and the browser never receives the new one; the next renewal then looks like a reused token and the session is ended. It needs a decision (a short grace period for the previous token), so it is brought to the owner and not changed here.
+- **A long conversation is not virtualised:** 50 messages load at a time and stay on the page. No new library was added for it.
+- **The running development database** got the chat demo data from `pnpm db:seed`, and test messages and reports from the browser tests. `pnpm demo:reset` clears them.
+
+### Open for the owner
+
+1. **Checkpoint test of the demo:** `pnpm demo:reset`, then `pnpm dev`. Two windows: `member.full@demo.test` and, in a private window, `member.honorary@demo.test`. Write to each other; mute, archive, block; report a message; then `admin@demo.test` at "Chat reports". The demo script has a chat section (8).
+2. **Push the branch and open the pull request?** Nothing was pushed. The owner merges, or asks for it.
+3. **The session bug above:** fix it now (a few seconds' grace for the previous refresh token), or leave it.
+4. **The wording of the Hebrew chat texts** (`packages/i18n/src/messages/he/chat.json`) is Claude's and should be read by the owner.
+5. **M12 (public rooms)** needs its own plan when the owner wants it.
+6. Still open from M9: the three unbuilt connection points, and the "who" column of the readiness checklist in `DEPLOYMENT.md`.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
 
 **M10 (video and push connection points)** was merged on 2026-10-04 (pull request #12).
+
+**M11 (private chat)** is built on branch `feat/chat` and waits for the owner's checkpoint test and for the pull request (see "Open for the owner" in its section). **M12 (public rooms) and M13 (files, online status)** follow, each with its own approved plan.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
