@@ -45,7 +45,8 @@ export function AdminDashboard() {
     !data.review &&
     !data.broadcasts &&
     !data.events &&
-    !data.accounts;
+    !data.accounts &&
+    !data.chat;
 
   return (
     <div className="flex flex-col gap-6">
@@ -107,6 +108,16 @@ export function AdminDashboard() {
               </p>
               <Link href="/admin/broadcasts" className={link}>
                 {d('broadcasts.link')}
+              </Link>
+            </Tile>
+          )}
+          {data.chat && (
+            <Tile id="chat" title={d('chat.title')}>
+              <p className="text-2xl font-semibold" data-testid="tile-chat">
+                {d('chat.open', { count: data.chat.openReports })}
+              </p>
+              <Link href="/admin/chat/reports" className={link}>
+                {d('chat.link')}
               </Link>
             </Tile>
           )}

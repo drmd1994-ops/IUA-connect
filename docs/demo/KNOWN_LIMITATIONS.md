@@ -2,7 +2,7 @@
 
 What IUA Connect does not do today, written for someone who was not there while it was built. Nothing here is hidden in the demo; this page is so that nothing is promised by mistake.
 
-Last updated: 2 October 2026 (end of the MVP, milestones M0 to M9).
+Last updated: 5 October 2026 (milestone M11, private chat).
 
 ## 1. It is a demo
 
@@ -31,7 +31,8 @@ These are in the original specification and are **not** in the demo:
 - **Payments** and invoices. Membership has a "payment status" field that is set by hand. The early planning documents said the database tables and a connection point for a payment provider would be prepared in advance; they were not, and neither were the planned connection points for an outside sign-in service and the Medical Association's member list. Each is work for the milestone that needs it.
 - **CME tracking and certificates.** Events and education items can show CME points; nothing is counted or credited.
 - **A mobile app.** The site works in a phone's browser. There are no push notifications: the place to plug a push service in exists in the code (since M10), but nothing is plugged in and nothing is sent.
-- **Community, case discussions, research collaboration, publications, jobs, mentorship, messaging between members, a surgical logbook, calculators, AI features, governance and voting.** Four of these appear on the member's dashboard as "Coming soon", and can't be clicked.
+- **Community, case discussions, research collaboration, publications, jobs, mentorship, a surgical logbook, calculators, AI features, governance and voting.** Four of these appear on the member's dashboard as "Coming soon", and can't be clicked.
+- **Most of chat.** Private chat between two members exists since M11 (see "Chat" below). Not built: public rooms and their moderation, reactions, @mentions, pinned messages and announcements (planned as M12); files and images in messages, online and "last active" status, group chats, forwarding (planned as M13, and files only after the legal review); voice and video calls. **Chat between doctors and patients is not planned at all:** patient information is not allowed anywhere in this project.
 - **A full question bank.** The exam section asks one question at a time and remembers answers; there are no timed exams, no question sets and no statistics for teachers.
 - **Video hosting.** A video is a link to where it is already hosted (YouTube, Vimeo). Restricting a video to members has to be done on that host.
 - **A video service.** The place to plug one in exists in the code (since M10); what is plugged in is "links", as described above.
@@ -51,6 +52,20 @@ These are in the original specification and are **not** in the demo:
 - The bell's number refreshes about once a minute, not instantly.
 - Email about new content is one summary a day. If the summary job is interrupted halfway, the items it had taken are not listed again.
 - A member is told about new content published since their account was created, not before.
+
+**Chat**
+
+- **Messages are not end-to-end encrypted.** They are stored in the database like the rest of the data, and whoever can read the database can read them. Encrypting the disk and the backups is on the readiness checklist.
+- **Nothing technical stops a person from typing a patient's details.** A note above the message box says not to, "details that identify a patient" is a reason for reporting, and staff can delete a reported message. This needs the legal review before any real use.
+- **Staff see a reported message with the five before and after it, and nothing else.** There is no screen for reading conversations, and every look at a report is recorded. Who moderates, and how long messages are kept, are decisions for the association and the legal review; today messages are kept until a person deletes them or the account is deleted.
+- **A person can write only to members listed in the member directory** (and not to those who chose "nobody"). The person written to sees the writer's first and last name, also when the writer is not listed.
+- "Delivered" means the other person's app received the message. With "read" switched off on either side, neither sees it.
+- A message can be edited for 15 minutes. Deleting for everyone leaves "This message was deleted" in its place.
+- Email about messages is at most one a day, and never shows a message or who sent it.
+- Messages arrive live through one open connection per chat page. **How many open connections one server can hold was not tested.** If the connection can't be opened, the page asks every ten seconds instead.
+- The number on the Chat link refreshes about once a minute on pages other than chat.
+- A long conversation loads 50 messages at a time; there is no "jump to this message" from a search result.
+- The report reasons are rows in the database; there is no screen for editing them yet.
 
 **Membership**
 
@@ -93,4 +108,5 @@ These are in the original specification and are **not** in the demo:
 3. Which video provider, if videos are to be restricted to members.
 4. Who the first administrators are, and who reviews medical content.
 5. Whether the member directory stays opt-in (as built) or changes.
-6. The legal texts: terms, privacy, consent wording, and an accessibility coordinator's contact details as Israeli regulations require.
+6. For chat: who moderates, how long messages are kept, what staff may read, and whether files may be sent.
+7. The legal texts: terms, privacy, consent wording, and an accessibility coordinator's contact details as Israeli regulations require.

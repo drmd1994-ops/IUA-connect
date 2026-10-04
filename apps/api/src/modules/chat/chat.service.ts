@@ -242,6 +242,16 @@ export class ChatService {
     });
   }
 
+  /** Whether the Chat link is shown: an active member, or someone who has conversations. */
+  async enabled(principal: Principal): Promise<boolean> {
+    if (await this.access.isActiveMember(principal)) return true;
+    const any = await this.prisma.conversationMember.findFirst({
+      where: { userId: principal.userId, conversation: { lastSeq: { gt: 0 } } },
+      select: { userId: true },
+    });
+    return any !== null;
+  }
+
   /**
    * How many conversations hold something unread, for the number on the Chat link. Nothing
    * for a person who switched "Private messages" off in the app.

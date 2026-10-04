@@ -46,7 +46,7 @@ import {
   ReadDto,
   SendMessageDto,
   StartConversationDto,
-  UnreadCountDto,
+  ChatUnreadCountDto,
 } from './chat.dto';
 import { ChatService } from './chat.service';
 
@@ -92,9 +92,14 @@ export class ChatController {
   }
 
   @Get('unread-count')
-  @ApiOkResponse({ type: UnreadCountDto })
-  async unreadCount(@Req() req: RequestWithPrincipal): Promise<UnreadCountDto> {
-    return { conversations: await this.chat.unreadCount(principalOf(req)) };
+  @ApiOkResponse({ type: ChatUnreadCountDto })
+  async unreadCount(@Req() req: RequestWithPrincipal): Promise<ChatUnreadCountDto> {
+    const principal = principalOf(req);
+    const [conversations, enabled] = await Promise.all([
+      this.chat.unreadCount(principal),
+      this.chat.enabled(principal),
+    ]);
+    return { conversations, enabled };
   }
 
   /**

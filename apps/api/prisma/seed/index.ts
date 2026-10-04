@@ -6,7 +6,8 @@
  *                 an event admin, speakers and events in every state (M5);
  *                 education items, a course and exam questions waiting for review (M6);
  *                 a second admin, directory members, notices and broadcasts (M7);
- *                 a super admin, contact details and a sample notice (M8)
+ *                 a super admin, contact details and a sample notice (M8);
+ *                 conversations, a blocked pair and a chat report waiting for review (M11)
  *   3. import:    the hand-picked IUA website sample from fixtures/iua-import/ (M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
@@ -17,6 +18,7 @@ import { config as loadEnv } from 'dotenv';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedDemo } from './demo';
+import { seedDemoChat } from './demo-chat';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
 import { seedDemoEvents } from './demo-events';
@@ -43,6 +45,7 @@ const LAYERS: SeedLayer[] = [
       await seedDemoEducation(prisma);
       await seedDemoNotifications(prisma);
       await seedDemoPortal(prisma);
+      await seedDemoChat(prisma);
     },
   },
   {

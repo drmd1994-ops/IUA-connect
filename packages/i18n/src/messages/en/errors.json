@@ -139,6 +139,19 @@
     "accountLastSuperAdmin": "This is the last super administrator. Give the role to another account first.",
     "accountIsDisabled": "This account is disabled. Enable it first.",
     "roleScoped": "This role belongs to a department or subspecialty and is assigned from that screen.",
-    "roleUnknown": "Please choose a role from the list."
+    "roleUnknown": "Please choose a role from the list.",
+    "chatNameRequired": "Add your first and last name to your profile before writing to someone. They see who wrote to them.",
+    "chatSuspended": "The association’s staff suspended you from sending messages.",
+    "chatUndeliverable": "This message can’t be delivered.",
+    "chatEditWindowClosed": "A message can be edited for 15 minutes after it was sent.",
+    "chatReplyNotInConversation": "The message you are replying to isn’t in this conversation.",
+    "chatReportOwnMessage": "You can’t report your own message.",
+    "chatReportCategoryInvalid": "Please choose a reason from the list.",
+    "chatReportClosed": "This report was already decided.",
+    "chatReportOwn": "You are one of the two people of this report, so a different administrator must decide on it.",
+    "chatReportNoMessage": "This report is about a person, so there is no message to delete.",
+    "chatReportNoPerson": "The reported account no longer exists.",
+    "chatAlreadySuspended": "This person is already suspended from chat.",
+    "chatSuspendSelf": "You can’t suspend yourself."
   }
 }

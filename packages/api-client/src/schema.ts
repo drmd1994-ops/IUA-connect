@@ -2084,6 +2084,358 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/chat/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_list"];
+        put?: never;
+        post: operations["ChatController_start"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_unreadCount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_events"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/conversations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/conversations/{id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["ChatController_update"];
+        trace?: never;
+    };
+    "/api/v1/chat/conversations/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/conversations/{id}/typing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_typing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/conversations/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatController_messages"];
+        put?: never;
+        post: operations["ChatController_send"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/messages/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["ChatController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["ChatController_edit"];
+        trace?: never;
+    };
+    "/api/v1/chat/messages/{id}/hide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatController_hide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/people": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatPeopleController_people"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatPeopleController_blocked"];
+        put?: never;
+        post: operations["ChatPeopleController_block"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/blocks/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["ChatPeopleController_unblock"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/chat-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatSettingsController_get"];
+        put: operations["ChatSettingsController_set"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/report-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatReportsController_categories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatReportsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatAdminController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/reports/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatAdminController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/reports/{id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatAdminController_resolve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/suspensions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ChatAdminController_suspensions"];
+        put?: never;
+        post: operations["ChatAdminController_suspend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/suspensions/{id}/lift": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChatAdminController_lift"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/dashboard": {
         parameters: {
             query?: never;
@@ -4518,7 +4870,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -4539,7 +4891,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -4548,7 +4900,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
                 app: boolean;
                 email: boolean;
             }[];
@@ -4557,7 +4909,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -4696,6 +5048,369 @@ export interface components {
             page: number;
             pageSize: number;
         };
+        ConversationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "DIRECT";
+                other: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                };
+                lastMessage: {
+                    /** Format: uuid */
+                    id: string;
+                    seq: number;
+                    senderId: string | null;
+                    body: string;
+                    deleted: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                } | null;
+                lastSeq: number;
+                lastMessageAt: string | null;
+                unreadCount: number;
+                markedUnread: boolean;
+                muted: boolean;
+                mutedUntil: string | null;
+                archived: boolean;
+                myLastReadSeq: number;
+                otherDeliveredSeq: number;
+                otherReadSeq: number | null;
+            }[];
+            nextCursor: string | null;
+        };
+        StartConversationDto: {
+            /** Format: uuid */
+            userId: string;
+        };
+        ConversationDetailDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "DIRECT";
+            other: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+                photoFileId: string | null;
+                listed: boolean;
+            };
+            lastMessage: {
+                /** Format: uuid */
+                id: string;
+                seq: number;
+                senderId: string | null;
+                body: string;
+                deleted: boolean;
+                /** Format: date-time */
+                createdAt: string;
+            } | null;
+            lastSeq: number;
+            lastMessageAt: string | null;
+            unreadCount: number;
+            markedUnread: boolean;
+            muted: boolean;
+            mutedUntil: string | null;
+            archived: boolean;
+            myLastReadSeq: number;
+            otherDeliveredSeq: number;
+            otherReadSeq: number | null;
+            /** @enum {string} */
+            sendState: "none" | "membersOnly" | "suspended" | "blocked" | "unavailable";
+            blockedByMe: boolean;
+        };
+        ChatUnreadCountDto: {
+            conversations: number;
+            enabled: boolean;
+        };
+        MessageSearchDto: {
+            items: {
+                message: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    conversationId: string;
+                    seq: number;
+                    senderId: string | null;
+                    mine: boolean;
+                    body: string;
+                    deleted: boolean;
+                    editedAt: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    canEdit: boolean;
+                    replyTo: {
+                        /** Format: uuid */
+                        id: string;
+                        seq: number;
+                        senderId: string | null;
+                        body: string;
+                        deleted: boolean;
+                    } | null;
+                };
+                other: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                };
+            }[];
+        };
+        ConversationSettingsDto: {
+            /** @enum {string} */
+            mute?: "off" | "8h" | "week" | "forever";
+            archived?: boolean;
+            /** @constant */
+            markedUnread?: true;
+        };
+        ReadDto: {
+            seq?: number;
+        };
+        MessageListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                conversationId: string;
+                seq: number;
+                senderId: string | null;
+                mine: boolean;
+                body: string;
+                deleted: boolean;
+                editedAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                canEdit: boolean;
+                replyTo: {
+                    /** Format: uuid */
+                    id: string;
+                    seq: number;
+                    senderId: string | null;
+                    body: string;
+                    deleted: boolean;
+                } | null;
+            }[];
+            hasMore: boolean;
+        };
+        SendMessageDto: {
+            body: string;
+            /** Format: uuid */
+            replyToId?: string;
+        };
+        MessageDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            conversationId: string;
+            seq: number;
+            senderId: string | null;
+            mine: boolean;
+            body: string;
+            deleted: boolean;
+            editedAt: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            canEdit: boolean;
+            replyTo: {
+                /** Format: uuid */
+                id: string;
+                seq: number;
+                senderId: string | null;
+                body: string;
+                deleted: boolean;
+            } | null;
+        };
+        EditMessageDto: {
+            body: string;
+        };
+        ChatPeopleDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                firstName: string | null;
+                lastName: string | null;
+                title: string | null;
+                photoFileId: string | null;
+            }[];
+        };
+        BlockListDto: {
+            items: {
+                user: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                };
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        BlockInputDto: {
+            /** Format: uuid */
+            userId: string;
+        };
+        ChatSettingsDto: {
+            /** @enum {string} */
+            audience: "LISTED" | "NOBODY";
+            readReceipts: boolean;
+            typing: boolean;
+        };
+        ReportCategoriesDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+        };
+        ReportInputDto: {
+            /** Format: uuid */
+            messageId?: string;
+            /** Format: uuid */
+            userId?: string;
+            /** Format: uuid */
+            categoryId: string;
+            description?: string;
+        };
+        ReportCreatedDto: {
+            /** Format: uuid */
+            id: string;
+        };
+        AdminReportListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                status: "OPEN" | "DISMISSED" | "UPHELD";
+                /** @enum {string} */
+                action: "NONE" | "MESSAGE_DELETED" | "SUSPENDED";
+                category: {
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
+                reporter: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                };
+                reported: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                };
+                aboutMessage: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                reviewedAt: string | null;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        AdminReportDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "OPEN" | "DISMISSED" | "UPHELD";
+            /** @enum {string} */
+            action: "NONE" | "MESSAGE_DELETED" | "SUSPENDED";
+            category: {
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            };
+            reporter: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            };
+            reported: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            };
+            aboutMessage: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            reviewedAt: string | null;
+            description: string | null;
+            messages: {
+                seq: number;
+                senderId: string | null;
+                body: string;
+                deleted: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                reported: boolean;
+            }[];
+            reviewer: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            };
+            resolution: string | null;
+            reportedSuspended: boolean;
+            canResolve: boolean;
+        };
+        ResolveReportDto: {
+            /** @enum {string} */
+            decision: "dismiss" | "deleteMessage" | "suspend";
+            reason: string;
+            days?: number | null;
+        };
+        AdminSuspensionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                user: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                };
+                reason: string;
+                /** Format: date-time */
+                startsAt: string;
+                endsAt: string | null;
+                liftedAt: string | null;
+                active: boolean;
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        SuspendInputDto: {
+            /** Format: uuid */
+            userId: string;
+            reason: string;
+            days: number | null;
+        };
+        AdminSuspensionDto: {
+            /** Format: uuid */
+            id: string;
+            user: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            };
+            reason: string;
+            /** Format: date-time */
+            startsAt: string;
+            endsAt: string | null;
+            liftedAt: string | null;
+            active: boolean;
+        };
+        LiftSuspensionDto: {
+            reason: string;
+        };
         AdminDashboardDto: {
             applications: {
                 waitingDirector: number;
@@ -4735,6 +5450,9 @@ export interface components {
             accounts: {
                 locked: number;
                 disabled: number;
+            } | null;
+            chat: {
+                openReports: number;
             } | null;
         };
         AccountListDto: {
@@ -4800,7 +5518,7 @@ export interface components {
                 key: string;
                 requiresTwoStep: boolean;
                 scope: string;
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "audit.read" | "settings.manage")[];
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -8611,6 +9329,642 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResultsDto"];
+                };
+            };
+        };
+    };
+    ChatController_list: {
+        parameters: {
+            query?: {
+                archived?: "true" | "false";
+                q?: string;
+                cursor?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationListDto"];
+                };
+            };
+        };
+    };
+    ChatController_start: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartConversationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationDetailDto"];
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationDetailDto"];
+                };
+            };
+        };
+    };
+    ChatController_unreadCount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatUnreadCountDto"];
+                };
+            };
+        };
+    };
+    ChatController_events: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Server-sent events; each one is a JSON object with a "type". */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatController_search: {
+        parameters: {
+            query: {
+                q: string;
+                conversationId?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageSearchDto"];
+                };
+            };
+        };
+    };
+    ChatController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationDetailDto"];
+                };
+            };
+        };
+    };
+    ChatController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationSettingsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationDetailDto"];
+                };
+            };
+        };
+    };
+    ChatController_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatController_typing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatController_messages: {
+        parameters: {
+            query?: {
+                before?: number;
+                after?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageListDto"];
+                };
+            };
+        };
+    };
+    ChatController_send: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Sending the same request again with the same key sends nothing new. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendMessageDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    ChatController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatController_edit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditMessageDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    ChatController_hide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatPeopleController_people: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatPeopleDto"];
+                };
+            };
+        };
+    };
+    ChatPeopleController_blocked: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlockListDto"];
+                };
+            };
+        };
+    };
+    ChatPeopleController_block: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BlockInputDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatPeopleController_unblock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChatSettingsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatSettingsDto"];
+                };
+            };
+        };
+    };
+    ChatSettingsController_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChatSettingsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatSettingsDto"];
+                };
+            };
+        };
+    };
+    ChatReportsController_categories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportCategoriesDto"];
+                };
+            };
+        };
+    };
+    ChatReportsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportCreatedDto"];
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportCreatedDto"];
+                };
+            };
+        };
+    };
+    ChatAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "OPEN" | "DISMISSED" | "UPHELD";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportListDto"];
+                };
+            };
+        };
+    };
+    ChatAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportDto"];
+                };
+            };
+        };
+    };
+    ChatAdminController_resolve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveReportDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportDto"];
+                };
+            };
+        };
+    };
+    ChatAdminController_suspensions: {
+        parameters: {
+            query?: {
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSuspensionListDto"];
+                };
+            };
+        };
+    };
+    ChatAdminController_suspend: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuspendInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSuspensionDto"];
+                };
+            };
+        };
+    };
+    ChatAdminController_lift: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LiftSuspensionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSuspensionDto"];
                 };
             };
         };

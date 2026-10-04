@@ -358,9 +358,11 @@ export class BlockListDto extends createZodDto(
   }),
 ) {}
 
-export class UnreadCountDto extends createZodDto(
+export class ChatUnreadCountDto extends createZodDto(
   z.strictObject({
     /** Conversations with something unread, leaving out muted and archived ones. */
     conversations: z.number().int(),
+    /** The reader has chat: an active membership, or conversations from when they had one. */
+    enabled: z.boolean(),
   }),
 ) {}
