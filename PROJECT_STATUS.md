@@ -588,7 +588,7 @@ Plan: [`docs/plans/M11-chat.md`](docs/plans/M11-chat.md), approved by the owner 
 
 No new libraries.
 
-**State: built, on branch `feat/chat`. Waiting for the owner's checkpoint test and for the pull request to be merged.**
+**State: built, on branch `feat/chat`, pull request #14 open with green CI. Waiting for the owner's checkpoint test and for the merge.**
 
 ### Delivered
 
@@ -617,12 +617,12 @@ No new libraries.
   - No WCAG 2.2 AA violations (axe) on the chat pages and dialogs, in Hebrew and English.
 - Playwright (Chromium, production builds, local): the four chat tests pass; the whole suite: **101 tests, all passing**.
 - Lint, type check and the formatting check are clean.
+- **CI is green on the branch** (pull request #14, run 37236557575): lint, type check, unit, integration, the browser suite, the secret and dependency scan, the ZAP scan and the build.
 - Before any chat code: an event stream was sent through the built web server's forwarding of `/api/v1` and arrived piece by piece, with the sign-in header.
 - The chat list, a conversation, sending and the message menu were also looked at in a browser by Claude.
 
 ### Not verified
 
-- **CI on GitHub** has not run yet: the branch is not pushed. The ZAP scan in particular has not seen the new pages.
 - **The owner's checkpoint test** (two windows) is still to do.
 - **The screen-reader check** was not repeated for the chat pages; only the automated checks ran.
 - **How many open connections one server holds** was not tested.
@@ -651,7 +651,7 @@ No new libraries.
 ### Open for the owner
 
 1. **Checkpoint test of the demo:** `pnpm demo:reset`, then `pnpm dev`. Two windows: `member.full@demo.test` and, in a private window, `member.honorary@demo.test`. Write to each other; mute, archive, block; report a message; then `admin@demo.test` at "Chat reports". The demo script has a chat section (8).
-2. **Push the branch and open the pull request?** Nothing was pushed. The owner merges, or asks for it.
+2. **Merge pull request #14** (CI green), or ask Claude to. It is opened from `feat/chat` into `main`, as the plan said.
 3. **The session bug above:** fix it now (a few seconds' grace for the previous refresh token), or leave it.
 4. **The wording of the Hebrew chat texts** (`packages/i18n/src/messages/he/chat.json`) is Claude's and should be read by the owner.
 5. **M12 (public rooms)** needs its own plan when the owner wants it.
