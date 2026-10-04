@@ -159,6 +159,45 @@ export class SendMessageDto extends createZodDto(
 
 export class EditMessageDto extends createZodDto(z.strictObject({ body: messageBody })) {}
 
+/** A person's chat settings (M11 plan §2.12). */
+export class ChatSettingsDto extends createZodDto(
+  z.strictObject({
+    /** Who can start a conversation with me: listed members' peers, or nobody. */
+    audience: z.enum(['LISTED', 'NOBODY']),
+    /** Show others when I have read their messages (and see it for theirs). */
+    readReceipts: z.boolean(),
+    /** Show others when I am typing. */
+    typing: z.boolean(),
+  }),
+) {}
+
+export class ChatPeopleQueryDto extends createZodDto(
+  z.strictObject({
+    /** Part of a name, at least 2 characters. */
+    q: z.string().trim().min(2).max(100),
+  }),
+) {}
+
+const reachablePerson = z.strictObject({
+  id: z.uuid(),
+  firstName: nullableString(),
+  lastName: nullableString(),
+  title: nullableString(),
+  photoFileId: nullableString(),
+});
+
+export class ChatPeopleDto extends createZodDto(
+  z.strictObject({ items: z.array(reachablePerson) }),
+) {}
+
+export class BlockInputDto extends createZodDto(z.strictObject({ userId: z.uuid() })) {}
+
+export class BlockListDto extends createZodDto(
+  z.strictObject({
+    items: z.array(z.strictObject({ user: person, createdAt: z.iso.datetime() })),
+  }),
+) {}
+
 export class UnreadCountDto extends createZodDto(
   z.strictObject({
     /** Conversations with something unread, leaving out muted and archived ones. */

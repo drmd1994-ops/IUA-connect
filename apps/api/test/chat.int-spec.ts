@@ -1,13 +1,7 @@
 import { RealtimeBus } from '../src/infra/realtime/realtime-bus';
 import { type ChatEvent, ChatStream } from '../src/modules/chat';
-import {
-  type Harness,
-  bearer,
-  createVerifiedUser,
-  signIn,
-  signInAdmin,
-  startHarness,
-} from './auth-harness';
+import { type Harness, bearer, signInAdmin, startHarness } from './auth-harness';
+import { type ChatPerson as Person, NOBODY, chatActors } from './chat-harness';
 
 /**
  * M11 checkpoint 2: private conversations and their messages. Everyone here is fictional.
@@ -17,110 +11,35 @@ import {
 describe('chat: conversations and messages (integration)', () => {
   let h: Harness;
   let admin: { accessToken: string };
-  let types: Record<string, string>;
-  const run = Date.now().toString(36);
-  let n = 0;
-  const tag = () => `zc${run}${(++n).toString(36)}x`;
-  const NOBODY = '0190a000-0000-7000-8000-00000000c0de';
-
-  interface Person {
-    id: string;
-    email: string;
-    token: string;
-    membershipId: string | null;
-  }
+  const {
+    tag,
+    person,
+    member,
+    listed,
+    endMembership,
+    start,
+    send,
+    messages,
+    conversation,
+    list,
+    unread,
+    read,
+    settings,
+    pair,
+    bodies,
+  } = chatActors(
+    () => h,
+    () => admin.accessToken,
+  );
 
   beforeAll(async () => {
     h = await startHarness();
     admin = await signInAdmin(h, 'chat-admin');
-    const res = await h.http().get('/api/v1/membership-types').expect(200);
-    types = Object.fromEntries(
-      (res.body.items as { key: string; id: string }[]).map((t) => [t.key, t.id]),
-    );
   });
 
   afterAll(async () => {
     await h.close();
   });
-
-  async function person(membershipType: string | null = null): Promise<Person> {
-    const email = await createVerifiedUser(h, 'chat');
-    let membershipId: string | null = null;
-    if (membershipType) {
-      const created = await h
-        .http()
-        .post('/api/v1/admin/memberships')
-        .set(bearer(admin.accessToken))
-        .send({ email, typeId: types[membershipType] })
-        .expect(201);
-      membershipId = created.body.membership.id;
-    }
-    const { rows } = await h.db.query<{ id: string }>('SELECT id FROM users WHERE email = $1', [
-      email,
-    ]);
-    return { id: rows[0]!.id, email, token: (await signIn(h, email)).accessToken, membershipId };
-  }
-  /** An active member with a name. Not listed in the directory. */
-  async function member(first = 'Noa'): Promise<Person> {
-    const p = await person('HONORARY_MEMBER');
-    await h
-      .http()
-      .patch('/api/v1/me/profile')
-      .set(bearer(p.token))
-      .send({ firstName: first, lastName: `Fictional ${tag()}` })
-      .expect(200);
-    return p;
-  }
-  /** An active member who chose to be listed, so others may write to them. */
-  async function listed(first = 'Dana'): Promise<Person> {
-    const p = await member(first);
-    await h
-      .http()
-      .post('/api/v1/me/consents')
-      .set(bearer(p.token))
-      .send({ kind: 'DIRECTORY', granted: true })
-      .expect(200);
-    return p;
-  }
-  const endMembership = (p: Person, how: 'suspend' | 'expire') =>
-    h
-      .http()
-      .post(`/api/v1/admin/memberships/${p.membershipId}/${how}`)
-      .set(bearer(admin.accessToken))
-      .send(how === 'suspend' ? { reason: 'Test' } : {})
-      .expect(200);
-
-  const start = (from: Person, toId: string) =>
-    h.http().post('/api/v1/chat/conversations').set(bearer(from.token)).send({ userId: toId });
-  const send = (from: Person, id: string, body: string, extra: object = {}) =>
-    h
-      .http()
-      .post(`/api/v1/chat/conversations/${id}/messages`)
-      .set(bearer(from.token))
-      .send({ body, ...extra });
-  const messages = (as: Person, id: string, query = '') =>
-    h.http().get(`/api/v1/chat/conversations/${id}/messages${query}`).set(bearer(as.token));
-  const conversation = (as: Person, id: string) =>
-    h.http().get(`/api/v1/chat/conversations/${id}`).set(bearer(as.token));
-  const list = (as: Person, query = '') =>
-    h.http().get(`/api/v1/chat/conversations${query}`).set(bearer(as.token));
-  const unread = async (as: Person) =>
-    (await h.http().get('/api/v1/chat/unread-count').set(bearer(as.token)).expect(200)).body
-      .conversations as number;
-  const read = (as: Person, id: string, body: object = {}) =>
-    h.http().post(`/api/v1/chat/conversations/${id}/read`).set(bearer(as.token)).send(body);
-  const settings = (as: Person, id: string, body: object) =>
-    h.http().patch(`/api/v1/chat/conversations/${id}/me`).set(bearer(as.token)).send(body);
-
-  /** A and B (B listed) with an open conversation. */
-  async function pair(): Promise<{ a: Person; b: Person; id: string }> {
-    const a = await member();
-    const b = await listed();
-    const id = (await start(a, b.id).expect(201)).body.id as string;
-    return { a, b, id };
-  }
-  const bodies = (res: { body: { items: { body: string }[] } }) =>
-    res.body.items.map((item) => item.body);
 
   describe('who may use chat', () => {
     it('needs a signed-in account on every route', async () => {

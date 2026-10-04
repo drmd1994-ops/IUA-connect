@@ -182,7 +182,13 @@ export class ChatService {
       this.access.sendState(principal, row.otherId),
       row.otherId ? this.access.blocks(me, row.otherId) : { byMe: false, byThem: false },
     ]);
-    return { ...view!, sendState, blockedByMe: blocks.byMe };
+    return {
+      ...view!,
+      // A person someone else blocked is not told: for them the conversation looks open, and
+      // a message they send is refused with a neutral answer.
+      sendState: sendState === 'blocked' && !blocks.byMe ? 'none' : sendState,
+      blockedByMe: blocks.byMe,
+    };
   }
 
   /** Mute, archive, or mark as unread: the reader's own settings of a conversation. */
