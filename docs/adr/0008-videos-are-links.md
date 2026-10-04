@@ -32,3 +32,7 @@ An item of a linked type can be submitted for review only with a link or marked 
 - Access tiers protect the item page and its link, not the recording: whoever has the link can open it on the host. Recordings meant for members only must be protected on the host (unlisted or private), until a provider is chosen.
 - Viewing isn't tracked, so progress and CME credit for watching wait for a provider (Phase 2).
 - Moving to a provider later adds a status and a player. The existing columns and items stay as they are.
+
+## Update (M10, 2026-10-03)
+
+The link behaviour now sits behind a `VideoProvider` interface (`apps/api/src/infra/video/`), as `LinkVideoProvider`, chosen with `VIDEO_PROVIDER=links`. The decision above is unchanged: nothing is hosted, embedded or tracked. A hosted service would be a second implementation of that interface; the stored value (`external_url`) is then a reference the provider understands, and the page receives the address the provider gives for that viewer.

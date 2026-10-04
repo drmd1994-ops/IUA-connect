@@ -114,6 +114,15 @@
 - **Security scan (CI job `zap`):** the OWASP ZAP baseline reads the running site and API passively on every change. A new warning fails the build unless it is listed with a reason (`docs/security/ZAP_BASELINE.md`). It is not a penetration test.
 - **Performance** is measured by hand with Lighthouse, not in CI; the numbers are in `docs/demo/PERFORMANCE.md`.
 
+## What the M10 (Video and push connection points) suites prove
+
+- **Video (unit):** the link provider accepts web links and refuses everything else (scripts, files, other schemes, relative addresses, over-long links); it presents a recording as a link to its host.
+- **Video (integration, `video.int-spec.ts`):** with a stand-in for a hosted service in place of the link provider, education refuses a recording the provider does not take (naming the field), does not ask about a type that has no recording, stores the reference and not a viewer's address, and gives each viewer the address the provider returns for them. The existing education tests run unchanged against the link provider.
+- **Push (unit):** the disabled provider says push does not exist and sends nothing.
+- **Push (integration, `push.int-spec.ts`):** with a recording provider in place, a notice reaches the push provider with the same type, values and in-site link as the notice in the app, only for the person it is for, and not when the person switched that kind off in the app; when the push service fails, the notice in the app and the email are still delivered.
+- **Settings (unit):** unknown provider names are refused at start-up; `links` and `disabled` are allowed in production.
+- **Nothing visible changed,** so the browser suite runs as it was.
+
 ## Integration test database
 
 `pnpm setup:dev` creates `iua_connect_test`. The integration suite migrates and seeds it (reference layer) before running (`test/global-setup.ts`) and connects as the application role, exactly like the running API. Tests use unique IDs and don't depend on an empty database; the audit log can't be cleaned anyway (append-only), so if a reset is ever needed, drop `iua_connect_test` as the superuser and re-run `pnpm db:provision`.

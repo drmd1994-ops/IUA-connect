@@ -103,6 +103,7 @@
     "educationChanged": "Someone changed this item in the meantime. Please reload it and try again.",
     "educationNotEditable": "This item can’t be edited now. Drafts are edited by editors; an item in review by a reviewer.",
     "educationTypeFixed": "The type of an item can’t be changed. Create a new item instead.",
+    "educationLinkRefused": "This link can’t be used for a recording. Use a full web address, for example https://example.org/lecture.",
     "educationNotDeletable": "Only a draft that was never published can be deleted.",
     "educationNotACourse": "Only a course has lessons.",
     "educationActionNotAllowed": "You don’t have permission for this step.",

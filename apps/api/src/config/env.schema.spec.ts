@@ -56,6 +56,17 @@ describe('parseEnv', () => {
     expect(parseError({ ...valid, MALWARE_SCANNER: 'clamav' }).message).toContain(
       'MALWARE_SCANNER',
     );
+    expect(parseError({ ...valid, VIDEO_PROVIDER: 'mux' }).message).toContain('VIDEO_PROVIDER');
+    expect(parseError({ ...valid, PUSH_PROVIDER: 'expo' }).message).toContain('PUSH_PROVIDER');
+  });
+
+  it('links videos and sends no push by default, also in production', () => {
+    const env = parseEnv(valid);
+    expect(env.VIDEO_PROVIDER).toBe('links');
+    expect(env.PUSH_PROVIDER).toBe('disabled');
+    const problems = parseError({ ...valid, NODE_ENV: 'production' }).problems.join('\n');
+    expect(problems).not.toContain('VIDEO_PROVIDER');
+    expect(problems).not.toContain('PUSH_PROVIDER');
   });
 
   it('decodes the key material', () => {

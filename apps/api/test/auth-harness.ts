@@ -7,7 +7,9 @@ import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/app.setup';
 import { type EmailMessage, type EmailTemplate, Mailer } from '../src/infra/mailer/mailer';
+import { PushProvider } from '../src/infra/push/push-provider';
 import { type RateLimitHit, RateLimitStore } from '../src/infra/rate-limit/rate-limit.store';
+import { VideoProvider } from '../src/infra/video/video-provider';
 import { testEnv } from '../src/testing/test-env';
 import { testAppUrl } from './test-db';
 
@@ -83,10 +85,16 @@ export interface Harness {
 
 /**
  * Starts the full app against the test database. Real rate limits and the real job queue (pg-boss)
- * only when asked for; otherwise jobs run only when a test triggers them.
+ * only when asked for; otherwise jobs run only when a test triggers them. `push` and `video`
+ * replace those providers (the app's own send nothing and link to the host).
  */
 export async function startHarness(
-  options: { rateLimits?: boolean; jobs?: boolean } = {},
+  options: {
+    rateLimits?: boolean;
+    jobs?: boolean;
+    push?: PushProvider;
+    video?: VideoProvider;
+  } = {},
 ): Promise<Harness> {
   const mailer = new CapturingMailer();
   const env = testEnv({
@@ -96,6 +104,8 @@ export async function startHarness(
   let builder = Test.createTestingModule({ imports: [AppModule.forRoot(env)] })
     .overrideProvider(Mailer)
     .useValue(mailer);
+  if (options.push) builder = builder.overrideProvider(PushProvider).useValue(options.push);
+  if (options.video) builder = builder.overrideProvider(VideoProvider).useValue(options.video);
   if (!options.rateLimits) {
     builder = builder.overrideProvider(RateLimitStore).useValue(new UnlimitedRateLimitStore());
   }

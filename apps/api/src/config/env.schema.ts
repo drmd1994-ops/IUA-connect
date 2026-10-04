@@ -90,6 +90,10 @@ export const envSchema = z
     RATE_LIMIT_SCALE: z.coerce.number().int().min(1).max(100).default(1),
     /** pgboss: jobs run on schedule (ADR 0003). manual: only when triggered (tests, tools). */
     JOB_QUEUE: z.enum(['pgboss', 'manual']).default('pgboss'),
+    /** links: a recording is a link to where it is hosted (ADR 0008). Fine in production. */
+    VIDEO_PROVIDER: z.enum(['links']).default('links'),
+    /** disabled: no push notifications. Fine in production; push is optional. */
+    PUSH_PROVIDER: z.enum(['disabled']).default('disabled'),
 
     // Identity (M1)
     /** Public origin of the web app; used in links sent by email. */
