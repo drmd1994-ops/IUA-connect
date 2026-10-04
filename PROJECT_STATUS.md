@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-03 (M10 built, waiting for merge)_
+_Last updated: 2026-10-04 (M10 merged)_
 
 ## Summary
 
@@ -556,7 +556,7 @@ No new libraries. No database change.
 
 ### Verified
 
-- API: **286 unit and 351 integration tests**, all passing locally.
+- API: **286 unit and 351 integration tests**, all passing, locally and in CI; the browser suite passes in CI unchanged.
 - With a stand-in for a hosted video service: education refuses a recording the provider does not take, stores the reference and not a viewer's address, and gives each viewer the address the provider returns.
 - With a recording push provider: a notice reaches it only for the right person and only when that kind is switched on in the app; when the push service fails, the notice in the app and the email are still delivered.
 - The existing education and notification tests pass unchanged.
@@ -571,13 +571,13 @@ No new libraries. No database change.
 
 ### Open for the owner
 
-- **Merge the pull request** when you are satisfied. There is nothing new to click: the demo is that the site behaves as before.
+- ~~Merge the pull request~~ merged at the owner's request on 2026-10-04 (pull request #12, CI green). There was nothing new to click: the demo is that the site behaves as before.
 - Still open from M9: whether the remaining three items (payment tables and `PaymentProvider`, `IdentityProvider`, `MembershipSource`) are built now or each with its feature; and the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
 
-**M10 (video and push connection points)** is built on `feat/video-push-interfaces` and waits for the owner to merge its pull request.
+**M10 (video and push connection points)** was merged on 2026-10-04 (pull request #12).
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
