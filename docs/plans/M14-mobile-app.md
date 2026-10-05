@@ -204,3 +204,14 @@ Given on 2026-10-05: "1. demo app on my phone 2. Make it compatible for android 
 6. **Signed in as long as on the web.**
 
 The smaller points stand as proposed.
+
+## 12. Amendment 1: the phone reaches this computer through a tunnel
+
+Asked for by the owner on 2026-10-05 ("make a tunnel"), after the phone could not be shown to reach this computer over the Wi-Fi. The choice of program and the details below are Claude's; the owner can change them.
+
+- **What changes.** The server and the app's own server stay on this computer. A tunnel program gives each a public `https://` address, and the phone uses those addresses instead of the Wi-Fi address. The phone no longer has to be on the same Wi-Fi. It works only while this computer is on and the tunnel is running.
+- **The program.** Microsoft's dev tunnels (`devtunnel.exe`), signed by Microsoft, kept outside the repository in `%LOCALAPPDATA%\IUAConnectTools`. It is signed in with the owner's GitHub account, by the owner, in the browser. Using it means accepting Microsoft's terms for dev tunnels. Nothing is added to the project's libraries.
+- **What is opened.** The server (port 4000) and the app's own server (port 8081). The site (port 3001) is not opened in this step.
+- **What it means for safety.** While the tunnel runs, anyone who has the address can reach the demo server from the internet and sign in with a demo account. The address is long and not listed anywhere, the repository with the demo password is private, and the server holds fictional people only. The tunnel is stopped when the demo is not being shown. This is never how real members' data would be served.
+- **What does not change.** No code of the server. The app's code changes only in where its `.env` points, which is not committed.
+- **Replaces** the risk line "The demo server is this computer: the app works only on the same Wi-Fi".

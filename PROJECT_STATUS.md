@@ -847,8 +847,8 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 ### Not verified
 
-- **The app has not been run on a phone.** Nobody has seen a screen of it. Everything above is what can be checked without one.
-- **The two unknowns of the plan are still unknown:** whether chat's live connection works on a phone, and how the change of direction behaves when the language is changed.
+- **The app opened on the owner's phone through Expo Go on 2026-10-05,** and the owner reported "the expo go test is ok". Which of the steps in `apps/mobile/README.md` were tried was not said, so none of them is recorded as seen.
+- **The two unknowns of the plan are still unknown:** whether chat's live connection works on a phone (now also: through the tunnel), and how the change of direction behaves when the language is changed.
 - Nothing was tried on an iPhone, and nothing will be in part 1.
 
 ### Deviations and findings
@@ -858,6 +858,7 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **Two of the project's own supply-chain rules blocked installs, and were not bypassed.** The 7-day rule: a batch of Expo libraries was 6 days old, so the release before it was installed for each. The trust check refused a sub-dependency of `expo-device`, so that library was left out; the phone's name comes from Android itself.
 - **The app's rules are tested with the same test runner as the other packages,** not with the phone-component test tools the plan listed (`jest-expo`, the React Native testing library). Those are still to be added for the screens.
 - **Passkeys don't work in the app,** as the plan said; the sign-in screen says so.
+- **The phone reaches this computer through a tunnel, not over the Wi-Fi** (the plan's Amendment 1, asked for by the owner on 2026-10-05). Over the Wi-Fi, Expo Go never loaded the app, and the cause was not found. With Microsoft's dev tunnels, signed in with the owner's GitHub account, it loaded. While the tunnel runs, the demo server can be reached from the internet by anyone who has the address; it is stopped with the demo. The address changes each time the tunnel is started. The site is not behind the tunnel, so the card's code can't be checked from a second device this way.
 
 ### Open for the owner
 

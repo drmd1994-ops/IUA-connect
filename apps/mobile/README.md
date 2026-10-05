@@ -35,6 +35,33 @@ You need the phone and this computer on **the same Wi-Fi**.
 
 Sign in with a demo account, for example `member.full@demo.test` and the demo password from the main `README.md`.
 
+## If the phone can't reach the computer: the tunnel
+
+On the owner's computer the phone never loaded the app over the Wi-Fi. A tunnel gives the server and the app's own server public `https://` addresses instead; the phone can then be on any network. **While it runs, anyone who has the address can reach the demo server,** so stop it when the demo is over.
+
+The program is Microsoft's dev tunnels (`devtunnel.exe`, kept in `%LOCALAPPDATA%\IUAConnectTools`, signed in once with `devtunnel user login -g`).
+
+1. Start the site and the server (`pnpm dev`).
+2. Open the tunnel, and leave its window open:
+
+   ```powershell
+   & "$env:LOCALAPPDATA\IUAConnectTools\devtunnel.exe" host -p 4000 -p 8081 --allow-anonymous
+   ```
+
+   It prints two addresses, one ending in `-4000…` (the server) and one in `-8081…` (the app's own server). They change each time.
+
+3. Put the first in `apps/mobile/.env` as `EXPO_PUBLIC_API_URL`.
+4. Start the app's own server with the second, in `cmd`:
+
+   ```
+   set EXPO_PACKAGER_PROXY_URL=https://<the address ending in -8081…>
+   pnpm --filter @iua/mobile start
+   ```
+
+5. In Expo Go choose "Enter URL manually" and type `exps://<the address ending in -8081…>` without `https://`, or scan the QR code.
+
+The site is not behind the tunnel, so the card's code can't be checked from a second device this way.
+
 ## What to try in this first step
 
 - **Sign in,** close the app completely, and open it again: you should still be signed in, after the phone's fingerprint or face check.
