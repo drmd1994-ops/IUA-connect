@@ -1,0 +1,60 @@
+{
+  "demoBanner": "Demo version: all people and data shown are fictional.",
+  "loading": "Loading…",
+  "unreachable": {
+    "title": "The server can’t be reached",
+    "text": "The app could not reach IUA Connect at {address}. In the demo, the phone must be on the same Wi-Fi as the computer that runs it.",
+    "retry": "Try again"
+  },
+  "signIn": {
+    "title": "Sign in",
+    "intro": "Use the same email and password as on the IUA Connect site.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "codeTitle": "Authenticator code",
+    "codeIntro": "Enter the 6-digit code from your authenticator app, or a recovery code.",
+    "code": "Code",
+    "verify": "Continue",
+    "back": "Use a different account",
+    "forgot": "Forgot your password? Reset it on the site.",
+    "join": "Not a member yet? Join on the site.",
+    "passkeyNote": "Passkeys don’t work in the app yet. Use your password, and your authenticator code if you have one."
+  },
+  "home": {
+    "title": "IUA Connect",
+    "signedInAs": "Signed in as {email}",
+    "staffNote": "You have a staff role. The admin area is on the website; the app is for members’ everyday use.",
+    "soon": "This is the first step of the app: signing in. The membership card, news, events, notifications and chat are added one by one."
+  },
+  "language": {
+    "title": "Language",
+    "he": "עברית",
+    "en": "English",
+    "restart": "The direction of the text changes with the language. Close the app and open it again to finish the change."
+  },
+  "account": {
+    "signOut": "Sign out",
+    "signOutEverywhere": "Sign out everywhere",
+    "signOutEverywhereHint": "Ends every session of your account: this phone, other phones and browsers.",
+    "version": "Version {version}"
+  },
+  "lock": {
+    "title": "Unlock IUA Connect",
+    "prompt": "Unlock IUA Connect",
+    "unlock": "Unlock",
+    "failed": "The phone did not recognise you. Try again, or sign out.",
+    "setting": "Ask for my fingerprint or face when the app opens",
+    "settingHint": "Uses the lock your phone already has. Nothing about your fingerprint or face leaves the phone.",
+    "notAvailable": "This phone has no fingerprint or face unlock set up, so the app opens without asking."
+  },
+  "check": {
+    "title": "Connection check",
+    "intro": "For the first test on your phone: whether live updates (used by chat) arrive.",
+    "start": "Start the check",
+    "running": "Listening, for up to thirty seconds…",
+    "ok": "Live updates arrive on this phone.",
+    "failed": "Live updates did not arrive. Chat will ask the server every few seconds instead.",
+    "detail": "Details for the developer: {detail}"
+  }
+}

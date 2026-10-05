@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "IUA Connect",
+    "slug": "iua-connect",
+    "scheme": "iuaconnect",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "platforms": ["android", "ios"],
+    "android": {
+      "package": "test.demo.iuaconnect"
+    },
+    "ios": {
+      "bundleIdentifier": "test.demo.iuaconnect"
+    },
+    "extra": {
+      "supportsRTL": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow IUA Connect to use Face ID to unlock the app."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
