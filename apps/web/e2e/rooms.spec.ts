@@ -17,7 +17,7 @@ import {
  * the seed and are fictional; the tests leave them as they found them (nobody banned, nothing
  * pinned or locked, the same people in each room).
  */
-const DEMO_PASSWORD = 'olive-grove-demo-2026';
+const DEMO_PASSWORD = 'ilikeIUAconnect11';
 const NOA = { email: 'member.full@demo.test', name: 'Noa Bar-Lev' };
 const RUTH = { email: 'member.honorary@demo.test', name: 'Ruth Golan' };
 const YOAV = { email: 'member.resident@demo.test', name: 'Yoav Sela' };

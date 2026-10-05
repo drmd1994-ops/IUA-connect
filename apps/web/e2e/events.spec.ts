@@ -15,7 +15,7 @@ import {
  * as attending through the venue code; the admin sees the attendance.
  */
 // A demo member (seeded by `pnpm db:seed`; fictional, password documented in the README).
-const MEMBER = { email: 'member.resident@demo.test', password: 'olive-grove-demo-2026' };
+const MEMBER = { email: 'member.resident@demo.test', password: 'ilikeIUAconnect11' };
 
 async function expectAccessible(page: Page) {
   const results = await new AxeBuilder({ page })

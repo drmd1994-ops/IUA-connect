@@ -19,7 +19,7 @@ import {
  * needs a second admin; the opt-in member directory; search in Hebrew. Plus axe on every new
  * page. The demo members come from the seed and are fictional.
  */
-const DEMO_PASSWORD = 'olive-grove-demo-2026';
+const DEMO_PASSWORD = 'ilikeIUAconnect11';
 /** Listed in the directory by the seed, showing the Hebrew name, position and institution. */
 const LISTED = { email: 'member.full@demo.test', hebrewName: 'נועה', position: 'Senior Urologist' };
 const MEMBER = { email: 'member.resident@demo.test' };

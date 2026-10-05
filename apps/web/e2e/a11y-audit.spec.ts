@@ -16,7 +16,7 @@ import {
  * Automated checks find a part of the problems; the screen-reader pass is done by a person
  * (docs/demo/NVDA_CHECKLIST.md).
  */
-const DEMO_PASSWORD = 'olive-grove-demo-2026';
+const DEMO_PASSWORD = 'ilikeIUAconnect11';
 const MEMBER = 'member.full@demo.test';
 
 async function violations(page: Page): Promise<string[]> {
