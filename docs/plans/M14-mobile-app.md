@@ -216,6 +216,17 @@ Asked for by the owner on 2026-10-05 ("make a tunnel"), after the phone could no
 - **What does not change.** No code of the server. The app's code changes only in where its `.env` points, which is not committed.
 - **Replaces** the risk line "The demo server is this computer: the app works only on the same Wi-Fi".
 
-## 13. What came after
+## 13. Amendment 2: a fixed address for the tunnel, and an .apk
+
+Asked for by the owner on 2026-10-05 ("creat a a permenant server so an apk could connect to the cumputer thru tunnel", "creat .apk for the mobile app that is compatable with android 16"). How it is done is Claude's choice; the owner can change it.
+
+- **A fixed address.** A named tunnel of the same program as in Amendment 1, with the same address each time it is started. It lives as long as it is used at least once in thirty days. It is started with `%LOCALAPPDATA%IUAConnectToolsstart-tunnel.cmd`. What Amendment 1 says about safety holds: while it runs, whoever has the address reaches the demo server.
+- **The .apk is built on GitHub,** by the workflow `.github/workflows/apk.yml`, not on this computer: no Android Studio, no Java and no Expo account are needed. It runs when asked for or when a branch named `apk/...` is pushed, and is not part of CI.
+- **The server's address is built into the .apk.** It is read from two repository variables (`DEMO_API_URL`, `DEMO_WEB_URL`), so it is not written in the code. An .apk works only while this computer, the demo server and the tunnel run.
+- **Signed with the debug key** every Android project starts with: it installs on a phone (after allowing installs from the browser or the files app), and can't go to an app store. Publishing stays behind the readiness checklist.
+- **No icon of its own yet:** the app shows the default one.
+- **Android 16:** the Expo version in use builds for it; the owner's phone is the test.
+
+## 14. What came after
 
 On 2026-10-05 the owner asked for everything the site shows to be in the app. That is its own plan: [`M15-mobile-app-everything.md`](M15-mobile-app-everything.md), proposed and waiting for approval. Part 1 stays as described here, with one change the owner asked for on the same day: the membership card is not a tab, it opens from "Me" and from Home.
