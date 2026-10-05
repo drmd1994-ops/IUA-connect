@@ -1,6 +1,6 @@
 # M14 — Mobile app, part 1 (the member's app): plan
 
-- Status: **Proposed. Waiting for the owner's approval. No code is written, and nothing is installed, before it.**
+- Status: **Approved by the owner on 2026-10-05,** with the answers in §11.
 - Date: 2026-10-05
 - Asked for by the owner: "write the plan for the mobile app but do not start coding before i approve the plan" (2026-10-05).
 - Design sources: [ADR 0007](../adr/0007-web-first-delivery.md) (web first, mobile once the API is stable), `DEVELOPMENT_ROADMAP.md` (an Expo app in `apps/mobile`), `ARCHITECTURE.md` §5 (`PushProvider`, built as a connection point in M10), `SECURITY_MODEL.md`, `docs/product/MASTER_SPEC.md`.
@@ -194,4 +194,13 @@ Smaller points I will follow unless you say otherwise:
 
 ## 11. Owner answers
 
-_Not given yet._
+Given on 2026-10-05: "1. demo app on my phone 2. Make it compatible for android 16 3. no 4. yes 5. As recommended 6. As the web". With all six answered, the plan is approved, including the list of libraries in §6.
+
+1. **A demo app on the owner's own phone.** Not published.
+2. **The owner's phone runs Android 16,** and the app must work on it. Taken as answer (a): the app is seen through Expo Go on that phone, on the same Wi-Fi as this computer; no emulator is installed. **This is Claude's reading of the answer;** if an emulator on this computer was meant as well, the owner says so. The Expo version is chosen in checkpoint 3 so that it supports Android 16, and that is checked on the phone before any screen is built. Nobody will have tried the app on an iPhone.
+3. **No push notifications** in part 1.
+4. **Face or fingerprint** each time the app is opened, with a switch to turn it off.
+5. **The order of §8:** sign-in, card, news, events, notifications, chat.
+6. **Signed in as long as on the web.**
+
+The smaller points stand as proposed.

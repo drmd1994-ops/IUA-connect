@@ -17,10 +17,19 @@ import {
   type SessionKind,
 } from './session-policy';
 
+/** What started a session, and for the app what it called the phone. */
+export interface SessionClientInfo {
+  client: 'WEB' | 'APP';
+  clientName?: string | null;
+}
+
 export interface IssuedTokens {
   accessToken: string;
   expiresIn: number;
-  /** Opaque; goes only into the HttpOnly cookie. */
+  /**
+   * Opaque. For a browser it goes only into the HttpOnly cookie; for the mobile app it is in
+   * the answer, and the app keeps it in the phone's secure storage.
+   */
   refreshToken: string;
   sessionId: string;
   sessionExpiresAt: Date;
@@ -71,6 +80,7 @@ export class SessionsService extends PrincipalResolver {
     deviceId: string | null;
     mfa: boolean;
     meta: RequestMeta;
+    from?: SessionClientInfo | undefined;
   }): Promise<IssuedTokens> {
     const profile = await this.users.accessProfile(input.userId);
     const kind: SessionKind = profile.requiresMfa ? 'admin' : 'member';
@@ -89,6 +99,8 @@ export class SessionsService extends PrincipalResolver {
         lastSeenAt: now,
         idleTimeoutSec: policy.idleSec,
         expiresAt: new Date(now.getTime() + policy.absoluteSec * 1000),
+        client: input.from?.client ?? 'WEB',
+        clientName: input.from?.client === 'APP' ? (input.from.clientName ?? null) : null,
       },
     });
     const { token: refreshToken } = await this.newRefreshToken(session);
@@ -112,9 +124,23 @@ export class SessionsService extends PrincipalResolver {
    * One exception: the repeat, within seconds, of a renewal whose answer never arrived
    * (claimLostRotation).
    */
-  async refresh(refreshToken: string, meta: RequestMeta): Promise<IssuedTokens> {
+  async refresh(
+    refreshToken: string,
+    meta: RequestMeta,
+    /** How the token arrived: in a browser's cookie, or in the body of the app's request. */
+    via: 'WEB' | 'APP' = 'WEB',
+  ): Promise<IssuedTokens> {
     const tokenHash = this.hasher.hash(refreshToken);
     const now = new Date();
+
+    // A token is accepted only the way its session's client presents it: a browser's token
+    // never works outside its cookie (where the CSRF check guards it), and the app's never
+    // inside one. Refused before anything is used up, so the real owner's token still works.
+    const presented = await this.prisma.refreshToken.findUnique({
+      where: { tokenHash },
+      select: { session: { select: { client: true } } },
+    });
+    if (presented && presented.session.client !== via) throw new AppException('UNAUTHENTICATED');
 
     // Atomic claim: only one request can mark an unused token as used.
     const claimed = await this.prisma.refreshToken.updateMany({

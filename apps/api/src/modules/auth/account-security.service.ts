@@ -13,7 +13,7 @@ import { DevicesService } from './devices.service';
 import { type TotpEnrollment, MfaService } from './mfa.service';
 import { PasskeysService } from './passkeys.service';
 import { MFA_CHALLENGE_MAX_ATTEMPTS, REAUTH_WINDOW_SEC } from './session-policy';
-import { type IssuedTokens, SessionsService } from './sessions.service';
+import { type IssuedTokens, SessionsService, type SessionClientInfo } from './sessions.service';
 
 /**
  * MFA, re-authentication and password changes (SECURITY_MODEL.md §3). Sensitive changes need a
@@ -42,6 +42,7 @@ export class AccountSecurityService {
     code: string,
     deviceCookie: string | undefined,
     meta: RequestMeta,
+    from?: SessionClientInfo,
   ): Promise<IssuedTokens> {
     const challenge = await this.tokens.find(mfaToken, 'MFA_CHALLENGE');
     if (!challenge) throw new AppException('INVALID_TOKEN');
@@ -63,6 +64,7 @@ export class AccountSecurityService {
       deviceId: await this.devices.findForUser(challenge.userId, deviceCookie),
       mfa: true,
       meta,
+      from,
     });
     if (check.method === 'recovery') {
       await this.record('auth.mfa.recovery_code_used', challenge.userId, meta, {

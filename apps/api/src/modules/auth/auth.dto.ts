@@ -17,7 +17,38 @@ export class VerifyEmailDto extends createZodDto(z.strictObject({ token: opaqueT
 
 export class ResendVerificationDto extends createZodDto(z.strictObject({ email })) {}
 
-export class LoginDto extends createZodDto(z.strictObject({ email, password: anyPassword })) {}
+/**
+ * What the mobile app adds to a sign-in (M14). With client "app" the refresh token is returned
+ * in the answer and no cookie is set; the app keeps the token in the phone's secure storage.
+ * A browser never sends these fields.
+ */
+const appClient = {
+  client: z.enum(['web', 'app']).default('web'),
+  /** What the app calls the phone, shown in "my sessions". Only with client "app". */
+  deviceName: z.string().trim().min(1).max(80).optional(),
+  /** The app's stand-in for the browser's device cookie: the token an earlier sign-in returned. */
+  deviceToken: z.string().min(16).max(256).optional(),
+};
+const appFieldsOnlyForApp = (input: {
+  client: string;
+  deviceName?: string;
+  deviceToken?: string;
+}) => input.client === 'app' || (input.deviceName === undefined && input.deviceToken === undefined);
+const APP_FIELDS = { message: 'deviceName and deviceToken go with client "app"', path: ['client'] };
+
+/** What the app gets beside the access token. Never present in an answer to a browser. */
+const appTokens = {
+  refreshToken: z.string().optional(),
+  sessionExpiresAt: z.iso.datetime().optional(),
+  /** Set when the server did not know the phone: the app keeps it for its next sign-in. */
+  deviceToken: z.string().optional(),
+};
+
+export class LoginDto extends createZodDto(
+  z
+    .strictObject({ email, password: anyPassword, ...appClient })
+    .refine(appFieldsOnlyForApp, APP_FIELDS),
+) {}
 
 export class AcceptedDto extends createZodDto(z.strictObject({ status: z.literal('accepted') })) {}
 
@@ -28,7 +59,13 @@ export class TokenDto extends createZodDto(
     accessToken: z.string(),
     /** Seconds until the access token expires. */
     expiresIn: z.number().int(),
+    ...appTokens,
   }),
+) {}
+
+/** The mobile app's refresh and sign-out: the refresh token travels in the body (M14). */
+export class AppRefreshDto extends createZodDto(
+  z.strictObject({ refreshToken: z.string().min(16).max(256) }),
 ) {}
 
 /**
@@ -47,6 +84,7 @@ export class LoginResultDto extends createZodDto(
      * which completes sign-in on its own.
      */
     mfaMethods: z.array(z.enum(['totp', 'passkey'])).optional(),
+    ...appTokens,
   }),
 ) {}
 
@@ -73,7 +111,9 @@ export class MeDto extends createZodDto(
 const mfaCode = z.string().trim().min(6).max(20);
 
 export class MfaVerifyDto extends createZodDto(
-  z.strictObject({ mfaToken: opaqueToken, code: mfaCode }),
+  z
+    .strictObject({ mfaToken: opaqueToken, code: mfaCode, ...appClient })
+    .refine(appFieldsOnlyForApp, APP_FIELDS),
 ) {}
 
 export class MfaStatusDto extends createZodDto(
@@ -184,8 +224,10 @@ export class SessionListDto extends createZodDto(
     sessions: z.array(
       z.strictObject({
         id: z.uuid(),
-        /** e.g. "Chrome on Windows" */
+        /** e.g. "Chrome on Windows"; for the mobile app, what it called the phone. */
         device: z.string(),
+        /** A browser, or the mobile app (M14). */
+        client: z.enum(['WEB', 'APP']),
         ip: nullableString(),
         createdAt: z.iso.datetime(),
         lastSeenAt: z.iso.datetime(),

@@ -13,6 +13,7 @@ import { type RequestMeta, Meta } from '../../common/request-meta';
 import { AppException } from '../../common/errors/app.exception';
 import {
   AcceptedDto,
+  AppRefreshDto,
   LoginDto,
   LoginResultDto,
   MfaVerifyDto,
@@ -35,7 +36,7 @@ import {
 } from './auth.cookies';
 import { AccountSecurityService } from './account-security.service';
 import { AuthService } from './auth.service';
-import { SessionsService } from './sessions.service';
+import { type IssuedTokens, type SessionClientInfo, SessionsService } from './sessions.service';
 
 /** Sign-up, sign-in and token renewal (API_DESIGN.md §3–4). */
 @ApiTags('auth')
@@ -89,6 +90,20 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Meta() meta: RequestMeta,
   ): Promise<LoginResultDto> {
+    if (body.client === 'app') {
+      // The mobile app: no cookies at all. What a browser keeps in cookies is in the answer.
+      const outcome = await this.auth.login(body, body.deviceToken, meta, appInfo(body));
+      const deviceToken = outcome.newDeviceCookie ? { deviceToken: outcome.newDeviceCookie } : {};
+      if (outcome.mfaRequired) {
+        return {
+          mfaRequired: true,
+          mfaToken: outcome.mfaToken,
+          mfaMethods: outcome.mfaMethods,
+          ...deviceToken,
+        };
+      }
+      return { mfaRequired: false, ...appTokens(outcome.tokens), ...deviceToken };
+    }
     const outcome = await this.auth.login(body, readCookie(req, DEVICE_COOKIE), meta);
     if (outcome.newDeviceCookie) setDeviceCookie(res, outcome.newDeviceCookie);
     if (outcome.mfaRequired) {
@@ -114,6 +129,17 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Meta() meta: RequestMeta,
   ): Promise<TokenDto> {
+    if (body.client === 'app') {
+      return appTokens(
+        await this.security.completeMfaLogin(
+          body.mfaToken,
+          body.code,
+          body.deviceToken,
+          meta,
+          appInfo(body),
+        ),
+      );
+    }
     const tokens = await this.security.completeMfaLogin(
       body.mfaToken,
       body.code,
@@ -122,6 +148,30 @@ export class AuthController {
     );
     setSessionCookies(res, tokens.refreshToken, tokens.sessionExpiresAt);
     return { accessToken: tokens.accessToken, expiresIn: tokens.expiresIn };
+  }
+
+  /**
+   * The mobile app's refresh (M14): the refresh token is in the body and a new one is in the
+   * answer. No cookie is read or set, so there is no CSRF header: that check protects cookies.
+   * Only a session the app started is accepted here, and such a session nowhere else.
+   */
+  @Post('app/refresh')
+  @Public()
+  @RateLimit(RATE_LIMITS.signInPerIp)
+  @HttpCode(200)
+  @ApiOkResponse({ type: TokenDto })
+  async appRefresh(@Body() body: AppRefreshDto, @Meta() meta: RequestMeta): Promise<TokenDto> {
+    return appTokens(await this.sessions.refresh(body.refreshToken, meta, 'APP'));
+  }
+
+  /** The mobile app's sign-out: ends the session of this refresh token. Always 204. */
+  @Post('app/logout')
+  @Public()
+  @RateLimit(RATE_LIMITS.signInPerIp)
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  async appLogout(@Body() body: AppRefreshDto, @Meta() meta: RequestMeta): Promise<void> {
+    await this.auth.logout(body.refreshToken, meta, 'APP');
   }
 
   /** Always 202, whether or not the address is registered. */
@@ -187,4 +237,19 @@ export class AuthController {
     await this.auth.logout(readCookie(req, REFRESH_COOKIE), meta);
     clearSessionCookies(res);
   }
+}
+
+/** What a sign-in from the mobile app says about itself. */
+function appInfo(body: { deviceName?: string | undefined }): SessionClientInfo {
+  return { client: 'APP', clientName: body.deviceName ?? null };
+}
+
+/** The tokens as the mobile app receives them: all in the answer, nothing in a cookie. */
+function appTokens(tokens: IssuedTokens) {
+  return {
+    accessToken: tokens.accessToken,
+    expiresIn: tokens.expiresIn,
+    refreshToken: tokens.refreshToken,
+    sessionExpiresAt: tokens.sessionExpiresAt.toISOString(),
+  };
 }
