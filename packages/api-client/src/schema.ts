@@ -2436,6 +2436,486 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/chat/rooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_browse"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/room-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_categories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_join"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_leave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["RoomsController_update"];
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_members"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_messages"];
+        put?: never;
+        post: operations["RoomsController_send"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/typing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_typing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/messages/{id}/reactions/{reaction}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["RoomsController_react"];
+        post?: never;
+        delete: operations["RoomsController_unreact"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/pins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_pins"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/pins/{messageId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_pin"];
+        delete: operations["RoomsController_unpin"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/messages/{messageId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["RoomsController_removeMessage"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/members/{userId}/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_removeMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/bans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsController_bans"];
+        put?: never;
+        post: operations["RoomsController_ban"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/bans/{banId}/lift": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsController_liftBan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/rooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsAdminController_list"];
+        put?: never;
+        post: operations["RoomsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/rooms/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsAdminController_get"];
+        put: operations["RoomsAdminController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/rooms/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsAdminController_archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/rooms/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsAdminController_restore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/rooms/{id}/moderators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsAdminController_addModerator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/rooms/{id}/moderators/{userId}/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RoomsAdminController_removeModerator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/room-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsAdminController_categories"];
+        put?: never;
+        post: operations["RoomsAdminController_createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/room-categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["RoomsAdminController_updateCategory"];
+        post?: never;
+        delete: operations["RoomsAdminController_removeCategory"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/report-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RoomsAdminController_reportCategories"];
+        put?: never;
+        post: operations["RoomsAdminController_createReportCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/report-categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["RoomsAdminController_updateReportCategory"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/dashboard": {
         parameters: {
             query?: never;
@@ -4870,7 +5350,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -4891,7 +5371,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -4900,7 +5380,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
                 app: boolean;
                 email: boolean;
             }[];
@@ -4909,7 +5389,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -5137,9 +5617,31 @@ export interface components {
                     conversationId: string;
                     seq: number;
                     senderId: string | null;
+                    sender: {
+                        id: string | null;
+                        firstName: string | null;
+                        lastName: string | null;
+                        photoFileId: string | null;
+                        listed: boolean;
+                    };
                     mine: boolean;
                     body: string;
                     deleted: boolean;
+                    removedByModerator: boolean;
+                    announcement: boolean;
+                    senderBlocked: boolean;
+                    mentions: {
+                        /** Format: uuid */
+                        id: string;
+                        firstName: string | null;
+                        lastName: string | null;
+                    }[];
+                    reactions: {
+                        /** @enum {string} */
+                        reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+                        count: number;
+                        mine: boolean;
+                    }[];
                     editedAt: string | null;
                     /** Format: date-time */
                     createdAt: string;
@@ -5160,6 +5662,12 @@ export interface components {
                     photoFileId: string | null;
                     listed: boolean;
                 };
+                room: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string | null;
+                } | null;
             }[];
         };
         ConversationSettingsDto: {
@@ -5180,9 +5688,31 @@ export interface components {
                 conversationId: string;
                 seq: number;
                 senderId: string | null;
+                sender: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                };
                 mine: boolean;
                 body: string;
                 deleted: boolean;
+                removedByModerator: boolean;
+                announcement: boolean;
+                senderBlocked: boolean;
+                mentions: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string | null;
+                    lastName: string | null;
+                }[];
+                reactions: {
+                    /** @enum {string} */
+                    reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+                    count: number;
+                    mine: boolean;
+                }[];
                 editedAt: string | null;
                 /** Format: date-time */
                 createdAt: string;
@@ -5210,9 +5740,31 @@ export interface components {
             conversationId: string;
             seq: number;
             senderId: string | null;
+            sender: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+                photoFileId: string | null;
+                listed: boolean;
+            };
             mine: boolean;
             body: string;
             deleted: boolean;
+            removedByModerator: boolean;
+            announcement: boolean;
+            senderBlocked: boolean;
+            mentions: {
+                /** Format: uuid */
+                id: string;
+                firstName: string | null;
+                lastName: string | null;
+            }[];
+            reactions: {
+                /** @enum {string} */
+                reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+                count: number;
+                mine: boolean;
+            }[];
             editedAt: string | null;
             /** Format: date-time */
             createdAt: string;
@@ -5277,6 +5829,8 @@ export interface components {
             /** Format: uuid */
             userId?: string;
             /** Format: uuid */
+            roomId?: string;
+            /** Format: uuid */
             categoryId: string;
             description?: string;
         };
@@ -5291,7 +5845,7 @@ export interface components {
                 /** @enum {string} */
                 status: "OPEN" | "DISMISSED" | "UPHELD";
                 /** @enum {string} */
-                action: "NONE" | "MESSAGE_DELETED" | "SUSPENDED";
+                action: "NONE" | "MESSAGE_DELETED" | "SUSPENDED" | "ROOM_ARCHIVED";
                 category: {
                     key: string;
                     nameHe: string;
@@ -5308,6 +5862,13 @@ export interface components {
                     lastName: string | null;
                 };
                 aboutMessage: boolean;
+                room: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string | null;
+                } | null;
+                aboutRoom: boolean;
                 /** Format: date-time */
                 createdAt: string;
                 reviewedAt: string | null;
@@ -5322,7 +5883,7 @@ export interface components {
             /** @enum {string} */
             status: "OPEN" | "DISMISSED" | "UPHELD";
             /** @enum {string} */
-            action: "NONE" | "MESSAGE_DELETED" | "SUSPENDED";
+            action: "NONE" | "MESSAGE_DELETED" | "SUSPENDED" | "ROOM_ARCHIVED";
             category: {
                 key: string;
                 nameHe: string;
@@ -5339,6 +5900,13 @@ export interface components {
                 lastName: string | null;
             };
             aboutMessage: boolean;
+            room: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string | null;
+            } | null;
+            aboutRoom: boolean;
             /** Format: date-time */
             createdAt: string;
             reviewedAt: string | null;
@@ -5363,7 +5931,7 @@ export interface components {
         };
         ResolveReportDto: {
             /** @enum {string} */
-            decision: "dismiss" | "deleteMessage" | "suspend";
+            decision: "dismiss" | "deleteMessage" | "suspend" | "archiveRoom";
             reason: string;
             days?: number | null;
         };
@@ -5410,6 +5978,359 @@ export interface components {
         };
         LiftSuspensionDto: {
             reason: string;
+        };
+        RoomListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string | null;
+                descriptionHe: string | null;
+                descriptionEn: string | null;
+                category: {
+                    /** Format: uuid */
+                    id: string;
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                pictureFileId: string | null;
+                memberCount: number;
+                moderatorsOnly: boolean;
+                locked: boolean;
+                lockedUntil: string | null;
+                archived: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                lastMessageAt: string | null;
+                /** @enum {string} */
+                role: "NONE" | "MEMBER" | "MODERATOR";
+                unreadCount: number;
+                markedUnread: boolean;
+                muted: boolean;
+                mutedUntil: string | null;
+            }[];
+            nextCursor: string | null;
+        };
+        RoomCategoriesDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+        };
+        RoomDetailDto: {
+            /** Format: uuid */
+            id: string;
+            nameHe: string;
+            nameEn: string | null;
+            descriptionHe: string | null;
+            descriptionEn: string | null;
+            category: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            pictureFileId: string | null;
+            memberCount: number;
+            moderatorsOnly: boolean;
+            locked: boolean;
+            lockedUntil: string | null;
+            archived: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            lastMessageAt: string | null;
+            /** @enum {string} */
+            role: "NONE" | "MEMBER" | "MODERATOR";
+            unreadCount: number;
+            markedUnread: boolean;
+            muted: boolean;
+            mutedUntil: string | null;
+            lastSeq: number;
+            myLastReadSeq: number;
+            /** @enum {string} */
+            sendState: "none" | "notJoined" | "membersOnly" | "suspended" | "archived" | "locked" | "moderatorsOnly";
+            canModerate: boolean;
+            banned: boolean;
+            moderators: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+                photoFileId: string | null;
+                listed: boolean;
+            }[];
+        };
+        RoomSettingsDto: {
+            /** @enum {string} */
+            mute?: "off" | "8h" | "week" | "forever";
+            /** @constant */
+            markedUnread?: true;
+        };
+        RoomMembersDto: {
+            items: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+                photoFileId: string | null;
+                listed: boolean;
+                /** @enum {string} */
+                role: "MEMBER" | "MODERATOR";
+            }[];
+            total: number;
+            page: number;
+            /** @constant */
+            pageSize: 50;
+        };
+        RoomSendDto: {
+            body: string;
+            /** Format: uuid */
+            replyToId?: string;
+            mentions?: string[];
+            announcement?: boolean;
+        };
+        RoomPinsDto: {
+            items: {
+                message: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    conversationId: string;
+                    seq: number;
+                    senderId: string | null;
+                    sender: {
+                        id: string | null;
+                        firstName: string | null;
+                        lastName: string | null;
+                        photoFileId: string | null;
+                        listed: boolean;
+                    };
+                    mine: boolean;
+                    body: string;
+                    deleted: boolean;
+                    removedByModerator: boolean;
+                    announcement: boolean;
+                    senderBlocked: boolean;
+                    mentions: {
+                        /** Format: uuid */
+                        id: string;
+                        firstName: string | null;
+                        lastName: string | null;
+                    }[];
+                    reactions: {
+                        /** @enum {string} */
+                        reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+                        count: number;
+                        mine: boolean;
+                    }[];
+                    editedAt: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    canEdit: boolean;
+                    replyTo: {
+                        /** Format: uuid */
+                        id: string;
+                        seq: number;
+                        senderId: string | null;
+                        body: string;
+                        deleted: boolean;
+                    } | null;
+                };
+                /** Format: date-time */
+                pinnedAt: string;
+            }[];
+        };
+        RoomLockDto: {
+            minutes?: number | null;
+        };
+        RoomRemoveDto: {
+            reason: string;
+        };
+        RoomBanListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                user: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                };
+                reason: string;
+                /** Format: date-time */
+                startsAt: string;
+                endsAt: string | null;
+                liftedAt: string | null;
+                active: boolean;
+            }[];
+        };
+        RoomBanInputDto: {
+            /** Format: uuid */
+            userId: string;
+            reason: string;
+            days: number | null;
+        };
+        RoomBanDto: {
+            /** Format: uuid */
+            id: string;
+            user: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            };
+            reason: string;
+            /** Format: date-time */
+            startsAt: string;
+            endsAt: string | null;
+            liftedAt: string | null;
+            active: boolean;
+        };
+        AdminRoomListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string | null;
+                descriptionHe: string | null;
+                descriptionEn: string | null;
+                category: {
+                    /** Format: uuid */
+                    id: string;
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                pictureFileId: string | null;
+                memberCount: number;
+                moderatorsOnly: boolean;
+                locked: boolean;
+                archived: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                lastMessageAt: string | null;
+                moderators: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                }[];
+            }[];
+            total: number;
+            page: number;
+            pageSize: number;
+        };
+        AdminRoomInputDto: {
+            nameHe: string;
+            nameEn?: string | null;
+            descriptionHe?: string | null;
+            descriptionEn?: string | null;
+            categoryId?: string | null;
+            pictureFileId?: string | null;
+            /** @default false */
+            moderatorsOnly: boolean;
+        };
+        AdminRoomDto: {
+            /** Format: uuid */
+            id: string;
+            nameHe: string;
+            nameEn: string | null;
+            descriptionHe: string | null;
+            descriptionEn: string | null;
+            category: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            pictureFileId: string | null;
+            memberCount: number;
+            moderatorsOnly: boolean;
+            locked: boolean;
+            archived: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            lastMessageAt: string | null;
+            moderators: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+            }[];
+        };
+        ModeratorInputDto: {
+            /** Format: uuid */
+            userId: string;
+        };
+        AdminRoomCategoriesDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+                sortOrder: number;
+                rooms: number;
+            }[];
+        };
+        RoomCategoryCreateDto: {
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+        };
+        AdminRoomCategoryDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            sortOrder: number;
+            rooms: number;
+        };
+        RoomCategoryInputDto: {
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+        };
+        AdminReportCategoriesDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+                sortOrder: number;
+                active: boolean;
+            }[];
+        };
+        ReportCategoryCreateDto: {
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+            /** @default true */
+            active: boolean;
+        };
+        AdminReportCategoryDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            nameHe: string;
+            nameEn: string;
+            sortOrder: number;
+            active: boolean;
+        };
+        ReportCategoryInputDto: {
+            nameHe: string;
+            nameEn: string;
+            /** @default 0 */
+            sortOrder: number;
+            /** @default true */
+            active: boolean;
         };
         AdminDashboardDto: {
             applications: {
@@ -5518,7 +6439,7 @@ export interface components {
                 key: string;
                 requiresTwoStep: boolean;
                 scope: string;
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "audit.read" | "settings.manage")[];
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -9965,6 +10886,883 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminSuspensionDto"];
+                };
+            };
+        };
+    };
+    RoomsController_browse: {
+        parameters: {
+            query?: {
+                q?: string;
+                categoryId?: string;
+                cursor?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomListDto"];
+                };
+            };
+        };
+    };
+    RoomsController_mine: {
+        parameters: {
+            query?: {
+                q?: string;
+                categoryId?: string;
+                cursor?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomListDto"];
+                };
+            };
+        };
+    };
+    RoomsController_categories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomCategoriesDto"];
+                };
+            };
+        };
+    };
+    RoomsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomDetailDto"];
+                };
+            };
+        };
+    };
+    RoomsController_join: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomDetailDto"];
+                };
+            };
+        };
+    };
+    RoomsController_leave: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomSettingsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomDetailDto"];
+                };
+            };
+        };
+    };
+    RoomsController_members: {
+        parameters: {
+            query?: {
+                q?: string;
+                page?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomMembersDto"];
+                };
+            };
+        };
+    };
+    RoomsController_messages: {
+        parameters: {
+            query?: {
+                before?: number;
+                after?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageListDto"];
+                };
+            };
+        };
+    };
+    RoomsController_send: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Sending the same request again with the same key sends nothing new. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomSendDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    RoomsController_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_typing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_react: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    RoomsController_unreact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    RoomsController_pins: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomPinsDto"];
+                };
+            };
+        };
+    };
+    RoomsController_pin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                messageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_unpin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                messageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_removeMessage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                messageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomLockDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomDetailDto"];
+                };
+            };
+        };
+    };
+    RoomsController_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomDetailDto"];
+                };
+            };
+        };
+    };
+    RoomsController_removeMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomRemoveDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsController_bans: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomBanListDto"];
+                };
+            };
+        };
+    };
+    RoomsController_ban: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomBanInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomBanDto"];
+                };
+            };
+        };
+    };
+    RoomsController_liftBan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                banId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomBanDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                archived?: "true" | "false";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomListDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminRoomInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminRoomInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_archive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_restore: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_addModerator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModeratorInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_removeModerator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_categories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomCategoriesDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomCategoryCreateDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomCategoryDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_updateCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomCategoryInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminRoomCategoryDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_removeCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RoomsAdminController_reportCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportCategoriesDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_createReportCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportCategoryCreateDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportCategoryDto"];
+                };
+            };
+        };
+    };
+    RoomsAdminController_updateReportCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportCategoryInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminReportCategoryDto"];
                 };
             };
         };

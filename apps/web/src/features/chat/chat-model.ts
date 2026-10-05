@@ -3,6 +3,8 @@ import type { components } from '@iua/api-client';
 export type Conversation = components['schemas']['ConversationListDto']['items'][number];
 export type ConversationDetail = components['schemas']['ConversationDetailDto'];
 export type Message = components['schemas']['MessageDto'];
+export type Room = components['schemas']['RoomListDto']['items'][number];
+export type RoomDetail = components['schemas']['RoomDetailDto'];
 export type Person = Conversation['other'];
 
 export const MESSAGE_MAX_LENGTH = 4000;
@@ -62,6 +64,73 @@ export function textParts(text: string): { text: string; link: boolean }[] {
     });
 }
 
+export type Reaction = Message['reactions'][number]['reaction'];
+
+/** The fixed set of reactions, in the order they are offered (M12 plan, owner answer 5). */
+export const REACTIONS: readonly Reaction[] = ['like', 'heart', 'laugh', 'wow', 'thanks', 'check'];
+
+export const REACTION_EMOJI: Record<Reaction, string> = {
+  like: '👍',
+  heart: '❤️',
+  laugh: '😂',
+  wow: '😮',
+  thanks: '🙏',
+  check: '✅',
+};
+
+export type MessagePart = { text: string; kind: 'text' | 'link' | 'mention' };
+
+/**
+ * A message's text cut into plain pieces, web addresses and mentions ("@First Last" of the
+ * people the message mentions), in order.
+ */
+export function messageParts(text: string, mentionNames: readonly string[]): MessagePart[] {
+  const tokens = [...new Set(mentionNames)]
+    .filter(Boolean)
+    .map((name) => `@${name}`)
+    // The longer name first, so "@Dana Levi" is not cut at "@Dana".
+    .sort((a, b) => b.length - a.length);
+  return textParts(text).flatMap((part): MessagePart[] => {
+    if (part.link) return [{ text: part.text, kind: 'link' }];
+    if (tokens.length === 0) return [{ text: part.text, kind: 'text' }];
+    const pieces: MessagePart[] = [];
+    let rest = part.text;
+    while (rest.length > 0) {
+      let at = -1;
+      let found = '';
+      for (const token of tokens) {
+        const index = rest.indexOf(token);
+        if (index !== -1 && (at === -1 || index < at)) {
+          at = index;
+          found = token;
+        }
+      }
+      if (at === -1) {
+        pieces.push({ text: rest, kind: 'text' });
+        break;
+      }
+      if (at > 0) pieces.push({ text: rest.slice(0, at), kind: 'text' });
+      pieces.push({ text: found, kind: 'mention' });
+      rest = rest.slice(at + found.length);
+    }
+    return pieces;
+  });
+}
+
+/**
+ * The "@…" being typed just before the cursor, if any: where it starts and what was typed
+ * after the "@" (at least one character, at most thirty, on one line).
+ */
+export function mentionAt(text: string, caret: number): { start: number; query: string } | null {
+  const before = text.slice(0, caret);
+  const match = /(^|\s)@([^\s@][^@\n]{0,29})$/.exec(before);
+  if (!match) return null;
+  const query = match[2]!;
+  // Two words at most: a first and a last name.
+  if (query.trim().split(/\s+/).length > 2 || /\s$/.test(query)) return null;
+  return { start: before.length - query.length - 1, query };
+}
+
 /** Adds or replaces messages by id and keeps them in order. */
 export function mergeMessages(current: readonly Message[], incoming: readonly Message[]) {
   const byId = new Map(current.map((message) => [message.id, message]));
@@ -81,6 +150,8 @@ export interface ChatEvent {
     | 'message.deleted'
     | 'markers'
     | 'typing'
+    | 'room'
+    | 'room.left'
     | 'refresh'
     | 'ping';
   conversationId?: string;

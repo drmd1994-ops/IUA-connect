@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   type Message,
   initials,
+  mentionAt,
   mergeMessages,
+  messageParts,
   messageStatus,
   parseEvent,
   personName,
@@ -14,9 +16,15 @@ const message = (seq: number, body = `m${seq}`): Message => ({
   conversationId: 'c',
   seq,
   senderId: 'a',
+  sender: { id: 'a', firstName: 'Dana', lastName: 'Fictional', photoFileId: null, listed: false },
   mine: true,
   body,
   deleted: false,
+  removedByModerator: false,
+  announcement: false,
+  senderBlocked: false,
+  mentions: [],
+  reactions: [],
   editedAt: null,
   createdAt: '2026-10-04T10:00:00.000Z',
   canEdit: true,
@@ -55,6 +63,38 @@ describe('chat model', () => {
       { text: 'javascript:alert(1) <b>x</b>', link: false },
     ]);
     expect(textParts('')).toEqual([]);
+  });
+
+  it('marks the mentions in a text, the longer name first', () => {
+    expect(
+      messageParts('Hi @Dana Levi and @Dana, see https://example.test', ['Dana', 'Dana Levi']),
+    ).toEqual([
+      { text: 'Hi ', kind: 'text' },
+      { text: '@Dana Levi', kind: 'mention' },
+      { text: ' and ', kind: 'text' },
+      { text: '@Dana', kind: 'mention' },
+      { text: ', see ', kind: 'text' },
+      { text: 'https://example.test', kind: 'link' },
+    ]);
+    // A name nobody was mentioned by stays plain text.
+    expect(messageParts('Hi @Someone', [])).toEqual([{ text: 'Hi @Someone', kind: 'text' }]);
+    expect(messageParts('שלום @נועה בר', ['נועה בר'])).toEqual([
+      { text: 'שלום ', kind: 'text' },
+      { text: '@נועה בר', kind: 'mention' },
+    ]);
+  });
+
+  it('finds the "@…" being typed before the cursor', () => {
+    expect(mentionAt('Hello @Da', 9)).toEqual({ start: 6, query: 'Da' });
+    expect(mentionAt('@נוע', 4)).toEqual({ start: 0, query: 'נוע' });
+    expect(mentionAt('Hello @Dana Le', 14)).toEqual({ start: 6, query: 'Dana Le' });
+    // Not inside a word (an email address), not after a finished word, not three words.
+    expect(mentionAt('mail me at a@b', 14)).toBeNull();
+    expect(mentionAt('Hello @Dana ', 12)).toBeNull();
+    expect(mentionAt('Hello @Dana Levi Cohen', 22)).toBeNull();
+    expect(mentionAt('Hello @', 7)).toBeNull();
+    // Only what is before the cursor counts.
+    expect(mentionAt('@Da and more', 3)).toEqual({ start: 0, query: 'Da' });
   });
 
   it('merges messages by id and keeps them in order', () => {

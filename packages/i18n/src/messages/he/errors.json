@@ -152,6 +152,23 @@
     "chatReportNoMessage": "הדיווח הוא על אדם, ולכן אין הודעה למחוק.",
     "chatReportNoPerson": "החשבון שדווח כבר אינו קיים.",
     "chatAlreadySuspended": "האדם הזה כבר מושעה מהצ׳אט.",
-    "chatSuspendSelf": "אי אפשר להשעות את עצמך."
+    "chatSuspendSelf": "אי אפשר להשעות את עצמך.",
+    "chatMessageDeleted": "ההודעה הזאת נמחקה.",
+    "chatRoomNotJoined": "קודם צריך להצטרף לחדר.",
+    "chatRoomBanned": "הוצאת מהחדר הזה ואי אפשר להצטרף אליו כעת.",
+    "chatRoomArchived": "החדר הועבר לארכיון, ולכן אי אפשר לכתוב בו עוד.",
+    "chatRoomLocked": "מנהל/ת החדר נעל/ה אותו.",
+    "chatModeratorsOnly": "רק מנהלי החדר יכולים לעשות זאת בחדר הזה.",
+    "chatMentionNotInRoom": "אפשר לאזכר רק מי שנמצא בחדר.",
+    "chatPinLimit": "בחדר יכולות להיות לכל היותר חמש הודעות נעוצות. יש לבטל נעיצה אחת קודם.",
+    "chatModerateSelf": "אי אפשר לעשות זאת לעצמך.",
+    "chatModerateModerator": "רק צוות האיגוד יכול להוציא או לחסום מנהל/ת חדר.",
+    "chatAlreadyBanned": "האדם הזה כבר חסום מהחדר הזה.",
+    "chatRoomNameTaken": "כבר יש חדר אחר בשם הזה.",
+    "chatModeratorNotMember": "רק חבר/ה בעל/ת חברות פעילה, עם שם פרטי ושם משפחה, יכול/ה לנהל חדר.",
+    "chatModeratorBanned": "האדם הזה חסום מהחדר הזה. יש לבטל את החסימה קודם.",
+    "chatCategoryInUse": "יש חדרים בקטגוריה הזאת. יש להעביר אותם לקטגוריה אחרת קודם.",
+    "chatLastReportReason": "לפחות סיבת דיווח אחת חייבת להישאר פעילה.",
+    "chatReportNoRoom": "הדיווח הזה אינו על חדר."
   }
 }
