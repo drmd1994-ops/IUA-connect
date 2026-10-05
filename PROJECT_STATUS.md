@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M13 merged; the plan for the mobile app, M14, is written and waits for approval)_
+_Last updated: 2026-10-05 (M12 and M13 merged and checked by the owner; the plan for the mobile app, M14, is written and waits for approval)_
 
 ## Summary
 
@@ -678,7 +678,7 @@ Plan: [`docs/plans/M12-chat-rooms.md`](docs/plans/M12-chat-rooms.md), approved b
 
 No new libraries.
 
-**Merged** into `main` on 2026-10-05 at the owner's request (pull request #17, squash commit `a1f8184`), with green CI. The security scan (ZAP) failed once in CI without scanning anything and passed when run again; nothing was changed in between. **The owner's checkpoint test has not been done yet.**
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #17, squash commit `a1f8184`), with green CI. The security scan (ZAP) failed once in CI without scanning anything and passed when run again; nothing was changed in between. **The owner marked the checkpoint test as good on 2026-10-05.**
 
 ### Delivered
 
@@ -716,7 +716,7 @@ No new libraries.
 - **How many open connections one server holds** is still not tested.
 - **The demo script's rooms section** was written from the screens and the seed, not walked through start to finish.
 - **Uploading a room picture** was not tried in a browser; the upload itself is the one news uses.
-- **The Hebrew room texts** were written by Claude and not yet read by the owner.
+- ~~The Hebrew room texts were not yet read by the owner~~ **Read by the owner on 2026-10-05;** no change was asked for.
 
 ### Deviations and findings
 
@@ -737,9 +737,9 @@ No new libraries.
 
 ### Open for the owner
 
-1. **Checkpoint test of the demo** (plan §11): two browser windows and the admin area. `docs/demo/DEMO_SCRIPT.md` section 9.
+1. ~~Checkpoint test of the demo~~ **Marked as good by the owner on 2026-10-05.**
 2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #17, CI green).
-3. **The wording of the Hebrew room texts.**
+3. ~~The wording of the Hebrew room texts~~ **Read by the owner on 2026-10-05;** no change was asked for.
 4. **M13 (files, online status, rooms by invitation)** needs its own plan when the owner wants it. Files wait for the legal review.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
@@ -757,7 +757,7 @@ Plan: [`docs/plans/M13-chat-groups-status.md`](docs/plans/M13-chat-groups-status
 
 No new libraries.
 
-**Merged** into `main` on 2026-10-05 at the owner's request (pull request #18, squash commit `4feef55`), with green CI on the first run. **The owner's checkpoint test has not been done yet.**
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #18, squash commit `4feef55`), with green CI on the first run. **The owner marked the checkpoint test as good on 2026-10-05.**
 
 ### Delivered
 
@@ -794,8 +794,8 @@ No new libraries.
 - **The screen-reader check** was not done for any chat page since M11; only the automated checks ran.
 - **How many open connections one server holds** is still not tested, and M13 adds a message between server processes every thirty seconds.
 - **The demo script's new section** was written from the screens and the seed, not walked through start to finish.
-- **The Hebrew texts of M13** were written by Claude and not yet read by the owner.
-- **The owner's checkpoint test of M12** was never done; M12 was merged without it.
+- ~~The Hebrew texts of M13 were not yet read by the owner~~ **Read by the owner on 2026-10-05;** no change was asked for.
+- ~~The owner's checkpoint test of M12 was never done~~ **Marked as good by the owner on 2026-10-05,** after both M12 and M13 were merged.
 
 ### Deviations and findings
 
@@ -819,9 +819,9 @@ No new libraries.
 
 ### Open for the owner
 
-1. **Checkpoint test of the demo** (plan §10): `docs/demo/DEMO_SCRIPT.md` section 10, and section 9 for M12, which was never done.
+1. ~~Checkpoint test of the demo~~ **Marked as good by the owner on 2026-10-05,** for M12 and M13.
 2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #18, CI green).
-3. **The wording of the Hebrew texts** of M12 and M13.
+3. ~~The wording of the Hebrew texts of M12 and M13~~ **Read by the owner on 2026-10-05;** no change was asked for.
 4. **The legal review now also has to cover files and video in chat,** which are in the demo ahead of it.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
@@ -833,9 +833,9 @@ No new libraries.
 
 **M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day.
 
-**M12 (chat rooms)** was merged on 2026-10-05 (pull request #17). The owner's checkpoint test is still owed.
+**M12 (chat rooms)** was merged on 2026-10-05 (pull request #17), and the owner marked its checkpoint test as good the same day.
 
-**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner's checkpoint tests of M12 and M13 are still owed.
+**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner marked its checkpoint test as good the same day, and read the Hebrew texts of M12 and M13.
 
 **M14 (the mobile app, part 1)** has a written plan, [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), asked for by the owner on 2026-10-05. **It is not approved yet: no app code is written and nothing is installed.** What the plan found: the server needs a second way to sign in that suits an app (today the long-lived part of a session travels only in a browser cookie); passkeys can't work in an app until the site has real hosting with an address; this computer has no mobile tools, and an iPhone app can't be built on Windows.
 
