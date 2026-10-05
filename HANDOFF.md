@@ -29,7 +29,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 ## 2. Current state
 
-**The MVP is complete and merged, and so are private chat and chat rooms.** `main` is at M12 (pull request #17, commit `a1f8184`), CI green. **M13 (groups, invitations, online status, files in chat) is built on the branch `feat/chat-groups`, in a pull request that the owner has not merged yet.**
+**The MVP is complete and merged, and so are private chat and chat rooms.** `main` is at M13 (pull request #18, commit `4feef55`), CI green.
 
 | Milestone | What it added                                                                              | Merged     |
 | --------- | ------------------------------------------------------------------------------------------ | ---------- |
@@ -48,7 +48,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 **What it runs on:** pnpm 10 and Turborepo, Node 24, TypeScript. API: NestJS 11, Prisma 7, PostgreSQL 16 (portable install at `C:\Users\PC\tools\pgsql`). Web: Next.js 16 on port 3001, Hebrew (right to left) and English, Tailwind v4. Tests: Jest, Vitest, Playwright with axe.
 
-**Test totals at M13 (on its branch):** API 301 unit and 466 integration tests; 110 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
+**Test totals at M13:** API 301 unit and 466 integration tests; 110 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
 
 **How to show it**
 
@@ -224,7 +224,9 @@ What was tried and did not work, so nobody tries it the same way again.
 
 ## 6. Next step
 
-**M13 waits for the owner:** the checkpoint test (`docs/demo/DEMO_SCRIPT.md`, sections 9 and 10; M12 was merged without its test) and the merge of its pull request. After that the next step is the owner's to choose.
+**The mobile app is next, and waits for the owner.** Its plan is written (`docs/plans/M14-mobile-app.md`, 5 October 2026) and **not approved**: no app code, and nothing installed, until the owner approves it and answers its six questions. Read its §1 first: what the server lacks for an app (sign-in outside a browser cookie, devices for push), why passkeys must wait for real hosting, and that this computer has no mobile tools.
+
+**Also owed by the owner:** the checkpoint tests of M12 and M13 (`docs/demo/DEMO_SCRIPT.md`, sections 9 and 10). Both were merged without them.
 
 1. **Chat is built** as far as the owner's request goes. **Not planned at all:** chat between doctors and patients (patient information is not allowed anywhere in this project), voice and video calls. The request also says "do not stop after creating a plan". The project's rule is the opposite, and it stood for M11, M12 and M13.
 2. **Left open by the chat milestones:** a screen-reader pass on the chat pages; a test of how many open connections one server holds; trying a real phone video in the browsers people use; a virus scanner that also checks videos; the wording of the Hebrew texts of M12 and M13, for the owner to read.

@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M13 groups, invitations and files built, in a pull request; M12 chat rooms merged)_
+_Last updated: 2026-10-05 (M13 merged; the plan for the mobile app, M14, is written and waits for approval)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: merged 2026-10-05** (pull request #17). **M13 Groups, invitations, online status and files in chat: built 2026-10-05, in a pull request, not merged.** |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: merged 2026-10-05** (pull request #17). **M13 Groups, invitations, online status and files in chat: merged 2026-10-05** (pull request #18). |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -757,7 +757,7 @@ Plan: [`docs/plans/M13-chat-groups-status.md`](docs/plans/M13-chat-groups-status
 
 No new libraries.
 
-**Not merged.** The work is on the branch `feat/chat-groups`, in a pull request into `main`. The owner merges, or asks for it.
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #18, squash commit `4feef55`), with green CI on the first run. **The owner's checkpoint test has not been done yet.**
 
 ### Delivered
 
@@ -820,7 +820,7 @@ No new libraries.
 ### Open for the owner
 
 1. **Checkpoint test of the demo** (plan §10): `docs/demo/DEMO_SCRIPT.md` section 10, and section 9 for M12, which was never done.
-2. **Merge the pull request,** or ask Claude to.
+2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #18, CI green).
 3. **The wording of the Hebrew texts** of M12 and M13.
 4. **The legal review now also has to cover files and video in chat,** which are in the demo ahead of it.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
@@ -835,6 +835,8 @@ No new libraries.
 
 **M12 (chat rooms)** was merged on 2026-10-05 (pull request #17). The owner's checkpoint test is still owed.
 
-**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** is built on the branch `feat/chat-groups` and waits for the owner's checkpoint test and merge. With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against.
+**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner's checkpoint tests of M12 and M13 are still owed.
+
+**M14 (the mobile app, part 1)** has a written plan, [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), asked for by the owner on 2026-10-05. **It is not approved yet: no app code is written and nothing is installed.** What the plan found: the server needs a second way to sign in that suits an app (today the long-lived part of a session travels only in a browser cookie); passkeys can't work in an app until the site has real hosting with an address; this computer has no mobile tools, and an iPhone app can't be built on Windows.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
