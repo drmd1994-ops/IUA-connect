@@ -23,16 +23,17 @@ export class ResendVerificationDto extends createZodDto(z.strictObject({ email }
  * A browser never sends these fields.
  */
 const appClient = {
-  client: z.enum(['web', 'app']).default('web'),
+  /** Left out by a browser, which is the same as "web". */
+  client: z.enum(['web', 'app']).optional(),
   /** What the app calls the phone, shown in "my sessions". Only with client "app". */
   deviceName: z.string().trim().min(1).max(80).optional(),
   /** The app's stand-in for the browser's device cookie: the token an earlier sign-in returned. */
   deviceToken: z.string().min(16).max(256).optional(),
 };
 const appFieldsOnlyForApp = (input: {
-  client: string;
-  deviceName?: string;
-  deviceToken?: string;
+  client?: string | undefined;
+  deviceName?: string | undefined;
+  deviceToken?: string | undefined;
 }) => input.client === 'app' || (input.deviceName === undefined && input.deviceToken === undefined);
 const APP_FIELDS = { message: 'deviceName and deviceToken go with client "app"', path: ['client'] };
 

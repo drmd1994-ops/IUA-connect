@@ -11176,7 +11176,6 @@
             "maxLength": 1024
           },
           "client": {
-            "default": "web",
             "type": "string",
             "enum": [
               "web",
@@ -11258,7 +11257,6 @@
             "maxLength": 20
           },
           "client": {
-            "default": "web",
             "type": "string",
             "enum": [
               "web",

@@ -3521,11 +3521,8 @@ export interface components {
             /** Format: email */
             email: string;
             password: string;
-            /**
-             * @default web
-             * @enum {string}
-             */
-            client: "web" | "app";
+            /** @enum {string} */
+            client?: "web" | "app";
             deviceName?: string;
             deviceToken?: string;
         };
@@ -3543,11 +3540,8 @@ export interface components {
         MfaVerifyDto: {
             mfaToken: string;
             code: string;
-            /**
-             * @default web
-             * @enum {string}
-             */
-            client: "web" | "app";
+            /** @enum {string} */
+            client?: "web" | "app";
             deviceName?: string;
             deviceToken?: string;
         };
