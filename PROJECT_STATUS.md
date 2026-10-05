@@ -927,8 +927,8 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 ### The fixed tunnel and the .apk (M14 amendment 2, asked for by the owner on 2026-10-05)
 
 - **A tunnel with a fixed address exists and was checked:** the demo server and the app's own server answer through it. It is started with `start-tunnel.cmd` (see `apps/mobile/README.md`).
-- **A workflow that builds the .apk on GitHub is written and was started once. It has not run yet:** on 2026-10-05 GitHub reported an incident ("delays in assigning GitHub-hosted runners"), and the build waited in the queue. **No .apk exists yet, and whether the workflow succeeds is not known.** A first build of this kind often needs a correction or two.
-- **For the same reason the checks on `main` after pull request #20 did not run** (the first job was never picked up and the run was cancelled by GitHub), and the checks of pull request #21 were waiting. Neither says anything about the code.
+- **The .apk was built on GitHub on 2026-10-06, at the first real attempt** (the attempt of the day before was lost to an incident at GitHub and never ran). It is 57 MB, for phones with 64-bit ARM processors, built for Android 16 (target SDK 36; it installs from Android 7), signed with the debug key. The demo server's fixed address is inside it. **It has not been installed on a phone by anyone yet:** that it builds says nothing about whether it opens.
+- **The checks on `main` after pull request #20, and those of pull request #21, were lost to the same incident** and were started again on 2026-10-06.
 
 ### Open for the owner
 
