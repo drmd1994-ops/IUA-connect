@@ -909,7 +909,7 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 
 ### Not verified
 
-- **Nothing of M15 has been seen on a phone, and nothing of it was exercised against a server.** The screens were written against the API's typed shapes and they compile. The first run will turn up mistakes; `docs/demo/MOBILE_CHECKLIST.md` has the lines to go through.
+- **The owner tried the app in Expo Go on 2026-10-05, after M15 was built, and reported "it runs fine".** Which screens and which lines of `docs/demo/MOBILE_CHECKLIST.md` were tried was not said, so no line of the checklist is marked as seen. Before that report, nothing of M15 had been run on a phone or against a server.
 - **In particular, never tried:** the camera reading a code; saving a calendar file and the phone offering a calendar app; the authenticator opening from the app; the photo upload; "confirm it's you"; moving between a visitor's pages and signing in from there.
 - **The integration and browser suites were not run in this session** after the chat rules moved packages (M14). The site type-checks and the unit tests of all packages pass; CI runs the rest when the branch is pushed.
 
