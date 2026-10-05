@@ -273,6 +273,14 @@ describe('identity: registration, sign-in, sessions (M1)', () => {
         .set('X-CSRF-Token', jar.get('iua_csrf')!)
         .expect(200);
       jar.store(ok);
+      // Longer ago than the few seconds in which a lost answer may be repeated.
+      await h.db.query(
+        `UPDATE refresh_tokens SET used_at = used_at - interval '11 seconds'
+         WHERE used_at IS NOT NULL
+           AND session_id IN (SELECT s.id FROM sessions s JOIN users u ON u.id = s.user_id
+                              WHERE u.email = $1)`,
+        [email],
+      );
 
       // The attacker replays token 1.
       await h
@@ -302,6 +310,93 @@ describe('identity: registration, sign-in, sessions (M1)', () => {
         [email],
       );
       expect(audit.rows[0].n).toBe(1);
+    });
+
+    describe('a renewal whose answer never reached the browser', () => {
+      const refresh = (jar: CookieJar) =>
+        h
+          .http()
+          .post('/api/v1/auth/refresh')
+          .set('Cookie', jar.header())
+          .set('X-CSRF-Token', jar.get('iua_csrf')!);
+      const sessionState = async (email: string) =>
+        (
+          await h.db.query<{ revoked_reason: string | null }>(
+            `SELECT s.revoked_reason FROM sessions s JOIN users u ON u.id = s.user_id
+             WHERE u.email = $1`,
+            [email],
+          )
+        ).rows;
+
+      it('can be repeated within seconds, and the token that was lost is used up', async () => {
+        const email = await createVerifiedUser(h, 'lost-answer');
+        const { jar } = await signIn(h, email);
+        // The page reloads mid-renewal: the server rotates, the browser keeps token 1.
+        const lost = new CookieJar();
+        lost.set('iua_csrf', jar.get('iua_csrf')!);
+        lost.set('iua_rt', jar.get('iua_rt')!);
+        lost.store(await refresh(lost).expect(200)); // token 2, never delivered
+        const undelivered = lost.get('iua_rt')!;
+
+        // The browser presents token 1 again and stays signed in, with token 3.
+        const again = await refresh(jar).expect(200);
+        jar.store(again);
+        expect(jar.get('iua_rt')).not.toBe(undelivered);
+        await h
+          .http()
+          .get('/api/v1/me')
+          .set('Authorization', `Bearer ${again.body.accessToken}`)
+          .expect(200);
+        expect(await sessionState(email)).toEqual([{ revoked_reason: null }]);
+        const audit = await h.db.query(
+          `SELECT count(*)::int AS n FROM audit_logs a JOIN users u ON a.actor_user_id = u.id
+           WHERE u.email = $1 AND a.action = 'auth.refresh.lost_answer'`,
+          [email],
+        );
+        expect(audit.rows[0].n).toBe(1);
+
+        // Token 3 works as usual. Token 2, which nobody should hold, ends the session.
+        jar.store(await refresh(jar).expect(200));
+        await refresh(lost).expect(401);
+        expect(await sessionState(email)).toEqual([{ revoked_reason: 'refresh_reuse' }]);
+      });
+
+      it('is not accepted once the replacing token was used: that is a stolen token', async () => {
+        const email = await createVerifiedUser(h, 'stolen-fast');
+        const { jar } = await signIn(h, email);
+        const stolen = new CookieJar();
+        stolen.set('iua_csrf', jar.get('iua_csrf')!);
+        stolen.set('iua_rt', jar.get('iua_rt')!);
+        // The legitimate client moves on twice (token 1 → 2 → 3), all within seconds.
+        jar.store(await refresh(jar).expect(200));
+        jar.store(await refresh(jar).expect(200));
+
+        await refresh(stolen).expect(401);
+        expect(await sessionState(email)).toEqual([{ revoked_reason: 'refresh_reuse' }]);
+        await refresh(jar).expect(401);
+      });
+
+      it('gives a thief who is quick no lasting hold: the owner’s next renewal ends it', async () => {
+        const email = await createVerifiedUser(h, 'stolen-quick');
+        const { jar } = await signIn(h, email);
+        const stolen = new CookieJar();
+        stolen.set('iua_csrf', jar.get('iua_csrf')!);
+        stolen.set('iua_rt', jar.get('iua_rt')!);
+        jar.store(await refresh(jar).expect(200)); // the owner holds token 2
+        stolen.store(await refresh(stolen).expect(200)); // within seconds: token 2 is used up
+
+        // Later, the owner presents token 2: it was used, so the whole session ends.
+        await h.db.query(
+          `UPDATE refresh_tokens SET used_at = used_at - interval '11 seconds'
+           WHERE used_at IS NOT NULL
+             AND session_id IN (SELECT s.id FROM sessions s JOIN users u ON u.id = s.user_id
+                                WHERE u.email = $1)`,
+          [email],
+        );
+        await refresh(jar).expect(401);
+        expect(await sessionState(email)).toEqual([{ revoked_reason: 'refresh_reuse' }]);
+        await refresh(stolen).expect(401);
+      });
     });
 
     it('ends idle sessions', async () => {

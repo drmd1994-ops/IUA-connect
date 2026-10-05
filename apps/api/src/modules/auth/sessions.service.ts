@@ -10,7 +10,12 @@ import { type Session } from '../../generated/prisma/client';
 import { AuditService } from '../audit';
 import { type AccessProfile, UsersService } from '../users';
 import { AccessTokenService } from './access-token.service';
-import { ACTIVITY_WRITE_INTERVAL_SEC, SESSION_POLICY, type SessionKind } from './session-policy';
+import {
+  ACTIVITY_WRITE_INTERVAL_SEC,
+  REFRESH_REUSE_GRACE_SEC,
+  SESSION_POLICY,
+  type SessionKind,
+} from './session-policy';
 
 export interface IssuedTokens {
   accessToken: string;
@@ -104,6 +109,8 @@ export class SessionsService extends PrincipalResolver {
   /**
    * Rotates a refresh token. A token that was already used means it leaked (or the client
    * misbehaved): the whole session is revoked and the event is audited (reuse detection).
+   * One exception: the repeat, within seconds, of a renewal whose answer never arrived
+   * (claimLostRotation).
    */
   async refresh(refreshToken: string, meta: RequestMeta): Promise<IssuedTokens> {
     const tokenHash = this.hasher.hash(refreshToken);
@@ -120,7 +127,9 @@ export class SessionsService extends PrincipalResolver {
     });
     if (!token) throw new AppException('UNAUTHENTICATED');
 
-    if (claimed.count === 0) {
+    // An old token is accepted only as the repeat of a renewal whose answer was lost.
+    const lostAnswer = claimed.count === 0 ? await this.claimLostRotation(token, now) : null;
+    if (claimed.count === 0 && !lostAnswer) {
       await this.revoke(token.session, 'refresh_reuse');
       await this.audit.record({
         action: 'auth.refresh.reuse_detected',
@@ -145,10 +154,21 @@ export class SessionsService extends PrincipalResolver {
     }
 
     const next = await this.newRefreshToken(session);
-    await this.prisma.refreshToken.update({
-      where: { id: token.id },
+    // The token that was lost on its way points on too, so it can never start a second line.
+    await this.prisma.refreshToken.updateMany({
+      where: { id: { in: [token.id, ...(lostAnswer?.lostId ? [lostAnswer.lostId] : [])] } },
       data: { replacedBy: next.id },
     });
+    if (lostAnswer) {
+      await this.audit.record({
+        action: 'auth.refresh.lost_answer',
+        entityType: 'session',
+        entityId: session.id,
+        actorUserId: session.userId,
+        actorIp: meta.ip,
+        correlationId: meta.correlationId,
+      });
+    }
     await this.touch(session, now, true);
     const access = await this.accessTokens.sign({
       userId: session.userId,
@@ -269,6 +289,37 @@ export class SessionsService extends PrincipalResolver {
       throw new AppException('SESSION_EXPIRED');
     }
     return session;
+  }
+
+  /**
+   * Whether a used token may be accepted once more (REFRESH_REUSE_GRACE_SEC): it was used
+   * moments ago, and the token that replaced it was never used, so its answer most likely
+   * never reached the browser. That replacement is used up here, atomically, so it can't be
+   * presented later; if it had been used already, this is a real reuse.
+   */
+  private async claimLostRotation(
+    token: { id: string; usedAt: Date | null; replacedBy: string | null },
+    now: Date,
+  ): Promise<{ lostId: string | null } | null> {
+    if (!token.usedAt) return null;
+    if (now.getTime() - token.usedAt.getTime() > REFRESH_REUSE_GRACE_SEC * 1000) return null;
+    // The first request may still be writing the replacement; give it a moment.
+    let replacedBy = token.replacedBy;
+    for (let attempt = 0; attempt < 5 && !replacedBy; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const current = await this.prisma.refreshToken.findUnique({
+        where: { id: token.id },
+        select: { replacedBy: true },
+      });
+      replacedBy = current?.replacedBy ?? null;
+    }
+    // No replacement was ever written: the first request failed before issuing one.
+    if (!replacedBy) return { lostId: null };
+    const claimed = await this.prisma.refreshToken.updateMany({
+      where: { id: replacedBy, usedAt: null },
+      data: { usedAt: now },
+    });
+    return claimed.count === 1 ? { lostId: replacedBy } : null;
   }
 
   /** Records activity (at most once a minute unless forced). */
