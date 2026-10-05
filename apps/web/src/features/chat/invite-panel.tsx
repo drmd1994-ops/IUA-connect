@@ -114,7 +114,7 @@ export function InvitePanel({
 
   return (
     <div data-testid="invite-panel" className="flex flex-col gap-3">
-      <form role="search" aria-label={title} onSubmit={find} className="flex items-end gap-3">
+      <form onSubmit={find} className="flex items-end gap-3">
         <TextField
           label={title}
           value={search}
