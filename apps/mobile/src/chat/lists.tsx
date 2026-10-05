@@ -9,7 +9,7 @@ import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Card, Field, Notice, Screen, Title } from '@/ui/kit';
 import { Choices, Tag } from '@/ui/parts';
-import { PeopleSearch } from './dialogs';
+import { MessageSearchSheet, PeopleSearch } from './dialogs';
 import { useChatEvents } from './events';
 import { listKind, threadRoute } from './model';
 import { Avatar, Confirm, type Person, usePersonLabel, useSend } from './ui';
@@ -47,6 +47,7 @@ export function ChatTab() {
   const [rooms, setRooms] = useState<Room[] | null>(null);
   const [invitations, setInvitations] = useState(0);
   const [enabled, setEnabled] = useState(true);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [version] = useReload();
 
@@ -142,6 +143,8 @@ export function ChatTab() {
           ))}
         </>
       )}
+      <Button label={t('searchMessages')} variant="link" onPress={() => setSearching(true)} />
+      {searching && <MessageSearchSheet onClose={() => setSearching(false)} />}
       <Button label={t('settings')} variant="link" onPress={() => router.push('/chat-settings')} />
     </Screen>
   );

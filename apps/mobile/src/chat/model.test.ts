@@ -11,8 +11,8 @@ import {
   threadRoute,
 } from './model';
 
-const theirs = { id: 'm', mine: false, deleted: false, canEdit: false, senderId: 'u' };
-const mine = { id: 'm', mine: true, deleted: false, canEdit: true, senderId: 'me' };
+const theirs = { id: 'm', mine: false, deleted: false, canEdit: false, senderId: 'u', body: 'hi' };
+const mine = { id: 'm', mine: true, deleted: false, canEdit: true, senderId: 'me', body: 'hi' };
 const member = { kind: 'direct', canWrite: true, canModerate: false, pinned: false } as const;
 
 describe('where a thread lives', () => {
@@ -33,13 +33,20 @@ describe('where a thread lives', () => {
 
 describe('what may be done with a message', () => {
   it('lets a member answer, forward, hide and report someone else’s message', () => {
-    expect(messageActions(theirs, member)).toEqual(['reply', 'forward', 'deleteMine', 'report']);
+    expect(messageActions(theirs, member)).toEqual([
+      'reply',
+      'forward',
+      'copy',
+      'deleteMine',
+      'report',
+    ]);
   });
 
   it('lets the writer edit and delete their own, and never report it', () => {
     expect(messageActions(mine, member)).toEqual([
       'reply',
       'forward',
+      'copy',
       'edit',
       'deleteAll',
       'deleteMine',
@@ -49,9 +56,14 @@ describe('what may be done with a message', () => {
   it('offers no reply where the reader can’t write', () => {
     expect(messageActions(theirs, { ...member, canWrite: false })).toEqual([
       'forward',
+      'copy',
       'deleteMine',
       'report',
     ]);
+  });
+
+  it('offers no copy for a message that is only files', () => {
+    expect(messageActions({ ...theirs, body: '' }, member)).not.toContain('copy');
   });
 
   it('leaves only hiding for a deleted message', () => {
@@ -63,6 +75,7 @@ describe('what may be done with a message', () => {
     expect(messageActions(theirs, moderator)).toEqual([
       'reply',
       'forward',
+      'copy',
       'deleteMine',
       'report',
       'pin',

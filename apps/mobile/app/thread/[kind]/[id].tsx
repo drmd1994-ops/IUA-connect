@@ -5,7 +5,8 @@ import { Back, Screen } from '@/ui/kit';
 
 /** A private conversation, a group or a room; the address says which. */
 export default function ThreadRoute() {
-  const { kind, id } = useLocalSearchParams<{ kind: string; id: string }>();
+  const { kind, id, at } = useLocalSearchParams<{ kind: string; id: string; at?: string }>();
+  const seq = at && /^\d+$/.test(at) ? Number(at) : null;
   if (!isThreadKind(kind)) {
     return (
       <Screen>
@@ -14,5 +15,5 @@ export default function ThreadRoute() {
     );
   }
   // A different thread starts afresh, with nothing of the one before.
-  return <ThreadScreen key={`${kind}:${id}`} kind={kind} id={id} />;
+  return <ThreadScreen key={`${kind}:${id}:${seq}`} kind={kind} id={id} at={seq} />;
 }
