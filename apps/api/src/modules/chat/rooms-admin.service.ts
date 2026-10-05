@@ -38,6 +38,7 @@ const ROOM_SELECT = {
   pictureFileId: true,
   memberCount: true,
   moderatorsOnly: true,
+  inviteOnly: true,
   locked: true,
   lockedUntil: true,
   archivedAt: true,
@@ -150,6 +151,7 @@ export class RoomsAdminService {
       nameHe: input.nameHe,
       ...(before.nameHe === input.nameHe ? {} : { previousNameHe: before.nameHe }),
       moderatorsOnly: input.moderatorsOnly,
+      inviteOnly: input.inviteOnly,
     });
     await this.stream.publishRoom(id, { type: 'room', conversationId: id });
     return this.get(id);
@@ -397,6 +399,7 @@ export class RoomsAdminService {
       pictureFileId: row.pictureFileId,
       memberCount: row.memberCount,
       moderatorsOnly: row.moderatorsOnly,
+      inviteOnly: row.inviteOnly,
       locked: lockActive(row, now),
       archived: row.archivedAt !== null,
       createdAt: row.createdAt.toISOString(),
@@ -440,6 +443,7 @@ function roomData(input: AdminRoomInputDto) {
     categoryId: input.categoryId ?? null,
     pictureFileId: input.pictureFileId ?? null,
     moderatorsOnly: input.moderatorsOnly,
+    inviteOnly: input.inviteOnly,
   };
 }
 

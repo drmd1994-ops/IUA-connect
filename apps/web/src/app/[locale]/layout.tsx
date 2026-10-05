@@ -60,6 +60,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     search,
     chat,
     rooms,
+    groups,
     portal,
   } = getMessages(locale);
 
@@ -87,6 +88,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             search,
             chat,
             rooms,
+            groups,
             portal,
           }}
         >

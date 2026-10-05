@@ -59,7 +59,11 @@ export class ChatNotifier implements OnModuleInit {
    * the kind switched on in the app and has not muted the conversation. Nothing happens while
    * no push service is plugged in. A failure never undoes the message.
    */
-  async messageSent(conversationId: string, recipientIds: readonly string[]): Promise<void> {
+  async messageSent(
+    conversationId: string,
+    recipientIds: readonly string[],
+    link = `/chat/${conversationId}`,
+  ): Promise<void> {
     if (!this.push.enabled || recipientIds.length === 0) return;
     try {
       const now = new Date();
@@ -78,7 +82,7 @@ export class ChatNotifier implements OnModuleInit {
           locale: localeOf(user.locale),
           type: 'chatMessage',
           params: {},
-          link: `/chat/${conversationId}`,
+          link,
         });
       }
     } catch (error) {
@@ -103,7 +107,7 @@ export class ChatNotifier implements OnModuleInit {
         SELECT u.id AS "userId", u.email::text AS email, u.locale,
                count(DISTINCT m.conversation_id)::int AS waiting
         FROM conversation_members m
-        JOIN conversations c ON c.id = m.conversation_id AND c.kind = 'DIRECT'
+        JOIN conversations c ON c.id = m.conversation_id AND c.kind IN ('DIRECT', 'GROUP')
         JOIN users u ON u.id = m.user_id
         LEFT JOIN chat_preferences p ON p.user_id = u.id
         WHERE u.status = 'ACTIVE'

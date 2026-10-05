@@ -4,7 +4,7 @@ import { z } from 'zod';
 export class FileDto extends createZodDto(
   z.strictObject({
     id: z.uuid(),
-    kind: z.enum(['IMAGE', 'DOCUMENT']),
+    kind: z.enum(['IMAGE', 'DOCUMENT', 'VIDEO']),
     /** Detected from the content. */
     mimeType: z.string(),
     originalName: z.string(),

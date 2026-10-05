@@ -457,7 +457,7 @@ async function sampleDocument(
 }
 
 /** A minimal, valid one-page PDF with the given lines of plain ASCII text. */
-function onePagePdf(lines: string[]): Buffer {
+export function onePagePdf(lines: string[]): Buffer {
   const escape = (line: string) =>
     line.replace(/[^\x20-\x7e]/g, '?').replace(/[\\()]/g, (char) => `\\${char}`);
   const text = lines

@@ -8,7 +8,8 @@
  *                 a second admin, directory members, notices and broadcasts (M7);
  *                 a super admin, contact details and a sample notice (M8);
  *                 conversations, a blocked pair and a chat report waiting for review (M11);
- *                 room categories and chat rooms with a moderator, a ban and a report (M12)
+ *                 room categories and chat rooms with a moderator, a ban and a report (M12);
+ *                 groups, invitations, a room by invitation and files in messages (M13)
  *   3. import:    the hand-picked IUA website sample from fixtures/iua-import/ (M4)
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
@@ -23,6 +24,7 @@ import { seedDemoChat } from './demo-chat';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
 import { seedDemoEvents } from './demo-events';
+import { seedDemoGroups } from './demo-groups';
 import { seedDemoNotifications } from './demo-notifications';
 import { seedDemoPortal } from './demo-portal';
 import { seedDemoRooms } from './demo-rooms';
@@ -49,6 +51,7 @@ const LAYERS: SeedLayer[] = [
       await seedDemoPortal(prisma);
       await seedDemoChat(prisma);
       await seedDemoRooms(prisma);
+      await seedDemoGroups(prisma);
     },
   },
   {

@@ -6,6 +6,28 @@ export type Message = components['schemas']['MessageDto'];
 export type Room = components['schemas']['RoomListDto']['items'][number];
 export type RoomDetail = components['schemas']['RoomDetailDto'];
 export type Person = Conversation['other'];
+export type Group = components['schemas']['GroupDto'];
+export type Invitation = components['schemas']['InvitationListDto']['items'][number];
+export type Attachment = Message['attachments'][number];
+export type Activity = components['schemas']['ActivityDto']['items'][number]['activity'];
+
+/** A message carries at most this many files, of which at most one video (M13). */
+export const MAX_ATTACHMENTS = 3;
+
+/** Whether one more file of this kind may join the ones already chosen for a message. */
+export function canAttach(chosen: readonly { kind: string }[], kind: string): boolean {
+  if (chosen.length >= MAX_ATTACHMENTS) return false;
+  return kind !== 'VIDEO' || !chosen.some((file) => file.kind === 'VIDEO');
+}
+
+/** Where a conversation of each kind is opened. */
+export function conversationPath(kind: 'DIRECT' | 'GROUP' | 'ROOM', id: string): string {
+  return kind === 'GROUP'
+    ? `/chat/groups/${id}`
+    : kind === 'ROOM'
+      ? `/chat/rooms/${id}`
+      : `/chat/${id}`;
+}
 
 export const MESSAGE_MAX_LENGTH = 4000;
 
@@ -152,6 +174,8 @@ export interface ChatEvent {
     | 'typing'
     | 'room'
     | 'room.left'
+    | 'invitation'
+    | 'activity'
     | 'refresh'
     | 'ping';
   conversationId?: string;

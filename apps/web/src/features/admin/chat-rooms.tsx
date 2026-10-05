@@ -34,6 +34,7 @@ function usePersonName() {
 export function ChatRoomsPage() {
   const all = useTranslations();
   const t = useTranslations('rooms.admin');
+  const g = useTranslations('groups.admin');
   const locale = useLocale();
   const name = usePersonName();
   const { api, call } = useAuth();
@@ -141,6 +142,9 @@ export function ChatRoomsPage() {
                         {room.moderatorsOnly && (
                           <span className="block text-text-muted">{t('stateAnnouncements')}</span>
                         )}
+                        {room.inviteOnly && (
+                          <span className="block text-text-muted">{g('stateInviteOnly')}</span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -163,6 +167,7 @@ interface Draft {
   categoryId: string;
   pictureFileId: string | null;
   moderatorsOnly: boolean;
+  inviteOnly: boolean;
 }
 
 const toDraft = (room: Room | null): Draft => ({
@@ -173,6 +178,7 @@ const toDraft = (room: Room | null): Draft => ({
   categoryId: room?.category?.id ?? '',
   pictureFileId: room?.pictureFileId ?? null,
   moderatorsOnly: room?.moderatorsOnly ?? false,
+  inviteOnly: room?.inviteOnly ?? false,
 });
 
 /** Opening a room, or changing one: its name, description, category, picture and moderators. */
@@ -180,6 +186,7 @@ export function ChatRoomEditorPage({ id }: { id?: string }) {
   const all = useTranslations();
   const t = useTranslations('rooms.admin');
   const e = useTranslations('rooms.admin.editor');
+  const g = useTranslations('groups.admin');
   const locale = useLocale();
   const router = useRouter();
   const upload = useUpload();
@@ -245,6 +252,7 @@ export function ChatRoomEditorPage({ id }: { id?: string }) {
       categoryId: draft.categoryId || null,
       pictureFileId: draft.pictureFileId,
       moderatorsOnly: draft.moderatorsOnly,
+      inviteOnly: draft.inviteOnly,
     };
     try {
       if (id) {
@@ -352,6 +360,15 @@ export function ChatRoomEditorPage({ id }: { id?: string }) {
               onChange={(event) => set({ moderatorsOnly: event.target.checked })}
             />
             <span>{e('moderatorsOnly')}</span>
+          </label>
+          <label className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              className="mt-1 size-5"
+              checked={draft.inviteOnly}
+              onChange={(event) => set({ inviteOnly: event.target.checked })}
+            />
+            <span>{g('inviteOnly')}</span>
           </label>
           <div className="flex flex-col gap-2">
             <label htmlFor={pictureId} className="font-semibold">

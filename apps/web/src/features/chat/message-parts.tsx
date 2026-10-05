@@ -1,19 +1,33 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { errorMessage } from '@/lib/api-errors';
+import { useAuth } from '@/features/auth/auth-context';
+import { StoredImage, type UploadedFile, formatSize, useFileUrl } from '@/features/content/files';
+import { errorMessage, hasErrorDetail } from '@/lib/api-errors';
 import {
+  type Activity,
+  type Attachment,
   MESSAGE_MAX_LENGTH,
   type Message,
   REACTIONS,
   REACTION_EMOJI,
   type Reaction,
+  canAttach,
   mentionAt,
   messageParts,
 } from './chat-model';
+import { Modal } from './modal';
 
 const TYPING_EVERY_MS = 3000;
 /** The room a message's menu needs below its button. */
@@ -26,8 +40,30 @@ export interface MenuItem {
   danger?: boolean;
 }
 
-/** A message's text: web addresses become links, and mentions stand out. */
-export function MessageText({ message }: { message: Pick<Message, 'body' | 'mentions'> }) {
+/**
+ * A message's text and files: web addresses become links, mentions stand out, a forwarded
+ * message says so, and pictures, PDF and video follow the text.
+ */
+export function MessageText({
+  message,
+}: {
+  message: Pick<Message, 'body' | 'mentions' | 'forwarded' | 'attachments'>;
+}) {
+  const f = useTranslations('groups.forward');
+  return (
+    <>
+      {message.forwarded && (
+        <p data-testid="forwarded" className="text-xs italic text-text-muted">
+          {f('forwarded')}
+        </p>
+      )}
+      {message.body && <MessageBody message={message} />}
+      <Attachments files={message.attachments} />
+    </>
+  );
+}
+
+function MessageBody({ message }: { message: Pick<Message, 'body' | 'mentions'> }) {
   const names = message.mentions
     .map((person) => [person.firstName, person.lastName].filter(Boolean).join(' '))
     .filter(Boolean);
@@ -55,6 +91,174 @@ export function MessageText({ message }: { message: Pick<Message, 'body' | 'ment
     </p>
   );
 }
+
+/** The files of a message: a picture opens large, a PDF downloads, a video plays in place. */
+export function Attachments({ files }: { files: readonly Attachment[] }) {
+  if (files.length === 0) return null;
+  return (
+    <ul data-testid="attachments" className="mt-1 flex flex-col gap-2">
+      {files.map((file) => (
+        <li key={file.id}>
+          {file.kind === 'IMAGE' ? (
+            <Picture file={file} />
+          ) : file.kind === 'VIDEO' ? (
+            <Video file={file} />
+          ) : (
+            <Document file={file} />
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Picture({ file }: { file: Attachment }) {
+  const t = useTranslations('groups.files');
+  const [open, setOpen] = useState(false);
+  // The box has the picture's shape before it arrives, so the list doesn't jump.
+  const ratio = file.width && file.height ? `${file.width} / ${file.height}` : '4 / 3';
+  return (
+    <>
+      <button
+        type="button"
+        aria-label={t('openName', { name: file.name })}
+        onClick={() => setOpen(true)}
+        className="block w-56 max-w-full overflow-hidden rounded-md border border-border"
+        style={{ aspectRatio: ratio }}
+      >
+        <StoredImage
+          fileId={file.id}
+          variant="thumb"
+          alt=""
+          placeholder
+          className="size-full object-cover"
+        />
+      </button>
+      {open && (
+        <Modal title={file.name} closeLabel={t('close')} onClose={() => setOpen(false)}>
+          <StoredImage
+            fileId={file.id}
+            alt={t('pictureAlt', { name: file.name })}
+            placeholder
+            className="max-h-[70dvh] w-full object-contain"
+          />
+        </Modal>
+      )}
+    </>
+  );
+}
+
+function Video({ file }: { file: Attachment }) {
+  const t = useTranslations('groups.files');
+  const locale = useLocale();
+  const url = useFileUrl(file.id);
+  return (
+    <figure className="flex flex-col gap-1">
+      {url ? (
+        // The browser's own player; it asks for the video in parts. No captions exist for a
+        // video a member filmed.
+        <video
+          controls
+          preload="metadata"
+          src={url}
+          aria-label={t('videoName', { name: file.name })}
+          className="max-h-80 w-72 max-w-full rounded-md border border-border bg-neutral-900"
+        />
+      ) : (
+        <div aria-hidden="true" className="h-40 w-72 max-w-full rounded-md bg-surface-muted" />
+      )}
+      <figcaption dir="auto" className="text-xs text-text-muted">
+        {file.name}
+        {' · '}
+        {formatSize(file.sizeBytes, locale)}
+      </figcaption>
+    </figure>
+  );
+}
+
+function Document({ file }: { file: Attachment }) {
+  const t = useTranslations('groups.files');
+  const locale = useLocale();
+  const url = useFileUrl(file.id);
+  const label = (
+    <span dir="auto">
+      {file.name}
+      {' · '}
+      {formatSize(file.sizeBytes, locale)}
+    </span>
+  );
+  return url ? (
+    <a
+      href={url}
+      aria-label={t('downloadName', { name: file.name })}
+      className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm font-semibold text-primary underline"
+    >
+      {label}
+    </a>
+  ) : (
+    <span className="inline-flex rounded-md border border-border px-3 py-2 text-sm text-text-muted">
+      {label}
+    </span>
+  );
+}
+
+/** A dot beside a person who is active now, with a text for everyone; otherwise the text alone. */
+export function ActivityMark({ activity }: { activity: Activity | undefined }) {
+  const t = useTranslations('groups.activity');
+  if (!activity) return null;
+  return (
+    <span
+      data-testid="activity"
+      data-activity={activity}
+      className="inline-flex items-center gap-1 text-xs text-text-muted"
+    >
+      {activity === 'online' && (
+        <span aria-hidden="true" className="size-2 rounded-full bg-success-700" />
+      )}
+      {t(activity)}
+    </span>
+  );
+}
+
+/**
+ * What the reader may know about when these people were last around, kept current by the
+ * page's events. Empty for people who don't show it, and when the reader doesn't show theirs.
+ */
+export function useActivity(
+  userIds: readonly string[],
+  subscribe: (listener: (event: { type: string; userId?: string }) => void) => () => void,
+): Map<string, Activity> {
+  const { api, call } = useAuth();
+  const [known, setKnown] = useState<Map<string, Activity>>(new Map());
+  const [version, setVersion] = useState(0);
+  const key = [...new Set(userIds)].sort().join(',');
+
+  useEffect(() => {
+    if (!key) return;
+    let active = true;
+    call(() => api.GET('/api/v1/chat/activity', { params: { query: { userIds: key } } }))
+      .then((result) => {
+        if (active) setKnown(new Map(result.items.map((item) => [item.userId, item.activity])));
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [api, call, key, version]);
+
+  useEffect(() => {
+    if (!key) return;
+    const ids = new Set(key.split(','));
+    return subscribe((event) => {
+      if (event.type === 'refresh' || (event.type === 'activity' && ids.has(event.userId ?? ''))) {
+        setVersion((value) => value + 1);
+      }
+    });
+  }, [subscribe, key]);
+
+  return key ? known : EMPTY_ACTIVITY;
+}
+const EMPTY_ACTIVITY = new Map<string, Activity>();
 
 /** The reactions somebody used on a message. Pressing one adds or takes back the reader's. */
 export function ReactionChips({
@@ -232,13 +436,16 @@ export function Composer({
   onTyping,
   suggest,
   extra,
+  attach = false,
 }: {
   initial: string;
   banner: string | null;
   saving: boolean;
   onCancel: () => void;
-  /** The text, and the ids of the people mentioned in it (rooms). */
-  onSend: (text: string, mentions: string[]) => Promise<void>;
+  /** The text, the ids of the people mentioned in it (rooms), and the files to send with it. */
+  onSend: (text: string, mentions: string[], attachmentIds: string[]) => Promise<void>;
+  /** Files can be sent with the message (not while editing one). */
+  attach?: boolean;
   onTyping: (() => void) | null;
   /** Rooms: the people whose name starts like this. */
   suggest?: ((q: string) => Promise<Suggestion[]>) | undefined;
@@ -248,6 +455,11 @@ export function Composer({
   const all = useTranslations();
   const t = useTranslations('chat.composer');
   const r = useTranslations('rooms.composer');
+  const f = useTranslations('groups.files');
+  const { api, call } = useAuth();
+  const fileId = useId();
+  const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [uploading, setUploading] = useState<string | null>(null);
   const [text, setText] = useState(initial);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -263,16 +475,47 @@ export function Composer({
     if (banner) box.current?.focus();
   }, [banner]);
 
+  async function addFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setError(null);
+    setUploading(file.name);
+    try {
+      const stored = await call(() =>
+        api.POST('/api/v1/chat/attachments', {
+          body: { file: '' },
+          bodySerializer: () => {
+            const form = new FormData();
+            form.append('file', file);
+            return form;
+          },
+        }),
+      );
+      setFiles((current) => (canAttach(current, stored.kind) ? [...current, stored] : current));
+      if (!canAttach(files, stored.kind)) setError(new Error('tooMany'));
+    } catch (caught) {
+      setError(caught);
+    } finally {
+      setUploading(null);
+    }
+  }
+
   async function submit() {
     const body = text.trim();
-    if (!body || pending) return;
+    if ((!body && files.length === 0) || pending || uploading) return;
     setPending(true);
     setError(null);
     try {
       // Only the people whose "@name" is still in the text.
       const ids = mentioned.filter((p) => body.includes(`@${p.name}`)).map((p) => p.id);
-      await onSend(body, [...new Set(ids)]);
+      await onSend(
+        body,
+        [...new Set(ids)],
+        files.map((file) => file.id),
+      );
       setText('');
+      setFiles([]);
       setMentioned([]);
       setSuggestions([]);
     } catch (caught) {
@@ -337,7 +580,15 @@ export function Composer({
       }}
       className="flex flex-col gap-2"
     >
-      {error !== null && <Alert tone="error">{errorMessage(error, all)}</Alert>}
+      {error !== null && (
+        <Alert tone="error">
+          {error instanceof Error && error.message === 'tooMany'
+            ? f('tooMany')
+            : hasErrorDetail(error, 'fileTypeNotAllowed')
+              ? f('typeNotAllowed')
+              : errorMessage(error, all)}
+        </Alert>
+      )}
       {banner && (
         <p className="flex items-center justify-between gap-3 rounded-md bg-surface-muted px-3 py-1.5 text-sm">
           <span data-testid="composer-banner">{banner}</span>
@@ -388,10 +639,72 @@ export function Composer({
           onKeyDown={onKeyDown}
           className="min-w-0 flex-1 resize-none rounded-md border border-neutral-400 bg-surface px-3 py-2 text-base text-text"
         />
-        <Button type="submit" pending={pending} disabled={!text.trim()}>
+        <Button
+          type="submit"
+          pending={pending}
+          disabled={(!text.trim() && files.length === 0) || uploading !== null}
+        >
           {saving ? t('save') : t('send')}
         </Button>
       </div>
+      {attach && (
+        <div className="flex flex-col gap-1.5 text-sm">
+          {files.length > 0 && (
+            <ul
+              aria-label={f('chosen')}
+              data-testid="chosen-files"
+              className="flex flex-wrap gap-2"
+            >
+              {files.map((file) => (
+                <li
+                  key={file.id}
+                  className="flex items-center gap-2 rounded-full bg-surface-muted py-1 pe-1 ps-3"
+                >
+                  <span dir="auto" className="max-w-40 truncate">
+                    {file.originalName}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label={f('removeName', { name: file.originalName })}
+                    onClick={() => setFiles((current) => current.filter((x) => x.id !== file.id))}
+                    className="grid size-6 place-items-center rounded-full hover:bg-surface"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="size-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    >
+                      <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {uploading && <p role="status">{f('uploading', { name: uploading })}</p>}
+          <div className="flex flex-wrap items-center gap-2">
+            <label htmlFor={fileId} className="font-semibold">
+              {f('attach')}
+            </label>
+            <input
+              id={fileId}
+              type="file"
+              accept="image/jpeg,image/png,application/pdf,video/mp4"
+              aria-describedby={`${fileId}-hint`}
+              disabled={uploading !== null || files.length >= 3}
+              onChange={(event) => void addFile(event)}
+              className="max-w-full text-sm"
+            />
+          </div>
+          <p id={`${fileId}-hint`} className="text-xs text-text-muted">
+            {f('patientNote')} {f('hint')} {f('videoNote')}
+          </p>
+        </div>
+      )}
       {extra}
       <p id="composer-hint" className="text-xs text-text-muted">
         {t('patientNote')} {t('hint')}

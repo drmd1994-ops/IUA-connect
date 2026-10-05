@@ -10,9 +10,13 @@ import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { MessageSearchDialog, NewConversationDialog } from './chat-dialogs';
 import { CHAT_CHANGED, type ChatEvent, useChatEvents } from './chat-events';
+import { GroupMark } from './chat-extras';
 import { type Conversation, dayKey } from './chat-model';
 import { Avatar, type Subscribe, usePersonLabel } from './chat-parts';
 import { ConversationView } from './conversation-view';
+import { GroupView } from './group-view';
+import { Invitations, NewGroupDialog, useInvitationCount } from './invitations';
+import { ActivityMark, useActivity } from './message-parts';
 import { RoomView } from './room-view';
 import { BrowseRooms, RoomList } from './rooms-list';
 
@@ -39,15 +43,28 @@ export function RoomsPage({ roomId, browse }: { roomId?: string; browse?: boolea
   );
 }
 
-type Open = { kind: 'private' | 'room'; id: string | null } | { kind: 'browse' };
+/** A group a member made (M13). It lives on the Private side of the Chat section. */
+export function GroupPage({ groupId }: { groupId: string }) {
+  return (
+    <RequireSignIn>{(me) => <Chat me={me} open={{ kind: 'group', id: groupId }} />}</RequireSignIn>
+  );
+}
+
+/** The reader's invitations to groups and to rooms by invitation (M13). */
+export function InvitationsPage() {
+  return <RequireSignIn>{(me) => <Chat me={me} open={{ kind: 'invitations' }} />}</RequireSignIn>;
+}
+
+type Open =
+  { kind: 'private' | 'room' | 'group'; id: string | null } | { kind: 'browse' | 'invitations' };
 
 function Chat({ me, open }: { me: Me; open: Open }) {
   const t = useTranslations('chat');
   const r = useTranslations('rooms');
-  const rooms = open.kind !== 'private';
-  const openId = open.kind === 'browse' ? null : open.id;
+  const rooms = open.kind === 'room' || open.kind === 'browse';
+  const openId = 'id' in open ? open.id : null;
   /** On a phone the list and what is open are a screen each. */
-  const showsMain = open.kind === 'browse' || openId !== null;
+  const showsMain = !('id' in open) || openId !== null;
   // One stream for the page; the list and the open conversation both listen to it.
   const listeners = useRef(new Set<(event: ChatEvent) => void>());
   const subscribe = useCallback<Subscribe>((listener) => {
@@ -97,6 +114,10 @@ function Chat({ me, open }: { me: Me; open: Open }) {
         >
           {open.kind === 'browse' ? (
             <BrowseRooms />
+          ) : open.kind === 'invitations' ? (
+            <Invitations subscribe={subscribe} />
+          ) : open.kind === 'group' && open.id ? (
+            <GroupView key={open.id} id={open.id} me={me} subscribe={subscribe} />
           ) : open.kind === 'room' && open.id ? (
             <RoomView key={open.id} id={open.id} me={me} subscribe={subscribe} />
           ) : open.kind === 'private' && open.id ? (
@@ -121,9 +142,11 @@ function ConversationList({
 }) {
   const all = useTranslations();
   const t = useTranslations('chat.list');
+  const g = useTranslations('groups.list');
   const format = useFormatter();
   const label = usePersonLabel();
   const { api, call } = useAuth();
+  const invitations = useInvitationCount(subscribe);
   const [archived, setArchived] = useState(false);
   const [search, setSearch] = useState('');
   const [q, setQ] = useState('');
@@ -131,7 +154,11 @@ function ConversationList({
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [version, setVersion] = useState(0);
-  const [dialog, setDialog] = useState<'new' | 'search' | null>(null);
+  const [dialog, setDialog] = useState<'new' | 'group' | 'search' | null>(null);
+  const activity = useActivity(
+    (items ?? []).flatMap((item) => (item.other.id ? [item.other.id] : [])),
+    subscribe,
+  );
 
   // The first page, again whenever something changed.
   useEffect(() => {
@@ -158,7 +185,7 @@ function ConversationList({
   useEffect(() => {
     let timer: number | undefined;
     const stop = subscribe((event) => {
-      if (event.type === 'typing') return;
+      if (event.type === 'typing' || event.type === 'activity') return;
       window.clearTimeout(timer);
       timer = window.setTimeout(() => setVersion((value) => value + 1), 300);
     });
@@ -237,6 +264,14 @@ function ConversationList({
             type="button"
             variant="secondary"
             className="text-sm"
+            onClick={() => setDialog('group')}
+          >
+            {g('newGroup')}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            className="text-sm"
             onClick={() => setDialog('search')}
           >
             {t('searchMessages')}
@@ -251,6 +286,15 @@ function ConversationList({
           placeholder={t('search')}
           className="min-w-0 rounded-md border border-neutral-400 bg-surface px-3 py-2 text-sm text-text"
         />
+        {invitations > 0 && (
+          <Link
+            href="/chat/invitations"
+            data-testid="invitations-link"
+            className="rounded-md bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-900 underline"
+          >
+            {g('invitations', { count: invitations })}
+          </Link>
+        )}
         <div role="group" aria-label={t('tabsLabel')} className="flex gap-1">
           {tab(false, t('active'))}
           {tab(true, t('archived'))}
@@ -276,26 +320,35 @@ function ConversationList({
         {items && items.length > 0 && (
           <ul data-testid="conversation-list" className="divide-y divide-border">
             {items.map((item) => {
-              const name = label(item.other);
+              const name = item.group ? item.group.name : label(item.other);
               const last = item.lastMessage;
+              // A message that is only files says how many it carries.
+              const said = last
+                ? last.body || (last.files > 0 ? g('files', { count: last.files }) : '')
+                : '';
               const text = !last
-                ? ''
+                ? item.group
+                  ? g('people', { count: item.group.memberCount })
+                  : ''
                 : last.deleted
                   ? t('deleted')
-                  : last.senderId === item.other.id
-                    ? last.body
-                    : t('you', { text: last.body });
+                  : item.group || last.senderId === item.other.id
+                    ? said
+                    : t('you', { text: said });
+              const href = item.group ? `/chat/groups/${item.id}` : `/chat/${item.id}`;
+              const seen = item.other.id ? activity.get(item.other.id) : undefined;
               const unread = item.unreadCount > 0 || item.markedUnread;
               return (
                 <li key={item.id}>
                   <Link
-                    href={`/chat/${item.id}`}
+                    href={href}
+                    data-kind={item.kind}
                     aria-current={item.id === current ? 'page' : undefined}
                     className={`flex items-center gap-3 px-4 py-3 hover:bg-surface-muted ${
                       item.id === current ? 'bg-brand-50' : ''
                     }`}
                   >
-                    <Avatar person={item.other} />
+                    {item.group ? <GroupMark name={name} /> : <Avatar person={item.other} />}
                     <span className="min-w-0 flex-1">
                       <span className="flex items-baseline justify-between gap-2">
                         <span className={`truncate ${unread ? 'font-semibold' : ''}`}>{name}</span>
@@ -313,6 +366,10 @@ function ConversationList({
                           {text}
                         </span>
                         <span className="flex shrink-0 items-center gap-1.5">
+                          {seen === 'online' && <ActivityMark activity={seen} />}
+                          {item.pinned && (
+                            <span className="text-xs text-text-muted">{g('pinned')}</span>
+                          )}
                           {item.muted && (
                             <span className="text-xs text-text-muted">{t('muted')}</span>
                           )}
@@ -354,6 +411,7 @@ function ConversationList({
       </div>
 
       {dialog === 'new' && <NewConversationDialog onClose={() => setDialog(null)} />}
+      {dialog === 'group' && <NewGroupDialog onClose={() => setDialog(null)} />}
       {dialog === 'search' && <MessageSearchDialog onClose={() => setDialog(null)} />}
     </>
   );

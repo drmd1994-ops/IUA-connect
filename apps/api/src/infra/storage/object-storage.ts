@@ -1,11 +1,26 @@
+import { type Readable } from 'node:stream';
+
+/** A part of a stored object, both ends included (as in an HTTP Range header). */
+export interface ByteRange {
+  start: number;
+  end: number;
+}
+
 /**
  * Where uploaded bytes live (ARCHITECTURE.md §5). Demo: the local disk, outside the web root.
  * Later: an S3-compatible store, selected with STORAGE_ADAPTER.
  */
 export abstract class ObjectStorage {
   abstract put(key: string, body: Buffer, contentType: string): Promise<void>;
+  /**
+   * Stores a file that is already on this machine's disk, without reading it into memory (a
+   * video, M13). The source file is gone afterwards.
+   */
+  abstract putFile(key: string, sourcePath: string, contentType: string): Promise<void>;
   /** The bytes, or null when the key doesn't exist. */
   abstract get(key: string): Promise<Buffer | null>;
+  /** The bytes as a stream, all of them or a part; null when the key doesn't exist. */
+  abstract open(key: string, range?: ByteRange): Promise<{ stream: Readable; size: number } | null>;
   /** Removes the object; missing keys are ignored. */
   abstract delete(key: string): Promise<void>;
 }

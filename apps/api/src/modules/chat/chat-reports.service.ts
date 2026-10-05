@@ -143,8 +143,16 @@ export class ChatReportsService implements OnModuleInit {
           seq: { gte: message.seq - REPORT_CONTEXT, lte: message.seq + REPORT_CONTEXT },
         },
         orderBy: { seq: 'asc' },
-        select: { seq: true, senderId: true, body: true, deletedAt: true, createdAt: true },
+        select: {
+          seq: true,
+          senderId: true,
+          body: true,
+          deletedAt: true,
+          createdAt: true,
+          _count: { select: { attachments: true } },
+        },
       });
+      // The files of a message are not kept with a report, only how many there were.
       snapshot = around.map((row) => ({
         seq: row.seq,
         senderId: row.senderId,
@@ -152,15 +160,24 @@ export class ChatReportsService implements OnModuleInit {
         deleted: row.deletedAt !== null,
         createdAt: row.createdAt.toISOString(),
         reported: row.seq === message.seq,
+        files: row._count.attachments,
       }));
     } else if (input.roomId) {
       // A room as such: by someone who may see rooms. Nobody in particular is reported.
       const room = await this.prisma.conversation.findFirst({
         where: { id: input.roomId, kind: 'ROOM', archivedAt: null },
-        select: { id: true, members: { where: { userId: me }, select: { userId: true } } },
+        select: {
+          id: true,
+          inviteOnly: true,
+          members: { where: { userId: me }, select: { userId: true } },
+        },
       });
       if (!room) throw new AppException('NOT_FOUND');
-      if (room.members.length === 0 && !(await this.access.isActiveMember(principal))) {
+      // A room by invitation exists only for the people in it.
+      if (
+        room.members.length === 0 &&
+        (room.inviteOnly || !(await this.access.isActiveMember(principal)))
+      ) {
         throw new AppException('NOT_FOUND');
       }
       reportedUserId = null;

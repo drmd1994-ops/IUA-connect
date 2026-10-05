@@ -48,7 +48,7 @@ export class NewsInputDto extends createZodDto(
 
 const fileView = z.strictObject({
   id: z.uuid(),
-  kind: z.enum(['IMAGE', 'DOCUMENT']),
+  kind: z.enum(['IMAGE', 'DOCUMENT', 'VIDEO']),
   mimeType: z.string(),
   originalName: z.string(),
   sizeBytes: z.number().int(),

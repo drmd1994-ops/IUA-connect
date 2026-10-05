@@ -73,6 +73,12 @@ const noSidewaysScroll = (page: Page) =>
 
 test.setTimeout(180_000);
 
+// A person may hold three live chat connections. Windows left open by an earlier test would
+// take them, and the next test's page would keep losing its own.
+test.afterEach(async ({ browser }) => {
+  for (const context of browser.contexts()) await context.close();
+});
+
 test('a member joins a room; messages, reactions and mentions arrive without refreshing', async ({
   browser,
 }) => {

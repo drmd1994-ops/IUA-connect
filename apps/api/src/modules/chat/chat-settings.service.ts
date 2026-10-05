@@ -123,7 +123,11 @@ export class ChatSettingsService {
     if (existing) return;
     const shared = await this.sharedConversations(me, targetId);
     if (shared.length === 0 && !(await this.directory.listedAmong([targetId])).has(targetId)) {
-      throw new AppException('NOT_FOUND');
+      // Someone who invited the reader can be blocked too, straight from the invitation.
+      const invited = await this.prisma.conversationInvitation.count({
+        where: { userId: me, invitedBy: targetId },
+      });
+      if (invited === 0) throw new AppException('NOT_FOUND');
     }
     await this.prisma.chatBlock.upsert({
       where: { blockerId_blockedId: { blockerId: me, blockedId: targetId } },
@@ -138,6 +142,12 @@ export class ChatSettingsService {
       entityType: 'user',
       entityId: targetId,
     });
+    // Whatever that person invited the reader to is declined with the block.
+    const { count } = await this.prisma.conversationInvitation.updateMany({
+      where: { userId: me, invitedBy: targetId, status: 'OPEN' },
+      data: { status: 'DECLINED', resolvedAt: new Date() },
+    });
+    if (count > 0) await this.stream.publish([me], { type: 'invitation' });
     await this.refresh(me, shared);
   }
 

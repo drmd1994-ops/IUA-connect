@@ -7,6 +7,7 @@ import enEducation from './messages/en/education.json';
 import enEmails from './messages/en/emails.json';
 import enErrors from './messages/en/errors.json';
 import enEvents from './messages/en/events.json';
+import enGroups from './messages/en/groups.json';
 import enDirectory from './messages/en/directory.json';
 import enMembership from './messages/en/membership.json';
 import enNotifications from './messages/en/notifications.json';
@@ -22,6 +23,7 @@ import heEducation from './messages/he/education.json';
 import heEmails from './messages/he/emails.json';
 import heErrors from './messages/he/errors.json';
 import heEvents from './messages/he/events.json';
+import heGroups from './messages/he/groups.json';
 import heDirectory from './messages/he/directory.json';
 import heMembership from './messages/he/membership.json';
 import heNotifications from './messages/he/notifications.json';
@@ -64,6 +66,7 @@ export type Messages = {
   search: typeof heSearch;
   chat: typeof heChat;
   rooms: typeof heRooms;
+  groups: typeof heGroups;
   portal: typeof hePortal;
 };
 
@@ -83,6 +86,7 @@ const MESSAGES: Record<Locale, Messages> = {
     search: heSearch,
     chat: heChat,
     rooms: heRooms,
+    groups: heGroups,
     portal: hePortal,
   },
   en: {
@@ -100,6 +104,7 @@ const MESSAGES: Record<Locale, Messages> = {
     search: enSearch,
     chat: enChat,
     rooms: enRooms,
+    groups: enGroups,
     portal: enPortal,
   },
 };

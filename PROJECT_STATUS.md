@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M12 chat rooms built, in a pull request; M11 merged and checked by the owner)_
+_Last updated: 2026-10-05 (M13 groups, invitations and files built, in a pull request; M12 chat rooms merged)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: built 2026-10-05, in a pull request, not merged.** |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: merged 2026-10-05** (pull request #17). **M13 Groups, invitations, online status and files in chat: built 2026-10-05, in a pull request, not merged.** |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -678,7 +678,7 @@ Plan: [`docs/plans/M12-chat-rooms.md`](docs/plans/M12-chat-rooms.md), approved b
 
 No new libraries.
 
-**Not merged.** The work is on the branch `feat/chat-rooms`, in a pull request into `main`. The owner merges, or asks for it.
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #17, squash commit `a1f8184`), with green CI. The security scan (ZAP) failed once in CI without scanning anything and passed when run again; nothing was changed in between. **The owner's checkpoint test has not been done yet.**
 
 ### Delivered
 
@@ -738,9 +738,91 @@ No new libraries.
 ### Open for the owner
 
 1. **Checkpoint test of the demo** (plan §11): two browser windows and the admin area. `docs/demo/DEMO_SCRIPT.md` section 9.
-2. **Merge the pull request,** or ask Claude to.
+2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #17, CI green).
 3. **The wording of the Hebrew room texts.**
 4. **M13 (files, online status, rooms by invitation)** needs its own plan when the owner wants it. Files wait for the legal review.
+5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
+
+## M13 Groups, invitations, online status and files in chat (2026-10-05)
+
+Plan: [`docs/plans/M13-chat-groups-status.md`](docs/plans/M13-chat-groups-status.md), approved by the owner on 2026-10-05. The owner answered each question (plan §11) and three more about video (plan §12):
+
+- **Files are built now, and video too.** This changes the earlier decision that files wait for the legal review. The review is still needed before real use.
+- **Online and "last active":** on at the start, shown only to people you already have a conversation or a group with, rounded, with one switch.
+- **Groups:** any active member, up to 50 people, every invitation must be accepted.
+- **One milestone.**
+- **Forwarding:** marked "Forwarded", without the writer's name, and it carries pictures, PDF and video.
+- **Staff and groups:** staff see only a report.
+- **Video:** MP4 up to 100 MB, one a message; stored as it was sent, with what the phone wrote into it; played by the browser's own player.
+
+No new libraries.
+
+**Not merged.** The work is on the branch `feat/chat-groups`, in a pull request into `main`. The owner merges, or asks for it.
+
+### Delivered
+
+- **Group chats.** "New group" on the Private side of Chat: a name and the people to invite. A group is listed beside private conversations. In it: everything a room message has (replies, the six reactions, mentions, edit, delete, "delete for me", copy, report), and the people of the group. Its admin renames it, invites, removes a person and hands it over; when the admin leaves, the person who has been in it longest runs it.
+- **Invitations (`/chat/invitations`).** Nobody is put into a group or a room. The invited person sees who invited them and, for a group, who is in it, and nothing that was written. Accept, decline, or decline and block. An invitation ends after 30 days. A notice under the bell.
+- **Rooms by invitation.** Staff tick "by invitation" in a room's editor. The room is not in "Browse rooms"; its moderators and staff invite members from the room's details.
+- **Who can invite me:** a new chat setting (members who could write to me, only people I already talk with, or nobody).
+- **Online and "last active".** A dot and "Active now" beside a person who has chat open; otherwise "active today", "this week" or "a while ago". In the list of conversations, in a conversation's heading and in a group's list of people. One switch in chat settings.
+- **Files in messages,** in private conversations, groups and rooms: JPEG and PNG pictures and PDF up to 10 MB, MP4 video up to 100 MB, three files a message and one video at most. A picture opens large; a PDF downloads; a video plays in place. A message may be files without a text. Two standing notes beside the attach button: not to send anything of a patient, and what a video still carries.
+- **Forwarding:** "Forward" in a message's menu, to any conversation, group or room the member can write in.
+- **Pinned conversations:** up to five, at the top of a person's own list (conversations, groups and rooms).
+- **Finding a message:** search by day and "only what I wrote"; "Go to this message" opens the conversation at that message, with a way back to the newest.
+- **Demo seed:** a pinned group of the three demo members with a drawn sample picture and a sample PDF; a group and a room by invitation that the demo member is invited to. No sample video. Nothing medical, and no picture of a person.
+- **Database:** two new tables and new columns; three migrations.
+
+### Verified
+
+- API: **301 unit and 466 integration tests**, all passing (20 of the integration tests are M13's).
+- **Exit criteria:**
+  - Nobody outside a group reads it, staff included: tested on every group route, with the same answer as for an invented id.
+  - Nobody is in a group or a room before accepting: tested, and that three people accepting the last place at once leave a group at fifty.
+  - A room by invitation doesn't exist for a member who is not in it: tested on every room route, for someone not invited and for someone invited who has not accepted.
+  - Online status is never shown against a person's switch: no route and no event.
+  - A file is readable only by the people who can read its message, and not after the message is deleted or the person left.
+  - Private chat and rooms keep working: the M11 and M12 suites pass. One M11 test was changed (the chat settings now have two more).
+  - No WCAG 2.2 AA violations (axe) on the new pages and dialogs, in Hebrew and English.
+- Playwright (Chromium, production builds, local): the five M13 tests pass; the whole suite: **110 tests, all passing**.
+- Lint, type check and the formatting check are clean.
+
+### Not verified
+
+- **That a real phone video plays** in the browsers people use. The tests send the start of an MP4 file and check that it is stored and delivered whole and in parts. Nobody watched a film in a message.
+- **A 100 MB upload** was not tried; a 12 MB one was.
+- **The screen-reader check** was not done for any chat page since M11; only the automated checks ran.
+- **How many open connections one server holds** is still not tested, and M13 adds a message between server processes every thirty seconds.
+- **The demo script's new section** was written from the screens and the seed, not walked through start to finish.
+- **The Hebrew texts of M13** were written by Claude and not yet read by the owner.
+- **The owner's checkpoint test of M12** was never done; M12 was merged without it.
+
+### Deviations and findings
+
+- **"Online" means a chat page is open.** The plan also said the browser tab must have been in front in the last five minutes. That part was not built; a tab left open in the background counts as online.
+- **A video is not handed to the virus scanner.** It is never read into memory, and the scanner's connection point takes a file in memory. The demo has no scanner anyway; a real one would have to be changed to check videos. Written into `SECURITY_MODEL.md` and the readiness checklist.
+- **A database rule from M11 was relaxed.** It said a message that is not deleted has text. A message can now be files only, so the database keeps the other half of the rule and the API checks "a text or a file".
+- **A file of a message is closed to its uploader once they leave the conversation, and to staff who may upload content.** Before M13 the files module let an uploader, and staff with the upload permission, read any file they could name. For chat files only the people of the conversation count.
+- **Deleting a message doesn't take its file back from a conversation it was forwarded to.** The file lives as long as any message carries it. The plan said "deleting a message for everyone deletes its files"; with forwarding of files (the owner's answer) that can only hold for the last copy.
+- **A group's name is not written to the audit log,** and neither are group messages. The log records that a group was made, renamed, handed over, and who was invited or removed.
+- **Invitations are limited to 60 a day per person,** not 30 as the plan said, because making a group of fifty needs 49 at once.
+- **Inviting to a room by invitation finds only members listed in the directory,** for staff too.
+- **The notice about an invitation** is under "Private messages" for a group and under "Chat rooms" for a room, as planned, and a member who switched that kind off in the app gets the invitation without a notice.
+- **Blocking a person declines the invitations they sent,** and a person can block someone who invited them even with no other contact. The plan said "can block the inviter"; it did not say what happens to the invitation.
+- **A page opened at a found message doesn't follow new messages** until "Go to the newest messages" is pressed. Otherwise opening an old message in a long conversation would load everything after it.
+- **The files module gained two things** the plan named only as "new code": storage can take a file from disk and give back a part of one, and a download answers a request for a part (`Range`), which a video player needs.
+- **The browser test for a room by invitation hung once** on its first run, waiting three minutes for the search field of "Browse rooms", then passed on the retry and on every run after. The cause was not found.
+- **More than three open chat windows of one person fight over the live connection.** A person may hold three; a fourth closes the oldest, which reconnects at once and closes another, and so on. While a window is being reconnected it can miss an edit or a reaction (new messages are fetched again on reconnecting; changes to old ones are not). Found because the browser tests left their windows open, so late in a full run one demo person had many: a reaction did not arrive once. The tests now close their windows when they end. **The product behaviour is unchanged** and is written into the known limitations; a real person with four chat tabs would see it.
+- **The unit tests printed "a worker process has failed to exit gracefully" once.** It did not happen again in three runs. Not tracked down.
+- **A script that edited files mangled three characters** (a known problem with this computer's shell and non-English text). Found by the lint check and corrected; the Hebrew texts were checked afterwards.
+- **The running development database** got the demo group from `pnpm db:seed`, and test groups, rooms and files from the browser tests. `pnpm demo:reset` clears them.
+
+### Open for the owner
+
+1. **Checkpoint test of the demo** (plan §10): `docs/demo/DEMO_SCRIPT.md` section 10, and section 9 for M12, which was never done.
+2. **Merge the pull request,** or ask Claude to.
+3. **The wording of the Hebrew texts** of M12 and M13.
+4. **The legal review now also has to cover files and video in chat,** which are in the demo ahead of it.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
 ## Next step
@@ -751,6 +833,8 @@ No new libraries.
 
 **M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day.
 
-**M12 (chat rooms)** is built on the branch `feat/chat-rooms` and waits for the owner's checkpoint test and merge. **M13 (files, online status, rooms by invitation)** follows, with its own approved plan.
+**M12 (chat rooms)** was merged on 2026-10-05 (pull request #17). The owner's checkpoint test is still owed.
+
+**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** is built on the branch `feat/chat-groups` and waits for the owner's checkpoint test and merge. With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

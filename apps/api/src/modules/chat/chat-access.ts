@@ -10,6 +10,10 @@ export interface ChatSettings {
   audience: 'LISTED' | 'NOBODY';
   readReceipts: boolean;
   typing: boolean;
+  /** Who may invite this person to a group or a room by invitation (M13). */
+  invitesFrom: 'LISTED' | 'CONTACTS' | 'NOBODY';
+  /** Shows the people they talk with when they are active, and sees it for them (M13). */
+  showActivity: boolean;
 }
 
 /** The settings of a person who never opened "Chat settings". */
@@ -17,6 +21,8 @@ export const DEFAULT_CHAT_SETTINGS: ChatSettings = {
   audience: 'LISTED',
   readReceipts: true,
   typing: true,
+  invitesFrom: 'LISTED',
+  showActivity: true,
 };
 
 /**
@@ -81,7 +87,14 @@ export class ChatAccess {
   async settings(userIds: readonly string[]): Promise<Map<string, ChatSettings>> {
     const rows = await this.prisma.chatPreference.findMany({
       where: { userId: { in: [...new Set(userIds)] } },
-      select: { userId: true, audience: true, readReceipts: true, typing: true },
+      select: {
+        userId: true,
+        audience: true,
+        readReceipts: true,
+        typing: true,
+        invitesFrom: true,
+        showActivity: true,
+      },
     });
     const stored = new Map(rows.map(({ userId, ...settings }) => [userId, settings]));
     return new Map(userIds.map((id) => [id, stored.get(id) ?? DEFAULT_CHAT_SETTINGS]));
@@ -115,6 +128,32 @@ export class ChatAccess {
       ...blocks.map((row) => (row.blockerId === me ? row.blockedId : row.blockerId)),
     ]);
     return new Set(ids.filter((id) => listed.has(id) && !excluded.has(id)));
+  }
+
+  /** A first and a last name: needed wherever other people will see who this is. */
+  async ensureNamed(userId: string): Promise<void> {
+    const own = (await this.directory.cards([userId])).get(userId);
+    if (!own?.firstName?.trim() || !own.lastName?.trim()) {
+      throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatNameRequired' }]);
+    }
+  }
+
+  /**
+   * The people among these that `me` already talks with: the other person of a private
+   * conversation that holds a message, or someone in a group with them (M13).
+   */
+  async contactsAmong(me: string, userIds: readonly string[]): Promise<Set<string>> {
+    const ids = [...new Set(userIds)].filter((id) => id !== me);
+    if (ids.length === 0) return new Set();
+    const rows = await this.prisma.$queryRaw<{ userId: string }[]>`
+      SELECT DISTINCT o.user_id AS "userId"
+      FROM conversation_members m
+      JOIN conversations c ON c.id = m.conversation_id
+      JOIN conversation_members o ON o.conversation_id = c.id AND o.user_id <> m.user_id
+      WHERE m.user_id = ${me}::uuid
+        AND o.user_id = ANY(${ids}::uuid[])
+        AND ((c.kind = 'DIRECT' AND c.last_seq > 0) OR c.kind = 'GROUP')`;
+    return new Set(rows.map((row) => row.userId));
   }
 
   /**
