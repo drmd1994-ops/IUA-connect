@@ -38,7 +38,7 @@ import {
   type RoomSendDto,
   type RoomSettingsDto,
 } from './chat.dto';
-import { ChatService, ensureIdempotencyKey } from './chat.service';
+import { ChatService, type ForwardedContent, ensureIdempotencyKey, pinGuard } from './chat.service';
 import { RoomNotifier } from './room-notifier';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -52,6 +52,8 @@ interface RoomRow {
   pictureFileId: string | null;
   memberCount: number;
   moderatorsOnly: boolean;
+  inviteOnly: boolean;
+  pinnedAt: Date | null;
   locked: boolean;
   lockedUntil: Date | null;
   archivedAt: Date | null;
@@ -87,7 +89,9 @@ interface Standing {
  *
  * Who may do what:
  * - **See the list of rooms and a room's details:** active members, and staff with the chat
- *   permission. Someone in a room keeps seeing it after their membership ends.
+ *   permission. Someone in a room keeps seeing it after their membership ends. A room by
+ *   invitation (M13) exists only for the people in it and for staff: it is not listed, and
+ *   for anyone else its address answers "not found".
  * - **Read its messages:** people in the room, and staff.
  * - **Write:** people in the room with an active membership who are not suspended, unless the
  *   room is locked, archived or for announcements (moderators still write).
@@ -114,11 +118,18 @@ export class RoomsService implements OnModuleInit {
       canRead: async (fileId, principal) => {
         const room = await this.prisma.conversation.findFirst({
           where: { pictureFileId: fileId, kind: 'ROOM' },
-          select: { id: true },
+          select: { id: true, inviteOnly: true },
         });
         if (!room) return null;
         if (!principal) return false;
-        return isStaff(principal) || (await this.access.isActiveMember(principal));
+        if (isStaff(principal)) return true;
+        if (room.inviteOnly) {
+          const inside = await this.prisma.conversationMember.count({
+            where: { conversationId: room.id, userId: principal.userId },
+          });
+          return inside > 0;
+        }
+        return this.access.isActiveMember(principal);
       },
     });
   }
@@ -130,7 +141,7 @@ export class RoomsService implements OnModuleInit {
     await this.ensureMayBrowse(principal);
     return this.list(
       principal.userId,
-      Prisma.sql`c.archived_at IS NULL
+      Prisma.sql`c.archived_at IS NULL AND NOT c.invite_only
         ${query.categoryId ? Prisma.sql`AND c.category_id = ${query.categoryId}::uuid` : Prisma.empty}`,
       query,
     );
@@ -138,7 +149,18 @@ export class RoomsService implements OnModuleInit {
 
   /** The rooms the reader is in, newest activity first, each with its unread count. */
   async mine(principal: Principal, query: RoomListQueryDto): Promise<RoomListDto> {
-    return this.list(principal.userId, Prisma.sql`m.user_id IS NOT NULL`, query);
+    const me = principal.userId;
+    if (query.q) return this.list(me, Prisma.sql`m.user_id IS NOT NULL`, query);
+    // Pinned rooms lead the first page; the pages after it hold the rest.
+    const rest = await this.list(
+      me,
+      Prisma.sql`m.user_id IS NOT NULL AND m.pinned_at IS NULL`,
+      query,
+    );
+    if (query.cursor) return rest;
+    const pinned = await this.rows(me, Prisma.sql`m.pinned_at IS NOT NULL`, 10);
+    pinned.sort((a, b) => b.pinnedAt!.getTime() - a.pinnedAt!.getTime());
+    return { items: [...pinned.map(roomView), ...rest.items], nextCursor: rest.nextCursor };
   }
 
   async categories(principal: Principal): Promise<RoomCategoriesDto> {
@@ -185,18 +207,16 @@ export class RoomsService implements OnModuleInit {
   async join(principal: Principal, id: string): Promise<RoomDetailDto> {
     const me = principal.userId;
     await this.access.ensureActiveMember(principal);
+    // A room by invitation is joined by accepting an invitation, never from here.
     const room = await this.prisma.conversation.findFirst({
-      where: { id, kind: 'ROOM', archivedAt: null },
+      where: { id, kind: 'ROOM', archivedAt: null, inviteOnly: false },
       select: { id: true },
     });
     if (!room) throw new AppException('NOT_FOUND');
     if (await this.banned(id, me)) {
       throw new AppException('FORBIDDEN', [{ code: 'chatRoomBanned' }]);
     }
-    const own = (await this.directory.cards([me])).get(me);
-    if (!own?.firstName?.trim() || !own.lastName?.trim()) {
-      throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatNameRequired' }]);
-    }
+    await this.access.ensureNamed(me);
     const joined = await this.addMember(id, me, 'MEMBER');
     if (joined) await this.stream.setPresence(me, id, true);
     return this.get(principal, id);
@@ -270,6 +290,7 @@ export class RoomsService implements OnModuleInit {
     id: string,
     input: RoomSendDto,
     idempotencyKey: string | undefined,
+    forwarded?: ForwardedContent,
   ): Promise<{ message: MessageDto; created: boolean }> {
     const me = principal.userId;
     ensureIdempotencyKey(idempotencyKey);
@@ -300,11 +321,14 @@ export class RoomsService implements OnModuleInit {
     const { row, created } = await this.msgs.append({
       conversationId: id,
       senderId: me,
-      body: input.body,
+      body: forwarded?.body ?? input.body,
       replyToId: input.replyToId,
       idempotencyKey,
       announcement: input.announcement ?? false,
       mentions,
+      forwarded: forwarded !== undefined,
+      attachmentIds:
+        forwarded?.fileIds ?? (await this.msgs.ownUnusedFiles(me, input.attachmentIds)),
       unarchiveOthers: false,
     });
     if (created) {
@@ -353,13 +377,16 @@ export class RoomsService implements OnModuleInit {
   /** Mute, or mark as unread: the reader's own settings of a room. */
   async update(principal: Principal, id: string, input: RoomSettingsDto): Promise<RoomDetailDto> {
     const me = principal.userId;
-    const { count } = await this.prisma.conversationMember.updateMany({
-      where: { conversationId: id, userId: me, conversation: { kind: 'ROOM' } },
-      data: {
-        ...(input.mute ? muteFor(input.mute as MuteChoice) : {}),
-        ...(input.markedUnread ? { markedUnread: true } : {}),
-      },
-    });
+    const { count } = await pinGuard(() =>
+      this.prisma.conversationMember.updateMany({
+        where: { conversationId: id, userId: me, conversation: { kind: 'ROOM' } },
+        data: {
+          ...(input.mute ? muteFor(input.mute as MuteChoice) : {}),
+          ...(input.markedUnread ? { markedUnread: true } : {}),
+          ...(input.pinned === undefined ? {} : { pinnedAt: input.pinned ? new Date() : null }),
+        },
+      }),
+    );
     if (count === 0) throw new AppException('NOT_FOUND');
     await this.stream.publish([me], { type: 'markers', conversationId: id, userId: me });
     return this.get(principal, id);
@@ -671,7 +698,8 @@ export class RoomsService implements OnModuleInit {
       throw new AppException('FORBIDDEN', [{ code: 'membersOnly' }]);
     }
     if (!row) throw new AppException('NOT_FOUND');
-    if (row.archivedAt && standing.role === null && !standing.staff) {
+    // An archived room, and a room by invitation, exist only for the people in them and staff.
+    if ((row.archivedAt || row.inviteOnly) && standing.role === null && !standing.staff) {
       throw new AppException('NOT_FOUND');
     }
     return { row, standing };
@@ -696,7 +724,7 @@ export class RoomsService implements OnModuleInit {
       where: { conversationId: id, userId: principal.userId, conversation: { kind: 'ROOM' } },
       select: { role: true },
     });
-    const standing = await this.standing(principal, member?.role ?? null);
+    const standing = await this.standing(principal, roomRole(member?.role));
     if (canModerate(standing)) {
       const exists = await this.prisma.conversation.count({ where: { id, kind: 'ROOM' } });
       if (exists === 0) throw new AppException('NOT_FOUND');
@@ -832,7 +860,8 @@ export class RoomsService implements OnModuleInit {
       SELECT c.id, c.name_he AS "nameHe", c.name_en AS "nameEn",
              c.description_he AS "descriptionHe", c.description_en AS "descriptionEn",
              c.picture_file_id AS "pictureFileId", c.member_count AS "memberCount",
-             c.moderators_only AS "moderatorsOnly", c.locked, c.locked_until AS "lockedUntil",
+             c.moderators_only AS "moderatorsOnly", c.invite_only AS "inviteOnly",
+             m.pinned_at AS "pinnedAt", c.locked, c.locked_until AS "lockedUntil",
              c.archived_at AS "archivedAt", c.created_at AS "createdAt",
              c.last_message_at AS "lastMessageAt", c.last_seq AS "lastSeq",
              coalesce(c.last_message_at, c.created_at) AS "activityAt",
@@ -862,6 +891,10 @@ export class RoomsService implements OnModuleInit {
 }
 
 const isStaff = (principal: Principal): boolean => principal.permissions.has('chat.moderate');
+
+/** A room has members and moderators; a group's "admin" is never a room's role. */
+const roomRole = (role: string | null | undefined): Standing['role'] =>
+  role === 'MODERATOR' ? 'MODERATOR' : role ? 'MEMBER' : null;
 
 /** A moderator must still be an active member; staff moderate by their permission. */
 const canModerate = (standing: Standing): boolean =>
@@ -893,6 +926,8 @@ function roomView(row: RoomRow): RoomListDto['items'][number] {
     locked,
     lockedUntil: locked ? (row.lockedUntil?.toISOString() ?? null) : null,
     archived: row.archivedAt !== null,
+    inviteOnly: row.inviteOnly,
+    pinned: row.pinnedAt !== null,
     createdAt: row.createdAt.toISOString(),
     lastMessageAt: row.lastMessageAt?.toISOString() ?? null,
     role: row.role ?? 'NONE',

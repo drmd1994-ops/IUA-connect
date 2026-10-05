@@ -13,10 +13,14 @@ export async function hitUserLimit(
   rule: RateLimitRule,
   userId: string,
   response: Response,
+  /** How many this request counts for (inviting several people at once). */
+  times = 1,
 ): Promise<void> {
-  const hit = await store.hit(`${rule.name}:user:${userId}`, rule.windowSec);
-  if (hit.count > rule.limit) {
-    response.setHeader('Retry-After', String(hit.resetInSec));
-    throw new AppException('RATE_LIMITED');
+  for (let i = 0; i < times; i++) {
+    const hit = await store.hit(`${rule.name}:user:${userId}`, rule.windowSec);
+    if (hit.count > rule.limit) {
+      response.setHeader('Retry-After', String(hit.resetInSec));
+      throw new AppException('RATE_LIMITED');
+    }
   }
 }

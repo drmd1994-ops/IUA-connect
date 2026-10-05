@@ -21,6 +21,47 @@ export const MAX_MENTIONS = 10;
 export const ROOMS_PAGE_SIZE = 30;
 export const ROOM_MEMBERS_PAGE_SIZE = 50;
 
+// --- Groups, invitations, activity, files (M13) -------------------------------------------------
+
+/** A group holds at most this many people (M13 plan, owner answer 3). */
+export const GROUP_MAX_MEMBERS = 50;
+/** A person pins at most this many conversations to the top of their list. */
+export const MAX_PINNED_CONVERSATIONS = 5;
+/** An invitation nobody answered ends after this long. */
+export const INVITATION_DAYS = 30;
+/** A message carries at most this many files, of which at most one video. */
+export const MAX_ATTACHMENTS = 3;
+/** "Last active" is written at most this often. */
+export const ACTIVITY_WRITE_EVERY_MS = 10 * 60 * 1000;
+
+export const GROUP_SEND_STATES = ['none', 'membersOnly', 'suspended'] as const;
+export type GroupSendState = (typeof GROUP_SEND_STATES)[number];
+
+export const ACTIVITY_LABELS = ['online', 'today', 'week', 'earlier'] as const;
+export type ActivityLabel = (typeof ACTIVITY_LABELS)[number];
+
+/**
+ * What others are told about when a person was last around: never a time, only "today",
+ * "this week" or "a while ago" (M13 plan §3). Null when nothing is known.
+ */
+export function activityLabel(
+  online: boolean,
+  lastActiveAt: Date | null,
+  now = new Date(),
+): ActivityLabel | null {
+  if (online) return 'online';
+  if (!lastActiveAt) return null;
+  const age = now.getTime() - lastActiveAt.getTime();
+  if (age < 24 * 60 * 60 * 1000) return 'today';
+  if (age < 7 * 24 * 60 * 60 * 1000) return 'week';
+  return 'earlier';
+}
+
+/** What a message may carry: up to three files, one video at most, each only once. */
+export function attachmentsAllowed(kinds: readonly string[]): boolean {
+  return kinds.length <= MAX_ATTACHMENTS && kinds.filter((kind) => kind === 'VIDEO').length <= 1;
+}
+
 /** A lock with a time that has passed is no lock. */
 export function lockActive(
   room: { locked: boolean; lockedUntil: Date | null },

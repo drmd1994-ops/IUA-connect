@@ -34,8 +34,20 @@ import {
   type MessageSearchQueryDto,
 } from './chat.dto';
 
+/** What a forwarded message carries over: its text and its files, nothing about its writer. */
+export interface ForwardedContent {
+  body: string;
+  fileIds: string[];
+}
+
 interface ConversationRow {
   id: string;
+  kind: 'DIRECT' | 'GROUP';
+  name: string | null;
+  memberCount: number;
+  pinnedAt: Date | null;
+  activityAt: Date;
+  lmFiles: number;
   lastSeq: number;
   lastMessageAt: Date | null;
   myLastReadSeq: number;
@@ -85,26 +97,40 @@ export class ChatService {
     const archived = query.archived === 'true';
     const cursor = query.cursor ? parseCursor(query.cursor) : null;
     const pattern = query.q ? `%${query.q.replace(/[\\%_]/g, (char) => `\\${char}`)}%` : null;
+    // A private conversation is listed once it holds a message; a group from the start.
+    const listed = Prisma.sql`(c.kind = 'GROUP' OR (c.kind = 'DIRECT' AND c.last_seq > 0))
+        AND (m.archived_at IS NOT NULL) = ${archived}`;
+    // Pinned conversations lead the first page; the pages after it hold the rest.
+    const apart = !archived && !pattern;
+    const pinned =
+      apart && !cursor
+        ? await this.rows(me, Prisma.sql`${listed} AND m.pinned_at IS NOT NULL`, 10)
+        : [];
+    pinned.sort((a, b) => b.pinnedAt!.getTime() - a.pinnedAt!.getTime());
     const rows = await this.rows(
       me,
-      Prisma.sql`c.kind = 'DIRECT' AND c.last_seq > 0
-        AND (m.archived_at IS NOT NULL) = ${archived}
+      Prisma.sql`${listed}
+        ${apart ? Prisma.sql`AND m.pinned_at IS NULL` : Prisma.empty}
         ${
           cursor
-            ? Prisma.sql`AND (c.last_message_at, c.id) < (${cursor.at}::timestamptz, ${cursor.id}::uuid)`
+            ? Prisma.sql`AND (coalesce(c.last_message_at, c.created_at), c.id)
+                           < (${cursor.at}::timestamptz, ${cursor.id}::uuid)`
             : Prisma.empty
         }
         ${
           pattern
-            ? Prisma.sql`AND EXISTS (
-                SELECT 1 FROM profiles p
-                WHERE p.user_id = o.user_id
-                  AND (
-                    normalize_he(coalesce(p.first_name, '') || ' ' || coalesce(p.last_name, ''))
-                      LIKE normalize_he(${pattern})
-                    OR normalize_he(coalesce(p.last_name, '') || ' ' || coalesce(p.first_name, ''))
-                      LIKE normalize_he(${pattern})
-                  )
+            ? Prisma.sql`AND (
+                normalize_he(coalesce(c.name_he, '')) LIKE normalize_he(${pattern})
+                OR EXISTS (
+                  SELECT 1 FROM profiles p
+                  WHERE p.user_id = o.user_id
+                    AND (
+                      normalize_he(coalesce(p.first_name, '') || ' ' || coalesce(p.last_name, ''))
+                        LIKE normalize_he(${pattern})
+                      OR normalize_he(coalesce(p.last_name, '') || ' ' || coalesce(p.first_name, ''))
+                        LIKE normalize_he(${pattern})
+                    )
+                )
               )`
             : Prisma.empty
         }`,
@@ -113,11 +139,9 @@ export class ChatService {
     const page = rows.slice(0, query.limit);
     const last = page.at(-1);
     return {
-      items: await this.views(me, page),
+      items: await this.views(me, [...pinned, ...page]),
       nextCursor:
-        rows.length > query.limit && last?.lastMessageAt
-          ? `${last.lastMessageAt.toISOString()}|${last.id}`
-          : null,
+        rows.length > query.limit && last ? `${last.activityAt.toISOString()}|${last.id}` : null,
     };
   }
 
@@ -144,10 +168,7 @@ export class ChatService {
       throw new AppException('NOT_FOUND');
     }
     // The other person sees who wrote to them, so the writer needs a name.
-    const own = (await this.directory.cards([me])).get(me);
-    if (!own?.firstName?.trim() || !own.lastName?.trim()) {
-      throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatNameRequired' }]);
-    }
+    await this.access.ensureNamed(me);
     const id = uuidv7();
     try {
       await this.prisma.conversation.create({
@@ -196,14 +217,19 @@ export class ChatService {
   ): Promise<ConversationDetailDto> {
     const me = principal.userId;
     await this.member(id, me);
-    await this.prisma.conversationMember.update({
-      where: { conversationId_userId: { conversationId: id, userId: me } },
-      data: {
-        ...(input.mute ? muteFor(input.mute as MuteChoice) : {}),
-        ...(input.archived === undefined ? {} : { archivedAt: input.archived ? new Date() : null }),
-        ...(input.markedUnread ? { markedUnread: true } : {}),
-      },
-    });
+    await pinGuard(() =>
+      this.prisma.conversationMember.update({
+        where: { conversationId_userId: { conversationId: id, userId: me } },
+        data: {
+          ...(input.mute ? muteFor(input.mute as MuteChoice) : {}),
+          ...(input.archived === undefined
+            ? {}
+            : { archivedAt: input.archived ? new Date() : null }),
+          ...(input.markedUnread ? { markedUnread: true } : {}),
+          ...(input.pinned === undefined ? {} : { pinnedAt: input.pinned ? new Date() : null }),
+        },
+      }),
+    );
     // The reader's other open windows follow.
     await this.stream.publish([me], { type: 'markers', conversationId: id, userId: me });
     return this.get(principal, id);
@@ -292,8 +318,13 @@ export class ChatService {
   async send(
     principal: Principal,
     id: string,
-    input: { body: string; replyToId?: string | undefined },
+    input: {
+      body: string;
+      replyToId?: string | undefined;
+      attachmentIds?: string[] | undefined;
+    },
     idempotencyKey: string | undefined,
+    forwarded?: ForwardedContent,
   ): Promise<{ message: MessageDto; created: boolean }> {
     const me = principal.userId;
     ensureIdempotencyKey(idempotencyKey);
@@ -309,9 +340,12 @@ export class ChatService {
     const { row, created } = await this.msgs.append({
       conversationId: id,
       senderId: me,
-      body: input.body,
+      body: forwarded?.body ?? input.body,
       replyToId: input.replyToId,
       idempotencyKey,
+      forwarded: forwarded !== undefined,
+      attachmentIds:
+        forwarded?.fileIds ?? (await this.msgs.ownUnusedFiles(me, input.attachmentIds)),
       unarchiveOthers: true,
     });
     if (created) {
@@ -348,11 +382,38 @@ export class ChatService {
     const me = principal.userId;
     const message = await this.ownMessage(me, messageId);
     if (message.deletedAt) return;
-    await this.prisma.message.update({
-      where: { id: messageId },
-      data: { body: '', deletedAt: new Date(), editedAt: null },
-    });
+    await this.prisma.$transaction([
+      this.prisma.message.update({
+        where: { id: messageId },
+        data: { body: '', deletedAt: new Date(), editedAt: null },
+      }),
+      // A deleted message is no longer pinned.
+      this.prisma.messagePin.deleteMany({ where: { messageId } }),
+    ]);
+    await this.msgs.eraseFiles(messageId);
     await this.msgs.changed(message, 'message.deleted');
+  }
+
+  /**
+   * What "Forward" copies from a message the reader can read: its text and its files. A
+   * deleted message has nothing to forward.
+   */
+  async forwardable(principal: Principal, messageId: string): Promise<ForwardedContent> {
+    const message = await this.visibleMessage(principal.userId, messageId);
+    if (message.deletedAt) {
+      throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatMessageDeleted' }]);
+    }
+    return { body: message.body, fileIds: message.attachments.map(({ file }) => file.id) };
+  }
+
+  /** What kind of conversation this is, if the reader is in it. */
+  async kindFor(userId: string, conversationId: string): Promise<'DIRECT' | 'ROOM' | 'GROUP'> {
+    const member = await this.prisma.conversationMember.findUnique({
+      where: { conversationId_userId: { conversationId, userId } },
+      select: { conversation: { select: { kind: true } } },
+    });
+    if (!member) throw new AppException('NOT_FOUND');
+    return member.conversation.kind;
   }
 
   /** Delete for me: the message leaves the reader's side only. */
@@ -436,6 +497,18 @@ export class ChatService {
             ? Prisma.sql`AND x.conversation_id = ${query.conversationId}::uuid`
             : Prisma.empty
         }
+        ${query.senderId ? Prisma.sql`AND x.sender_id = ${query.senderId}::uuid` : Prisma.empty}
+        ${
+          query.from
+            ? Prisma.sql`AND x.created_at >= (${query.from}::date AT TIME ZONE 'Asia/Jerusalem')`
+            : Prisma.empty
+        }
+        ${
+          query.to
+            ? Prisma.sql`AND x.created_at
+                           < ((${query.to}::date + 1) AT TIME ZONE 'Asia/Jerusalem')`
+            : Prisma.empty
+        }
       ORDER BY x.created_at DESC, x.id DESC
       LIMIT ${query.limit}`;
     if (found.length === 0) return { items: [] };
@@ -484,6 +557,10 @@ export class ChatService {
               conversation?.kind === 'ROOM' && conversation.nameHe
                 ? { id: conversation.id, nameHe: conversation.nameHe, nameEn: conversation.nameEn }
                 : null,
+            group:
+              conversation?.kind === 'GROUP' && conversation.nameHe
+                ? { id: conversation.id, name: conversation.nameHe }
+                : null,
           },
         ];
       }),
@@ -509,6 +586,7 @@ export class ChatService {
       // A deleted message is no longer pinned.
       this.prisma.messagePin.deleteMany({ where: { messageId } }),
     ]);
+    await this.msgs.eraseFiles(messageId);
     await this.msgs.changed(message, 'message.deleted');
     return true;
   }
@@ -605,7 +683,13 @@ export class ChatService {
   /** The reader's conversations that match, with the other person's markers and the last message. */
   private rows(me: string, where: Prisma.Sql, limit: number): Promise<ConversationRow[]> {
     return this.prisma.$queryRaw<ConversationRow[]>`
-      SELECT c.id, c.last_seq AS "lastSeq", c.last_message_at AS "lastMessageAt",
+      SELECT c.id, c.kind::text AS kind, c.name_he AS name, c.member_count AS "memberCount",
+             c.last_seq AS "lastSeq", c.last_message_at AS "lastMessageAt",
+             coalesce(c.last_message_at, c.created_at) AS "activityAt",
+             m.pinned_at AS "pinnedAt",
+             (
+               SELECT count(*)::int FROM message_attachments a WHERE a.message_id = lm.id
+             ) AS "lmFiles",
              m.last_read_seq AS "myLastReadSeq", m.marked_unread AS "markedUnread",
              m.muted, m.muted_until AS "mutedUntil", m.archived_at AS "archivedAt",
              o.user_id AS "otherId", o.last_read_seq AS "otherReadSeq",
@@ -626,7 +710,7 @@ export class ChatService {
       FROM conversation_members m
       JOIN conversations c ON c.id = m.conversation_id
       LEFT JOIN conversation_members o
-        ON o.conversation_id = c.id AND o.user_id <> m.user_id
+        ON o.conversation_id = c.id AND o.user_id <> m.user_id AND c.kind = 'DIRECT'
       LEFT JOIN LATERAL (
         SELECT x.id, x.seq, x.sender_id, x.body, x.deleted_at, x.created_at
         FROM messages x
@@ -638,7 +722,7 @@ export class ChatService {
         LIMIT 1
       ) lm ON true
       WHERE m.user_id = ${me}::uuid AND ${where}
-      ORDER BY c.last_message_at DESC NULLS LAST, c.id DESC
+      ORDER BY coalesce(c.last_message_at, c.created_at) DESC, c.id DESC
       LIMIT ${limit}`;
   }
 
@@ -657,8 +741,10 @@ export class ChatService {
       const muted = muteActive(row, now);
       return {
         id: row.id,
-        kind: 'DIRECT',
+        kind: row.kind,
         other: personView(row.otherId, row.otherId ? cards.get(row.otherId) : undefined),
+        group: row.kind === 'GROUP' ? { name: row.name ?? '', memberCount: row.memberCount } : null,
+        pinned: row.pinnedAt !== null,
         lastMessage:
           row.lmId && row.lmSeq !== null && row.lmCreatedAt
             ? {
@@ -667,6 +753,7 @@ export class ChatService {
                 senderId: row.lmSenderId,
                 body: preview(row.lmBody ?? ''),
                 deleted: row.lmDeletedAt !== null,
+                files: row.lmDeletedAt ? 0 : row.lmFiles,
                 createdAt: row.lmCreatedAt.toISOString(),
               }
             : null,
@@ -693,6 +780,21 @@ export function ensureIdempotencyKey(idempotencyKey: string | undefined): void {
     ]);
   }
 }
+/**
+ * Runs a change that may pin a conversation. The database refuses a sixth pin (a trigger), also
+ * when two requests arrive together.
+ */
+export async function pinGuard<T>(change: () => Promise<T>): Promise<T> {
+  try {
+    return await change();
+  } catch (error) {
+    if (String((error as Error).message).includes('pins at most five')) {
+      throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatPinnedLimit' }]);
+    }
+    throw error;
+  }
+}
+
 /** "<time>|<id>" of the last conversation of the page before. */
 function parseCursor(cursor: string): { at: Date; id: string } {
   const [time, id] = cursor.split('|');

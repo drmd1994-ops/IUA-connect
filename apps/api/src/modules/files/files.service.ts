@@ -1,3 +1,7 @@
+import { createHash } from 'node:crypto';
+import { createReadStream } from 'node:fs';
+import { open, readFile } from 'node:fs/promises';
+import { type Readable } from 'node:stream';
 import { Injectable, Logger } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
@@ -7,14 +11,23 @@ import { type StoredFile } from '../../generated/prisma/client';
 import { SecretHasher } from '../../infra/crypto/secrets';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { MalwareScanner } from '../../infra/storage/malware-scanner';
-import { ObjectStorage } from '../../infra/storage/object-storage';
+import { type ByteRange, ObjectStorage } from '../../infra/storage/object-storage';
 import { AuditService } from '../audit';
-import { FileRejected, type Purpose, prepareUpload } from './file-processing';
+import {
+  CHAT_FILE_MAX_BYTES,
+  CHAT_VIDEO_MAX_BYTES,
+  FileRejected,
+  type Purpose,
+  SNIFF_BYTES,
+  cleanName,
+  isMp4,
+  prepareUpload,
+} from './file-processing';
 import { FileUrlSigner, type Variant } from './file-url';
 
 export interface FileView {
   id: string;
-  kind: 'IMAGE' | 'DOCUMENT';
+  kind: 'IMAGE' | 'DOCUMENT' | 'VIDEO';
   mimeType: string;
   originalName: string;
   sizeBytes: number;
@@ -114,6 +127,88 @@ export class FilesService {
     return view(row);
   }
 
+  /**
+   * A file to send in a chat message, which the upload wrote to a temporary file: a JPEG or
+   * PNG picture or a PDF (10 MB), or an MP4 video (100 MB). What it is comes from its first
+   * bytes. The temporary file is the caller's to remove.
+   */
+  async uploadForChat(
+    input: { path: string; originalname: string; size: number },
+    ownerUserId: string,
+    meta: RequestMeta,
+  ): Promise<FileView> {
+    const handle = await open(input.path, 'r');
+    const head = Buffer.alloc(Math.min(SNIFF_BYTES, input.size));
+    try {
+      await handle.read(head, 0, head.length, 0);
+    } finally {
+      await handle.close();
+    }
+    if (await isMp4(head)) return this.uploadVideo(input, ownerUserId, meta);
+    if (input.size > CHAT_FILE_MAX_BYTES) {
+      throw new AppException('VALIDATION_FAILED', [{ field: 'file', code: 'fileTooLarge' }]);
+    }
+    return this.upload(
+      { buffer: await readFile(input.path), originalname: input.originalname },
+      'CHAT',
+      ownerUserId,
+      meta,
+    );
+  }
+
+  /**
+   * Stores an MP4 video that the upload wrote to a temporary file (M13). It is kept as it was
+   * sent: nothing in it is re-made, so whatever the camera wrote into it stays. It is never
+   * read into memory, and so it is not handed to the malware scanner (marked UNSCANNED).
+   */
+  async uploadVideo(
+    input: { path: string; originalname: string; size: number },
+    ownerUserId: string,
+    meta: RequestMeta,
+  ): Promise<FileView> {
+    if (input.size === 0) {
+      throw new AppException('VALIDATION_FAILED', [{ field: 'file', code: 'fileEmpty' }]);
+    }
+    if (input.size > CHAT_VIDEO_MAX_BYTES) {
+      throw new AppException('VALIDATION_FAILED', [{ field: 'file', code: 'fileTooLarge' }]);
+    }
+    const hash = createHash('sha256');
+    for await (const chunk of createReadStream(input.path)) hash.update(chunk as Buffer);
+    const id = uuidv7();
+    const now = new Date();
+    const storageKey = `${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, '0')}/${id}`;
+    await this.storage.putFile(storageKey, input.path, 'video/mp4');
+    const row = await this.prisma.storedFile.create({
+      data: {
+        id,
+        storageKey,
+        originalName: cleanName(input.originalname, 'mp4'),
+        mimeType: 'video/mp4',
+        kind: 'VIDEO',
+        purpose: 'CHAT',
+        sizeBytes: input.size,
+        sha256: hash.digest('hex'),
+        scanStatus: 'UNSCANNED',
+        ownerUserId,
+      },
+    });
+    await this.audit.record({
+      action: 'file.upload',
+      correlationId: meta.correlationId,
+      actorUserId: ownerUserId,
+      actorIp: meta.ip,
+      entityType: 'file',
+      entityId: id,
+      changes: {
+        kind: row.kind,
+        mimeType: row.mimeType,
+        sizeBytes: row.sizeBytes,
+        purpose: 'CHAT',
+      },
+    });
+    return view(row);
+  }
+
   /** A short-lived link to the file, after the access check. Unreadable files look missing. */
   async signedUrl(
     principal: Principal | null,
@@ -141,7 +236,43 @@ export class FilesService {
     return { body, file };
   }
 
+  /**
+   * A stored file as a stream, for a signed link: all of it or a part (a video is fetched in
+   * parts by the browser's player).
+   */
+  async stream(
+    id: string,
+    query: { v: string; exp: string; sig: string },
+    range: (size: number) => ByteRange | undefined,
+  ): Promise<{ stream: Readable; size: number; range: ByteRange | undefined; file: StoredFile }> {
+    if (!this.signer.verify(id, query.v, query.exp, query.sig) || query.v !== 'full') {
+      throw new AppException('NOT_FOUND');
+    }
+    const file = await this.prisma.storedFile.findUnique({ where: { id } });
+    if (!file) throw new AppException('NOT_FOUND');
+    const whole = await this.storage.open(file.storageKey);
+    if (!whole) throw new AppException('NOT_FOUND');
+    const part = range(whole.size);
+    if (!part) return { ...whole, range: undefined, file };
+    whole.stream.destroy();
+    const opened = await this.storage.open(file.storageKey, part);
+    if (!opened) throw new AppException('NOT_FOUND');
+    return { ...opened, range: part, file };
+  }
+
   async canRead(principal: Principal | null, file: StoredFile): Promise<boolean> {
+    if (file.purpose === 'CHAT') {
+      // A file of a message is for the people who can read that message, and nobody else:
+      // not staff who may upload, and not its sender after they left. Before it is sent, it
+      // is its uploader's alone.
+      for (const rule of this.rules) {
+        const verdict = await rule.canRead(file.id, principal);
+        if (verdict !== null) return verdict;
+      }
+      return (
+        principal !== null && file.attachedAt === null && file.ownerUserId === principal.userId
+      );
+    }
     if (principal && file.ownerUserId === principal.userId) return true;
     if (principal?.permissions.has('files.upload')) return true;
     for (const rule of this.rules) {

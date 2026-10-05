@@ -9,7 +9,7 @@ import sharp, { type Sharp } from 'sharp';
  * metadata (EXIF, GPS, comments) and anything hidden after the image data.
  */
 export type Kind = 'IMAGE' | 'DOCUMENT';
-export type Purpose = 'CONTENT' | 'PROFILE_PHOTO';
+export type Purpose = 'CONTENT' | 'PROFILE_PHOTO' | 'CHAT';
 
 const MB = 1024 * 1024;
 
@@ -39,6 +39,16 @@ export const ALLOWED_TYPES: Record<string, Allowed> = {
 /** The largest upload the server reads at all (the biggest per-type limit). */
 export const MAX_UPLOAD_BYTES = 25 * MB;
 export const PROFILE_PHOTO_MAX_BYTES = 5 * MB;
+
+/**
+ * Files in chat messages (M13 plan §2.7, owner answers §11 and §12): pictures and PDF up to
+ * 10 MB, and MP4 video up to 100 MB. Nothing else.
+ */
+export const CHAT_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+export const CHAT_FILE_MAX_BYTES = 10 * MB;
+export const CHAT_VIDEO_MAX_BYTES = 100 * MB;
+/** How much of a file's start is read to tell what it is. */
+export const SNIFF_BYTES = 4100;
 
 /** Refuse images that would expand to more pixels than this ("decompression bombs"). */
 const MAX_INPUT_PIXELS = 50_000_000;
@@ -78,7 +88,15 @@ export async function prepareUpload(
   if (purpose === 'PROFILE_PHOTO' && allowed.kind !== 'IMAGE') {
     throw new FileRejected('fileTypeNotAllowed');
   }
-  const limit = purpose === 'PROFILE_PHOTO' ? PROFILE_PHOTO_MAX_BYTES : allowed.maxBytes;
+  if (purpose === 'CHAT' && !CHAT_FILE_TYPES.includes(detected.mime)) {
+    throw new FileRejected('fileTypeNotAllowed');
+  }
+  const limit =
+    purpose === 'PROFILE_PHOTO'
+      ? PROFILE_PHOTO_MAX_BYTES
+      : purpose === 'CHAT'
+        ? CHAT_FILE_MAX_BYTES
+        : allowed.maxBytes;
   if (input.length > limit) throw new FileRejected('fileTooLarge');
 
   const originalName = cleanName(uploadedName, allowed.ext);
@@ -127,6 +145,11 @@ export async function prepareUpload(
   } catch {
     throw new FileRejected('fileUnreadable');
   }
+}
+
+/** Whether a file's first bytes say it is an MP4 video (the only video chat accepts). */
+export async function isMp4(head: Buffer): Promise<boolean> {
+  return (await fileTypeFromBuffer(head))?.mime === 'video/mp4';
 }
 
 /** A safe display name: no folders or control characters, the extension of the real type. */

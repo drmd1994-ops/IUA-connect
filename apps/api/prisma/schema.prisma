@@ -96,6 +96,8 @@ model User {
   conversationMembers ConversationMember[]
   messages            Message[]
   messageHides        MessageHide[]
+  chatInvitations     ConversationInvitation[] @relation("ChatInvited")
+  chatInvitationsMade ConversationInvitation[] @relation("ChatInviter")
   chatBlocksMade      ChatBlock[]              @relation("ChatBlocker")
   chatBlocksReceived  ChatBlock[]              @relation("ChatBlocked")
   chatPreference      ChatPreference?
@@ -698,6 +700,8 @@ model ImportBatch {
 enum FileKind {
   IMAGE
   DOCUMENT
+  /// An MP4 sent in chat, stored as it was uploaded (M13).
+  VIDEO
 
   @@map("file_kind")
 }
@@ -707,6 +711,8 @@ enum FilePurpose {
   CONTENT
   /// A member's own profile photo.
   PROFILE_PHOTO
+  /// Sent in a chat message: readable by whoever can read that message (M13).
+  CHAT
 
   @@map("file_purpose")
 }
@@ -744,16 +750,17 @@ model StoredFile {
   attachedAt   DateTime?   @map("attached_at") @db.Timestamptz(6)
   createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  owner           User?             @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
-  profilePhoto    Profile?          @relation("ProfilePhoto")
+  owner           User?               @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  profilePhoto    Profile?            @relation("ProfilePhoto")
   newsFeatured    News[]
   newsAttachment  NewsAttachment[]
   eventImage      Event[]
-  educationCover  EducationItem[]   @relation("EducationCover")
-  educationFile   EducationFile[]   @relation("EducationFile")
+  educationCover  EducationItem[]     @relation("EducationCover")
+  educationFile   EducationFile[]     @relation("EducationFile")
   speakerPhoto    Speaker[]
   sessionMaterial SessionMaterial[]
-  roomPicture     Conversation[]    @relation("RoomPicture")
+  roomPicture     Conversation[]      @relation("RoomPicture")
+  chatAttachment  MessageAttachment[] @relation("MessageAttachment")
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -1817,6 +1824,8 @@ enum ConversationKind {
   DIRECT
   /// A room the association opened: any active member can join (M12).
   ROOM
+  /// A small group a member made; people are in it by invitation (M13).
+  GROUP
 
   @@map("conversation_kind")
 }
@@ -1825,8 +1834,32 @@ enum ConversationMemberRole {
   MEMBER
   /// Appointed by staff for one room (M12).
   MODERATOR
+  /// The person who runs a group: at first the one who made it (M13).
+  ADMIN
 
   @@map("conversation_member_role")
+}
+
+/// Who may invite a person to a group or a room by invitation (M13 plan §2.4).
+enum ChatInviteAudience {
+  /// Members who could write to me privately.
+  LISTED
+  /// Only people I already have a conversation or a group with.
+  CONTACTS
+  NOBODY
+
+  @@map("chat_invite_audience")
+}
+
+enum ChatInvitationStatus {
+  OPEN
+  ACCEPTED
+  DECLINED
+  /// Taken back by whoever may invite there.
+  WITHDRAWN
+  EXPIRED
+
+  @@map("chat_invitation_status")
 }
 
 /// Who may start a conversation with a person (M11 plan §3).
@@ -1892,16 +1925,19 @@ model Conversation {
   createdBy      String?   @map("created_by") @db.Uuid
   /// Kept by the join and leave code, so the list of rooms never counts rows.
   memberCount    Int       @default(0) @map("member_count")
+  /// A room by invitation: not listed, not found, joined only by accepting an invitation (M13).
+  inviteOnly     Boolean   @default(false) @map("invite_only")
 
-  userLow  User?                @relation("ConversationUserLow", fields: [userLowId], references: [id], onDelete: SetNull)
-  userHigh User?                @relation("ConversationUserHigh", fields: [userHighId], references: [id], onDelete: SetNull)
-  category ChatRoomCategory?    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  picture  StoredFile?          @relation("RoomPicture", fields: [pictureFileId], references: [id], onDelete: SetNull)
-  members  ConversationMember[]
-  messages Message[]
-  reports  ChatReport[]
-  pins     MessagePin[]
-  bans     ConversationBan[]
+  userLow     User?                    @relation("ConversationUserLow", fields: [userLowId], references: [id], onDelete: SetNull)
+  userHigh    User?                    @relation("ConversationUserHigh", fields: [userHighId], references: [id], onDelete: SetNull)
+  category    ChatRoomCategory?        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  picture     StoredFile?              @relation("RoomPicture", fields: [pictureFileId], references: [id], onDelete: SetNull)
+  members     ConversationMember[]
+  messages    Message[]
+  reports     ChatReport[]
+  pins        MessagePin[]
+  bans        ConversationBan[]
+  invitations ConversationInvitation[]
 
   @@unique([userLowId, userHighId])
   @@index([userHighId])
@@ -1928,12 +1964,15 @@ model ConversationMember {
   /// When a timed mute ends; null with muted = true means until switched back.
   mutedUntil       DateTime?              @map("muted_until") @db.Timestamptz(6)
   archivedAt       DateTime?              @map("archived_at") @db.Timestamptz(6)
+  /// Pinned to the top of this person's own list, newest pin first (M13). Five at most.
+  pinnedAt         DateTime?              @map("pinned_at") @db.Timestamptz(6)
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([conversationId, userId])
   @@index([userId, archivedAt])
+  @@index([userId, pinnedAt])
   @@index([conversationId, role])
   @@map("conversation_members")
 }
@@ -1960,17 +1999,20 @@ model Message {
   removedBy      String?                  @map("removed_by") @db.Uuid
   /// The people mentioned in it, all of them in the room when it was sent (M12).
   mentions       String[]                 @default([]) @db.Uuid
+  /// A copy of a message from elsewhere; it doesn't say whose or from where (M13).
+  forwarded      Boolean                  @default(false)
   /// Maintained by a trigger: the text after the Hebrew normalisation, as for news.
   searchVector   Unsupported("tsvector")? @map("search_vector")
 
-  conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User?             @relation(fields: [senderId], references: [id], onDelete: SetNull)
-  replyTo      Message?          @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
-  replies      Message[]         @relation("MessageReplies")
+  conversation Conversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User?               @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  replyTo      Message?            @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      Message[]           @relation("MessageReplies")
   hides        MessageHide[]
   reports      ChatReport[]
   reactions    MessageReaction[]
   pins         MessagePin[]
+  attachments  MessageAttachment[]
 
   @@unique([conversationId, seq])
   @@unique([senderId, idempotencyKey])
@@ -2009,15 +2051,21 @@ model ChatBlock {
 
 /// A person's chat settings. A missing row means the starting settings.
 model ChatPreference {
-  userId          String       @id @map("user_id") @db.Uuid
-  audience        ChatAudience @default(LISTED)
+  userId          String             @id @map("user_id") @db.Uuid
+  audience        ChatAudience       @default(LISTED)
   /// Show others when I have read their messages (and see it for theirs).
-  readReceipts    Boolean      @default(true) @map("read_receipts")
+  readReceipts    Boolean            @default(true) @map("read_receipts")
   /// Show others when I am typing.
-  typing          Boolean      @default(true)
+  typing          Boolean            @default(true)
   /// When the last "messages are waiting" email went out: at most one a day.
-  unreadEmailedAt DateTime?    @map("unread_emailed_at") @db.Timestamptz(6)
-  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  unreadEmailedAt DateTime?          @map("unread_emailed_at") @db.Timestamptz(6)
+  /// Who may invite me to a group or a room by invitation (M13).
+  invitesFrom     ChatInviteAudience @default(LISTED) @map("invites_from")
+  /// Show the people I talk with when I am active (and see it for them) (M13).
+  showActivity    Boolean            @default(true) @map("show_activity")
+  /// When this person last had a chat page open; written at most once every ten minutes.
+  lastActiveAt    DateTime?          @map("last_active_at") @db.Timestamptz(6)
+  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -2136,6 +2184,45 @@ model MessagePin {
   @@id([conversationId, messageId])
   @@index([messageId])
   @@map("message_pins")
+}
+
+/// An invitation to a group or to a room by invitation. It gives nothing until it is accepted:
+/// the invited person is not in the conversation and reads none of it. One open invitation per
+/// person per conversation (a partial unique index).
+model ConversationInvitation {
+  id             String               @id @db.Uuid
+  conversationId String               @map("conversation_id") @db.Uuid
+  userId         String               @map("user_id") @db.Uuid
+  invitedBy      String?              @map("invited_by") @db.Uuid
+  status         ChatInvitationStatus @default(OPEN)
+  createdAt      DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiresAt      DateTime             @map("expires_at") @db.Timestamptz(6)
+  resolvedAt     DateTime?            @map("resolved_at") @db.Timestamptz(6)
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation("ChatInvited", fields: [userId], references: [id], onDelete: Cascade)
+  inviter      User?        @relation("ChatInviter", fields: [invitedBy], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([conversationId, status])
+  @@map("conversation_invitations")
+}
+
+/// A picture, a PDF or a video sent with a message (M13). A forwarded message points at the same
+/// stored file, so a file is erased when its last attachment goes.
+model MessageAttachment {
+  messageId String @map("message_id") @db.Uuid
+  fileId    String @map("file_id") @db.Uuid
+  /// The order inside the message, from 0.
+  position  Int    @db.SmallInt
+
+  message Message    @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  file    StoredFile @relation("MessageAttachment", fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, position])
+  @@unique([messageId, fileId], map: "message_attachments_message_file_key")
+  @@index([fileId])
+  @@map("message_attachments")
 }
 
 /// A person banned from one room: they can't join it. In force from starts_at until ends_at

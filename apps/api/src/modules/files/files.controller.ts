@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseUUIDPipe,
@@ -118,19 +119,41 @@ export class FilesController {
   async content(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Query() query: FileContentQueryDto,
+    @Headers('range') asked: string | undefined,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
-    const { body, file } = await this.files.content(id, query);
-    const disposition = file.kind === 'IMAGE' ? 'inline' : 'attachment';
-    res.set({
-      'Content-Type': file.mimeType,
-      'Content-Disposition': `${disposition}; ${filenameParams(file.originalName)}`,
-      'Cache-Control': 'private, max-age=300',
-      'X-Content-Type-Options': 'nosniff',
-      // Even if a browser rendered it, nothing in it could run.
-      'Content-Security-Policy': "default-src 'none'; img-src 'self'; sandbox",
-    });
-    return new StreamableFile(body);
+    const headers = (file: { kind: string; mimeType: string; originalName: string }) => {
+      const disposition = file.kind === 'DOCUMENT' ? 'attachment' : 'inline';
+      res.set({
+        'Content-Type': file.mimeType,
+        'Content-Disposition': `${disposition}; ${filenameParams(file.originalName)}`,
+        'Cache-Control': 'private, max-age=300',
+        'X-Content-Type-Options': 'nosniff',
+        // Even if a browser rendered it, nothing in it could run.
+        'Content-Security-Policy': "default-src 'none'; img-src 'self'; media-src 'self'; sandbox",
+      });
+    };
+    if (query.v !== 'full') {
+      const { body, file } = await this.files.content(id, query);
+      headers(file);
+      return new StreamableFile(body);
+    }
+    // The whole file is streamed, never held in memory; a video's player asks for parts.
+    const { stream, size, range, file } = await this.files.stream(id, query, (total) =>
+      parseRange(asked, total),
+    );
+    headers(file);
+    res.set('Accept-Ranges', 'bytes');
+    if (range) {
+      res.status(206);
+      res.set({
+        'Content-Range': `bytes ${range.start}-${range.end}/${size}`,
+        'Content-Length': String(range.end - range.start + 1),
+      });
+    } else {
+      res.set('Content-Length', String(size));
+    }
+    return new StreamableFile(stream);
   }
 }
 
@@ -162,6 +185,25 @@ export class ProfilePhotoController {
   remove(@Req() req: RequestWithPrincipal, @Meta() meta: RequestMeta): Promise<void> {
     return this.photos.remove(principalOf(req).userId, meta);
   }
+}
+
+/**
+ * One byte range of a file of this size, from a Range header ("bytes=0-", "bytes=100-199",
+ * "bytes=-500"). Anything else, several ranges, or a range outside the file means the whole file.
+ */
+export function parseRange(
+  header: string | undefined,
+  size: number,
+): { start: number; end: number } | undefined {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(header?.trim() ?? '');
+  if (!match || size === 0 || (match[1] === '' && match[2] === '')) return undefined;
+  if (match[1] === '') {
+    const last = Number(match[2]);
+    return last > 0 ? { start: Math.max(0, size - last), end: size - 1 } : undefined;
+  }
+  const start = Number(match[1]);
+  const end = match[2] === '' ? size - 1 : Math.min(Number(match[2]), size - 1);
+  return start <= end && start < size ? { start, end } : undefined;
 }
 
 /** `filename="ascii"; filename*=UTF-8''encoded` (RFC 6266), so Hebrew names survive. */

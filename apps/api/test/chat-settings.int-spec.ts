@@ -41,7 +41,14 @@ describe('chat: blocking, settings and finding people (integration)', () => {
     () => h,
     () => admin.accessToken,
   );
-  const STARTING = { audience: 'LISTED', readReceipts: true, typing: true };
+  const STARTING = {
+    audience: 'LISTED',
+    readReceipts: true,
+    typing: true,
+    // Since M13: who may invite me, and whether I show when I am active.
+    invitesFrom: 'LISTED',
+    showActivity: true,
+  };
 
   beforeAll(async () => {
     h = await startHarness();
@@ -239,8 +246,10 @@ describe('chat: blocking, settings and finding people (integration)', () => {
       const get = () => h.http().get('/api/v1/me/chat-settings').set(bearer(a.token)).expect(200);
       expect((await get()).body).toEqual(STARTING);
       const changed = { audience: 'NOBODY', readReceipts: false, typing: false };
-      expect((await chatSettings(a, changed).expect(200)).body).toEqual(changed);
-      expect((await get()).body).toEqual(changed);
+      // The two settings added in M13 keep their starting values when they are left out.
+      const stored = { ...STARTING, ...changed };
+      expect((await chatSettings(a, changed).expect(200)).body).toEqual(stored);
+      expect((await get()).body).toEqual(stored);
       await chatSettings(a, { audience: 'EVERYONE', readReceipts: true, typing: true }).expect(400);
       await chatSettings(a, { audience: 'LISTED' }).expect(400);
       await chatSettings(a, { ...STARTING, extra: 1 }).expect(400);

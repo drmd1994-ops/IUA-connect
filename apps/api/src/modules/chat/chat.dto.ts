@@ -4,6 +4,10 @@ import { nullableNumber, nullableString } from '../../common/dto/nullable-string
 import {
   CONVERSATIONS_PAGE_SIZE,
   MESSAGES_PAGE_SIZE,
+  ACTIVITY_LABELS,
+  GROUP_MAX_MEMBERS,
+  GROUP_SEND_STATES,
+  MAX_ATTACHMENTS,
   MAX_MENTIONS,
   MESSAGE_MAX_LENGTH,
   MUTE_CHOICES,
@@ -25,6 +29,22 @@ const messageBody = z
   .max(MESSAGE_MAX_LENGTH)
   .refine((text) => !text.includes('\u0000'), 'must not contain the NUL character');
 
+/** The text of a message that may also be only files: plain text, possibly empty. */
+const optionalBody = z
+  .string()
+  .trim()
+  .max(MESSAGE_MAX_LENGTH)
+  .refine((text) => !text.includes('\u0000'), 'must not contain the NUL character')
+  .default('');
+
+/** Files uploaded with POST /chat/attachments, to send with the message (M13). */
+const attachmentIds = z.array(z.uuid()).max(MAX_ATTACHMENTS).optional();
+
+/** A message needs a text or a file. */
+const textOrFiles = (input: { body: string; attachmentIds?: string[] | undefined }) =>
+  input.body.length > 0 || (input.attachmentIds?.length ?? 0) > 0;
+const TEXT_OR_FILES = { message: 'a message needs a text or a file', path: ['body'] };
+
 /** The other person, as the reader may see them. All empty for a deleted account. */
 const person = z.strictObject({
   id: nullableString(),
@@ -42,13 +62,20 @@ const lastMessage = z.strictObject({
   /** The start of the text; empty for a deleted message. */
   body: z.string(),
   deleted: z.boolean(),
+  /** How many files it carries (M13). */
+  files: z.number().int(),
   createdAt: z.iso.datetime(),
 });
 
 const conversation = z.strictObject({
   id: z.uuid(),
-  kind: z.enum(['DIRECT']),
+  kind: z.enum(['DIRECT', 'GROUP']),
+  /** The other person of a private conversation; all empty for a group. */
   other: person,
+  /** A group's name and size; null for a private conversation (M13). */
+  group: z.strictObject({ name: z.string(), memberCount: z.number().int() }).nullable(),
+  /** Pinned to the top of the reader's list (M13). */
+  pinned: z.boolean(),
   lastMessage: lastMessage.nullable(),
   /** The number of the newest message. */
   lastSeq: z.number().int(),
@@ -98,6 +125,8 @@ export class ConversationSettingsDto extends createZodDto(
       archived: z.boolean().optional(),
       /** "Mark as unread". Opening the conversation takes the mark off. */
       markedUnread: z.literal(true).optional(),
+      /** Pin to the top of my list, or take it down. Five at most (M13). */
+      pinned: z.boolean().optional(),
     })
     .refine((input) => Object.keys(input).length > 0, 'nothing to change'),
 ) {}
@@ -130,6 +159,20 @@ const message = z.strictObject({
   mentions: z.array(
     z.strictObject({ id: z.uuid(), firstName: nullableString(), lastName: nullableString() }),
   ),
+  /** A copy of a message from elsewhere; it doesn't say whose (M13). */
+  forwarded: z.boolean(),
+  /** Pictures, PDF and video sent with it; none for a deleted message (M13). */
+  attachments: z.array(
+    z.strictObject({
+      id: z.uuid(),
+      kind: z.enum(['IMAGE', 'DOCUMENT', 'VIDEO']),
+      mimeType: z.string(),
+      name: z.string(),
+      sizeBytes: z.number().int(),
+      width: nullableNumber(),
+      height: nullableNumber(),
+    }),
+  ),
   /** The reactions somebody used, in the fixed order, with the reader's own marked. */
   reactions: z.array(
     z.strictObject({ reaction: z.enum(REACTIONS), count: z.number().int(), mine: z.boolean() }),
@@ -158,11 +201,16 @@ export class MessageListQueryDto extends createZodDto(
       before: z.coerce.number().int().min(1).optional(),
       /** Messages newer than this number, oldest first (catching up after a lost connection). */
       after: z.coerce.number().int().min(0).optional(),
+      /** The messages around this number: a found message in its place (M13). */
+      around: z.coerce.number().int().min(1).optional(),
       limit: z.coerce.number().int().min(1).max(100).default(MESSAGES_PAGE_SIZE),
     })
-    .refine((query) => query.before === undefined || query.after === undefined, {
-      message: 'before and after can not be combined',
-    }),
+    .refine(
+      (query) =>
+        [query.before, query.after, query.around].filter((value) => value !== undefined).length <=
+        1,
+      { message: 'before, after and around can not be combined' },
+    ),
 ) {}
 
 export class MessageListDto extends createZodDto(
@@ -175,8 +223,13 @@ export class MessageListDto extends createZodDto(
 ) {}
 
 export class SendMessageDto extends createZodDto(
-  z.strictObject({ body: messageBody, replyToId: z.uuid().optional() }),
+  z
+    .strictObject({ body: optionalBody, replyToId: z.uuid().optional(), attachmentIds })
+    .refine(textOrFiles, TEXT_OR_FILES),
 ) {}
+
+/** Where a copy of a message goes: a conversation, group or room the sender is in (M13). */
+export class ForwardDto extends createZodDto(z.strictObject({ conversationId: z.uuid() })) {}
 
 export class EditMessageDto extends createZodDto(z.strictObject({ body: messageBody })) {}
 
@@ -186,6 +239,11 @@ export class MessageSearchQueryDto extends createZodDto(
     q: z.string().trim().min(2).max(100),
     /** Only in this conversation; in all of the reader's conversations when left out. */
     conversationId: z.uuid().optional(),
+    /** Only what this person wrote (M13). */
+    senderId: z.uuid().optional(),
+    /** Only messages sent on or after this day, and on or before that one (M13). */
+    from: z.iso.date().optional(),
+    to: z.iso.date().optional(),
     limit: z.coerce.number().int().min(1).max(50).default(30),
   }),
 ) {}
@@ -202,6 +260,8 @@ export class MessageSearchDto extends createZodDto(
         room: z
           .strictObject({ id: z.uuid(), nameHe: z.string(), nameEn: nullableString() })
           .nullable(),
+        /** The group the message is in; null otherwise (M13). */
+        group: z.strictObject({ id: z.uuid(), name: z.string() }).nullable(),
       }),
     ),
   }),
@@ -257,6 +317,8 @@ const snapshotMessage = z.strictObject({
   createdAt: z.iso.datetime(),
   /** The message the report is about. */
   reported: z.boolean(),
+  /** How many files it carried. The files themselves are not kept with a report (M13). */
+  files: z.number().int().optional(),
 });
 export type SnapshotMessage = z.infer<typeof snapshotMessage>;
 
@@ -367,6 +429,10 @@ export class ChatSettingsDto extends createZodDto(
     readReceipts: z.boolean(),
     /** Show others when I am typing. */
     typing: z.boolean(),
+    /** Who can invite me to a group or a room by invitation (M13). */
+    invitesFrom: z.enum(['LISTED', 'CONTACTS', 'NOBODY']).default('LISTED'),
+    /** Show the people I talk with when I am active, and see it for them (M13). */
+    showActivity: z.boolean().default(true),
   }),
 ) {}
 
@@ -435,6 +501,10 @@ const room = z.strictObject({
   locked: z.boolean(),
   lockedUntil: z.iso.datetime().nullable(),
   archived: z.boolean(),
+  /** Joined by invitation only; not listed in "Browse rooms" (M13). */
+  inviteOnly: z.boolean(),
+  /** Pinned to the top of the reader's list (M13). */
+  pinned: z.boolean(),
   createdAt: z.iso.datetime(),
   lastMessageAt: z.iso.datetime().nullable(),
   /** The reader's place in the room: not in it, a member, or a moderator. */
@@ -482,19 +552,23 @@ export class RoomSettingsDto extends createZodDto(
     .strictObject({
       mute: z.enum(MUTE_CHOICES).optional(),
       markedUnread: z.literal(true).optional(),
+      pinned: z.boolean().optional(),
     })
     .refine((input) => Object.keys(input).length > 0, 'nothing to change'),
 ) {}
 
 export class RoomSendDto extends createZodDto(
-  z.strictObject({
-    body: messageBody,
-    replyToId: z.uuid().optional(),
-    /** People mentioned in the text; each must be in the room. */
-    mentions: z.array(z.uuid()).max(MAX_MENTIONS).optional(),
-    /** Moderators only: the message stands out and the room is told. */
-    announcement: z.boolean().optional(),
-  }),
+  z
+    .strictObject({
+      body: optionalBody,
+      replyToId: z.uuid().optional(),
+      /** People mentioned in the text; each must be in the room. */
+      mentions: z.array(z.uuid()).max(MAX_MENTIONS).optional(),
+      /** Moderators only: the message stands out and the room is told. */
+      announcement: z.boolean().optional(),
+      attachmentIds,
+    })
+    .refine(textOrFiles, TEXT_OR_FILES),
 ) {}
 
 export class RoomMembersQueryDto extends createZodDto(
@@ -576,6 +650,8 @@ export class AdminRoomInputDto extends createZodDto(
     /** An image staff uploaded (POST /files). */
     pictureFileId: z.uuid().nullable().optional(),
     moderatorsOnly: z.boolean().default(false),
+    /** Joined by invitation only (M13). */
+    inviteOnly: z.boolean().default(false),
   }),
 ) {}
 
@@ -589,6 +665,7 @@ const adminRoom = z.strictObject({
   pictureFileId: nullableString(),
   memberCount: z.number().int(),
   moderatorsOnly: z.boolean(),
+  inviteOnly: z.boolean(),
   locked: z.boolean(),
   archived: z.boolean(),
   createdAt: z.iso.datetime(),
@@ -683,5 +760,134 @@ export class ReportCategoryCreateDto extends createZodDto(
     nameEn: z.string().trim().min(1).max(120),
     sortOrder: z.number().int().min(0).max(1000).default(0),
     active: z.boolean().default(true),
+  }),
+) {}
+
+// --- Groups, invitations, activity (M13) ---------------------------------------------------------
+
+const groupName = z.string().trim().min(2).max(80);
+
+/** A group as one of its people sees it. */
+const group = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+  memberCount: z.number().int(),
+  createdAt: z.iso.datetime(),
+  lastMessageAt: z.iso.datetime().nullable(),
+  lastSeq: z.number().int(),
+  myLastReadSeq: z.number().int(),
+  /** The reader runs the group, or is one of its people. */
+  role: z.enum(['MEMBER', 'ADMIN']),
+  unreadCount: z.number().int(),
+  markedUnread: z.boolean(),
+  muted: z.boolean(),
+  mutedUntil: z.iso.datetime().nullable(),
+  archived: z.boolean(),
+  pinned: z.boolean(),
+  /** Whether the reader can write here, and if not, why. */
+  sendState: z.enum(GROUP_SEND_STATES),
+});
+
+export class GroupDto extends createZodDto(group) {}
+
+export class GroupCreateDto extends createZodDto(
+  z.strictObject({
+    name: groupName,
+    /** The people to invite. Each gets an invitation; nobody is added without accepting. */
+    userIds: z
+      .array(z.uuid())
+      .max(GROUP_MAX_MEMBERS - 1)
+      .default([]),
+  }),
+) {}
+
+export class GroupRenameDto extends createZodDto(z.strictObject({ name: groupName })) {}
+
+export class GroupMembersQueryDto extends createZodDto(
+  z.strictObject({
+    /** Part of a name (for "@" suggestions). */
+    q: z.string().trim().min(1).max(100).optional(),
+  }),
+) {}
+
+export class GroupMembersDto extends createZodDto(
+  z.strictObject({
+    /** The admin first. A group is small, so this is everyone. */
+    items: z.array(person.extend({ role: z.enum(['MEMBER', 'ADMIN']) })),
+  }),
+) {}
+
+export class GroupAdminDto extends createZodDto(z.strictObject({ userId: z.uuid() })) {}
+
+export class InviteDto extends createZodDto(
+  z.strictObject({ userIds: z.array(z.uuid()).min(1).max(GROUP_MAX_MEMBERS) }),
+) {}
+
+export class InviteePeopleQueryDto extends createZodDto(
+  z.strictObject({
+    /** Part of a name, at least 2 characters. */
+    q: z.string().trim().min(2).max(100),
+    /** Leaves out people already in this group or room, or already invited to it. */
+    conversationId: z.uuid().optional(),
+  }),
+) {}
+
+const invitation = z.strictObject({
+  id: z.uuid(),
+  kind: z.enum(['GROUP', 'ROOM']),
+  conversationId: z.uuid(),
+  /** A group's name, or a room's Hebrew name. */
+  name: z.string(),
+  nameEn: nullableString(),
+  memberCount: z.number().int(),
+  invitedBy: person,
+  /** The people of a group, so the invited person knows who they would join. Empty for a room. */
+  members: z.array(person),
+  createdAt: z.iso.datetime(),
+  expiresAt: z.iso.datetime(),
+});
+
+export class InvitationDto extends createZodDto(invitation) {}
+
+export class InvitationListDto extends createZodDto(
+  z.strictObject({ items: z.array(invitation) }),
+) {}
+
+/** The invitations to one group or room that nobody answered yet, for whoever may invite there. */
+export class SentInvitationsDto extends createZodDto(
+  z.strictObject({
+    items: z.array(
+      z.strictObject({
+        id: z.uuid(),
+        user: person,
+        createdAt: z.iso.datetime(),
+        expiresAt: z.iso.datetime(),
+      }),
+    ),
+  }),
+) {}
+
+export class AcceptedInvitationDto extends createZodDto(
+  z.strictObject({ kind: z.enum(['GROUP', 'ROOM']), conversationId: z.uuid() }),
+) {}
+
+export class ActivityQueryDto extends createZodDto(
+  z.strictObject({
+    /** Up to fifty ids, separated by commas. */
+    userIds: z
+      .string()
+      .max(2000)
+      .transform((value) => value.split(',').filter(Boolean))
+      .pipe(z.array(z.uuid()).min(1).max(50)),
+  }),
+) {}
+
+export class ActivityDto extends createZodDto(
+  z.strictObject({
+    /**
+     * Only people the reader shares a conversation or a group with, who show their activity,
+     * and only when the reader shows theirs. Everyone else is simply not in the answer.
+     */
+    items: z.array(z.strictObject({ userId: z.uuid(), activity: z.enum(ACTIVITY_LABELS) })),
   }),
 ) {}

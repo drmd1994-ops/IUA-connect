@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { AppException } from '../../common/errors/app.exception';
 import { type Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { FilesService } from '../files';
 import { DirectoryService, type PersonCard } from '../profiles';
-import { REACTIONS, type Reaction, canEdit, preview } from './chat-rules';
+import { REACTIONS, type Reaction, attachmentsAllowed, canEdit, preview } from './chat-rules';
 import { type ChatEvent, ChatStream } from './chat-stream';
 import { type MessageDto, type MessageListDto, type MessageListQueryDto } from './chat.dto';
 
@@ -21,6 +22,23 @@ export const MESSAGE_SELECT = {
   announcement: true,
   removedBy: true,
   mentions: true,
+  forwarded: true,
+  attachments: {
+    orderBy: { position: 'asc' },
+    select: {
+      file: {
+        select: {
+          id: true,
+          kind: true,
+          mimeType: true,
+          originalName: true,
+          sizeBytes: true,
+          width: true,
+          height: true,
+        },
+      },
+    },
+  },
   conversation: { select: { kind: true } },
   replyTo: { select: { id: true, seq: true, senderId: true, body: true, deletedAt: true } },
 } satisfies Prisma.MessageSelect;
@@ -34,6 +52,10 @@ export interface NewMessage {
   idempotencyKey?: string | undefined;
   announcement?: boolean;
   mentions?: readonly string[];
+  /** A copy of a message from elsewhere (M13). */
+  forwarded?: boolean;
+  /** Files to send with it, in order; the caller has checked that they may be used (M13). */
+  attachmentIds?: readonly string[];
   /**
    * A new message brings the conversation back from the other people's archive (private
    * chat). Not in rooms, where it would touch every member's row on every message.
@@ -47,12 +69,54 @@ export interface NewMessage {
  * who should hear about a change. Who may do what is decided by the callers.
  */
 @Injectable()
-export class ChatMessages {
+export class ChatMessages implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly directory: DirectoryService,
     private readonly stream: ChatStream,
+    private readonly files: FilesService,
   ) {}
+
+  /**
+   * A file of a message is readable by whoever can read that message (M13): the people of its
+   * conversation, group or room, and for a room also staff with the chat permission. Nobody
+   * else, whoever uploaded it. A file not yet sent is left to the files module (its uploader).
+   */
+  onModuleInit(): void {
+    this.files.registerReadRule({
+      canRead: async (fileId, principal) => {
+        const uses = await this.prisma.messageAttachment.findMany({
+          where: { fileId },
+          select: {
+            message: {
+              select: {
+                deletedAt: true,
+                conversationId: true,
+                conversation: { select: { kind: true } },
+              },
+            },
+          },
+        });
+        if (uses.length === 0) return null;
+        if (!principal) return false;
+        const live = uses.map((use) => use.message).filter((message) => !message.deletedAt);
+        if (live.length === 0) return false;
+        if (
+          principal.permissions.has('chat.moderate') &&
+          live.some((message) => message.conversation.kind === 'ROOM')
+        ) {
+          return true;
+        }
+        const mine = await this.prisma.conversationMember.count({
+          where: {
+            userId: principal.userId,
+            conversationId: { in: live.map((message) => message.conversationId) },
+          },
+        });
+        return mine > 0;
+      },
+    });
+  }
 
   /**
    * A page of messages, oldest first: the newest ones, the ones before a number, or the ones
@@ -63,6 +127,7 @@ export class ChatMessages {
     me: string,
     query: MessageListQueryDto,
   ): Promise<MessageListDto> {
+    if (query.around !== undefined) return this.pageAround(conversationId, me, query);
     const forward = query.after !== undefined;
     const rows = await this.prisma.message.findMany({
       where: {
@@ -78,6 +143,71 @@ export class ChatMessages {
     const page = rows.slice(0, query.limit);
     if (!forward) page.reverse();
     return { items: await this.views(page, me), hasMore: rows.length > query.limit };
+  }
+
+  /**
+   * The messages around one number: half a page before it and half after, so a found message
+   * opens in its place (M13). "hasMore" then means there are older ones.
+   */
+  private async pageAround(
+    conversationId: string,
+    me: string,
+    query: MessageListQueryDto,
+  ): Promise<MessageListDto> {
+    const half = Math.ceil(query.limit / 2);
+    const visible = { conversationId, hides: { none: { userId: me } } };
+    const [before, after] = await Promise.all([
+      this.prisma.message.findMany({
+        where: { ...visible, seq: { lt: query.around! } },
+        select: MESSAGE_SELECT,
+        orderBy: { seq: 'desc' },
+        take: half + 1,
+      }),
+      this.prisma.message.findMany({
+        where: { ...visible, seq: { gte: query.around! } },
+        select: MESSAGE_SELECT,
+        orderBy: { seq: 'asc' },
+        take: half,
+      }),
+    ]);
+    const rows = [...before.slice(0, half).reverse(), ...after];
+    return { items: await this.views(rows, me), hasMore: before.length > half };
+  }
+
+  /**
+   * Checks the files a person wants to send with a message: each one they uploaded for chat
+   * and have not used yet, three at most, one video at most. Anything else is one answer.
+   */
+  async ownUnusedFiles(me: string, ids: readonly string[] | undefined): Promise<string[]> {
+    const wanted = [...new Set(ids ?? [])];
+    if (wanted.length === 0) return [];
+    const files = await this.prisma.storedFile.findMany({
+      where: { id: { in: wanted }, purpose: 'CHAT', ownerUserId: me, attachedAt: null },
+      select: { id: true, kind: true },
+    });
+    if (files.length !== wanted.length || !attachmentsAllowed(files.map((file) => file.kind))) {
+      throw new AppException('VALIDATION_FAILED', [
+        { field: 'attachmentIds', code: 'chatAttachmentInvalid' },
+      ]);
+    }
+    return wanted;
+  }
+
+  /**
+   * Erases the files of a message that was deleted for everyone. A file a forwarded copy
+   * still uses stays until its last message goes.
+   */
+  async eraseFiles(messageId: string): Promise<void> {
+    const rows = await this.prisma.messageAttachment.findMany({
+      where: { messageId },
+      select: { fileId: true },
+    });
+    if (rows.length === 0) return;
+    await this.prisma.messageAttachment.deleteMany({ where: { messageId } });
+    for (const { fileId } of rows) {
+      const left = await this.prisma.messageAttachment.count({ where: { fileId } });
+      if (left === 0) await this.files.remove(fileId);
+    }
   }
 
   /** The message a sender already sent with this Idempotency-Key, if any. */
@@ -130,10 +260,21 @@ export class ChatMessages {
             idempotencyKey: idempotencyKey ?? null,
             announcement: input.announcement ?? false,
             mentions: [...new Set(input.mentions ?? [])],
+            forwarded: input.forwarded ?? false,
             createdAt: now,
+            attachments: {
+              create: (input.attachmentIds ?? []).map((fileId, position) => ({ fileId, position })),
+            },
           },
           select: MESSAGE_SELECT,
         });
+        if (input.attachmentIds?.length) {
+          // Used now: no longer its uploader's alone, and not cleared away as an unused upload.
+          await tx.storedFile.updateMany({
+            where: { id: { in: [...input.attachmentIds] }, attachedAt: null },
+            data: { attachedAt: now },
+          });
+        }
         // Writing reads what came before, and takes the writer's own copy out of the archive.
         await tx.conversationMember.updateMany({
           where: { conversationId: id, userId: me },
@@ -164,13 +305,13 @@ export class ChatMessages {
 
   /**
    * Tells the people of a conversation about a change: by name in a private conversation, by
-   * room in a room.
+   * room in a room or a group.
    */
   async broadcast(
-    conversation: { id: string; kind: 'DIRECT' | 'ROOM' },
+    conversation: { id: string; kind: 'DIRECT' | 'ROOM' | 'GROUP' },
     event: ChatEvent,
   ): Promise<void> {
-    if (conversation.kind === 'ROOM') {
+    if (conversation.kind !== 'DIRECT') {
       await this.stream.publishRoom(conversation.id, event);
       return;
     }
@@ -260,6 +401,18 @@ export class ChatMessages {
       deleted: row.deletedAt !== null,
       removedByModerator: row.removedBy !== null,
       announcement: row.announcement,
+      forwarded: row.forwarded,
+      attachments: row.deletedAt
+        ? []
+        : row.attachments.map(({ file }) => ({
+            id: file.id,
+            kind: file.kind,
+            mimeType: file.mimeType,
+            name: file.originalName,
+            sizeBytes: file.sizeBytes,
+            width: file.width,
+            height: file.height,
+          })),
       editedAt: row.editedAt?.toISOString() ?? null,
       createdAt: row.createdAt.toISOString(),
       canEdit: canEdit(row, me, now),
