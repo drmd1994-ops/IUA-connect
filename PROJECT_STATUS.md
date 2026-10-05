@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M11 merged)_
+_Last updated: 2026-10-05 (M11 merged and checked by the owner; session fix)_
 
 ## Summary
 
@@ -588,7 +588,7 @@ Plan: [`docs/plans/M11-chat.md`](docs/plans/M11-chat.md), approved by the owner 
 
 No new libraries.
 
-**Merged** into `main` on 2026-10-05 at the owner's request (pull request #14, squash commit `8c2b494`), with green CI. The owner's checkpoint test is still to come.
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #14, squash commit `8c2b494`), with green CI. **The owner did the checkpoint test on 2026-10-05 and found it good.**
 
 ### Delivered
 
@@ -623,7 +623,6 @@ No new libraries.
 
 ### Not verified
 
-- **The owner's checkpoint test** (two windows) is still to do.
 - **The screen-reader check** was not repeated for the chat pages; only the automated checks ran.
 - **How many open connections one server holds** was not tested.
 - **The demo script's new chat section** was written from the screens, not walked through start to finish.
@@ -650,12 +649,21 @@ No new libraries.
 
 ### Open for the owner
 
-1. **Checkpoint test of the demo:** `pnpm demo:reset`, then `pnpm dev`. Two windows: `member.full@demo.test` and, in a private window, `member.honorary@demo.test`. Write to each other; mute, archive, block; report a message; then `admin@demo.test` at "Chat reports". The demo script has a chat section (8).
+1. ~~Checkpoint test of the demo~~ **Done 2026-10-05:** the owner reset the demo, tried chat and found it good.
 2. ~~Merge pull request #14~~ merged at the owner's request on 2026-10-05 (CI green).
-3. **The session bug above:** fix it now (a few seconds' grace for the previous refresh token), or leave it.
-4. **The wording of the Hebrew chat texts** (`packages/i18n/src/messages/he/chat.json`) is Claude's and should be read by the owner.
+3. ~~The session bug above~~ **Fixed 2026-10-05** at the owner's request (see "After M11" below).
+4. ~~The wording of the Hebrew chat texts~~ **Read by the owner on 2026-10-05 and found good.**
 5. **M12 (public rooms)** needs its own plan when the owner wants it.
-6. Still open from M9: the three unbuilt connection points, and the "who" column of the readiness checklist in `DEPLOYMENT.md`.
+6. **The three unbuilt connection points** (payments, outside sign-in, the Medical Association's member list): the owner decided on 2026-10-05 to leave them for now; each is built with the feature that needs it.
+7. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
+
+### After M11 (2026-10-05)
+
+- **The session was ended when a page reloaded during a renewal.** The server had already changed the refresh token, the browser never received the new one, and the next renewal looked like a stolen token. Fixed at the owner's request: a token used less than 10 seconds ago is accepted once more, if the token that replaced it was never used. The lost token is used up at that moment and the event is audited. Any other use of an old token still ends the session.
+  - **The 10 seconds are Claude's choice;** the owner asked for the fix, not for a number.
+  - **What it costs:** someone who stole a token and uses it within 10 seconds of its owner is not caught at once. They are caught at the owner's next renewal, which finds its own token used and ends the session. Tested.
+  - The existing reuse test now waits out the 10 seconds; three tests were added (a lost answer repeated; an old token after its replacement was used; a quick thief). `SECURITY_MODEL.md` describes the rule.
+- **`HANDOFF.md` was brought up to date** with M11.
 
 ## Next step
 
@@ -663,6 +671,6 @@ No new libraries.
 
 **M10 (video and push connection points)** was merged on 2026-10-04 (pull request #12).
 
-**M11 (private chat)** was merged on 2026-10-05 (pull request #14). The owner's checkpoint test is still open (see "Open for the owner" in its section). **M12 (public rooms) and M13 (files, online status)** follow, each with its own approved plan.
+**M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day. **M12 (public rooms) and M13 (files, online status)** follow, each with its own approved plan.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

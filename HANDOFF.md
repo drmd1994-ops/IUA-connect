@@ -1,6 +1,6 @@
 # HANDOFF — IUA Connect
 
-_Written 4 October 2026, after milestone M10 was merged. For whoever picks the project up next, person or AI._
+_Written 4 October 2026 after milestone M10, updated 5 October 2026 after M11 (private chat). For whoever picks the project up next, person or AI._
 
 Read this file, then `PROJECT_STATUS.md` (one section per milestone: what was delivered, what was verified, what is open). `CLAUDE.md` holds the standing rules.
 
@@ -12,7 +12,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 - **What it is today:** a private **demo**, built to be pitched to the association. It is not endorsed by or affiliated with the IUA or the Israeli Medical Association.
 - **Owner:** a urology surgeon, the only developer for now.
-- **The goal of the work so far:** a complete, honest MVP that can be shown start to finish. That goal is met (milestones M0 to M9), plus one small addition (M10).
+- **The goal of the work so far:** a complete, honest MVP that can be shown start to finish. That goal is met (milestones M0 to M9), plus two additions the owner asked for: connection points (M10) and private chat (M11).
 - **The longer goal:** real use by the association, which needs the readiness checklist in `DEPLOYMENT.md` first, starting with a legal review.
 - Full original specification: `docs/product/MASTER_SPEC.md`. What the MVP covers: `PRODUCT_REQUIREMENTS.md`. What comes later: `DEVELOPMENT_ROADMAP.md`.
 
@@ -29,7 +29,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 ## 2. Current state
 
-**The MVP is complete and merged.** `main` is at M10 (commit `4684ec0`), CI green. There is no open pull request except the one that adds this file.
+**The MVP is complete and merged, and so is private chat.** `main` is at M11 (pull request #14, commit `8c2b494`), CI green.
 
 | Milestone | What it added                                                                              | Merged     |
 | --------- | ------------------------------------------------------------------------------------------ | ---------- |
@@ -44,10 +44,11 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 | M8        | Admin dashboard, accounts and roles, audit log screen, settings, the member's home page    | 2026-10-02 |
 | M9        | Pitch readiness: demo reset and script, accessibility, performance, security scan, docs    | 2026-10-03 |
 | M10       | Connection points for a video service and a push service (nothing visible changes)         | 2026-10-04 |
+| M11       | Private chat between members, live, with blocking, reports and staff review                | 2026-10-05 |
 
 **What it runs on:** pnpm 10 and Turborepo, Node 24, TypeScript. API: NestJS 11, Prisma 7, PostgreSQL 16 (portable install at `C:\Users\PC\tools\pgsql`). Web: Next.js 16 on port 3001, Hebrew (right to left) and English, Tailwind v4. Tests: Jest, Vitest, Playwright with axe.
 
-**Test totals at M10:** API 286 unit and 351 integration tests; 97 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
+**Test totals at M11:** API 294 unit and 411 integration tests; 101 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
 
 **How to show it**
 
@@ -58,14 +59,15 @@ pnpm dev          # then open http://localhost:3001
 
 All demo accounts use the password in `README.md` ("Demo accounts"). Staff accounts also need a code from the authenticator entry in `outbox\demo-authenticator.svg`. The walk-through is `docs/demo/DEMO_SCRIPT.md`.
 
-**Checked by the owner:** the demo walk-through and the screen-reader check with NVDA (both 3 October 2026), and the ten sample exam questions (2 October 2026, loaded published since).
+**Checked by the owner:** the demo walk-through and the screen-reader check with NVDA (both 3 October 2026), the ten sample exam questions (2 October 2026, loaded published since), and chat with its Hebrew wording (5 October 2026).
 
 **Known gaps, all written down** in `docs/demo/KNOWN_LIMITATIONS.md`. The main ones:
 
-- No payments, no mobile app, no CME tracking, no messaging or community features, no video hosting, no real email (emails are written to the `outbox` folder).
+- No payments, no mobile app, no CME tracking, no community features, no video hosting, no real email (emails are written to the `outbox` folder).
+- **Chat is private one-to-one only.** No public rooms, reactions or mentions (planned as M12), no files, online status or group chats (M13). Messages are not end-to-end encrypted, and nothing technical stops someone typing patient details. The screen-reader check was not repeated for the chat pages, and the number of open connections one server holds was not tested.
 - No legal review, no penetration test, no load test.
 - The speed target is met only in part: main content appears at about 3.0 s on a simulated slow phone, against a target of 2.5 s (`docs/demo/PERFORMANCE.md`).
-- Three planned "interface only" items were never built: `PaymentProvider` with the `payments` and `invoices` tables, `IdentityProvider`, `MembershipSource`.
+- Three planned "interface only" items were never built: `PaymentProvider` with the `payments` and `invoices` tables, `IdentityProvider`, `MembershipSource`. The owner decided on 5 October 2026 to leave them; each comes with the feature that needs it.
 - One dependency advisory is accepted in the audit (`braces`, lint tooling only, no fixed version yet). Remove the entry in `pnpm-workspace.yaml` when a fix exists.
 
 ## 3. Active files
@@ -87,8 +89,8 @@ All demo accounts use the password in `README.md` ("Demo accounts"). Staff accou
 
 | Path                                   | What is there                                                                                  |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `apps/api/src/modules/`                | One folder per feature: auth, users, profiles, membership, institutions, news, guidelines, events, education, notifications, search, files, access, audit, admin, health. A module is imported only through its `index.ts` |
-| `apps/api/src/infra/`                  | Adapters behind interfaces: mailer, storage, jobs, rate limit, crypto, and since M10 video and push |
+| `apps/api/src/modules/`                | One folder per feature: auth, users, profiles, membership, institutions, news, guidelines, events, education, notifications, search, chat, files, access, audit, admin, health. A module is imported only through its `index.ts` |
+| `apps/api/src/infra/`                  | Adapters behind interfaces: mailer, storage, jobs, rate limit, crypto, since M10 video and push, and since M11 realtime |
 | `apps/api/src/common/`, `src/config/`  | The request pipeline, guards, the checked settings (`env.schema.ts`)                           |
 | `apps/api/prisma/`                     | `schema.prisma`, migrations, the seed layers (`seed/`), scripts (`demo-reset.ts`, `create-admin.ts`) |
 | `apps/api/test/`                       | Integration tests (`*.int-spec.ts`) and their harness (`auth-harness.ts`)                      |
@@ -100,14 +102,18 @@ All demo accounts use the password in `README.md` ("Demo accounts"). Staff accou
 | `packages/api-client/`                 | The typed client, generated from the API (`pnpm openapi:generate`)                             |
 | `.github/workflows/ci.yml`, `.zap/rules.tsv` | CI and the security scan's accepted rules                                                |
 
-**Touched most recently (M9, M10)**
+**Touched most recently (M11, and M9, M10 before it)**
+
+- `apps/api/src/modules/chat/` (the chat API), `apps/api/src/infra/realtime/` (events between server processes), migration `20261004120000_chat`, `apps/api/prisma/seed/demo-chat.ts`.
+- `apps/web/src/features/chat/` (the chat screens), `apps/web/src/features/admin/chat-reports.tsx`, `packages/i18n/src/messages/{he,en}/chat.json`, `apps/web/e2e/chat.spec.ts`.
+- `apps/api/src/modules/auth/sessions.service.ts` (a renewal whose answer was lost can be repeated for 10 seconds).
 
 - `apps/api/src/infra/video/`, `apps/api/src/infra/push/` and their use in `modules/education/` and `modules/notifications/notifier.ts`.
 - `apps/web/src/features/auth/login-form.tsx` (where sign-in lands).
 - `apps/api/prisma/seed/demo-education.ts` (exam questions load published).
 - `docs/demo/` (script, limitations, performance, NVDA checklist), `docs/security/ZAP_BASELINE.md`.
 
-**Not part of the project:** `chat.md.txt` in the project folder is the owner's request for a chat feature (see section 6). It is not committed.
+**Not part of the project:** `chat.md.txt` in the project folder is the owner's request for a chat feature. M11 built the first third of it (see section 6). It is not committed.
 
 ## 4. Changes made
 
@@ -134,6 +140,19 @@ The milestone table in section 2 is the summary; `PROJECT_STATUS.md` has the det
 - `PushProvider` with `DisabledPushProvider`: sends nothing. The notifier hands it each notice in the app.
 - Both are "interface only", by the owner's choice. No new library, no database change, nothing visible.
 
+**M11, private chat** (plan: `docs/plans/M11-chat.md`; detail in `PROJECT_STATUS.md`)
+
+- The owner's request (`chat.md.txt`) was split into three milestones. M11 is the shared foundation and private chat.
+- **Chat** in the top menu: one-to-one conversations with members listed in the directory. Reply, edit for 15 minutes, delete for everyone or for me, sent/delivered/read, unread counts, mute, archive, search, blocking, reporting, chat settings.
+- **Live** without a new library: server-sent events to the browser, PostgreSQL notify between server processes (ADR 0009). The page falls back to asking every ten seconds.
+- **Staff** review reports at `/admin/chat/reports` (`chat.moderate`). They see the reported message and five on each side, never a conversation, and every look is audited.
+- **Nine tables**, shared with the later rooms. Messages are numbered inside their conversation, so order never depends on clocks.
+- A new notification kind, "Private messages": at most one email a day, never with the text.
+
+**After M11 (5 October)**
+
+- **A session no longer ends when a page reloads during a renewal.** A refresh token used less than 10 seconds ago is accepted once more if its replacement was never used. Any other reuse still ends the session.
+
 ## 5. Failed attempts
 
 What was tried and did not work, so nobody tries it the same way again.
@@ -147,12 +166,18 @@ What was tried and did not work, so nobody tries it the same way again.
 - **The M9 demo script said the admin area opens by itself after an administrator signs in.** It did not. Found by the owner in the walk-through; the behaviour was then changed to match.
 - **A sample message to members said they could renew from "My membership".** The app has no such function. The text was corrected.
 
+- **Ordering chat messages by their id (M11).** The project's ids are ordered by time only to the millisecond, so two messages in the same millisecond could change places. Messages are numbered inside their conversation instead.
+- **Two API answer classes with one name (M11).** Chat's `UnreadCountDto` replaced the notifications one in the API document, and the bell's types were silently wrong. A test now refuses a second DTO class with a name already used.
+- **Closing a dialog on its "close" event (M11).** In development React mounts a component twice, and the first one's close event shut the window that had just opened. Close on "cancel" (Escape) instead.
+
 **In testing and CI**
 
 - **Integration tests ran out of memory in CI.** Fixed by running them in one worker that is recycled (`--maxWorkers=1`, `workerIdleMemoryLimit`).
 - **Browser tests hit the real sign-in rate limit in CI.** Fixed with `RATE_LIMIT_SCALE`, which the API refuses in production.
 - **The first ZAP scan failed the build** with seven warnings. One was a real gap and was fixed; six are accepted with reasons.
 - **A new advisory for `braces` turned the security job red** with no fixed version available. Accepted as a documented exception, with the owner's agreement.
+- **Browser tests against `pnpm dev` lost their sign-ins (M11)** when the API restarted under them. Run them against the builds, as CI does: `pnpm build`, stop `pnpm dev`, then `$env:CI = '1'; pnpm --filter @iua/web e2e`. What makes the watcher restart was not found.
+- **A browser test that waits for the network to go quiet never finishes on a chat page,** because the page keeps a connection open. Chat pages get their accessibility check in `chat.spec.ts`, not in the audit that visits every page.
 - **`pnpm db:reset` was never checked.** Prisma refuses to let an AI agent run it without the owner's explicit consent. Use `pnpm demo:reset`.
 
 **In the way of working (worth knowing on this machine)**
@@ -166,14 +191,13 @@ What was tried and did not work, so nobody tries it the same way again.
 
 ## 6. Next step
 
-**Waiting for the owner's decision. Nothing is in progress.**
+**Nothing is in progress. The next step is the owner's to choose.**
 
-1. **A chat feature has been asked for.** The owner's request is in `chat.md.txt`: private one-to-one chat and public rooms, in real time, with moderation, reporting, blocking, attachments and privacy settings. It is by far the largest feature since the MVP. Before any code it needs an approved plan (`docs/plans/M11-chat.md`), and these decisions from the owner first:
-   - **How big the first version is.** The request lists about a hundred capabilities; a first milestone should be a part of it.
-   - **Real time needs a new library** (WebSockets), which needs the owner's approval, or a simpler first version that refreshes every few seconds.
-   - **"Doctor/patient chats" are named as a future direction.** Patient information is not allowed anywhere in this project today; that would need a legal review first.
-   - **Who may message whom:** members only, and whether it follows the opt-in member directory.
-   - **Moderation and retention:** who moderates, how long messages are kept, and what staff may read. Private messages between doctors are sensitive.
-   - The request says "do not stop after creating a plan". The project's rule is the opposite, and the rule stands unless the owner changes it.
-2. **Still open from M9:** whether the last three "interface only" items (payments, outside sign-in, the Medical Association's member list) are built now or each with its feature; and confirming the "who" column of the readiness checklist in `DEPLOYMENT.md`.
-3. **Proposed after the pitch,** each with its own plan: have the server send public pages complete (speed); then the readiness checklist, starting with the legal review; then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
+1. **The rest of chat,** each with its own approved plan before any code:
+   - **M12:** public rooms run by staff (create, edit, lock, archive, moderators, remove and ban people), joining and leaving, reactions, @mentions, pinned messages, announcements, reporting a room, and a screen for editing the report reasons. The conversation and message tables were built to be shared; a room adds a kind and its own columns.
+   - **M13:** files and images in messages, online and "last active" status, group chats, forwarding. **Files wait for the legal review:** between doctors they are where patient details travel.
+   - **Not planned at all:** chat between doctors and patients. Patient information is not allowed anywhere in this project.
+   - The request also says "do not stop after creating a plan". The project's rule is the opposite, and it stood for M11.
+2. **Smaller things left open by M11:** a screen-reader pass on the chat pages; a test of how many open connections one server holds; "jump to this message" from a search result.
+3. **Still open from M9:** confirming the "who" column of the readiness checklist in `DEPLOYMENT.md` (who is responsible for each line before real members use the site).
+4. **Proposed after the pitch,** each with its own plan: have the server send public pages complete (speed); then the readiness checklist, starting with the legal review, which for chat must also settle who moderates, how long messages are kept and what staff may read; then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
