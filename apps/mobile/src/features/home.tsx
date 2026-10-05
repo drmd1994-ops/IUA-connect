@@ -82,6 +82,7 @@ export function Home() {
       )}
       <Card>
         <Heading>{t('more')}</Heading>
+        <Button label={all('mobile.scan.title')} onPress={() => router.push('/scan')} />
         <Button
           label={all('education.nav')}
           variant="secondary"

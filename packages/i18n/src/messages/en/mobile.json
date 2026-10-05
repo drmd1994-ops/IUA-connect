@@ -87,8 +87,8 @@
     "fileFailed": "The file couldn’t be opened."
   },
   "events": {
-    "checkInNote": "At the venue, scan the code shown there with your phone’s camera. It opens the website, which records your attendance.",
-    "calendarOnSite": "The calendar file is on the website."
+    "scanVenue": "Scan the venue’s code",
+    "calendarFailed": "The calendar file couldn’t be saved."
   },
   "notices": {
     "onSite": "This one opens on the website."
@@ -121,5 +121,14 @@
   "security": {
     "openApp": "Your authenticator app is on this phone, so there is no code to scan. Open it from here, or type the key below into it.",
     "openAppButton": "Open my authenticator app"
+  },
+  "scan": {
+    "title": "Scan a code",
+    "intro": "Point the camera at the code shown at an event’s venue to record your attendance, or at the code on a membership card to check it.",
+    "permission": "The app needs the camera to read a code. Nothing is photographed or kept.",
+    "allow": "Allow the camera",
+    "camera": "The camera, looking for a code",
+    "unknown": "This is not a code of IUA Connect.",
+    "again": "Scan another code"
   }
 }

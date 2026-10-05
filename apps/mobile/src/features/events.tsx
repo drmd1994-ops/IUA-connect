@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFormatter, useTranslations } from 'use-intl';
-import { API_URL } from '@/config';
 import { errorMessage } from '@/errors';
 import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';
@@ -14,6 +13,7 @@ import { Markdown } from '@/ui/markdown';
 import { Choices, FileLink, Picture, Tag } from '@/ui/parts';
 import { groupByDay, mapUrl, registrationPanel, toggleSession, writeRange } from './events-model';
 import { useFileUrl } from './files';
+import { useSaveCalendar } from './scan';
 
 type Schemas = components['schemas'];
 type List = Schemas['PublicEventListDto'];
@@ -196,6 +196,31 @@ function EventCard({ item }: { item: Item }) {
   );
 }
 
+/** Saves a calendar file and hands it to the phone's calendar apps. */
+function CalendarButton({ label, path, title }: { label: string; path: string; title: string }) {
+  const m = useTranslations('mobile.events');
+  const save = useSaveCalendar();
+  const [pending, setPending] = useState(false);
+  const [failed, setFailed] = useState(false);
+  return (
+    <>
+      <Button
+        label={label}
+        variant="secondary"
+        pending={pending}
+        onPress={() => {
+          setPending(true);
+          setFailed(false);
+          save(path, title)
+            .catch(() => setFailed(true))
+            .finally(() => setPending(false));
+        }}
+      />
+      {failed && <Notice tone="error">{m('calendarFailed')}</Notice>}
+    </>
+  );
+}
+
 /** One event: when and where, its text, registration, and the programme. */
 export function EventPage({ slug }: { slug: string }) {
   const all = useTranslations();
@@ -343,20 +368,11 @@ function EventView({ event }: { event: Event }) {
       </Card>
       {event.summary ? <Text style={styles.lead}>{event.summary}</Text> : null}
       <Markdown>{event.description}</Markdown>
-      {/* The calendar file of a members-only event needs the session, which a browser opened
-          from the app does not have; it is offered only where anyone may fetch it. */}
-      {event.accessTier === 'PUBLIC' ? (
-        <Button
-          label={t('events.event.addToCalendar')}
-          variant="secondary"
-          hint={hint}
-          onPress={() =>
-            open(`${API_URL}/api/v1/events/${encodeURIComponent(event.slug)}.ics?locale=${locale}`)
-          }
-        />
-      ) : (
-        <Body muted>{t('mobile.events.calendarOnSite')}</Body>
-      )}
+      <CalendarButton
+        label={t('events.event.addToCalendar')}
+        path={`/api/v1/events/${encodeURIComponent(event.slug)}.ics?locale=${locale}`}
+        title={event.title}
+      />
       {event.sourceUrl && (
         <View style={styles.source}>
           <Text style={styles.meta}>{t('events.event.sourceLabel')}</Text>
@@ -392,6 +408,7 @@ function RegistrationCard({
 }) {
   const all = useTranslations();
   const r = useTranslations('events.event.registration');
+  const router = useRouter();
   const m = useTranslations('mobile');
   const { request } = useSession();
   const [pending, setPending] = useState(false);
@@ -460,7 +477,13 @@ function RegistrationCard({
               }
             />
           )}
-          {panel.mine === 'REGISTERED' && <Body muted>{m('events.checkInNote')}</Body>}
+          {panel.mine === 'REGISTERED' && (
+            <Button
+              label={m('events.scanVenue')}
+              variant="secondary"
+              onPress={() => router.push('/scan')}
+            />
+          )}
         </>
       )}
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
@@ -633,7 +656,13 @@ export function MySchedule() {
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
       {!items && error === null && <Body muted>{m('loading')}</Body>}
       {items?.length === 0 && <Body muted>{t('schedule.empty')}</Body>}
-      {items && items.length > 0 && <Body muted>{m('events.calendarOnSite')}</Body>}
+      {items && items.length > 0 && (
+        <CalendarButton
+          label={t('schedule.download')}
+          path={`/api/v1/me/schedule.ics?locale=${locale}`}
+          title={t('schedule.title')}
+        />
+      )}
       {items?.map((event) => (
         <Card key={event.slug}>
           <Button
