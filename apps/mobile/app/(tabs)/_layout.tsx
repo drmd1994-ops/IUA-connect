@@ -8,6 +8,7 @@ import { useTranslations } from 'use-intl';
 const ICONS = {
   home: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
   card: 'M3 6h18v12H3zM3 10h18M7 15h4',
+  news: 'M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5',
   me: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
 } as const;
 
@@ -42,6 +43,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" options={{ title: t('home'), tabBarIcon: icon('home') }} />
       <Tabs.Screen name="card" options={{ title: t('card'), tabBarIcon: icon('card') }} />
+      <Tabs.Screen name="news" options={{ title: t('news'), tabBarIcon: icon('news') }} />
       <Tabs.Screen name="me" options={{ title: t('me'), tabBarIcon: icon('me') }} />
     </Tabs>
   );

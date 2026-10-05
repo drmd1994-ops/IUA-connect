@@ -25,7 +25,7 @@
     "title": "IUA Connect",
     "signedInAs": "Signed in as {email}",
     "staffNote": "You have a staff role. The admin area is on the website; the app is for members’ everyday use.",
-    "soon": "The app is being built step by step. News, events, notifications and chat are not in it yet; they are on the website.",
+    "soon": "The app is being built step by step. Events, notifications and chat are not in it yet; they are on the website.",
     "membership": "Your membership",
     "active": "Active until {date}",
     "suspended": "Your membership is suspended.",
@@ -68,12 +68,21 @@
   "tabs": {
     "home": "Home",
     "card": "Card",
+    "news": "News",
     "me": "Me"
   },
   "card": {
     "offline": "No connection. This is your card as it was on {date}. The code can’t be shown without a connection, because it changes every few minutes.",
     "retry": "Try again",
     "brightness": "Turn the screen’s brightness up if the code doesn’t scan."
+  },
+  "news": {
+    "more": "Show more",
+    "shown": "{shown} of {total} shown",
+    "fileKb": "{name} ({size} KB)",
+    "fileMb": "{name} ({size} MB)",
+    "fileHint": "Opens in the phone’s browser.",
+    "fileFailed": "The file couldn’t be opened."
   },
   "me": {
     "title": "Me"

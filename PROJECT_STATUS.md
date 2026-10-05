@@ -838,17 +838,20 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **Sign-in in the app** (checkpoint 4): email and password, then the authenticator code; the refresh token only in the phone's secure storage; the session restored when the app opens; the phone's fingerprint or face check, with a switch; sign out, and sign out everywhere.
 
 - **Home and the membership card** (checkpoint 5, on the branch `feat/mobile-screens`, not in a pull request yet): three tabs (Home, Card, Me). Home shows who is signed in, the state of the membership and the number of unread notifications. The card shows the member's name, the kind of membership, until when, and the code that the site's verification page checks, renewed every four minutes. **Without a connection the card is shown as it last was, with its date and without a code,** because a kept code would be refused: the plan said "readable without a connection", and this is what that can honestly mean.
+- **News** (checkpoint 6, same branch): a fourth tab. The list with a category choice and "Show more"; an item with its picture, text, files and references. Member-only items are shown as the API allows, as on the site. A file or a link opens in the phone's browser. The text of an item is drawn by a small reader written for the app (headings, paragraphs, lists, quotes, code, bold, italics, links); the site uses a library for this, and no library was added to the app.
 
 ### Verified
 
 - 54 sign-in integration tests pass (7 new); **the existing web sign-in suites pass unchanged.**
-- 19 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again).
+- 31 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again; the kept card; the reader of an item's text, including that a link is made only of a web or mail address and that HTML stays plain text; file addresses and sizes).
+- **On the owner's phone (Android 16, Expo Go, through the tunnel), reported by the owner on 2026-10-05:** the app opens; the connection check says "live updates arrive on this phone"; the page changes sides when the language is changed.
+- The app's server builds the app with the News screens, and the demo server answers the requests they make (the list, a second page, a category, the categories).
 - The app type-checks, lints, and **bundles for Android**. The repository's format check, lint, type check and unit tests pass with the app included.
 
 ### Not verified
 
-- **The app opened on the owner's phone through Expo Go on 2026-10-05,** and the owner reported "the expo go test is ok". Which of the steps in `apps/mobile/README.md` were tried was not said, so none of them is recorded as seen.
-- **The two unknowns of the plan are still unknown:** whether chat's live connection works on a phone (now also: through the tunnel), and how the change of direction behaves when the language is changed.
+- **The News screens have not been seen on a phone.** Nobody has looked at a list or an item there, in either language.
+- **Of the first test on the phone, these were not reported:** staying signed in after the app is closed, the fingerprint or face check, the card and its code, and the phone showing among the sessions on the site. Whether the change of direction needed the app closed and opened was not said either.
 - Nothing was tried on an iPhone, and nothing will be in part 1.
 
 ### Deviations and findings
@@ -858,11 +861,15 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **Two of the project's own supply-chain rules blocked installs, and were not bypassed.** The 7-day rule: a batch of Expo libraries was 6 days old, so the release before it was installed for each. The trust check refused a sub-dependency of `expo-device`, so that library was left out; the phone's name comes from Android itself.
 - **The app's rules are tested with the same test runner as the other packages,** not with the phone-component test tools the plan listed (`jest-expo`, the React Native testing library). Those are still to be added for the screens.
 - **Passkeys don't work in the app,** as the plan said; the sign-in screen says so.
+- **The card has a tab of its own** (Home, Card, News, Me). The plan listed Home, News, Events, Chat, Me, with the card under Home. Five tabs is the most that fits; when Events and Chat arrive, the card moves under Home.
+- **Checked route names were switched off in the app.** While the app's server runs, Expo rewrites a generated file wrongly (it lists ordinary source files as screens), and the type check then fails on correct code. CI never had this file, so nothing that CI checks is lost.
+- **The demo's news list holds leftovers of the browser tests** ("Scheduled article 462278" and the like). How they got into the demo database was not looked into. They are fictional; `pnpm db:reset` followed by the seed removes them.
 - **The phone reaches this computer through a tunnel, not over the Wi-Fi** (the plan's Amendment 1, asked for by the owner on 2026-10-05). Over the Wi-Fi, Expo Go never loaded the app, and the cause was not found. With Microsoft's dev tunnels, signed in with the owner's GitHub account, it loaded. While the tunnel runs, the demo server can be reached from the internet by anyone who has the address; it is stopped with the demo. The address changes each time the tunnel is started. The site is not behind the tunnel, so the card's code can't be checked from a second device this way.
 
 ### Open for the owner
 
-1. **The first test on the phone** (`apps/mobile/README.md`): sign in; close and reopen the app; change the language; and what "Connection check" says. **The owner said on 2026-10-05 what should happen** (the app stays signed in; the page direction changes). **Whether it does on the phone is not known yet.**
+1. **The News tab on the phone** (`apps/mobile/README.md`): the list, a category, "Show more", an item with a picture, and a file.
+2. **The rest of the first test:** close the app and open it again (still signed in, after the fingerprint or face check); the card and its code.
 
 ## Next step
 
