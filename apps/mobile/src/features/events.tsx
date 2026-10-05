@@ -14,6 +14,7 @@ import { Choices, FileLink, Picture, Tag } from '@/ui/parts';
 import { groupByDay, mapUrl, registrationPanel, toggleSession, writeRange } from './events-model';
 import { useFileUrl } from './files';
 import { useSaveCalendar } from './scan';
+import { useGuest } from './visitor';
 
 type Schemas = components['schemas'];
 type List = Schemas['PublicEventListDto'];
@@ -51,6 +52,7 @@ function useEventTime() {
 
 /** The list of events. A member also sees what their membership opens; the API decides. */
 export function EventList() {
+  const { guest } = useGuest();
   const all = useTranslations();
   const t = useTranslations('events');
   const m = useTranslations('mobile');
@@ -106,11 +108,13 @@ export function EventList() {
     <Screen>
       <Title>{t('list.title')}</Title>
       <Body muted>{t('list.intro')}</Body>
-      <Button
-        label={t('event.schedule.view')}
-        variant="secondary"
-        onPress={() => router.push('/events/schedule')}
-      />
+      {!guest && (
+        <Button
+          label={t('event.schedule.view')}
+          variant="secondary"
+          onPress={() => router.push('/events/schedule')}
+        />
+      )}
       <Choices
         label={t('list.show')}
         value={when}
@@ -223,6 +227,7 @@ function CalendarButton({ label, path, title }: { label: string; path: string; t
 
 /** One event: when and where, its text, registration, and the programme. */
 export function EventPage({ slug }: { slug: string }) {
+  const { guest } = useGuest();
   const all = useTranslations();
   const t = useTranslations();
   const locale = useLocale();
@@ -244,7 +249,10 @@ export function EventPage({ slug }: { slug: string }) {
     Promise.all([
       request<Event>(`${path}?locale=${locale}`),
       request<{ items: Session[] }>(`${path}/sessions?locale=${locale}`),
-      request<Registration>(`${path}/registration`),
+      // A visitor has no registration; asking would only be refused.
+      guest
+        ? Promise.resolve<Registration>({ status: 'NONE', waitingPosition: null, sessionIds: [] })
+        : request<Registration>(`${path}/registration`),
     ])
       .then(([event, list, registration]) => {
         if (!active) return;
@@ -255,7 +263,7 @@ export function EventPage({ slug }: { slug: string }) {
     return () => {
       active = false;
     };
-  }, [request, slug, locale, key, version]);
+  }, [request, slug, locale, key, version, guest]);
 
   const back = (
     <Button
@@ -408,6 +416,7 @@ function RegistrationCard({
 }) {
   const all = useTranslations();
   const r = useTranslations('events.event.registration');
+  const { guest, toSignIn } = useGuest();
   const router = useRouter();
   const m = useTranslations('mobile');
   const { request } = useSession();
@@ -448,7 +457,13 @@ function RegistrationCard({
           )}
         </>
       )}
-      {panel.kind === 'member' && (
+      {panel.kind === 'member' && guest && (
+        <>
+          <Body>{event.registrationOpen ? r('signIn') : r('closed')}</Body>
+          {event.registrationOpen && <Button label={m('signIn.submit')} onPress={toSignIn} />}
+        </>
+      )}
+      {panel.kind === 'member' && !guest && (
         <>
           {panel.mine === 'REGISTERED' && <Notice tone="success">{r('registered')}</Notice>}
           {panel.mine === 'WAITLISTED' && (

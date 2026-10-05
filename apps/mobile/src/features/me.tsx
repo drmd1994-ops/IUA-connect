@@ -48,6 +48,11 @@ export function MeScreen() {
           onPress={() => router.push('/membership')}
         />
         <Button
+          label={all('membership.application.title')}
+          variant="secondary"
+          onPress={() => router.push('/applications')}
+        />
+        <Button
           label={all('auth.security.title')}
           variant="secondary"
           onPress={() => router.push('/security')}

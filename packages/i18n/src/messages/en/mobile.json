@@ -18,9 +18,10 @@
     "code": "Code",
     "verify": "Continue",
     "back": "Use a different account",
-    "forgot": "Forgot your password? Reset it on the site.",
-    "join": "Not a member yet? Join on the site.",
-    "passkeyNote": "Passkeys don’t work in the app yet. Use your password, and your authenticator code if you have one."
+    "forgot": "Forgot your password?",
+    "join": "Not registered yet? Open an account",
+    "passkeyNote": "Passkeys don’t work in the app yet. Use your password, and your authenticator code if you have one.",
+    "guest": "Continue without signing in"
   },
   "home": {
     "title": "IUA Connect",
@@ -130,5 +131,10 @@
     "camera": "The camera, looking for a code",
     "unknown": "This is not a code of IUA Connect.",
     "again": "Scan another code"
+  },
+  "guest": {
+    "intro": "You are not signed in. News, events, guidelines and the open part of the education library can be read without an account.",
+    "linkOpensSite": "The link in the email opens the website, where this step is finished.",
+    "afterVerify": "After your address is verified, sign in here and apply for membership under “Me” → “My application”."
   }
 }

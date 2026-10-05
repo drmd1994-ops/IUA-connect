@@ -21,6 +21,7 @@ import {
 } from './exam-model';
 import { useFileUrl } from './files';
 import { useLocalName, useSubspecialties } from './reference';
+import { useGuest } from './visitor';
 
 type Schemas = components['schemas'];
 type List = Schemas['PublicEducationListDto'];
@@ -363,6 +364,7 @@ export function EducationItem({ slug }: { slug: string }) {
  * each option is right or wrong, and a short summary of the topic.
  */
 export function ExamPractice() {
+  const { guest } = useGuest();
   const all = useTranslations();
   const e = useTranslations('education.exam');
   const m = useTranslations('mobile');
@@ -443,7 +445,11 @@ export function ExamPractice() {
       <Back />
       <Title>{e('title')}</Title>
       <Body muted>{e('intro')}</Body>
-      <Button label={e('results')} variant="link" onPress={() => router.push('/exam-results')} />
+      {guest ? (
+        <Notice>{e('signInNote')}</Notice>
+      ) : (
+        <Button label={e('results')} variant="link" onPress={() => router.push('/exam-results')} />
+      )}
       <LevelAndSubspecialty
         level={level}
         subspecialty={subspecialty}

@@ -1,11 +1,13 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslations } from 'use-intl';
 import { ChatEventsProvider } from '@/chat/events';
 import { API_URL } from '@/config';
 import { LanguageChoice } from '@/features/language-choice';
 import { SignIn } from '@/features/sign-in';
+import { ForgotPassword, GuestProvider, Register } from '@/features/visitor';
 import { I18nProvider } from '@/i18n/i18n-provider';
 import { AppLock } from '@/lock/app-lock';
 import { SessionProvider, useSession } from '@/session/session-provider';
@@ -28,8 +30,33 @@ export default function RootLayout() {
 }
 
 /**
+ * Nobody is signed in. The sign-in screen leads to a forgotten password, to opening an account,
+ * and to the pages that are open to everyone, which need no account.
+ */
+function Visitor() {
+  const [mode, setMode] = useState<'signIn' | 'forgot' | 'register' | 'guest'>('signIn');
+  const back = () => setMode('signIn');
+  if (mode === 'guest') {
+    return (
+      <GuestProvider toSignIn={back}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </GuestProvider>
+    );
+  }
+  if (mode === 'forgot') return <ForgotPassword onBack={back} />;
+  if (mode === 'register') return <Register onBack={back} />;
+  return (
+    <SignIn
+      onForgot={() => setMode('forgot')}
+      onRegister={() => setMode('register')}
+      onGuest={() => setMode('guest')}
+    />
+  );
+}
+
+/**
  * Nothing of the member's screens is shown, or even started, without a session: a visitor sees
- * the sign-in screen at every address of the app.
+ * the sign-in screen at every address of the app, unless they chose to read the open pages.
  */
 function Gate() {
   const t = useTranslations('mobile');
@@ -43,7 +70,7 @@ function Gate() {
       </ChatEventsProvider>
     );
   }
-  if (status === 'signedOut') return <SignIn />;
+  if (status === 'signedOut') return <Visitor />;
   if (status === 'unreachable') {
     return (
       <Screen>

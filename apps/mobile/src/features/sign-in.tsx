@@ -1,21 +1,26 @@
-import * as Linking from 'expo-linking';
 import { useState } from 'react';
 import { useTranslations } from 'use-intl';
-import { WEB_URL } from '@/config';
 import { errorMessage } from '@/errors';
-import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';
 import { Body, Button, Card, Field, Notice, Screen, Title } from '@/ui/kit';
 import { LanguageChoice } from './language-choice';
 
 /**
  * Signing in: email and password, then the authenticator code when the account has one. The
- * same accounts as the site. Joining and a forgotten password are done on the site.
+ * same accounts as the site.
  */
-export function SignIn() {
+export function SignIn({
+  onForgot,
+  onRegister,
+  onGuest,
+}: {
+  onForgot: () => void;
+  onRegister: () => void;
+  /** Reading what is open to everyone, without an account. */
+  onGuest: () => void;
+}) {
   const all = useTranslations();
   const t = useTranslations('mobile.signIn');
-  const locale = useLocale();
   const { session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,7 +51,6 @@ export function SignIn() {
     run(async () => {
       if (mfaToken) await session.verifyCode(mfaToken, code.trim());
     });
-  const web = (path: string) => () => void Linking.openURL(`${WEB_URL}/${locale}${path}`);
 
   if (mfaToken) {
     return (
@@ -123,8 +127,9 @@ export function SignIn() {
         />
       </Card>
       <Body muted>{t('passkeyNote')}</Body>
-      <Button label={t('forgot')} variant="link" onPress={web('/forgot-password')} />
-      <Button label={t('join')} variant="link" onPress={web('/register')} />
+      <Button label={t('forgot')} variant="link" onPress={onForgot} />
+      <Button label={t('join')} variant="link" onPress={onRegister} />
+      <Button label={t('guest')} variant="secondary" onPress={onGuest} />
       <LanguageChoice />
     </Screen>
   );

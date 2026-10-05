@@ -142,10 +142,10 @@ export function ChatEventsProvider({ children }: { children: ReactNode }) {
 /** Calls `onEvent` for every live event while the component is shown. */
 export function useChatEvents(onEvent: Handler): void {
   const subscribe = useContext(EventsContext);
-  if (!subscribe) throw new Error('useChatEvents needs a ChatEventsProvider above it');
   const handler = useRef(onEvent);
   useEffect(() => {
     handler.current = onEvent;
   }, [onEvent]);
-  useEffect(() => subscribe((event) => handler.current(event)), [subscribe]);
+  // A visitor has no stream: there is nothing to listen to.
+  useEffect(() => subscribe?.((event) => handler.current(event)), [subscribe]);
 }
