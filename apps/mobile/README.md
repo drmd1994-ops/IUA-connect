@@ -39,7 +39,8 @@ Sign in with a demo account, for example `member.full@demo.test` and the demo pa
 
 - **Sign in,** close the app completely, and open it again: you should still be signed in, after the phone's fingerprint or face check.
 - **Change the language** to English and back. The text changes at once; the direction of the page changes after the app is closed and opened again.
-- **"Connection check" → "Start the check".** It says whether live updates (which chat uses) arrive on your phone. It can take up to thirty seconds. Tell Claude what it says, including the "details for the developer" line.
+- **The "Card" tab:** your membership card with its code. On a second device, scan the code: the site's verification page should say the membership is valid. Then switch the phone to flight mode and open the tab again: the card is shown as it last was, with its date and without a code.
+- **"Me" → "Connection check" → "Start the check".** It says whether live updates (which chat uses) arrive on your phone. It can take up to thirty seconds. Tell Claude what it says, including the "details for the developer" line.
 - **On the site,** as the same person: **Account → Security**. The phone is listed among your sessions, by its name. Ending it there signs the app out.
 
 ## If something goes wrong

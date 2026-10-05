@@ -837,10 +837,12 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **The app's frame** (checkpoint 3): `apps/mobile`, Expo SDK 57 (React Native 0.86), using the shared API client, texts and design tokens. Hebrew and English, starting in the phone's language. A "Connection check" for the first test on a real phone.
 - **Sign-in in the app** (checkpoint 4): email and password, then the authenticator code; the refresh token only in the phone's secure storage; the session restored when the app opens; the phone's fingerprint or face check, with a switch; sign out, and sign out everywhere.
 
+- **Home and the membership card** (checkpoint 5, on the branch `feat/mobile-screens`, not in a pull request yet): three tabs (Home, Card, Me). Home shows who is signed in, the state of the membership and the number of unread notifications. The card shows the member's name, the kind of membership, until when, and the code that the site's verification page checks, renewed every four minutes. **Without a connection the card is shown as it last was, with its date and without a code,** because a kept code would be refused: the plan said "readable without a connection", and this is what that can honestly mean.
+
 ### Verified
 
 - 54 sign-in integration tests pass (7 new); **the existing web sign-in suites pass unchanged.**
-- 15 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again).
+- 19 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again).
 - The app type-checks, lints, and **bundles for Android**. The repository's format check, lint, type check and unit tests pass with the app included.
 
 ### Not verified
