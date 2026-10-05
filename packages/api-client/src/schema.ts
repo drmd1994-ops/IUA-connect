@@ -2916,6 +2916,326 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/chat/groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["GroupsController_rename"];
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["GroupsController_update"];
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_leave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_members"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/members/{userId}/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_removeMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_passAdmin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_messages"];
+        put?: never;
+        post: operations["GroupsController_send"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/typing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_typing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/invitable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_invitable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_myInvitations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/invitations/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/invitations/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_decline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/invitations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["GroupsController_withdraw"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/groups/{id}/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_sent[0]"];
+        put?: never;
+        post: operations["GroupsController_invite[0]"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/rooms/{id}/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_sent[1]"];
+        put?: never;
+        post: operations["GroupsController_invite[1]"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GroupsController_activityOf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/messages/{id}/forward": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_forward"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/attachments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GroupsController_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/dashboard": {
         parameters: {
             query?: never;
@@ -3992,7 +4312,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            kind: "IMAGE" | "DOCUMENT";
+            kind: "IMAGE" | "DOCUMENT" | "VIDEO";
             mimeType: string;
             originalName: string;
             sizeBytes: number;
@@ -4011,7 +4331,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "IMAGE" | "DOCUMENT";
+                kind: "IMAGE" | "DOCUMENT" | "VIDEO";
                 mimeType: string;
                 originalName: string;
                 sizeBytes: number;
@@ -4130,7 +4450,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "IMAGE" | "DOCUMENT";
+                kind: "IMAGE" | "DOCUMENT" | "VIDEO";
                 mimeType: string;
                 originalName: string;
                 sizeBytes: number;
@@ -4143,7 +4463,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "IMAGE" | "DOCUMENT";
+                kind: "IMAGE" | "DOCUMENT" | "VIDEO";
                 mimeType: string;
                 originalName: string;
                 sizeBytes: number;
@@ -5533,7 +5853,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "DIRECT";
+                kind: "DIRECT" | "GROUP";
                 other: {
                     id: string | null;
                     firstName: string | null;
@@ -5541,6 +5861,11 @@ export interface components {
                     photoFileId: string | null;
                     listed: boolean;
                 };
+                group: {
+                    name: string;
+                    memberCount: number;
+                } | null;
+                pinned: boolean;
                 lastMessage: {
                     /** Format: uuid */
                     id: string;
@@ -5548,6 +5873,7 @@ export interface components {
                     senderId: string | null;
                     body: string;
                     deleted: boolean;
+                    files: number;
                     /** Format: date-time */
                     createdAt: string;
                 } | null;
@@ -5572,7 +5898,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /** @enum {string} */
-            kind: "DIRECT";
+            kind: "DIRECT" | "GROUP";
             other: {
                 id: string | null;
                 firstName: string | null;
@@ -5580,6 +5906,11 @@ export interface components {
                 photoFileId: string | null;
                 listed: boolean;
             };
+            group: {
+                name: string;
+                memberCount: number;
+            } | null;
+            pinned: boolean;
             lastMessage: {
                 /** Format: uuid */
                 id: string;
@@ -5587,6 +5918,7 @@ export interface components {
                 senderId: string | null;
                 body: string;
                 deleted: boolean;
+                files: number;
                 /** Format: date-time */
                 createdAt: string;
             } | null;
@@ -5636,6 +5968,18 @@ export interface components {
                         firstName: string | null;
                         lastName: string | null;
                     }[];
+                    forwarded: boolean;
+                    attachments: {
+                        /** Format: uuid */
+                        id: string;
+                        /** @enum {string} */
+                        kind: "IMAGE" | "DOCUMENT" | "VIDEO";
+                        mimeType: string;
+                        name: string;
+                        sizeBytes: number;
+                        width: number | null;
+                        height: number | null;
+                    }[];
                     reactions: {
                         /** @enum {string} */
                         reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
@@ -5668,6 +6012,11 @@ export interface components {
                     nameHe: string;
                     nameEn: string | null;
                 } | null;
+                group: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                } | null;
             }[];
         };
         ConversationSettingsDto: {
@@ -5676,6 +6025,7 @@ export interface components {
             archived?: boolean;
             /** @constant */
             markedUnread?: true;
+            pinned?: boolean;
         };
         ReadDto: {
             seq?: number;
@@ -5707,6 +6057,18 @@ export interface components {
                     firstName: string | null;
                     lastName: string | null;
                 }[];
+                forwarded: boolean;
+                attachments: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "IMAGE" | "DOCUMENT" | "VIDEO";
+                    mimeType: string;
+                    name: string;
+                    sizeBytes: number;
+                    width: number | null;
+                    height: number | null;
+                }[];
                 reactions: {
                     /** @enum {string} */
                     reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
@@ -5729,9 +6091,11 @@ export interface components {
             hasMore: boolean;
         };
         SendMessageDto: {
+            /** @default  */
             body: string;
             /** Format: uuid */
             replyToId?: string;
+            attachmentIds?: string[];
         };
         MessageDto: {
             /** Format: uuid */
@@ -5758,6 +6122,18 @@ export interface components {
                 id: string;
                 firstName: string | null;
                 lastName: string | null;
+            }[];
+            forwarded: boolean;
+            attachments: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT" | "VIDEO";
+                mimeType: string;
+                name: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
             }[];
             reactions: {
                 /** @enum {string} */
@@ -5813,6 +6189,13 @@ export interface components {
             audience: "LISTED" | "NOBODY";
             readReceipts: boolean;
             typing: boolean;
+            /**
+             * @default LISTED
+             * @enum {string}
+             */
+            invitesFrom: "LISTED" | "CONTACTS" | "NOBODY";
+            /** @default true */
+            showActivity: boolean;
         };
         ReportCategoriesDto: {
             items: {
@@ -5919,6 +6302,7 @@ export interface components {
                 /** Format: date-time */
                 createdAt: string;
                 reported: boolean;
+                files?: number;
             }[];
             reviewer: {
                 id: string | null;
@@ -6000,6 +6384,8 @@ export interface components {
                 locked: boolean;
                 lockedUntil: string | null;
                 archived: boolean;
+                inviteOnly: boolean;
+                pinned: boolean;
                 /** Format: date-time */
                 createdAt: string;
                 lastMessageAt: string | null;
@@ -6041,6 +6427,8 @@ export interface components {
             locked: boolean;
             lockedUntil: string | null;
             archived: boolean;
+            inviteOnly: boolean;
+            pinned: boolean;
             /** Format: date-time */
             createdAt: string;
             lastMessageAt: string | null;
@@ -6069,6 +6457,7 @@ export interface components {
             mute?: "off" | "8h" | "week" | "forever";
             /** @constant */
             markedUnread?: true;
+            pinned?: boolean;
         };
         RoomMembersDto: {
             items: {
@@ -6086,11 +6475,13 @@ export interface components {
             pageSize: 50;
         };
         RoomSendDto: {
+            /** @default  */
             body: string;
             /** Format: uuid */
             replyToId?: string;
             mentions?: string[];
             announcement?: boolean;
+            attachmentIds?: string[];
         };
         RoomPinsDto: {
             items: {
@@ -6119,6 +6510,18 @@ export interface components {
                         id: string;
                         firstName: string | null;
                         lastName: string | null;
+                    }[];
+                    forwarded: boolean;
+                    attachments: {
+                        /** Format: uuid */
+                        id: string;
+                        /** @enum {string} */
+                        kind: "IMAGE" | "DOCUMENT" | "VIDEO";
+                        mimeType: string;
+                        name: string;
+                        sizeBytes: number;
+                        width: number | null;
+                        height: number | null;
                     }[];
                     reactions: {
                         /** @enum {string} */
@@ -6205,6 +6608,7 @@ export interface components {
                 pictureFileId: string | null;
                 memberCount: number;
                 moderatorsOnly: boolean;
+                inviteOnly: boolean;
                 locked: boolean;
                 archived: boolean;
                 /** Format: date-time */
@@ -6229,6 +6633,8 @@ export interface components {
             pictureFileId?: string | null;
             /** @default false */
             moderatorsOnly: boolean;
+            /** @default false */
+            inviteOnly: boolean;
         };
         AdminRoomDto: {
             /** Format: uuid */
@@ -6247,6 +6653,7 @@ export interface components {
             pictureFileId: string | null;
             memberCount: number;
             moderatorsOnly: boolean;
+            inviteOnly: boolean;
             locked: boolean;
             archived: boolean;
             /** Format: date-time */
@@ -6331,6 +6738,119 @@ export interface components {
             sortOrder: number;
             /** @default true */
             active: boolean;
+        };
+        GroupCreateDto: {
+            name: string;
+            /** @default [] */
+            userIds: string[];
+        };
+        GroupDto: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            memberCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            lastMessageAt: string | null;
+            lastSeq: number;
+            myLastReadSeq: number;
+            /** @enum {string} */
+            role: "MEMBER" | "ADMIN";
+            unreadCount: number;
+            markedUnread: boolean;
+            muted: boolean;
+            mutedUntil: string | null;
+            archived: boolean;
+            pinned: boolean;
+            /** @enum {string} */
+            sendState: "none" | "membersOnly" | "suspended";
+        };
+        GroupRenameDto: {
+            name: string;
+        };
+        GroupMembersDto: {
+            items: {
+                id: string | null;
+                firstName: string | null;
+                lastName: string | null;
+                photoFileId: string | null;
+                listed: boolean;
+                /** @enum {string} */
+                role: "MEMBER" | "ADMIN";
+            }[];
+        };
+        GroupAdminDto: {
+            /** Format: uuid */
+            userId: string;
+        };
+        InvitationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "GROUP" | "ROOM";
+                /** Format: uuid */
+                conversationId: string;
+                name: string;
+                nameEn: string | null;
+                memberCount: number;
+                invitedBy: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                };
+                members: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                }[];
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                expiresAt: string;
+            }[];
+        };
+        AcceptedInvitationDto: {
+            /** @enum {string} */
+            kind: "GROUP" | "ROOM";
+            /** Format: uuid */
+            conversationId: string;
+        };
+        InviteDto: {
+            userIds: string[];
+        };
+        SentInvitationsDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                user: {
+                    id: string | null;
+                    firstName: string | null;
+                    lastName: string | null;
+                    photoFileId: string | null;
+                    listed: boolean;
+                };
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                expiresAt: string;
+            }[];
+        };
+        ActivityDto: {
+            items: {
+                /** Format: uuid */
+                userId: string;
+                /** @enum {string} */
+                activity: "online" | "today" | "week" | "earlier";
+            }[];
+        };
+        ForwardDto: {
+            /** Format: uuid */
+            conversationId: string;
         };
         AdminDashboardDto: {
             applications: {
@@ -10351,6 +10871,9 @@ export interface operations {
             query: {
                 q: string;
                 conversationId?: string;
+                senderId?: string;
+                from?: string;
+                to?: string;
                 limit?: number;
             };
             header?: never;
@@ -10462,6 +10985,7 @@ export interface operations {
             query?: {
                 before?: number;
                 after?: number;
+                around?: number;
                 limit?: number;
             };
             header?: never;
@@ -11072,6 +11596,7 @@ export interface operations {
             query?: {
                 before?: number;
                 after?: number;
+                around?: number;
                 limit?: number;
             };
             header?: never;
@@ -11763,6 +12288,551 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminReportCategoryDto"];
+                };
+            };
+        };
+    };
+    GroupsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GroupCreateDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GroupDto"];
+                };
+            };
+        };
+    };
+    GroupsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GroupDto"];
+                };
+            };
+        };
+    };
+    GroupsController_rename: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GroupRenameDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GroupDto"];
+                };
+            };
+        };
+    };
+    GroupsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationSettingsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GroupDto"];
+                };
+            };
+        };
+    };
+    GroupsController_leave: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GroupsController_members: {
+        parameters: {
+            query?: {
+                q?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GroupMembersDto"];
+                };
+            };
+        };
+    };
+    GroupsController_removeMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GroupsController_passAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GroupAdminDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GroupDto"];
+                };
+            };
+        };
+    };
+    GroupsController_messages: {
+        parameters: {
+            query?: {
+                before?: number;
+                after?: number;
+                around?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageListDto"];
+                };
+            };
+        };
+    };
+    GroupsController_send: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Sending the same request again with the same key sends nothing new. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomSendDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    GroupsController_read: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GroupsController_typing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GroupsController_invitable: {
+        parameters: {
+            query: {
+                q: string;
+                conversationId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatPeopleDto"];
+                };
+            };
+        };
+    };
+    GroupsController_myInvitations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitationListDto"];
+                };
+            };
+        };
+    };
+    GroupsController_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcceptedInvitationDto"];
+                };
+            };
+        };
+    };
+    GroupsController_decline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GroupsController_withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "GroupsController_sent[0]": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SentInvitationsDto"];
+                };
+            };
+        };
+    };
+    "GroupsController_invite[0]": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "GroupsController_sent[1]": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SentInvitationsDto"];
+                };
+            };
+        };
+    };
+    "GroupsController_invite[1]": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GroupsController_activityOf: {
+        parameters: {
+            query: {
+                userIds: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityDto"];
+                };
+            };
+        };
+    };
+    GroupsController_forward: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForwardDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageDto"];
+                };
+            };
+        };
+    };
+    GroupsController_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDto"];
                 };
             };
         };
