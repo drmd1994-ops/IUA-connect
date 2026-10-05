@@ -38,6 +38,21 @@ export function MeScreen() {
       <Card>
         <Button label={t('me.card')} onPress={() => router.push('/card')} />
         <Button
+          label={all('membership.profile.title')}
+          variant="secondary"
+          onPress={() => router.push('/profile')}
+        />
+        <Button
+          label={all('membership.membership.title')}
+          variant="secondary"
+          onPress={() => router.push('/membership')}
+        />
+        <Button
+          label={all('auth.security.title')}
+          variant="secondary"
+          onPress={() => router.push('/security')}
+        />
+        <Button
           label={t('me.notices')}
           variant="secondary"
           onPress={() => router.push('/notifications/settings')}
@@ -81,6 +96,11 @@ export function MeScreen() {
           onPress={() => void signOutEverywhere()}
         />
         <Body muted>{t('account.signOutEverywhereHint')}</Body>
+        <Button
+          label={all('portal.accessibility.title')}
+          variant="link"
+          onPress={() => router.push('/accessibility')}
+        />
         <Body muted>{t('account.version', { version: APP_VERSION })}</Body>
       </Card>
     </Screen>

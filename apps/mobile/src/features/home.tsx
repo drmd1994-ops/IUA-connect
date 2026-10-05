@@ -80,6 +80,34 @@ export function Home() {
           />
         </Card>
       )}
+      <Card>
+        <Heading>{t('more')}</Heading>
+        <Button
+          label={all('education.nav')}
+          variant="secondary"
+          onPress={() => router.push('/education')}
+        />
+        <Button
+          label={all('education.list.examLink')}
+          variant="secondary"
+          onPress={() => router.push('/exam')}
+        />
+        <Button
+          label={all('content.guidelines.title')}
+          variant="secondary"
+          onPress={() => router.push('/guidelines')}
+        />
+        <Button
+          label={all('directory.nav')}
+          variant="secondary"
+          onPress={() => router.push('/members')}
+        />
+        <Button
+          label={all('search.page.title')}
+          variant="secondary"
+          onPress={() => router.push('/search')}
+        />
+      </Card>
     </Screen>
   );
 }

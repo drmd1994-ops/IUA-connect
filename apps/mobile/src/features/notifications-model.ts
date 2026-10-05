@@ -10,11 +10,21 @@
 export function appRoute(link: string | null): string | null {
   if (!link) return null;
   const path = link.split(/[?#]/)[0] ?? '';
+  // Before the items: exam practice lives under "/education" on the site, and is not an item.
+  if (path === '/education/exam') return '/exam';
   const news = /^\/news\/([^/]+)$/.exec(path);
   if (news) return `/news/${news[1]}`;
   const event = /^\/events\/([^/]+)$/.exec(path);
   if (event) return `/events/${event[1]}`;
-  if (path === '/news' || path === '/events') return path;
+  const item = /^\/(education|guidelines|members)\/([^/]+)$/.exec(path);
+  if (item) return `/${item[1]}/${item[2]}`;
+  const message = /^\/account\/notifications\/messages\/([^/]+)$/.exec(path);
+  if (message) return `/broadcast/${message[1]}`;
+  if (['/news', '/events', '/education', '/guidelines', '/members'].includes(path)) return path;
+  if (path === '/account/exam-results') return '/exam-results';
+  if (path === '/account/profile') return '/profile';
+  if (path === '/account/membership') return '/membership';
+  if (path === '/account/security') return '/security';
   if (path === '/account/schedule') return '/events/schedule';
   return null;
 }

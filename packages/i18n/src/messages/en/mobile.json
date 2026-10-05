@@ -33,7 +33,8 @@
     "none": "You have no membership yet. Joining is done on the website.",
     "openCard": "Open my membership card",
     "unread": "{count, plural, =0 {No unread notifications} one {# unread notification} other {# unread notifications}}",
-    "openNotices": "Open notifications"
+    "openNotices": "Open notifications",
+    "more": "More"
   },
   "language": {
     "title": "Language",
@@ -102,5 +103,23 @@
     "title": "Me",
     "card": "My membership card",
     "notices": "Notification settings"
+  },
+  "languages": {
+    "he": "Hebrew",
+    "en": "English",
+    "ar": "Arabic",
+    "ru": "Russian",
+    "am": "Amharic",
+    "fr": "French",
+    "es": "Spanish",
+    "de": "German",
+    "ro": "Romanian",
+    "it": "Italian",
+    "pt": "Portuguese",
+    "uk": "Ukrainian"
+  },
+  "security": {
+    "openApp": "Your authenticator app is on this phone, so there is no code to scan. Open it from here, or type the key below into it.",
+    "openAppButton": "Open my authenticator app"
   }
 }
