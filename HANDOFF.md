@@ -1,6 +1,6 @@
 # HANDOFF — IUA Connect
 
-_Written 4 October 2026 after milestone M10, updated 5 October 2026 after M11 (private chat) and M12 (chat rooms). For whoever picks the project up next, person or AI._
+_Written 4 October 2026 after milestone M10, updated 5 October 2026 after M11 (private chat), M12 (chat rooms) and M13 (groups, invitations and files). For whoever picks the project up next, person or AI._
 
 Read this file, then `PROJECT_STATUS.md` (one section per milestone: what was delivered, what was verified, what is open). `CLAUDE.md` holds the standing rules.
 
@@ -12,7 +12,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 - **What it is today:** a private **demo**, built to be pitched to the association. It is not endorsed by or affiliated with the IUA or the Israeli Medical Association.
 - **Owner:** a urology surgeon, the only developer for now.
-- **The goal of the work so far:** a complete, honest MVP that can be shown start to finish. That goal is met (milestones M0 to M9), plus three additions the owner asked for: connection points (M10), private chat (M11) and chat rooms (M12).
+- **The goal of the work so far:** a complete, honest MVP that can be shown start to finish. That goal is met (milestones M0 to M9), plus four additions the owner asked for: connection points (M10), private chat (M11), chat rooms (M12), and groups, invitations and files in chat (M13).
 - **The longer goal:** real use by the association, which needs the readiness checklist in `DEPLOYMENT.md` first, starting with a legal review.
 - Full original specification: `docs/product/MASTER_SPEC.md`. What the MVP covers: `PRODUCT_REQUIREMENTS.md`. What comes later: `DEVELOPMENT_ROADMAP.md`.
 
@@ -29,7 +29,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 ## 2. Current state
 
-**The MVP is complete and merged, and so are private chat and chat rooms.** `main` is at M12 (pull request #17, commit `a1f8184`), CI green.
+**The MVP is complete and merged, and so are private chat and chat rooms.** `main` is at M12 (pull request #17, commit `a1f8184`), CI green. **M13 (groups, invitations, online status, files in chat) is built on the branch `feat/chat-groups`, in a pull request that the owner has not merged yet.**
 
 | Milestone | What it added                                                                              | Merged     |
 | --------- | ------------------------------------------------------------------------------------------ | ---------- |
@@ -48,7 +48,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 **What it runs on:** pnpm 10 and Turborepo, Node 24, TypeScript. API: NestJS 11, Prisma 7, PostgreSQL 16 (portable install at `C:\Users\PC\tools\pgsql`). Web: Next.js 16 on port 3001, Hebrew (right to left) and English, Tailwind v4. Tests: Jest, Vitest, Playwright with axe.
 
-**Test totals at M12:** API 298 unit and 446 integration tests; 105 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
+**Test totals at M13 (on its branch):** API 301 unit and 466 integration tests; 110 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
 
 **How to show it**
 
@@ -64,7 +64,7 @@ All demo accounts use the password in `README.md` ("Demo accounts"). Staff accou
 **Known gaps, all written down** in `docs/demo/KNOWN_LIMITATIONS.md`. The main ones:
 
 - No payments, no mobile app, no CME tracking, no community features, no video hosting, no real email (emails are written to the `outbox` folder).
-- **Chat carries text only.** No files, online status, rooms by invitation or group chats (M13). Messages are not end-to-end encrypted, and nothing technical stops someone typing patient details, in a private conversation or in a room that many people read. The screen-reader check was not repeated for the chat pages, and the number of open connections one server holds was not tested.
+- **Chat is not reviewed for real use.** Messages are not end-to-end encrypted, and nothing technical stops someone typing patient details or sending a patient's picture. **Files and video in messages (M13) are in the demo ahead of the legal review,** by the owner's decision; a video keeps what the phone wrote into it and is not checked for viruses. Staff can't read a group that members made. The screen-reader check was not repeated for the chat pages, and the number of open connections one server holds was not tested.
 - No legal review, no penetration test, no load test.
 - The speed target is met only in part: main content appears at about 3.0 s on a simulated slow phone, against a target of 2.5 s (`docs/demo/PERFORMANCE.md`).
 - Three planned "interface only" items were never built: `PaymentProvider` with the `payments` and `invoices` tables, `IdentityProvider`, `MembershipSource`. The owner decided on 5 October 2026 to leave them; each comes with the feature that needs it.
@@ -102,7 +102,10 @@ All demo accounts use the password in `README.md` ("Demo accounts"). Staff accou
 | `packages/api-client/`                 | The typed client, generated from the API (`pnpm openapi:generate`)                             |
 | `.github/workflows/ci.yml`, `.zap/rules.tsv` | CI and the security scan's accepted rules                                                |
 
-**Touched most recently (M12 and M11, and M9, M10 before them)**
+**Touched most recently (M13, M12 and M11, and M9, M10 before them)**
+
+- M13: in `apps/api/src/modules/chat/`, `groups.service.ts`, `invitations.service.ts`, `activity.service.ts`, `groups.controller.ts`; in `apps/api/src/modules/files/`, the chat upload, video and serving a part of a file; `apps/api/src/infra/storage/`; migrations `20261005150000_chat_group_enums`, `20261005150100_chat_groups`, `20261005150200_chat_message_files_only`; `apps/api/prisma/seed/demo-groups.ts`; `apps/api/test/chat-groups.int-spec.ts`.
+- M13, web: in `apps/web/src/features/chat/`, `group-view.tsx`, `invitations.tsx`, `invite-panel.tsx`, `chat-extras.tsx` (forwarding, "go to this message"), and files in `message-parts.tsx`; `packages/i18n/src/messages/{he,en}/groups.json`; `apps/web/e2e/groups.spec.ts`.
 
 - M12: in `apps/api/src/modules/chat/`, `rooms.service.ts` (rooms for members and moderators), `rooms-admin.service.ts` (staff), `rooms.controller.ts`, `room-notifier.ts` (mentions, replies, announcements), `chat-messages.ts` (what private chat and rooms share: paging, sending, views, reactions); migrations `20261005090000_chat_room_enums` and `20261005090100_chat_rooms`; `apps/api/prisma/seed/demo-rooms.ts`; `apps/api/test/chat-rooms.int-spec.ts`.
 - M12, web: in `apps/web/src/features/chat/`, `room-view.tsx`, `rooms-list.tsx`, `message-parts.tsx` (the message menu, reactions and message box, shared with private chat); `apps/web/src/features/admin/chat-rooms.tsx`; `packages/i18n/src/messages/{he,en}/rooms.json`; `apps/web/e2e/rooms.spec.ts`.
@@ -115,7 +118,7 @@ All demo accounts use the password in `README.md` ("Demo accounts"). Staff accou
 - `apps/api/prisma/seed/demo-education.ts` (exam questions load published).
 - `docs/demo/` (script, limitations, performance, NVDA checklist), `docs/security/ZAP_BASELINE.md`.
 
-**Not part of the project:** `chat.md.txt` in the project folder is the owner's request for a chat feature. M11 and M12 built two thirds of it (see section 6). It is not committed.
+**Not part of the project:** `chat.md.txt` in the project folder is the owner's request for a chat feature. M11, M12 and M13 built it, apart from what was decided against (see section 6). It is not committed.
 
 ## 4. Changes made
 
@@ -165,6 +168,16 @@ The milestone table in section 2 is the summary; `PROJECT_STATUS.md` has the det
 - **Notices:** a new kind, "Chat rooms": a mention, a reply to you and an announcement, under the bell. Email about rooms is off unless the member switches it on.
 - **Four new tables** and new columns on conversations and messages; additions only.
 
+**M13, groups, invitations, online status and files** (plan: `docs/plans/M13-chat-groups-status.md`; detail in `PROJECT_STATUS.md`)
+
+- **Groups** that members make, up to 50 people, with one admin. Staff can't read them; they see only a report.
+- **Invitations:** nobody is put into a group or a room. An invitation gives nothing until it is accepted.
+- **Rooms by invitation:** staff tick a box; the room is hidden from everyone who is not in it.
+- **Online and "last active",** shown only to people who already talk with the person, with a switch. Online is not stored.
+- **Files in messages:** pictures and PDF (10 MB), MP4 video (100 MB). The owner chose to build them before the legal review. A video is kept as sent.
+- **Forwarding, pinned conversations, search by day, and opening a found message in its place.**
+- Two new tables; the files module can now take an upload from disk and serve a part of a file.
+
 ## 5. Failed attempts
 
 What was tried and did not work, so nobody tries it the same way again.
@@ -184,6 +197,8 @@ What was tried and did not work, so nobody tries it the same way again.
 
 - **Adding an enum value and using it in one migration (M12).** PostgreSQL refuses to use a new enum value in the transaction that adds it. The values go in a migration of their own, before the one that uses them.
 - **Answering "not found" for a room the member can see in the list (M12).** The plan said every refusal looks like an invented id. For a room that "Browse rooms" shows to every member that hides nothing, and the page could not tell "join first" from "gone". A member who has not joined gets a clear refusal (`chatRoomNotJoined`); everyone who may not see rooms at all still gets "not found".
+- **A database rule that a message always has text (M11) broke messages that are only files (M13).** The server answered with an error until the rule was relaxed in a migration. When a rule is written into the database, a later feature that changes it needs a migration, not only code.
+- **Letting the files module's general rules decide about chat files (M13).** They let an uploader, and staff who may upload, read any file. For a file of a message only the people of the conversation count, so chat files are checked by the chat module alone.
 
 **In testing and CI**
 
@@ -193,6 +208,7 @@ What was tried and did not work, so nobody tries it the same way again.
 - **A new advisory for `braces` turned the security job red** with no fixed version available. Accepted as a documented exception, with the owner's agreement.
 - **Browser tests against `pnpm dev` lost their sign-ins (M11)** when the API restarted under them. Run them against the builds, as CI does: `pnpm build`, stop `pnpm dev`, then `$env:CI = '1'; pnpm --filter @iua/web e2e`. What makes the watcher restart was not found.
 - **A browser test that waits for the network to go quiet never finishes on a chat page,** because the page keeps a connection open. Chat pages get their accessibility check in `chat.spec.ts` and `rooms.spec.ts`, not in the audit that visits every page.
+- **Browser tests that leave their windows open (M13).** Contexts made with `browser.newContext()` stay open until the whole run ends. Late in a run one demo person had many chat windows, they fought over the three live connections a person may hold, and a reaction went missing once. The chat specs now close every context after each test.
 - **Integration tests that sign several people up at the same moment failed now and then (M12)** with a dropped connection. Create the people one after another.
 - **`pnpm db:reset` was never checked.** Prisma refuses to let an AI agent run it without the owner's explicit consent. Use `pnpm demo:reset`.
 
@@ -200,6 +216,7 @@ What was tried and did not work, so nobody tries it the same way again.
 
 - **Stopping a dev or production server task leaves its child processes alive** (the Next.js server, the API, the NestJS watcher). They keep the ports and can serve a mix of old and new builds. After stopping, check ports 3001 and 4000 and stop what is left.
 - **Shell here-documents break on apostrophes**, and scripted find-and-replace with regular expressions damaged `ARCHITECTURE.md` once. Edit files with the editing tools, line by line.
+- **Reading and writing a file through PowerShell's `Get-Content` and `Set-Content` mangles non-English characters** (M13: three characters in a script). Use the editing tools, or `[IO.File]::ReadAllText` and `WriteAllText` with UTF-8.
 - **Markdown files do not open readably** on the owner's computer. Give the owner an HTML page, or a formatted copy in the browser.
 - **Commit messages are checked** (commitlint): lower-case subject, lines of at most 100 characters.
 - **A long-running `pnpm dev` was stopped by the system once** for low memory.
@@ -207,12 +224,9 @@ What was tried and did not work, so nobody tries it the same way again.
 
 ## 6. Next step
 
-**M13 is in progress** on the branch `feat/chat-groups` (plan: `docs/plans/M13-chat-groups-status.md`, approved on 2026-10-05): group chats, rooms by invitation, online status, forwarding, and pictures, PDF and video in messages. **M12 was merged without the owner's checkpoint test;** it is still owed (`docs/demo/DEMO_SCRIPT.md`, section 9).
+**M13 waits for the owner:** the checkpoint test (`docs/demo/DEMO_SCRIPT.md`, sections 9 and 10; M12 was merged without its test) and the merge of its pull request. After that the next step is the owner's to choose.
 
-1. **The rest of chat,** with its own approved plan before any code:
-   - **M13:** files and images in messages, online and "last active" status, rooms by invitation, group chats, forwarding. **Files wait for the legal review:** between doctors they are where patient details travel.
-   - **Not planned at all:** chat between doctors and patients. Patient information is not allowed anywhere in this project.
-   - The request also says "do not stop after creating a plan". The project's rule is the opposite, and it stood for M11 and M12.
-2. **Smaller things left open by M11 and M12:** a screen-reader pass on the chat and room pages; a test of how many open connections one server holds; "jump to this message" from a search result; the wording of the Hebrew room texts, for the owner to read.
+1. **Chat is built** as far as the owner's request goes. **Not planned at all:** chat between doctors and patients (patient information is not allowed anywhere in this project), voice and video calls. The request also says "do not stop after creating a plan". The project's rule is the opposite, and it stood for M11, M12 and M13.
+2. **Left open by the chat milestones:** a screen-reader pass on the chat pages; a test of how many open connections one server holds; trying a real phone video in the browsers people use; a virus scanner that also checks videos; the wording of the Hebrew texts of M12 and M13, for the owner to read.
 3. **Still open from M9:** confirming the "who" column of the readiness checklist in `DEPLOYMENT.md` (who is responsible for each line before real members use the site).
-4. **Proposed after the pitch,** each with its own plan: have the server send public pages complete (speed); then the readiness checklist, starting with the legal review, which for chat must also settle who moderates, how long messages are kept and what staff may read; then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
+4. **Proposed after the pitch,** each with its own plan: have the server send public pages complete (speed); then the readiness checklist, starting with the legal review, which for chat must also settle who moderates, how long messages are kept, what staff may read, and whether files and video may be sent at all; then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

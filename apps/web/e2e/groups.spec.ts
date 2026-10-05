@@ -77,6 +77,12 @@ const noSidewaysScroll = (page: Page) =>
 
 test.setTimeout(180_000);
 
+// A person may hold three live chat connections. Windows left open by an earlier test would
+// take them, and the next test's page would keep losing its own.
+test.afterEach(async ({ browser }) => {
+  for (const context of browser.contexts()) await context.close();
+});
+
 test('a member makes a group; nobody is in it before accepting an invitation', async ({
   browser,
 }) => {
@@ -219,7 +225,7 @@ test('files in a message, forwarding, pinning, and opening a found message in it
   await expectAccessible(noa);
   await forward.getByRole('button', { name: `Forward to ${RUTH.name}` }).click();
   await expect(forward.getByText(`Forwarded to ${RUTH.name}.`)).toBeVisible();
-  await forward.getByRole('button', { name: 'Close' }).click();
+  await forward.getByRole('button', { name: 'Close', exact: true }).click();
   await ruth.goto('/en/chat');
   await ruth.getByTestId('conversation-list').getByRole('link', { name: NOA.name }).first().click();
   const copy = messageWith(ruth, withPicture);

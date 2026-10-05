@@ -163,6 +163,30 @@ Editing, deleting and hiding one's own message, search, the stream, blocks and r
 
 **Who gets what:** a room that doesn't exist, or a caller who may not see rooms at all, answers 404. An active member who is not in a listed room gets its details, and 403 (`chatRoomNotJoined`) for its messages, members and pins. A person in the room who is not a moderator gets 403 for a moderation route; a moderator of another room gets 404 if not in this one. Staff with `chat.moderate` read any room and act as its moderator without joining; they write only if they joined it as a member.
 
+### Chat groups, invitations, activity, forwarding and files (M13)
+
+| Method      | Path                                                       | Notes                                                                                                 |
+| ----------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| POST        | /chat/groups                                               | Makes a group and invites `userIds`. Nobody is in it until they accept. Needs an active membership    |
+| GET, PATCH  | /chat/groups/{id}                                          | The group as one of its people sees it; the admin renames it                                          |
+| PATCH       | /chat/groups/{id}/me                                       | Mute, archive, pin, mark as unread                                                                    |
+| POST        | /chat/groups/{id}/leave                                    | When the admin leaves, the longest-standing person runs the group                                     |
+| GET         | /chat/groups/{id}/members                                  | Everyone in it (50 at most). `q` for mentions                                                         |
+| POST        | /chat/groups/{id}/members/{userId}/remove, /admin          | The admin removes a person, or hands the group over                                                   |
+| GET, POST   | /chat/groups/{id}/messages, /read, /typing                 | As in a room, without announcements                                                                   |
+| GET, POST   | /chat/groups/{id}/invitations, /chat/rooms/{id}/invitations | A group's admin; in a room by invitation, its moderators and staff                                    |
+| GET         | /chat/invitable?q=&conversationId=                         | Who the caller may invite                                                                             |
+| GET         | /chat/invitations                                          | The caller's own invitations that wait for an answer                                                  |
+| POST        | /chat/invitations/{id}/accept, /decline                    |                                                                                                       |
+| DELETE      | /chat/invitations/{id}                                     | Takes one back: whoever may invite there                                                              |
+| GET         | /chat/activity?userIds=                                    | `online`, `today`, `week` or `earlier`, only for people the caller talks with who show it             |
+| POST        | /chat/messages/{id}/forward                                | A copy of the text and files to a conversation, group or room the caller can write in                 |
+| POST        | /chat/attachments                                          | Multipart, written to disk as it arrives. JPEG, PNG, PDF (10 MB) or MP4 (100 MB)                      |
+
+Also since M13: sending a message takes `attachmentIds` (three at most, one video at most, each the caller's own unused upload), and the text may then be empty; a message carries `forwarded` and `attachments`; `GET …/messages` takes `around`; `GET /chat/search` takes `senderId`, `from`, `to`; the three `/me` routes take `pinned` (five pinned conversations a person); `/me/chat-settings` has `invitesFrom` and `showActivity`; the admin room input has `inviteOnly`; `GET /files/{id}/content` answers a `Range` request with 206.
+
+**Who gets what:** a group answers 404 to anyone who is not in it, staff included, on every route, the same as an invented id. A room by invitation answers 404 to a member who is not in it, invited or not, and is left out of the list and the search. Someone who can't be invited answers 404, like someone who doesn't exist. A file of a message is given (`GET /files/{id}/url`) only to someone who can read that message.
+
 ### Files
 
 | Method | Path            | Notes                                                                                          |

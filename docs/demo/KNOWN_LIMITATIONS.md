@@ -2,7 +2,7 @@
 
 What IUA Connect does not do today, written for someone who was not there while it was built. Nothing here is hidden in the demo; this page is so that nothing is promised by mistake.
 
-Last updated: 5 October 2026 (milestone M12, chat rooms).
+Last updated: 5 October 2026 (milestone M13, groups, invitations, online status and files in chat).
 
 ## 1. It is a demo
 
@@ -32,7 +32,7 @@ These are in the original specification and are **not** in the demo:
 - **CME tracking and certificates.** Events and education items can show CME points; nothing is counted or credited.
 - **A mobile app.** The site works in a phone's browser. There are no push notifications: the place to plug a push service in exists in the code (since M10), but nothing is plugged in and nothing is sent.
 - **Community, case discussions, research collaboration, publications, jobs, mentorship, a surgical logbook, calculators, AI features, governance and voting.** Four of these appear on the member's dashboard as "Coming soon", and can't be clicked.
-- **Parts of chat.** Private chat between two members exists since M11 and rooms since M12 (see "Chat" below). Not built: files and images in messages, online and "last active" status, rooms by invitation, group chats, forwarding (planned as M13, and files only after the legal review); voice and video calls. **Chat between doctors and patients is not planned at all:** patient information is not allowed anywhere in this project.
+- **Parts of chat.** Private chat exists since M11, rooms since M12, and groups, invitations, online status, forwarding and files in messages since M13 (see "Chat" below). Not built: voice and video calls, voice messages, any emoji as a reaction, members opening public rooms, end-to-end encryption, automatic deletion of old messages. **Chat between doctors and patients is not planned at all:** patient information is not allowed anywhere in this project.
 - **A full question bank.** The exam section asks one question at a time and remembers answers; there are no timed exams, no question sets and no statistics for teachers.
 - **Video hosting.** A video is a link to where it is already hosted (YouTube, Vimeo). Restricting a video to members has to be done on that host.
 - **A video service.** The place to plug one in exists in the code (since M10); what is plugged in is "links", as described above.
@@ -63,6 +63,7 @@ These are in the original specification and are **not** in the demo:
 - A message can be edited for 15 minutes. Deleting for everyone leaves "This message was deleted" in its place.
 - Email about messages is at most one a day, and never shows a message or who sent it.
 - Messages arrive live through one open connection per chat page. **How many open connections one server can hold was not tested.** If the connection can't be opened, the page asks every ten seconds instead.
+- **Up to three chat windows per person.** With a fourth open (tabs, or several devices), the windows take the live connection from each other in turn, and a window that is reconnecting can miss an edit or a reaction until it is refreshed. New messages are not lost.
 - The number on the Chat link refreshes about once a minute on pages other than chat.
 - A long conversation loads 50 messages at a time; there is no "jump to this message" from a search result.
 
@@ -83,6 +84,31 @@ These are in the original specification and are **not** in the demo:
 - A room's picture can be uploaded by staff; like every upload in the demo it is not scanned for viruses.
 - **A room of 2,000 people and 10,000 messages was tested in the database, not with 2,000 open browsers.** How many open connections one server can hold is still not tested.
 - The moderator search on the admin room page uses the membership list, so it needs the "read memberships" permission too. IUA admins have both.
+
+**Files in messages (M13)**
+
+- **Files are in the demo before the legal review.** The project's earlier decision was that files wait for it, because a picture or a document between doctors is the likeliest place for a patient's details. The owner decided on 5 October 2026 to build them now for the demo. **The review is still needed before any real member uses them.**
+- **A video keeps what the phone wrote into it:** when it was filmed, and often where. A picture is re-made by the server and loses these details; the project has no tool that does the same for video. The page says so beside the attach button.
+- **A video is not checked for viruses,** not even by a real scanner if one is plugged in later, because it is never read into memory. The demo has no virus scanner at all (as for every upload).
+- Only JPEG and PNG pictures and PDF (10 MB each), and MP4 video (100 MB). No Word or PowerPoint files, no sound, no other video formats. Three files a message, one video at most.
+- A video has no preview picture until play is pressed, and no captions. Whether a particular phone's video plays depends on the browser; the tests check that the file is delivered, not that every film plays.
+- **A file can be forwarded, and then lives as long as any message carries it.** Deleting your own message doesn't take the file back from a conversation it was forwarded to.
+- **Nothing stops a person from saving or forwarding what they can read.**
+- A report keeps how many files a message had, not the files. Staff deciding on a report can't open them.
+- An upload that is never sent is removed after a day.
+- The seed has a sample picture and a sample PDF, and no sample video.
+
+**Groups, invitations and online status (M13)**
+
+- **The association's staff can't read a group** made by members, as they can't read a private conversation. If a group turns bad, the protections are: a report from inside it, blocking, leaving, and suspension from chat. Whether that is acceptable is a decision for the association and the legal review.
+- Up to 50 people in a group. A group has one name (not one per language), no picture, no pinned messages, no announcements and no moderators: one admin, who can rename it, invite, remove a person, and hand it over.
+- An invitation waits 30 days. The person who invited is not told about a decline.
+- Only members listed in the directory can be found by name to invite. Staff inviting to a room by invitation use the same search.
+- **Online means "has a chat page open",** not "is looking at it". The plan said the tab must also have been in front in the last five minutes; that part was not built.
+- "Last active" is rounded to today, this week, or a while ago. It is shown only to people who already share a conversation or a group with the person, and each person can switch it off.
+- A forwarded message doesn't say who wrote the original. A mention and a reply are not carried over.
+- A page opened at a found message ("Go to this message") shows the messages around it and doesn't follow new ones until "Go to the newest messages" is pressed.
+- Five pinned conversations a person, across private conversations, groups and rooms.
 
 **Membership**
 

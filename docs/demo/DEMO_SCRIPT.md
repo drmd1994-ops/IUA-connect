@@ -158,6 +158,25 @@ The same two windows, with `member.resident@demo.test` in the private window thi
 
 The seed also leaves a message removed by a moderator and one person banned for a week in "שאלות ותשובות" (open **פרטים** there as Noa to see the ban).
 
+### 10. Groups, invitations and files (3 minutes, optional; added in M13)
+
+Two windows: `member.full@demo.test` (Noa Bar-Lev) in the first, and in a private window `member.honorary@demo.test` (Ruth Golan).
+
+| Do                                                                                            | The audience sees                                                                                 | Say                                                                                              |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| First window: **צ׳אט**. Look at the top of the list.                                          | "קבוצת קריאה / Reading group" first, marked "נעוצה"; above the list, "2 הזמנות ממתינות".          | "Members make their own small groups. A group can be pinned to the top of the list."             |
+| Open the reading group.                                                                       | Messages from three people; one carries a drawn chart and a PDF.                                  | "Pictures, PDF and short videos can be sent. A picture loses what the camera wrote into it."     |
+| Press the picture.                                                                            | It opens large.                                                                                   |                                                                                                  |
+| Look under the message box.                                                                   | "אין לשלוח תמונות, מסמכים או סרטונים של מטופלים", and the note about what a video carries.        | "The page says plainly what must not be sent, and what a video still contains."                  |
+| The three dots beside the message with the files → **העברה** → choose Ruth Golan.             | "ההודעה הועברה אל Ruth Golan." In the second window the copy appears, marked "הועברה".            | "A forwarded copy doesn't say who wrote it."                                                     |
+| **הזמנות ממתינות**.                                                                           | Two invitations: a group and a room by invitation; who invited, and for the group who is in it.   | "Nobody is put into a group. You see who invited you, and you are in only if you accept."        |
+| Accept the group "מארגני המפגש השנתי".                                                        | The group opens, with the message that was written before.                                        |                                                                                                  |
+| **פרטים** in the reading group.                                                               | The people, who runs the group, a dot beside whoever is active now, inviting, and the staff note. | "The association's staff can't read a group. They see only a message that someone reports."      |
+| Second window: **Chat settings** → switch off "Show the people I talk with when I am active". | In the first window the dot beside Ruth is gone after reopening the conversation.                 | "Each member decides whether colleagues see when they are around."                               |
+| As `admin@demo.test`: **חדרי צ׳אט** → open "ועדת הכנס".                                       | The room is marked "בהזמנה"; the tick box that makes a room by invitation.                        | "A room for a committee: it is not in the list of rooms, and its moderators invite the members." |
+
+The seed has no sample video. To show one, attach any short MP4 from the computer (not of a person).
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).
@@ -180,4 +199,4 @@ The seed also leaves a message removed by a moderator and one person banned for 
 
 ## What not to promise
 
-See [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). In short: this is a demo on one computer with fictional data. There is no payment, no CME tracking, no mobile app yet, chat (private and rooms) carries text only and is not end-to-end encrypted, and nothing has been through a legal or security review for real members' data.
+See [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). In short: this is a demo on one computer with fictional data. There is no payment, no CME tracking, no mobile app yet, chat is not end-to-end encrypted and its files have not been through the legal review, and nothing has been through a legal or security review for real members' data.

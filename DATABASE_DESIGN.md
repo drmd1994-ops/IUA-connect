@@ -218,4 +218,22 @@ A room is a row of `conversations` with kind `ROOM`. Two migrations, additions o
 | `message_pins`                                      | A pinned message. A trigger refuses a sixth pin in a room                                                                                                                                                     |
 | `conversation_bans`                                 | A person banned from one room: by whom, why, from when until when, and who lifted it                                                                                                                          |
 
-Rooms are archived, never deleted. Attachments and online status have no tables yet (M13).
+Rooms are archived, never deleted.
+
+**Groups, invitations, activity and files in messages (M13)**
+
+Three migrations, additions only, except that two check constraints are replaced by wider ones (below). New enum values (`GROUP`, the member role `ADMIN`, the file kind `VIDEO`, the file purpose `CHAT`) are in a migration of their own.
+
+| Table or columns                              | What it holds                                                                                                                                                                                              |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `conversations` (kind `GROUP`, `invite_only`) | A group is a conversation of kind `GROUP`: one name (kept in `name_he`), who made it, `member_count`. `invite_only` marks a room that is joined by invitation and never listed                              |
+| `conversation_members` (`ADMIN`, `pinned_at`) | A group's admin; and a conversation pinned to the top of that person's list. A trigger refuses a sixth pin                                                                                                 |
+| `conversation_invitations`                    | An invitation to a group or a room: who, by whom, until when, and how it ended (accepted, declined, withdrawn, expired). One open invitation per person per conversation (a partial unique index)           |
+| `chat_preferences` (three columns)            | `invites_from` (who may invite me), `show_activity`, and `last_active_at`: one time per person, written at most every ten minutes and when their last chat page closes. **"Online" is not stored**          |
+| `messages.forwarded`                          | A copy of a message from elsewhere. Nothing records where it came from                                                                                                                                     |
+| `message_attachments`                         | Message, file, position (0 to 2). A forwarded message points at the same stored file, so a file is erased when its last attachment goes                                                                    |
+
+**Two rules that were widened:**
+
+- `conversations_room_fields` now knows three kinds: a room, a group (a name, no pair, none of a room's settings), and a direct conversation.
+- `messages_text` said that a message that is not deleted has text. A message may now be files without a text, so the database keeps only the other half (a deleted message has no text); the API checks that a message has a text or a file.
