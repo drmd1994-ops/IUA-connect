@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M14, the mobile app: all the screens of part 1 are built on the branch `feat/mobile-screens`; almost none of them has been seen on a phone yet)_
+_Last updated: 2026-10-05 (M14 and M15, the mobile app: the members' and visitors' parts of the site are built into the app on the branch `feat/mobile-screens`; almost none of it has been seen on a phone yet; the admin area stays on the site)_
 
 ## Summary
 
@@ -829,7 +829,7 @@ No new libraries.
 
 Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved by the owner on 2026-10-05 with the answers in its §11: a demo app on the owner's own phone (Android 16), seen through Expo Go; no push notifications in part 1; fingerprint or face when the app opens; the screens in the plan's order; signed in as long as on the web.
 
-**This section is a running record; the milestone is not finished.** Every screen of part 1 is built (checkpoints 2 to 10). What is left is checkpoint 12: the checklist on a real phone (`docs/demo/MOBILE_CHECKLIST.md`), what it turns up, and the demo. Checkpoints 2 to 4 are in pull request #20 (green, not merged); 5 to 10 are on the branch `feat/mobile-screens`, which is not pushed.
+**This section is a running record; the milestone is not finished.** Every screen of part 1 is built (checkpoints 2 to 10). What is left is checkpoint 12: the checklist on a real phone (`docs/demo/MOBILE_CHECKLIST.md`), what it turns up, and the demo. Checkpoints 2 to 4 were merged on 2026-10-05 (pull request #20); 5 to 10 are on the branch `feat/mobile-screens`, which is not pushed, together with M15 below.
 
 ### Built so far
 
@@ -882,8 +882,52 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 ### Open for the owner
 
 1. **The checklist on the phone:** `docs/demo/MOBILE_CHECKLIST.md`, with a second person on the site for the chat part. Tell Claude what does not work; expect a list.
-2. **Pull request #20** (the first part of the app) waits for "merge PR 20". The rest follows as a second pull request once the checklist was gone through.
+2. **Pull request #19** (the plan alone) is now redundant, since #20 was merged with the same commits; it waits for "close PR 19". The branch `feat/mobile-screens` needs rebasing onto `main` before it can become a pull request.
 3. **An .apk:** still wanted? It needs the decisions asked on 2026-10-05 (how it is built, and a fixed address for the server).
+
+## M15 Mobile app, part 2: the rest of the site, without the admin area (in progress, started 2026-10-05)
+
+Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-everything.md), approved by the owner on 2026-10-05 with "1.b 2.approved 3.as proposed": the members' and visitors' parts, the three new libraries, the proposed order; **the admin area stays on the site.**
+
+**This section is a running record; the milestone is not finished.** Steps 1 to 6 are built. Step 10 (component tests, the checklist on a phone, the demo) is not.
+
+### Built so far
+
+- **Education and exams** (step 1): the library with its filters, an item with its link, files, references and a course's lessons; exam practice one question at a time with the explanation of every option; "my results".
+- **Guidelines, the member directory, search** (step 2): the lists with their filters; a guideline with its versions; a member's page with "write to this member"; one search whose results open inside the app.
+- **The account** (step 3): the profile (every field, the photo, who may see each field, the choice to be listed in the directory); the membership and its history; account security (the authenticator, recovery codes, changing the password, the sessions, and "confirm it's you" before a sensitive change); the accessibility statement; a message from the association, opened from its notice.
+- **The rest of chat** (step 4): searching messages in one thread or in all, and opening a thread at the message found; "active now" under a person's name; copying a message's text; invitations still waiting, and taking one back; inviting to a room by invitation.
+- **The camera and files** (step 5): scanning the code shown at an event's venue records attendance; scanning a membership card's code checks it; "Add to my calendar" for every event and for "my schedule".
+- **Visitors** (step 6): without signing in, the pages open to everyone; a forgotten password; opening an account. Signed in: applying for membership, the applications made, withdrawing one.
+- **Where things are:** Home has a "More" card (scan a code, education, exam practice, guidelines, the directory, search); "Me" has the card, profile, membership, application, security, notification and chat settings, and the accessibility statement.
+
+### Verified
+
+- 79 tests of the app's rules pass (16 new in M15: the states of exam practice; which parts of a profile were changed; where a notice or a search result leads; what a scanned code means, including that a code that is not IUA Connect's is not followed; a message's "copy").
+- The app type-checks, lints, and **the whole of it builds for Android** (`expo export`).
+- **A test caught a real mistake before anyone saw it:** the address of exam practice on the site was read as the address of an education item.
+
+### Not verified
+
+- **Nothing of M15 has been seen on a phone, and nothing of it was exercised against a server.** The screens were written against the API's typed shapes and they compile. The first run will turn up mistakes; `docs/demo/MOBILE_CHECKLIST.md` has the lines to go through.
+- **In particular, never tried:** the camera reading a code; saving a calendar file and the phone offering a calendar app; the authenticator opening from the app; the photo upload; "confirm it's you"; moving between a visitor's pages and signing in from there.
+- **The integration and browser suites were not run in this session** after the chat rules moved packages (M14). The site type-checks and the unit tests of all packages pass; CI runs the rest when the branch is pushed.
+
+### Deviations and findings
+
+- **Joining has no documents.** The plan said "the application, with documents picked from the phone". The site's application has none: a membership type, a hospital and department, and for some types a licence or certificate number. The app has the same.
+- **Verifying an email address and choosing a new password after "forgot password" stay on the site.** Both open from a link in an email, and a link in an email opens the site. The app says so. Making such a link open the app needs the site to have real hosting with its own address, like passkeys.
+- **Languages in the profile are named by the app's own texts** (twelve names in Hebrew and English were added). The site asks the browser for them, and the phone's engine can't be asked.
+- **Setting up the authenticator shows no code to scan,** because the authenticator app is on the same phone. The app offers to open it, and shows the key to type.
+- **Recovery codes can be copied, not downloaded as a file.**
+- **Lists with many choices** (hospitals, departments) are a row that scrolls sideways, as everywhere in the app. With many hospitals this is slow to use; a searchable list would be better.
+- **The plan's step 10 is not done:** no component tests were written (the plan promised them for the screens of both parts, with the libraries approved in M14 §6), and the demo has not happened.
+- **Four packages were installed for the "three libraries" approved:** the camera, the clipboard, and the pair for files (saving and sharing), as the plan's table listed them. The project's own install rules let all four through.
+
+### Open for the owner
+
+1. **Go through the checklist on the phone** (`docs/demo/MOBILE_CHECKLIST.md`) and tell Claude what does not work.
+2. **Component tests:** still wanted before this is called finished? They are in the approved plan and not written.
 
 ## Next step
 
@@ -897,6 +941,6 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 **M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner marked its checkpoint test as good the same day, and read the Hebrew texts of M12 and M13.
 
-**M14 (the mobile app, part 1)** is in progress: see its section above. All of its screens are built; the checklist on a real phone and the demo are left.
+**M14 (the mobile app, part 1)** and **M15 (part 2: the rest of the site, without the admin area)** are in progress: see their sections above. Their screens are built; the checklist on a real phone, component tests and the demo are left.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
