@@ -215,3 +215,7 @@ Asked for by the owner on 2026-10-05 ("make a tunnel"), after the phone could no
 - **What it means for safety.** While the tunnel runs, anyone who has the address can reach the demo server from the internet and sign in with a demo account. The address is long and not listed anywhere, the repository with the demo password is private, and the server holds fictional people only. The tunnel is stopped when the demo is not being shown. This is never how real members' data would be served.
 - **What does not change.** No code of the server. The app's code changes only in where its `.env` points, which is not committed.
 - **Replaces** the risk line "The demo server is this computer: the app works only on the same Wi-Fi".
+
+## 13. What came after
+
+On 2026-10-05 the owner asked for everything the site shows to be in the app. That is its own plan: [`M15-mobile-app-everything.md`](M15-mobile-app-everything.md), proposed and waiting for approval. Part 1 stays as described here, with one change the owner asked for on the same day: the membership card is not a tab, it opens from "Me" and from Home.
