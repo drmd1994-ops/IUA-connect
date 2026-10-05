@@ -42,6 +42,11 @@ export function MeScreen() {
           variant="secondary"
           onPress={() => router.push('/notifications/settings')}
         />
+        <Button
+          label={all('chat.list.settings')}
+          variant="secondary"
+          onPress={() => router.push('/chat-settings')}
+        />
       </Card>
       <LanguageChoice />
 

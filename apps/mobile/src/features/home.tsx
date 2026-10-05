@@ -30,13 +30,13 @@ export function Home() {
     Promise.all([
       request<Me>('/api/v1/me'),
       request<MyMembership>('/api/v1/me/membership'),
-      request<{ count: number }>('/api/v1/notifications/unread-count'),
+      request<{ unread: number }>('/api/v1/notifications/unread-count'),
     ])
       .then(([who, membership, notices]) => {
         if (!active) return;
         setMe(who);
         setMine(membership);
-        setUnread(notices.count);
+        setUnread(notices.unread);
       })
       .catch((caught: unknown) => active && setError(caught));
     return () => {
@@ -80,8 +80,6 @@ export function Home() {
           />
         </Card>
       )}
-
-      <Notice>{t('soon')}</Notice>
     </Screen>
   );
 }

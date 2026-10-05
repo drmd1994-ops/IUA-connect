@@ -2,13 +2,17 @@
   "name": "@iua/api-client",
   "version": "0.0.0",
   "private": true,
-  "description": "Typed API client generated from the API's OpenAPI document. Do not hand-write request types.",
+  "description": "Typed API client generated from the API's OpenAPI document, and the chat rules the site and the app share. Do not hand-write request types.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./chat": {
+      "types": "./dist/chat-model.d.ts",
+      "default": "./dist/chat-model.js"
     }
   },
   "files": [

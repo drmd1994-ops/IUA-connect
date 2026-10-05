@@ -66,9 +66,14 @@ The site is not behind the tunnel, so the card's code can't be checked from a se
 
 - **Sign in,** close the app completely, and open it again: you should still be signed in, after the phone's fingerprint or face check.
 - **Change the language** to English and back. The text changes at once; the direction of the page changes after the app is closed and opened again.
-- **The "Card" tab:** your membership card with its code. On a second device, scan the code: the site's verification page should say the membership is valid. Then switch the phone to flight mode and open the tab again: the card is shown as it last was, with its date and without a code.
+- **"Me" → "My membership card":** your membership card with its code. On a second device, scan the code: the site's verification page should say the membership is valid. Then switch the phone to flight mode and open the tab again: the card is shown as it last was, with its date and without a code.
 - **The "News" tab:** the list; choose a category; "Show more" at the end; open an item with a picture; open one of its files (it opens in the phone's browser); the back link returns to the list. In Hebrew and in English.
 - **The "Events" tab:** upcoming and past; open "Workshop with limited places (demo)" or another event; "Register", then tick sessions and "Save my schedule"; "View my schedule"; "Cancel my registration". On the site, as the same person, the registration shows too.
+- **Home → "Open notifications",** and "Me" → "Notification settings".
+- **The "Chat" tab,** with a second person signed in on the site: write both ways, send a picture, make a group, join a room.
+
+The full list, to go through line by line, is `docs/demo/MOBILE_CHECKLIST.md`.
+
 - **"Me" → "Connection check" → "Start the check".** It says whether live updates (which chat uses) arrive on your phone. It can take up to thirty seconds. Tell Claude what it says, including the "details for the developer" line.
 - **On the site,** as the same person: **Account → Security**. The phone is listed among your sessions, by its name. Ending it there signs the app out.
 
@@ -88,4 +93,6 @@ The site is not behind the tunnel, so the card's code can't be checked from a se
 - The refresh token is kept only in the phone's secure storage (`src/session/`). Nothing else may store it; a test fails if it is written anywhere else.
 - Texts come from `packages/i18n` (the group `mobile` holds what only the app shows). No text is written into the code.
 - Colours and sizes come from `packages/ui-tokens`.
+- The chat rules both front ends share come from `@iua/api-client/chat`; what only the app decides is in `src/chat/model.ts`.
+- One stream of live chat events serves the whole app (`src/chat/events.tsx`); it closes when the app goes to the background.
 - Passkeys don't work in the app: they need a site with real hosting and its own address.

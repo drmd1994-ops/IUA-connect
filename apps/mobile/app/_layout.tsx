@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslations } from 'use-intl';
+import { ChatEventsProvider } from '@/chat/events';
 import { API_URL } from '@/config';
 import { LanguageChoice } from '@/features/language-choice';
 import { SignIn } from '@/features/sign-in';
@@ -35,7 +36,13 @@ function Gate() {
   const { session, status } = useSession();
 
   // The tabs, and over them the screens opened from a tab; the phone's back button returns.
-  if (status === 'signedIn') return <Stack screenOptions={{ headerShown: false }} />;
+  if (status === 'signedIn') {
+    return (
+      <ChatEventsProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+      </ChatEventsProvider>
+    );
+  }
   if (status === 'signedOut') return <SignIn />;
   if (status === 'unreachable') {
     return (

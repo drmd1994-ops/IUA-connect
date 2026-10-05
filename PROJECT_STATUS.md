@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M12 and M13 merged and checked by the owner; the plan for the mobile app, M14, is written and waits for approval)_
+_Last updated: 2026-10-05 (M14, the mobile app: all the screens of part 1 are built on the branch `feat/mobile-screens`; almost none of them has been seen on a phone yet)_
 
 ## Summary
 
@@ -829,7 +829,7 @@ No new libraries.
 
 Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved by the owner on 2026-10-05 with the answers in its §11: a demo app on the owner's own phone (Android 16), seen through Expo Go; no push notifications in part 1; fingerprint or face when the app opens; the screens in the plan's order; signed in as long as on the web.
 
-**This section is a running record; the milestone is not finished.** Twelve checkpoints are planned; 2, 3 and 4 are built.
+**This section is a running record; the milestone is not finished.** Every screen of part 1 is built (checkpoints 2 to 10). What is left is checkpoint 12: the checklist on a real phone (`docs/demo/MOBILE_CHECKLIST.md`), what it turns up, and the demo. Checkpoints 2 to 4 are in pull request #20 (green, not merged); 5 to 10 are on the branch `feat/mobile-screens`, which is not pushed.
 
 ### Built so far
 
@@ -840,18 +840,24 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **Home and the membership card** (checkpoint 5, on the branch `feat/mobile-screens`, not in a pull request yet): three tabs (Home, Card, Me). Home shows who is signed in, the state of the membership and the number of unread notifications. The card shows the member's name, the kind of membership, until when, and the code that the site's verification page checks, renewed every four minutes. **Without a connection the card is shown as it last was, with its date and without a code,** because a kept code would be refused: the plan said "readable without a connection", and this is what that can honestly mean.
 - **News** (checkpoint 6, same branch): a fourth tab. The list with a category choice and "Show more"; an item with its picture, text, files and references. Member-only items are shown as the API allows, as on the site. A file or a link opens in the phone's browser. The text of an item is drawn by a small reader written for the app (headings, paragraphs, lists, quotes, code, bold, italics, links); the site uses a library for this, and no library was added to the app.
 - **Events** (checkpoint 7, same branch): a fifth tab. The list (upcoming or past, a category, "Show more"); an event with when and where, a map link, its text, registration (register, the waiting list, cancel), and the programme with speakers and materials; choosing sessions and saving them; "My schedule". Times are written in the event's own time zone.
+- **Notifications** (checkpoint 8): the list, opened from Home; "read" and "read all"; the switches per kind, the same ones as the site. A notice about news or an event opens it inside the app; one about something the app does not have says it opens on the website.
+- **Chat** (checkpoints 9 and 10): a Chat tab with the number of conversations that hold something unread. Private conversations, groups and rooms on one screen: reading and writing, live; replying, editing, deleting for everyone or for oneself; the six reactions; mentions in groups and rooms; forwarding; reporting a message, a person or a room; blocking; muting, pinning, marking unread, archiving. Files: a picture or a video from the phone, a picture from the camera, a PDF; pictures show in the message, other files open in the phone's browser. Starting a conversation, making a group and inviting to it, invitations (accept, decline, decline and block), browsing and joining rooms, chat settings and the list of blocked people. For whoever runs a group: rename, invite, remove, hand over. For a room's moderator: pin, remove a message, remove or ban its writer, lock and unlock, the list of bans. Announcements by a moderator.
+- **The chat rules are shared with the site,** as the plan said: the module moved from the web app into the API client package (`@iua/api-client/chat`) with its 28 tests, and the site now reads it from there. Nothing in the site's behaviour changed.
+- **The tabs are Home, News, Events, Chat, Me.** At the owner's request (2026-10-05) the membership card is not a tab: it opens from "Me" and from Home.
 
 ### Verified
 
 - 54 sign-in integration tests pass (7 new); **the existing web sign-in suites pass unchanged.**
-- 44 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again; the kept card; the reader of an item's text, including that a link is made only of a web or mail address and that HTML stays plain text; file addresses and sizes; what the registration panel says and offers in each state; grouping sessions by day; writing a time range).
+- 60 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again; the kept card; the reader of an item's text; file addresses and sizes; the registration panel in each state; where a notice leads; what may be done with a message, including that only a room's moderator gets the moderation tools; which files chat carries; the days of a ban; cutting the live stream into events).
 - **On the owner's phone (Android 16, Expo Go, through the tunnel), reported by the owner on 2026-10-05:** the app opens; the connection check says "live updates arrive on this phone"; the page changes sides when the language is changed.
-- The app's server builds the app with the News and Events screens, and the demo server answers the requests their lists make. **Registering, cancelling and saving a schedule from the app were not tried by anyone;** the server's side of them is covered by the existing integration tests.
-- The app type-checks, lints, and **bundles for Android**. The repository's format check, lint, type check and unit tests pass with the app included.
+- The whole app builds for Android (`expo export`), and the app's server serves it through the tunnel. The demo server answers the list requests of News and Events. **Nothing else was exercised against a server from the app:** no registration, no notice, no message.
+- The repository's format check, lint, type check and unit tests pass with the app included (12 packages). **The integration and browser suites were not run again** after the chat rules moved packages; the site type-checks and its unit tests pass, and CI runs the rest when the branch is pushed.
 
 ### Not verified
 
-- **The News and Events screens have not been seen on a phone.** Nobody has looked at a list, an item or an event there, in either language, or pressed "Register".
+- **No screen built after sign-in has been seen on a phone:** not the card where it is now, News, Events, Notifications or Chat. They were written against the API's typed shapes and they compile; that is all that is known. The first run on the phone will turn up mistakes, and `docs/demo/MOBILE_CHECKLIST.md` is the list to go through.
+- **In particular, never tried:** the keyboard over the box where a message is written; choosing a file, the camera and the upload; the live stream closing in the background and reopening; the list keeping its place when earlier messages are added; right-to-left layout of a conversation; TalkBack; the largest text size.
+- **The app has no component tests.** The plan listed them (`jest-expo`, the React Native testing library): every screen rendering in both languages with a name on every control. They were not written. The rules behind the screens are tested; the screens themselves are not.
 - **Of the first test on the phone, these were not reported:** staying signed in after the app is closed, the fingerprint or face check, the card and its code, and the phone showing among the sessions on the site. Whether the change of direction needed the app closed and opened was not said either.
 - Nothing was tried on an iPhone, and nothing will be in part 1.
 
@@ -862,7 +868,10 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **Two of the project's own supply-chain rules blocked installs, and were not bypassed.** The 7-day rule: a batch of Expo libraries was 6 days old, so the release before it was installed for each. The trust check refused a sub-dependency of `expo-device`, so that library was left out; the phone's name comes from Android itself.
 - **The app's rules are tested with the same test runner as the other packages,** not with the phone-component test tools the plan listed (`jest-expo`, the React Native testing library). Those are still to be added for the screens.
 - **Passkeys don't work in the app,** as the plan said; the sign-in screen says so.
-- **The card has a tab of its own** (Home, Card, News, Events, Me). The plan listed Home, News, Events, Chat, Me, with the card under Home. Five tabs is the most that fits; when Chat arrives, the card moves under Home.
+- **Not in the app's chat, though the site has it:** searching messages and jumping to an old message; the "active now" marks; copying a message's text with a button (the text can be selected); the list of invitations still waiting for an answer, and taking one back; inviting to a room by invitation; a video playing inside the app (it opens in the phone's browser). Each is on the site.
+- **The conversations list shows the newest fifty,** and so does each rooms list; there is no "Show more" there yet.
+- **A bug of checkpoint 5 was found and fixed:** Home read the number of unread notifications from the wrong field, so it would not have shown the number. Nobody had reported it; it was found when the notifications screen was written.
+- **The camera and the photo library** are asked for only when the member presses "Camera" or "Photo or video", and only for what they pick, as the plan said. For an .apk the permission texts still have to be added to the app's configuration.
 - **There is no ticket code for the door,** though the plan listed one. The project has no such code: attendance is recorded when a member scans the code shown at the venue (M5), which opens the site. The app says so to a registered member. Scanning inside the app would need the camera and a new library, and was not added.
 - **"Add to my calendar" is offered in the app only for an event open to everyone.** The calendar file of a members-only event, and of "My schedule", needs the session, which a browser opened from the app does not have; the app says the file is on the website. Offering it in the app would need a library for saving and sharing files.
 - **How a time range is written was made by hand** (a day, then two times), because not every phone has the browser's range formatting.
@@ -872,8 +881,9 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 ### Open for the owner
 
-1. **The News and Events tabs on the phone** (`apps/mobile/README.md`): the lists, an item with a picture and a file; an event, "Register" and "Cancel my registration", choosing sessions, "My schedule".
-2. **The rest of the first test:** close the app and open it again (still signed in, after the fingerprint or face check); the card and its code.
+1. **The checklist on the phone:** `docs/demo/MOBILE_CHECKLIST.md`, with a second person on the site for the chat part. Tell Claude what does not work; expect a list.
+2. **Pull request #20** (the first part of the app) waits for "merge PR 20". The rest follows as a second pull request once the checklist was gone through.
+3. **An .apk:** still wanted? It needs the decisions asked on 2026-10-05 (how it is built, and a fixed address for the server).
 
 ## Next step
 
@@ -887,6 +897,6 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 **M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner marked its checkpoint test as good the same day, and read the Hebrew texts of M12 and M13.
 
-**M14 (the mobile app, part 1)** has a written plan, [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), asked for by the owner on 2026-10-05. **It is not approved yet: no app code is written and nothing is installed.** What the plan found: the server needs a second way to sign in that suits an app (today the long-lived part of a session travels only in a browser cookie); passkeys can't work in an app until the site has real hosting with an address; this computer has no mobile tools, and an iPhone app can't be built on Windows.
+**M14 (the mobile app, part 1)** is in progress: see its section above. All of its screens are built; the checklist on a real phone and the demo are left.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

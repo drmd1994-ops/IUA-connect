@@ -26,7 +26,6 @@
     "title": "IUA Connect",
     "signedInAs": "Signed in as {email}",
     "staffNote": "You have a staff role. The admin area is on the website; the app is for members’ everyday use.",
-    "soon": "The app is being built step by step. Notifications and chat are not in it yet; they are on the website.",
     "membership": "Your membership",
     "active": "Active until {date}",
     "suspended": "Your membership is suspended.",
@@ -70,6 +69,7 @@
     "home": "Home",
     "news": "News",
     "events": "Events",
+    "chat": "Chat",
     "me": "Me"
   },
   "card": {
@@ -91,6 +91,12 @@
   },
   "notices": {
     "onSite": "This one opens on the website."
+  },
+  "chat": {
+    "pickPhoto": "Photo or video",
+    "pickCamera": "Camera",
+    "pickPdf": "PDF",
+    "noCamera": "The app may not use the camera. You can allow it in the phone’s settings."
   },
   "me": {
     "title": "Me",
