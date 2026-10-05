@@ -139,6 +139,25 @@ Two windows: `member.full@demo.test` in the first, and in a private window `memb
 
 The seed leaves one report waiting (a sample advertisement, between two other demo members). `pnpm demo:reset` puts everything back.
 
+### 9. Chat rooms (3 minutes, optional; added in M12)
+
+The same two windows, with `member.resident@demo.test` in the private window this time. Noa Bar-Lev (`member.full`) is the moderator of three demo rooms.
+
+| Do                                                                                         | The audience sees                                                                             | Say                                                                                           |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| First window: **צ׳אט** → **חדרים**.                                                        | The rooms Noa is in: כללי, הודעות האיגוד, שאלות ותשובות, דיון מקצועי, with unread numbers.    | "Rooms the association opened for its members. A member sees the rooms she joined."           |
+| **כל החדרים** → **הצטרפות** beside "מתמחים".                                               | A short notice: the people in the room will see your name. Then the room opens.               | "Every active member can join. She is told first that her name will be seen."                 |
+| Second window: **Chat** → **Rooms** → **Residents**. First window: write a message, Enter. | The message appears in the second window by itself, under Noa's name.                         | "Live, as in private chat, for everyone in the room."                                         |
+| Second window: the three dots beside the message → 👍.                                     | The reaction appears under the message in both windows.                                       | "Six reactions. No free emoji, on purpose."                                                   |
+| First window: type `@Yo`, choose the name offered, finish the message, Enter.              | The name stands out in the message; the second window's bell gets a number.                   | "A mention reaches the person under the bell, wherever they are on the site."                 |
+| First window: open **הודעות האיגוד**.                                                      | Two pinned messages at the top; one marked "הודעה חשובה". Noa, as a moderator, can write.     | "An announcements room: only moderators write. Important messages stay pinned at the top."    |
+| First window: open **כללי** → the three dots beside a message.                             | Besides the usual actions: pin, remove, remove the writer, ban the writer.                    | "A moderator keeps order in her own rooms only. Every such action is recorded with a reason." |
+| **פרטים** → **נעילת החדר**. Look at the second window (open "General" there).              | The message box in the second window is replaced by "מנהל/ת החדר נעל/ה אותו…". Unlock it.     | "A room can be locked for an hour, a day, or until it is opened again."                       |
+| As `admin@demo.test`: **חדרי צ׳אט**.                                                       | The six rooms, their moderators and number of people; "פתיחת חדר"; categories and reasons.    | "Staff open rooms and appoint moderators. Nothing here needs a developer."                    |
+| **דיווחי צ׳אט** → the report marked "בחדר דיון מקצועי".                                    | The reported message and the ones around it; the decision now also offers archiving the room. | "A report from a room shows the same thing: that message and its neighbours."                 |
+
+The seed also leaves a message removed by a moderator and one person banned for a week in "שאלות ותשובות" (open **פרטים** there as Noa to see the ban).
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).
@@ -161,4 +180,4 @@ The seed leaves one report waiting (a sample advertisement, between two other de
 
 ## What not to promise
 
-See [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). In short: this is a demo on one computer with fictional data. There is no payment, no CME tracking, no mobile app yet, chat is private one-to-one only and not end-to-end encrypted, and nothing has been through a legal or security review for real members' data.
+See [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). In short: this is a demo on one computer with fictional data. There is no payment, no CME tracking, no mobile app yet, chat (private and rooms) carries text only and is not end-to-end encrypted, and nothing has been through a legal or security review for real members' data.

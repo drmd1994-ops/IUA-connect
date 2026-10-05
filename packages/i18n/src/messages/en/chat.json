@@ -169,7 +169,8 @@
     "actions": {
       "NONE": "No action",
       "MESSAGE_DELETED": "Message deleted",
-      "SUSPENDED": "Person suspended from chat"
+      "SUSPENDED": "Person suspended from chat",
+      "ROOM_ARCHIVED": "Room archived"
     },
     "empty": "No reports match.",
     "total": "{total, plural, one {# report} other {# reports}}",
@@ -181,6 +182,8 @@
     "colCreated": "Sent",
     "aboutMessage": "A message",
     "aboutPerson": "A person",
+    "aboutRoom": "A room",
+    "inRoom": "In the room {name}",
     "unknownPerson": "Deleted account",
     "open": "Open the report",
     "back": "Back to the reports",
@@ -196,6 +199,11 @@
       "account": "Open the account",
       "suspendedNow": "This person is suspended from chat now.",
       "decision": "Decision",
+      "room": "Room",
+      "aboutRoom": "This report is about the room as such. It carries no messages; open the room to see it.",
+      "archiveRoom": "Archive the room",
+      "openRoom": "Open the room",
+      "deleteRoomMessage": "Remove the reported message from the room",
       "dismiss": "Dismiss: nothing to do",
       "deleteMessage": "Delete the reported message for both people",
       "suspend": "Suspend the reported person from sending in chat",

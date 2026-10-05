@@ -11,6 +11,7 @@ import enDirectory from './messages/en/directory.json';
 import enMembership from './messages/en/membership.json';
 import enNotifications from './messages/en/notifications.json';
 import enPortal from './messages/en/portal.json';
+import enRooms from './messages/en/rooms.json';
 import enSearch from './messages/en/search.json';
 import heAdmin from './messages/he/admin.json';
 import heAuth from './messages/he/auth.json';
@@ -25,6 +26,7 @@ import heDirectory from './messages/he/directory.json';
 import heMembership from './messages/he/membership.json';
 import heNotifications from './messages/he/notifications.json';
 import hePortal from './messages/he/portal.json';
+import heRooms from './messages/he/rooms.json';
 import heSearch from './messages/he/search.json';
 
 /**
@@ -61,6 +63,7 @@ export type Messages = {
   directory: typeof heDirectory;
   search: typeof heSearch;
   chat: typeof heChat;
+  rooms: typeof heRooms;
   portal: typeof hePortal;
 };
 
@@ -79,6 +82,7 @@ const MESSAGES: Record<Locale, Messages> = {
     directory: heDirectory,
     search: heSearch,
     chat: heChat,
+    rooms: heRooms,
     portal: hePortal,
   },
   en: {
@@ -95,6 +99,7 @@ const MESSAGES: Record<Locale, Messages> = {
     directory: enDirectory,
     search: enSearch,
     chat: enChat,
+    rooms: enRooms,
     portal: enPortal,
   },
 };

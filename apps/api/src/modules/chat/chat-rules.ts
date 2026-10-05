@@ -11,6 +11,65 @@ export const PREVIEW_LENGTH = 160;
 export const MESSAGES_PAGE_SIZE = 50;
 export const CONVERSATIONS_PAGE_SIZE = 30;
 
+/** The fixed set of reactions, in the order they are shown (M12 plan, owner answer 5). */
+export const REACTIONS = ['like', 'heart', 'laugh', 'wow', 'thanks', 'check'] as const;
+export type Reaction = (typeof REACTIONS)[number];
+
+/** A room holds at most this many pinned messages, and a message this many mentions. */
+export const MAX_PINS = 5;
+export const MAX_MENTIONS = 10;
+export const ROOMS_PAGE_SIZE = 30;
+export const ROOM_MEMBERS_PAGE_SIZE = 50;
+
+/** A lock with a time that has passed is no lock. */
+export function lockActive(
+  room: { locked: boolean; lockedUntil: Date | null },
+  now = new Date(),
+): boolean {
+  return room.locked && (room.lockedUntil === null || room.lockedUntil > now);
+}
+
+export interface RoomWriter {
+  /** Has an active membership of the association. */
+  activeMember: boolean;
+  /** Suspended from chat by staff. */
+  suspended: boolean;
+  /** In the room, and as what. Null when not in it. */
+  role: 'MEMBER' | 'MODERATOR' | null;
+}
+
+export const ROOM_SEND_STATES = [
+  'none',
+  'notJoined',
+  'membersOnly',
+  'suspended',
+  'archived',
+  'locked',
+  'moderatorsOnly',
+] as const;
+export type RoomSendState = (typeof ROOM_SEND_STATES)[number];
+
+/** Whether a person can write in a room, and if not, why (M12 plan §3). */
+export function roomSendState(
+  room: {
+    archivedAt: Date | null;
+    locked: boolean;
+    lockedUntil: Date | null;
+    moderatorsOnly: boolean;
+  },
+  writer: RoomWriter,
+  now = new Date(),
+): RoomSendState {
+  if (room.archivedAt) return 'archived';
+  if (writer.role === null) return 'notJoined';
+  if (!writer.activeMember) return 'membersOnly';
+  if (writer.suspended) return 'suspended';
+  if (writer.role === 'MODERATOR') return 'none';
+  if (lockActive(room, now)) return 'locked';
+  if (room.moderatorsOnly) return 'moderatorsOnly';
+  return 'none';
+}
+
 export const MUTE_CHOICES = ['off', '8h', 'week', 'forever'] as const;
 export type MuteChoice = (typeof MUTE_CHOICES)[number];
 

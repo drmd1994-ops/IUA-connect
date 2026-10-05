@@ -46,6 +46,7 @@ const REPORT_SELECT = {
   resolution: true,
   createdAt: true,
   category: { select: { key: true, nameHe: true, nameEn: true } },
+  conversation: { select: { id: true, kind: true, nameHe: true, nameEn: true } },
 } satisfies Prisma.ChatReportSelect;
 type ReportRow = Prisma.ChatReportGetPayload<{ select: typeof REPORT_SELECT }>;
 
@@ -120,7 +121,7 @@ export class ChatReportsService implements OnModuleInit {
       ]);
     }
 
-    let reportedUserId: string;
+    let reportedUserId: string | null;
     let conversationId: string;
     let snapshot: SnapshotMessage[] | null = null;
     if (input.messageId) {
@@ -152,6 +153,18 @@ export class ChatReportsService implements OnModuleInit {
         createdAt: row.createdAt.toISOString(),
         reported: row.seq === message.seq,
       }));
+    } else if (input.roomId) {
+      // A room as such: by someone who may see rooms. Nobody in particular is reported.
+      const room = await this.prisma.conversation.findFirst({
+        where: { id: input.roomId, kind: 'ROOM', archivedAt: null },
+        select: { id: true, members: { where: { userId: me }, select: { userId: true } } },
+      });
+      if (!room) throw new AppException('NOT_FOUND');
+      if (room.members.length === 0 && !(await this.access.isActiveMember(principal))) {
+        throw new AppException('NOT_FOUND');
+      }
+      reportedUserId = null;
+      conversationId = room.id;
     } else {
       const userId = input.userId!;
       const shared = await this.prisma.conversation.findFirst({
@@ -170,6 +183,7 @@ export class ChatReportsService implements OnModuleInit {
         reporterId: me,
         reportedUserId,
         messageId: input.messageId ?? null,
+        ...(input.roomId ? { conversationId } : {}),
         status: 'OPEN',
       },
       select: { id: true },
@@ -196,7 +210,10 @@ export class ChatReportsService implements OnModuleInit {
       actorIp: meta.ip,
       entityType: 'chat_report',
       entityId: id,
-      changes: { aboutMessage: input.messageId !== undefined },
+      changes: {
+        aboutMessage: input.messageId !== undefined,
+        aboutRoom: input.roomId !== undefined,
+      },
     });
     return { id, created: true };
   }
@@ -265,6 +282,13 @@ export class ChatReportsService implements OnModuleInit {
     if (input.decision === 'suspend' && !row.reportedUserId) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatReportNoPerson' }]);
     }
+    if (input.decision === 'archiveRoom') {
+      if (row.conversation?.kind !== 'ROOM') {
+        throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatReportNoRoom' }]);
+      }
+      // Archiving a room is the room managers' decision, also when it starts from a report.
+      if (!principal.permissions.has('chat.rooms.manage')) throw new AppException('FORBIDDEN');
+    }
 
     // Claimed first, so two reviewers can't both act on it.
     const claimed = await this.prisma.chatReport.updateMany({
@@ -276,7 +300,9 @@ export class ChatReportsService implements OnModuleInit {
             ? 'MESSAGE_DELETED'
             : input.decision === 'suspend'
               ? 'SUSPENDED'
-              : 'NONE',
+              : input.decision === 'archiveRoom'
+                ? 'ROOM_ARCHIVED'
+                : 'NONE',
         reviewedBy: me,
         reviewedAt: new Date(),
         resolution: input.reason,
@@ -284,7 +310,17 @@ export class ChatReportsService implements OnModuleInit {
     });
     if (claimed.count === 0) throw new AppException('CONFLICT', [{ code: 'chatReportClosed' }]);
 
-    if (input.decision === 'deleteMessage') await this.chat.removeAsStaff(row.messageId!);
+    if (input.decision === 'deleteMessage') await this.chat.removeAsStaff(row.messageId!, me);
+    if (input.decision === 'archiveRoom') {
+      await this.prisma.conversation.updateMany({
+        where: { id: row.conversation!.id, archivedAt: null },
+        data: { archivedAt: new Date() },
+      });
+      await this.stream.publishRoom(row.conversation!.id, {
+        type: 'room',
+        conversationId: row.conversation!.id,
+      });
+    }
     if (input.decision === 'suspend') {
       await this.createSuspension(me, row.reportedUserId!, input.reason, input.days ?? null, id);
     }
@@ -466,6 +502,19 @@ function summary(row: ReportRow, cards: Map<string, PersonCard>) {
     reporter: personOf(row.reporterId, cards),
     reported: personOf(row.reportedUserId, cards),
     aboutMessage: row.messageId !== null || Array.isArray(row.snapshot),
+    room:
+      row.conversation?.kind === 'ROOM' && row.conversation.nameHe
+        ? {
+            id: row.conversation.id,
+            nameHe: row.conversation.nameHe,
+            nameEn: row.conversation.nameEn,
+          }
+        : null,
+    aboutRoom:
+      row.conversation?.kind === 'ROOM' &&
+      row.messageId === null &&
+      row.reportedUserId === null &&
+      !Array.isArray(row.snapshot),
     createdAt: row.createdAt.toISOString(),
     reviewedAt: row.reviewedAt?.toISOString() ?? null,
   };

@@ -13,6 +13,8 @@ import { CHAT_CHANGED, type ChatEvent, useChatEvents } from './chat-events';
 import { type Conversation, dayKey } from './chat-model';
 import { Avatar, type Subscribe, usePersonLabel } from './chat-parts';
 import { ConversationView } from './conversation-view';
+import { RoomView } from './room-view';
+import { BrowseRooms, RoomList } from './rooms-list';
 
 /**
  * The Chat section (M11): the reader's conversations on one side and the open conversation
@@ -21,13 +23,31 @@ import { ConversationView } from './conversation-view';
 export function ChatPage({ conversationId }: { conversationId?: string }) {
   return (
     <RequireSignIn>
-      {(me) => <Chat me={me} conversationId={conversationId ?? null} />}
+      {(me) => <Chat me={me} open={{ kind: 'private', id: conversationId ?? null }} />}
     </RequireSignIn>
   );
 }
 
-function Chat({ me, conversationId }: { me: Me; conversationId: string | null }) {
+/** The Rooms side of the Chat section (M12): the reader's rooms, one room, or all the rooms. */
+export function RoomsPage({ roomId, browse }: { roomId?: string; browse?: boolean }) {
+  return (
+    <RequireSignIn>
+      {(me) => (
+        <Chat me={me} open={browse ? { kind: 'browse' } : { kind: 'room', id: roomId ?? null }} />
+      )}
+    </RequireSignIn>
+  );
+}
+
+type Open = { kind: 'private' | 'room'; id: string | null } | { kind: 'browse' };
+
+function Chat({ me, open }: { me: Me; open: Open }) {
   const t = useTranslations('chat');
+  const r = useTranslations('rooms');
+  const rooms = open.kind !== 'private';
+  const openId = open.kind === 'browse' ? null : open.id;
+  /** On a phone the list and what is open are a screen each. */
+  const showsMain = open.kind === 'browse' || openId !== null;
   // One stream for the page; the list and the open conversation both listen to it.
   const listeners = useRef(new Set<(event: ChatEvent) => void>());
   const subscribe = useCallback<Subscribe>((listener) => {
@@ -42,28 +62,49 @@ function Chat({ me, conversationId }: { me: Me; conversationId: string | null })
     }, []),
   );
 
+  const tab = (href: string, current: boolean, text: string) => (
+    <Link
+      href={href}
+      aria-current={current ? 'true' : undefined}
+      className={`flex-1 rounded-md px-3 py-1.5 text-center text-sm font-semibold ${
+        current ? 'bg-brand-50 text-brand-900' : 'text-text-muted hover:text-text'
+      }`}
+    >
+      {text}
+    </Link>
+  );
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
       <div className="grid gap-4 md:grid-cols-[20rem_minmax(0,1fr)]">
         <aside
-          aria-label={t('list.title')}
-          className={`${conversationId ? 'hidden md:flex' : 'flex'} h-[75dvh] min-h-[28rem] min-w-0 flex-col rounded-lg border border-border bg-surface`}
+          aria-label={rooms ? r('list.title') : t('list.title')}
+          className={`${showsMain ? 'hidden md:flex' : 'flex'} h-[75dvh] min-h-[28rem] min-w-0 flex-col rounded-lg border border-border bg-surface`}
         >
-          <ConversationList current={conversationId} subscribe={subscribe} />
+          <nav aria-label={r('tabs.label')} className="flex gap-1 border-b border-border p-2">
+            {tab('/chat', !rooms, r('tabs.private'))}
+            {tab('/chat/rooms', rooms, r('tabs.rooms'))}
+          </nav>
+          {rooms ? (
+            <RoomList current={openId} subscribe={subscribe} />
+          ) : (
+            <ConversationList current={openId} subscribe={subscribe} />
+          )}
         </aside>
         <section
-          aria-label={t('conversation.details')}
-          className={`${conversationId ? 'flex' : 'hidden md:flex'} h-[75dvh] min-h-[28rem] min-w-0 flex-col rounded-lg border border-border bg-surface`}
+          aria-label={rooms ? r('tabs.rooms') : t('conversation.details')}
+          className={`${showsMain ? 'flex' : 'hidden md:flex'} h-[75dvh] min-h-[28rem] min-w-0 flex-col rounded-lg border border-border bg-surface`}
         >
-          {conversationId ? (
-            <ConversationView
-              key={conversationId}
-              id={conversationId}
-              me={me}
-              subscribe={subscribe}
-            />
+          {open.kind === 'browse' ? (
+            <BrowseRooms />
+          ) : open.kind === 'room' && open.id ? (
+            <RoomView key={open.id} id={open.id} me={me} subscribe={subscribe} />
+          ) : open.kind === 'private' && open.id ? (
+            <ConversationView key={open.id} id={open.id} me={me} subscribe={subscribe} />
           ) : (
-            <p className="m-auto max-w-sm p-6 text-center text-text-muted">{t('list.choose')}</p>
+            <p className="m-auto max-w-sm p-6 text-center text-text-muted">
+              {rooms ? r('list.choose') : t('list.choose')}
+            </p>
           )}
         </section>
       </div>

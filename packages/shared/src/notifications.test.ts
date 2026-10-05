@@ -12,11 +12,13 @@ describe('notification settings', () => {
     expect(Object.keys(NOTIFICATION_DEFAULTS).sort()).toEqual([...NOTIFICATION_KINDS].sort());
   });
 
-  it('starts with new-content email off and everything else on', () => {
+  it('starts with email off for new content and for chat rooms, and everything else on', () => {
     for (const kind of NOTIFICATION_KINDS) {
-      const content = (CONTENT_NOTIFICATION_KINDS as readonly string[]).includes(kind);
+      // New content arrives as one daily summary (M7); chat rooms by the owner's answer in M12.
+      const emailOff =
+        (CONTENT_NOTIFICATION_KINDS as readonly string[]).includes(kind) || kind === 'ROOMS';
       expect(notificationEnabled(kind, 'APP', [])).toBe(true);
-      expect(notificationEnabled(kind, 'EMAIL', [])).toBe(!content);
+      expect(notificationEnabled(kind, 'EMAIL', [])).toBe(!emailOff);
     }
   });
 

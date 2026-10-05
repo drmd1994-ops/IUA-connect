@@ -5,12 +5,14 @@ import { AppException } from '../../common/errors/app.exception';
 import { Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { DirectoryService, type PersonCard } from '../profiles';
+import { DirectoryService } from '../profiles';
 import { prepareQuery } from '../search';
 import { ChatAccess } from './chat-access';
+import { ChatMessages, MESSAGE_SELECT, type MessageRow, personView } from './chat-messages';
 import { ChatNotifier } from './chat-notifier';
 import {
   type MuteChoice,
+  type Reaction,
   canEdit,
   muteActive,
   muteFor,
@@ -53,23 +55,12 @@ interface ConversationRow {
   unreadCount: number;
 }
 
-const MESSAGE_SELECT = {
-  id: true,
-  conversationId: true,
-  seq: true,
-  senderId: true,
-  body: true,
-  editedAt: true,
-  deletedAt: true,
-  createdAt: true,
-  replyTo: { select: { id: true, seq: true, senderId: true, body: true, deletedAt: true } },
-} satisfies Prisma.MessageSelect;
-type MessageRow = Prisma.MessageGetPayload<{ select: typeof MESSAGE_SELECT }>;
-
 /**
- * Conversations and their messages (M11 plan §2–§5). Every method first finds the reader's own
- * membership of the conversation; a conversation or message the reader has no part in is "not
- * found", the same as one that never existed, whatever id is put in the address.
+ * Private conversations and their messages (M11 plan §2–§5). Every method first finds the
+ * reader's own membership of the conversation; a conversation or message the reader has no
+ * part in is "not found", the same as one that never existed, whatever id is put in the
+ * address. Rooms (M12) have their own service; the routes here answer "not found" for a room's
+ * id, except the ones that act on a single message, which serve both.
  */
 @Injectable()
 export class ChatService {
@@ -79,6 +70,7 @@ export class ChatService {
     private readonly directory: DirectoryService,
     private readonly stream: ChatStream,
     private readonly notifier: ChatNotifier,
+    private readonly msgs: ChatMessages,
   ) {}
 
   // --- Conversations --------------------------------------------------------------------------
@@ -95,7 +87,7 @@ export class ChatService {
     const pattern = query.q ? `%${query.q.replace(/[\\%_]/g, (char) => `\\${char}`)}%` : null;
     const rows = await this.rows(
       me,
-      Prisma.sql`c.last_seq > 0
+      Prisma.sql`c.kind = 'DIRECT' AND c.last_seq > 0
         AND (m.archived_at IS NOT NULL) = ${archived}
         ${
           cursor
@@ -180,7 +172,7 @@ export class ChatService {
 
   async get(principal: Principal, id: string): Promise<ConversationDetailDto> {
     const me = principal.userId;
-    const [row] = await this.rows(me, Prisma.sql`c.id = ${id}::uuid`, 1);
+    const [row] = await this.rows(me, Prisma.sql`c.id = ${id}::uuid AND c.kind = 'DIRECT'`, 1);
     if (!row) throw new AppException('NOT_FOUND');
     const [view] = await this.views(me, [row]);
     const [sendState, blocks] = await Promise.all([
@@ -284,10 +276,7 @@ export class ChatService {
 
   // --- Messages -------------------------------------------------------------------------------
 
-  /**
-   * A page of messages, oldest first: the newest ones, the ones before a number, or the ones
-   * after it. Messages the reader deleted for themselves are left out.
-   */
+  /** A page of messages, oldest first. Reading it means the reader's app has received them. */
   async messages(
     principal: Principal,
     id: string,
@@ -295,22 +284,9 @@ export class ChatService {
   ): Promise<MessageListDto> {
     const me = principal.userId;
     await this.member(id, me);
-    const forward = query.after !== undefined;
-    const rows = await this.prisma.message.findMany({
-      where: {
-        conversationId: id,
-        hides: { none: { userId: me } },
-        ...(forward ? { seq: { gt: query.after } } : {}),
-        ...(query.before !== undefined ? { seq: { lt: query.before } } : {}),
-      },
-      select: MESSAGE_SELECT,
-      orderBy: { seq: forward ? 'asc' : 'desc' },
-      take: query.limit + 1,
-    });
-    const page = rows.slice(0, query.limit);
-    if (!forward) page.reverse();
+    const page = await this.msgs.page(id, me, query);
     await this.markDelivered(me, id);
-    return { items: page.map((row) => messageView(row, me)), hasMore: rows.length > query.limit };
+    return page;
   }
 
   async send(
@@ -320,86 +296,34 @@ export class ChatService {
     idempotencyKey: string | undefined,
   ): Promise<{ message: MessageDto; created: boolean }> {
     const me = principal.userId;
-    if (idempotencyKey !== undefined && !validIdempotencyKey(idempotencyKey)) {
-      throw new AppException('VALIDATION_FAILED', [
-        { field: 'idempotencyKey', code: 'idempotencyKeyInvalid' },
-      ]);
-    }
+    ensureIdempotencyKey(idempotencyKey);
     await this.member(id, me);
     const others = (await this.memberIds(id)).filter((userId) => userId !== me);
     await this.ensureCanSend(principal, others[0] ?? null);
 
     if (idempotencyKey) {
-      const sent = await this.sentWith(me, idempotencyKey);
-      if (sent) return { message: messageView(sent, me), created: false };
+      const sent = await this.msgs.sentWith(me, idempotencyKey);
+      if (sent) return { message: await this.msgs.view(sent, me), created: false };
     }
-    if (input.replyToId) {
-      const target = await this.prisma.message.findFirst({
-        where: { id: input.replyToId, conversationId: id },
-        select: { id: true },
-      });
-      if (!target) {
-        throw new AppException('VALIDATION_FAILED', [
-          { field: 'replyToId', code: 'chatReplyNotInConversation' },
-        ]);
-      }
-    }
-
-    const messageId = uuidv7();
-    const now = new Date();
-    let row: MessageRow;
-    try {
-      row = await this.prisma.$transaction(async (tx) => {
-        // The row lock on the conversation gives each message the next number, in order.
-        const [next] = await tx.$queryRaw<{ seq: number }[]>`
-          UPDATE conversations
-          SET last_seq = last_seq + 1, last_message_at = ${now}, updated_at = ${now}
-          WHERE id = ${id}::uuid
-          RETURNING last_seq AS seq`;
-        const seq = next!.seq;
-        const created = await tx.message.create({
-          data: {
-            id: messageId,
-            conversationId: id,
-            seq,
-            senderId: me,
-            body: input.body,
-            replyToId: input.replyToId ?? null,
-            idempotencyKey: idempotencyKey ?? null,
-            createdAt: now,
-          },
-          select: MESSAGE_SELECT,
-        });
-        await tx.conversationMember.update({
-          where: { conversationId_userId: { conversationId: id, userId: me } },
-          data: { lastReadSeq: seq, lastDeliveredSeq: seq, markedUnread: false, archivedAt: null },
-        });
-        // A new message brings an archived conversation back, unless its reader muted it.
-        await tx.$executeRaw`
-          UPDATE conversation_members
-          SET archived_at = NULL
-          WHERE conversation_id = ${id}::uuid
-            AND user_id <> ${me}::uuid
-            AND archived_at IS NOT NULL
-            AND NOT (muted AND (muted_until IS NULL OR muted_until > ${now}))`;
-        return created;
-      });
-    } catch (error) {
-      // The same request arrived twice at once: the first one sent it.
-      if (idempotencyKey && isUniqueViolation(error)) {
-        const sent = await this.sentWith(me, idempotencyKey);
-        if (sent) return { message: messageView(sent, me), created: false };
-      }
-      throw error;
-    }
-    await this.stream.publish([me, ...others], {
-      type: 'message.new',
+    await this.msgs.ensureReplyTarget(id, input.replyToId);
+    const { row, created } = await this.msgs.append({
       conversationId: id,
-      messageId: row.id,
-      seq: row.seq,
+      senderId: me,
+      body: input.body,
+      replyToId: input.replyToId,
+      idempotencyKey,
+      unarchiveOthers: true,
     });
-    await this.notifier.messageSent(id, others);
-    return { message: messageView(row, me), created: true };
+    if (created) {
+      await this.stream.publish([me, ...others], {
+        type: 'message.new',
+        conversationId: id,
+        messageId: row.id,
+        seq: row.seq,
+      });
+      await this.notifier.messageSent(id, others);
+    }
+    return { message: await this.msgs.view(row, me), created };
   }
 
   /** The sender changes their message, within 15 minutes of sending it. */
@@ -409,19 +333,14 @@ export class ChatService {
     if (!canEdit(message, me)) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatEditWindowClosed' }]);
     }
-    if (body === message.body) return messageView(message, me);
+    if (body === message.body) return this.msgs.view(message, me);
     const row = await this.prisma.message.update({
       where: { id: messageId },
       data: { body, editedAt: new Date() },
       select: MESSAGE_SELECT,
     });
-    await this.stream.publish(await this.memberIds(row.conversationId), {
-      type: 'message.edited',
-      conversationId: row.conversationId,
-      messageId: row.id,
-      seq: row.seq,
-    });
-    return messageView(row, me);
+    await this.msgs.changed(row, 'message.edited');
+    return this.msgs.view(row, me);
   }
 
   /** Delete for everyone: the text is erased and the message stays in place as "deleted". */
@@ -433,12 +352,7 @@ export class ChatService {
       where: { id: messageId },
       data: { body: '', deletedAt: new Date(), editedAt: null },
     });
-    await this.stream.publish(await this.memberIds(message.conversationId), {
-      type: 'message.deleted',
-      conversationId: message.conversationId,
-      messageId,
-      seq: message.seq,
-    });
+    await this.msgs.changed(message, 'message.deleted');
   }
 
   /** Delete for me: the message leaves the reader's side only. */
@@ -458,6 +372,22 @@ export class ChatService {
     });
   }
 
+  /**
+   * Adds or takes back one of the fixed reactions on a message of a conversation or room the
+   * reader is in (M12).
+   */
+  async react(
+    principal: Principal,
+    messageId: string,
+    reaction: Reaction,
+    on: boolean,
+  ): Promise<MessageDto> {
+    const me = principal.userId;
+    const message = await this.visibleMessage(me, messageId);
+    await this.msgs.react(me, message, reaction, on);
+    return this.msgs.view(message, me);
+  }
+
   /** "… is typing". Nothing is stored. Sent only when the typer shows it and may send. */
   async typing(principal: Principal, id: string): Promise<void> {
     const me = principal.userId;
@@ -473,14 +403,22 @@ export class ChatService {
   }
 
   /**
-   * Finds messages by their text, in one of the reader's conversations or in all of them,
-   * newest first. Hebrew-aware like the site search: vowel marks and final letters are
+   * Finds messages by their text, in one of the reader's conversations or rooms or in all of
+   * them, newest first. Hebrew-aware like the site search: vowel marks and final letters are
    * ignored, a word matches from its start and with or without a one-letter prefix. Deleted
    * messages and the ones the reader deleted for themselves are never found.
    */
   async search(principal: Principal, query: MessageSearchQueryDto): Promise<MessageSearchDto> {
     const me = principal.userId;
-    if (query.conversationId) await this.member(query.conversationId, me);
+    if (query.conversationId) {
+      const mine = await this.prisma.conversationMember.findUnique({
+        where: {
+          conversationId_userId: { conversationId: query.conversationId, userId: me },
+        },
+        select: { userId: true },
+      });
+      if (!mine) throw new AppException('NOT_FOUND');
+    }
     const prepared = prepareQuery(query.q);
     if (!prepared) return { items: [] };
     const found = await this.prisma.$queryRaw<{ id: string }[]>`
@@ -502,25 +440,50 @@ export class ChatService {
       LIMIT ${query.limit}`;
     if (found.length === 0) return { items: [] };
     const ids = found.map((row) => row.id);
-    const [rows, members] = await Promise.all([
-      this.prisma.message.findMany({ where: { id: { in: ids } }, select: MESSAGE_SELECT }),
-      this.prisma.conversationMember.findMany({
-        where: { conversation: { messages: { some: { id: { in: ids } } } }, userId: { not: me } },
-        select: { conversationId: true, userId: true },
+    const rows = await this.prisma.message.findMany({
+      where: { id: { in: ids } },
+      select: MESSAGE_SELECT,
+    });
+    const conversationIds = [...new Set(rows.map((row) => row.conversationId))];
+    const [conversations, views] = await Promise.all([
+      this.prisma.conversation.findMany({
+        where: { id: { in: conversationIds } },
+        select: {
+          id: true,
+          kind: true,
+          nameHe: true,
+          nameEn: true,
+          // Only a private conversation's other person is read; a room has thousands.
+          userLowId: true,
+          userHighId: true,
+        },
       }),
+      this.msgs.views(rows, me),
     ]);
-    const otherOf = new Map(members.map((row) => [row.conversationId, row.userId]));
-    const cards = await this.directory.cards([...otherOf.values()]);
-    const byId = new Map(rows.map((row) => [row.id, row]));
+    const byConversation = new Map(conversations.map((c) => [c.id, c]));
+    const otherOf = (conversationId: string): string | null => {
+      const c = byConversation.get(conversationId);
+      if (!c || c.kind !== 'DIRECT') return null;
+      return c.userLowId === me ? c.userHighId : c.userLowId;
+    };
+    const cards = await this.directory.cards(
+      conversationIds.map(otherOf).filter((id) => id !== null),
+    );
+    const viewById = new Map(views.map((view) => [view.id, view]));
     return {
       items: ids.flatMap((id) => {
-        const row = byId.get(id);
-        if (!row) return [];
-        const otherId = otherOf.get(row.conversationId) ?? null;
+        const message = viewById.get(id);
+        if (!message) return [];
+        const conversation = byConversation.get(message.conversationId);
+        const otherId = otherOf(message.conversationId);
         return [
           {
-            message: messageView(row, me),
+            message,
             other: personView(otherId, otherId ? cards.get(otherId) : undefined),
+            room:
+              conversation?.kind === 'ROOM' && conversation.nameHe
+                ? { id: conversation.id, nameHe: conversation.nameHe, nameEn: conversation.nameEn }
+                : null,
           },
         ];
       }),
@@ -528,31 +491,30 @@ export class ChatService {
   }
 
   /**
-   * Staff delete a reported message (the reports service calls this after its own checks).
-   * The same as the sender deleting it for everyone.
+   * Someone other than the sender deletes a message: staff deciding on a report, or a room's
+   * moderator (the callers have checked that they may). The text is erased, and the message
+   * says that a moderator removed it.
    */
-  async removeAsStaff(messageId: string): Promise<boolean> {
+  async removeAsStaff(messageId: string, removedBy: string): Promise<boolean> {
     const message = await this.prisma.message.findUnique({
       where: { id: messageId },
-      select: { conversationId: true, seq: true, deletedAt: true },
+      select: MESSAGE_SELECT,
     });
     if (!message || message.deletedAt) return false;
-    await this.prisma.message.update({
-      where: { id: messageId },
-      data: { body: '', deletedAt: new Date(), editedAt: null },
-    });
-    await this.stream.publish(await this.memberIds(message.conversationId), {
-      type: 'message.deleted',
-      conversationId: message.conversationId,
-      messageId,
-      seq: message.seq,
-    });
+    await this.prisma.$transaction([
+      this.prisma.message.update({
+        where: { id: messageId },
+        data: { body: '', deletedAt: new Date(), editedAt: null, removedBy },
+      }),
+      // A deleted message is no longer pinned.
+      this.prisma.messagePin.deleteMany({ where: { messageId } }),
+    ]);
+    await this.msgs.changed(message, 'message.deleted');
     return true;
   }
-
   // --- Internals ------------------------------------------------------------------------------
 
-  /** The reader's membership of a conversation, or "not found". */
+  /** The reader's membership of a private conversation, or "not found" (also for a room). */
   private async member(conversationId: string, userId: string) {
     const member = await this.prisma.conversationMember.findUnique({
       where: { conversationId_userId: { conversationId, userId } },
@@ -560,10 +522,10 @@ export class ChatService {
         lastReadSeq: true,
         lastDeliveredSeq: true,
         markedUnread: true,
-        conversation: { select: { lastSeq: true } },
+        conversation: { select: { lastSeq: true, kind: true } },
       },
     });
-    if (!member) throw new AppException('NOT_FOUND');
+    if (!member || member.conversation.kind !== 'DIRECT') throw new AppException('NOT_FOUND');
     return member;
   }
 
@@ -590,13 +552,6 @@ export class ChatService {
     const message = await this.visibleMessage(userId, messageId);
     if (message.senderId !== userId) throw new AppException('FORBIDDEN');
     return message;
-  }
-
-  private async sentWith(senderId: string, idempotencyKey: string): Promise<MessageRow | null> {
-    return this.prisma.message.findUnique({
-      where: { senderId_idempotencyKey: { senderId, idempotencyKey } },
-      select: MESSAGE_SELECT,
-    });
   }
 
   /**
@@ -629,6 +584,7 @@ export class ChatService {
       WHERE c.id = m.conversation_id
         AND m.user_id = ${userId}::uuid
         AND m.last_delivered_seq < c.last_seq
+        AND c.kind = 'DIRECT'
         ${conversationId ? Prisma.sql`AND c.id = ${conversationId}::uuid` : Prisma.empty}
       RETURNING m.conversation_id AS "conversationId"`;
     if (moved.length === 0) return;
@@ -729,40 +685,14 @@ export class ChatService {
   }
 }
 
-function personView(id: string | null, card: PersonCard | undefined): ConversationDto['other'] {
-  return {
-    id,
-    firstName: card?.firstName ?? null,
-    lastName: card?.lastName ?? null,
-    photoFileId: card?.photoFileId ?? null,
-    listed: card?.listed ?? false,
-  };
+/** Refuses an Idempotency-Key that is not printable ASCII of a sane length. */
+export function ensureIdempotencyKey(idempotencyKey: string | undefined): void {
+  if (idempotencyKey !== undefined && !validIdempotencyKey(idempotencyKey)) {
+    throw new AppException('VALIDATION_FAILED', [
+      { field: 'idempotencyKey', code: 'idempotencyKeyInvalid' },
+    ]);
+  }
 }
-
-function messageView(row: MessageRow, me: string): MessageDto {
-  return {
-    id: row.id,
-    conversationId: row.conversationId,
-    seq: row.seq,
-    senderId: row.senderId,
-    mine: row.senderId === me,
-    body: row.body,
-    deleted: row.deletedAt !== null,
-    editedAt: row.editedAt?.toISOString() ?? null,
-    createdAt: row.createdAt.toISOString(),
-    canEdit: canEdit(row, me),
-    replyTo: row.replyTo
-      ? {
-          id: row.replyTo.id,
-          seq: row.replyTo.seq,
-          senderId: row.replyTo.senderId,
-          body: preview(row.replyTo.body),
-          deleted: row.replyTo.deletedAt !== null,
-        }
-      : null,
-  };
-}
-
 /** "<time>|<id>" of the last conversation of the page before. */
 function parseCursor(cursor: string): { at: Date; id: string } {
   const [time, id] = cursor.split('|');

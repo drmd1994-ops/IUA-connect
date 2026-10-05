@@ -189,7 +189,7 @@ Sections 2 to 5 are the design written before the code. **The schema that runs i
 
 **Chat (M11)**
 
-Private conversations and the later rooms share these tables; a room adds a kind and its own columns in M12. Nothing existing was changed by the migration.
+Private conversations and rooms share these tables; a room adds a kind and its own columns (M12, below). Nothing existing was changed by the migration.
 
 | Table                                         | What it holds                                                                                                                                                                                              |
 | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -202,4 +202,20 @@ Private conversations and the later rooms share these tables; a room adds a kind
 | `chat_report_categories`, `chat_reports`      | The reasons for reporting (rows, seeded), and reports with a kept copy of the reported message and the five on each side                                                                                   |
 | `chat_suspensions`                            | A person staff suspended from sending in chat, from when until when, and who lifted it                                                                                                                     |
 
-Typing is never stored. Reactions, attachments, pins and room bans have no tables yet: each comes with the milestone that uses it.
+Typing is never stored.
+
+**Chat rooms (M12)**
+
+A room is a row of `conversations` with kind `ROOM`. Two migrations, additions only; the two enums that gain a value (`ROOMS` for notification kinds, `ROOM_ARCHIVED` for report actions) are changed in a migration of their own, because PostgreSQL can't use a new enum value in the transaction that adds it.
+
+| Table or columns                                    | What it holds                                                                                                                                                                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `conversations` (new columns)                       | For a room: Hebrew name (unique among rooms) and English name, descriptions, category, picture, "moderators only", locked and until when, archived, who opened it, and `member_count` (kept by the join and leave code, so lists never count rows). A check keeps these empty for a direct conversation |
+| `conversation_members.role`                         | `MEMBER` or `MODERATOR` (the column existed since M11)                                                                                                                                                        |
+| `messages` (new columns)                            | `announcement`, `removed_by` (set when a moderator or staff deleted it, not its sender), `mentions` (the people mentioned, all in the room when it was sent)                                                   |
+| `chat_room_categories`                              | What rooms are grouped by. Rows, edited by staff                                                                                                                                                              |
+| `message_reactions`                                 | One row per person, message and reaction. The six reactions are fixed in code                                                                                                                                 |
+| `message_pins`                                      | A pinned message. A trigger refuses a sixth pin in a room                                                                                                                                                     |
+| `conversation_bans`                                 | A person banned from one room: by whom, why, from when until when, and who lifted it                                                                                                                          |
+
+Rooms are archived, never deleted. Attachments and online status have no tables yet (M13).

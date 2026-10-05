@@ -1,14 +1,7 @@
 'use client';
 
 import { useFormatter, useTranslations } from 'next-intl';
-import {
-  type KeyboardEvent,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { type Me, useAuth } from '@/features/auth/auth-context';
@@ -17,15 +10,15 @@ import { errorMessage } from '@/lib/api-errors';
 import { ConfirmDialog, MessageSearchDialog, ReportDialog } from './chat-dialogs';
 import {
   type ConversationDetail,
-  MESSAGE_MAX_LENGTH,
   type Message,
   type MessageStatus,
+  type Reaction,
   dayKey,
   mergeMessages,
   messageStatus,
-  textParts,
 } from './chat-model';
 import { Avatar, type Subscribe, chatLink, usePersonLabel } from './chat-parts';
+import { Composer, type MenuItem, MessageMenu, MessageText, ReactionChips } from './message-parts';
 import { Modal } from './modal';
 
 type Dialog =
@@ -33,9 +26,6 @@ type Dialog =
   | { kind: 'details' | 'search' | 'block' | 'reportPerson' };
 
 const TYPING_SHOWN_MS = 4000;
-const TYPING_EVERY_MS = 3000;
-/** The room a message's menu needs below its button. */
-const MENU_ROOM_PX = 260;
 /** Close enough to the end to follow new messages down. */
 const NEAR_END_PX = 80;
 
@@ -51,6 +41,7 @@ export function ConversationView({
 }) {
   const all = useTranslations();
   const t = useTranslations('chat');
+  const r = useTranslations('rooms.room');
   const format = useFormatter();
   const label = usePersonLabel();
   const { api, call } = useAuth();
@@ -270,6 +261,24 @@ export function ConversationView({
     void loadConversation();
   }
 
+  /** Adds or takes back a reaction; the answer is the message as it is now. */
+  async function react(message: Message, reaction: Reaction, on: boolean) {
+    setActionError(null);
+    try {
+      const path = { id: message.id, reaction };
+      const updated = on
+        ? await call(() =>
+            api.PUT('/api/v1/chat/messages/{id}/reactions/{reaction}', { params: { path } }),
+          )
+        : await call(() =>
+            api.DELETE('/api/v1/chat/messages/{id}/reactions/{reaction}', { params: { path } }),
+          );
+      setMessages((current) => mergeMessages(current, [updated]));
+    } catch (caught) {
+      setActionError(caught);
+    }
+  }
+
   const signalTyping = useCallback(() => {
     call(() =>
       api.POST('/api/v1/chat/conversations/{id}/typing', { params: { path: { id } } }),
@@ -307,6 +316,63 @@ export function ConversationView({
 
   const other = conversation.other;
   const name = label(other);
+  const canReply = conversation.sendState === 'none';
+  /** What the reader may do with a message; nothing else is listed. */
+  const menuItems = (message: Message): MenuItem[] => {
+    const items: MenuItem[] = [];
+    if (!message.deleted && canReply) {
+      items.push({
+        key: 'reply',
+        text: t('menu.reply'),
+        run: () => {
+          setEditing(null);
+          setReply(message);
+        },
+      });
+    }
+    if (!message.deleted) {
+      items.push({
+        key: 'copy',
+        text: t('menu.copy'),
+        run: () => {
+          void navigator.clipboard.writeText(message.body).then(() => {
+            setCopied(true);
+            window.setTimeout(() => setCopied(false), 2000);
+          });
+        },
+      });
+    }
+    if (message.canEdit) {
+      items.push({
+        key: 'edit',
+        text: t('menu.edit'),
+        run: () => {
+          setReply(null);
+          setEditing(message);
+        },
+      });
+    }
+    if (message.mine && !message.deleted) {
+      items.push({
+        key: 'deleteAll',
+        text: t('menu.deleteAll'),
+        run: () => setDialog({ kind: 'deleteAll', message }),
+      });
+    }
+    items.push({
+      key: 'deleteMine',
+      text: t('menu.deleteMine'),
+      run: () => setDialog({ kind: 'deleteMine', message }),
+    });
+    if (!message.mine && message.senderId && !message.deleted) {
+      items.push({
+        key: 'report',
+        text: t('menu.report'),
+        run: () => setDialog({ kind: 'report', message }),
+      });
+    }
+    return items;
+  };
   const sender = (message: Pick<Message, 'senderId'>) =>
     message.senderId === me.id ? t('conversation.you') : name;
   const time = (iso: string) => format.dateTime(new Date(iso), { timeStyle: 'short' });
@@ -386,25 +452,11 @@ export function ConversationView({
                   </p>
                 )}
                 {message.deleted ? (
-                  <p className="italic text-text-muted">{t('conversation.deleted')}</p>
-                ) : (
-                  <p dir="auto" className="whitespace-pre-wrap break-words">
-                    {textParts(message.body).map((part, index) =>
-                      part.link ? (
-                        <a
-                          key={index}
-                          href={part.text}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          className="text-primary underline"
-                        >
-                          {part.text}
-                        </a>
-                      ) : (
-                        part.text
-                      ),
-                    )}
+                  <p className="italic text-text-muted">
+                    {message.removedByModerator ? r('removed') : t('conversation.deleted')}
                   </p>
+                ) : (
+                  <MessageText message={message} />
                 )}
                 <p className="mt-1 flex items-center justify-end gap-1.5 text-xs text-text-muted">
                   {message.editedAt && !message.deleted && <span>{t('conversation.edited')}</span>}
@@ -413,25 +465,26 @@ export function ConversationView({
                     <StatusMark status={messageStatus(message.seq, conversation)} />
                   )}
                 </p>
+                <ReactionChips
+                  reactions={message.reactions}
+                  onToggle={
+                    message.deleted ? null : (reaction, on) => void react(message, reaction, on)
+                  }
+                />
               </div>
               <MessageMenu
-                message={message}
-                canReply={conversation.sendState === 'none'}
-                onReply={() => {
-                  setEditing(null);
-                  setReply(message);
-                }}
-                onEdit={() => {
-                  setReply(null);
-                  setEditing(message);
-                }}
-                onCopy={() => {
-                  void navigator.clipboard.writeText(message.body).then(() => {
-                    setCopied(true);
-                    window.setTimeout(() => setCopied(false), 2000);
-                  });
-                }}
-                onAsk={(kind) => setDialog({ kind, message })}
+                mine={message.mine}
+                items={menuItems(message)}
+                onReact={
+                  message.deleted
+                    ? undefined
+                    : (reaction) =>
+                        void react(
+                          message,
+                          reaction,
+                          !message.reactions.some((x) => x.reaction === reaction && x.mine),
+                        )
+                }
               />
             </div>
           </div>
@@ -586,222 +639,6 @@ function StatusMark({ status }: { status: MessageStatus }) {
       </svg>
       <span className="sr-only">{t(status)}</span>
     </span>
-  );
-}
-
-/** The actions of one message. Only what this reader may do with this message is listed. */
-function MessageMenu({
-  message,
-  canReply,
-  onReply,
-  onEdit,
-  onCopy,
-  onAsk,
-}: {
-  message: Message;
-  canReply: boolean;
-  onReply: () => void;
-  onEdit: () => void;
-  onCopy: () => void;
-  onAsk: (kind: 'deleteAll' | 'deleteMine' | 'report') => void;
-}) {
-  const t = useTranslations('chat.menu');
-  const [open, setOpen] = useState(false);
-  const [upward, setUpward] = useState(false);
-  const box = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const outside = (event: Event) => {
-      if (!box.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener('pointerdown', outside);
-    document.addEventListener('focusin', outside);
-    return () => {
-      document.removeEventListener('pointerdown', outside);
-      document.removeEventListener('focusin', outside);
-    };
-  }, [open]);
-
-  const items: { key: string; text: string; run: () => void }[] = [];
-  if (!message.deleted && canReply) items.push({ key: 'reply', text: t('reply'), run: onReply });
-  if (!message.deleted) items.push({ key: 'copy', text: t('copy'), run: onCopy });
-  if (message.canEdit) items.push({ key: 'edit', text: t('edit'), run: onEdit });
-  if (message.mine && !message.deleted) {
-    items.push({ key: 'deleteAll', text: t('deleteAll'), run: () => onAsk('deleteAll') });
-  }
-  items.push({ key: 'deleteMine', text: t('deleteMine'), run: () => onAsk('deleteMine') });
-  if (!message.mine && message.senderId && !message.deleted) {
-    items.push({ key: 'report', text: t('report'), run: () => onAsk('report') });
-  }
-
-  return (
-    <div
-      ref={box}
-      className="relative shrink-0"
-      onKeyDown={(event) => {
-        if (event.key !== 'Escape' || !open) return;
-        setOpen(false);
-        button.current?.focus();
-      }}
-    >
-      <button
-        ref={button}
-        type="button"
-        aria-label={t('open')}
-        aria-expanded={open}
-        onClick={(event) => {
-          // Near the end of the list the menu opens upward, so the list doesn't cut it off.
-          const log = event.currentTarget.closest('[role="log"]');
-          if (log) {
-            const below =
-              log.getBoundingClientRect().bottom -
-              event.currentTarget.getBoundingClientRect().bottom;
-            setUpward(below < MENU_ROOM_PX);
-          }
-          setOpen((value) => !value);
-        }}
-        className="rounded-md p-1 text-text-muted hover:bg-surface-muted"
-      >
-        <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="currentColor">
-          <circle cx="12" cy="5" r="1.8" />
-          <circle cx="12" cy="12" r="1.8" />
-          <circle cx="12" cy="19" r="1.8" />
-        </svg>
-      </button>
-      {open && (
-        <ul
-          data-testid="message-menu"
-          className={`absolute z-20 w-48 rounded-md border border-border bg-surface p-1 shadow-raised ${
-            upward ? 'bottom-full mb-1' : 'mt-1'
-          } ${message.mine ? 'end-0' : 'start-0'}`}
-        >
-          {items.map((item) => (
-            <li key={item.key}>
-              <button
-                type="button"
-                data-action={item.key}
-                onClick={() => {
-                  setOpen(false);
-                  item.run();
-                }}
-                className="block w-full rounded px-3 py-2 text-start text-sm hover:bg-surface-muted"
-              >
-                {item.text}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-/** The message box: Enter sends, Shift+Enter starts a new line. Used for replies and edits too. */
-function Composer({
-  initial,
-  banner,
-  saving,
-  onCancel,
-  onSend,
-  onTyping,
-}: {
-  initial: string;
-  banner: string | null;
-  saving: boolean;
-  onCancel: () => void;
-  onSend: (text: string) => Promise<void>;
-  onTyping: (() => void) | null;
-}) {
-  const all = useTranslations();
-  const t = useTranslations('chat.composer');
-  const [text, setText] = useState(initial);
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-  const lastTyping = useRef(0);
-  const box = useRef<HTMLTextAreaElement>(null);
-  const left = MESSAGE_MAX_LENGTH - text.length;
-
-  // Editing or replying puts the cursor in the box.
-  useEffect(() => {
-    if (banner) box.current?.focus();
-  }, [banner]);
-
-  async function submit() {
-    const body = text.trim();
-    if (!body || pending) return;
-    setPending(true);
-    setError(null);
-    try {
-      await onSend(body);
-      setText('');
-    } catch (caught) {
-      setError(caught);
-    } finally {
-      setPending(false);
-      box.current?.focus();
-    }
-  }
-
-  function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key === 'Escape' && banner) {
-      onCancel();
-      return;
-    }
-    // Enter while composing a character (an input method) belongs to the input method.
-    if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
-    event.preventDefault();
-    void submit();
-  }
-
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        void submit();
-      }}
-      className="flex flex-col gap-2"
-    >
-      {error !== null && <Alert tone="error">{errorMessage(error, all)}</Alert>}
-      {banner && (
-        <p className="flex items-center justify-between gap-3 rounded-md bg-surface-muted px-3 py-1.5 text-sm">
-          <span data-testid="composer-banner">{banner}</span>
-          <Button type="button" variant="link" onClick={onCancel}>
-            {t('cancel')}
-          </Button>
-        </p>
-      )}
-      <div className="flex items-end gap-2">
-        <textarea
-          ref={box}
-          value={text}
-          rows={2}
-          maxLength={MESSAGE_MAX_LENGTH}
-          aria-label={t('label')}
-          aria-describedby="composer-hint"
-          placeholder={t('placeholder')}
-          dir="auto"
-          onChange={(event) => {
-            setText(event.target.value);
-            const now = Date.now();
-            if (onTyping && event.target.value && now - lastTyping.current > TYPING_EVERY_MS) {
-              lastTyping.current = now;
-              onTyping();
-            }
-          }}
-          onKeyDown={onKeyDown}
-          className="min-w-0 flex-1 resize-none rounded-md border border-neutral-400 bg-surface px-3 py-2 text-base text-text"
-        />
-        <Button type="submit" pending={pending} disabled={!text.trim()}>
-          {saving ? t('save') : t('send')}
-        </Button>
-      </div>
-      <p id="composer-hint" className="text-xs text-text-muted">
-        {t('patientNote')} {t('hint')}
-        {left <= 200 && ` ${t('left', { count: left })}`}
-      </p>
-    </form>
   );
 }
 

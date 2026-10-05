@@ -152,6 +152,23 @@
     "chatReportNoMessage": "This report is about a person, so there is no message to delete.",
     "chatReportNoPerson": "The reported account no longer exists.",
     "chatAlreadySuspended": "This person is already suspended from chat.",
-    "chatSuspendSelf": "You can’t suspend yourself."
+    "chatSuspendSelf": "You can’t suspend yourself.",
+    "chatMessageDeleted": "This message was deleted.",
+    "chatRoomNotJoined": "Join this room first.",
+    "chatRoomBanned": "You were removed from this room and can’t join it now.",
+    "chatRoomArchived": "This room is archived, so nothing more can be written in it.",
+    "chatRoomLocked": "A moderator locked this room.",
+    "chatModeratorsOnly": "Only moderators can do this in this room.",
+    "chatMentionNotInRoom": "Only people in the room can be mentioned.",
+    "chatPinLimit": "A room holds at most five pinned messages. Unpin one first.",
+    "chatModerateSelf": "You can’t do this to yourself.",
+    "chatModerateModerator": "Only the association’s staff can remove or ban a moderator.",
+    "chatAlreadyBanned": "This person is already banned from this room.",
+    "chatRoomNameTaken": "Another room already has this name.",
+    "chatModeratorNotMember": "Only an active member with a first and last name can moderate a room.",
+    "chatModeratorBanned": "This person is banned from this room. Lift the ban first.",
+    "chatCategoryInUse": "Rooms use this category. Move them to another one first.",
+    "chatLastReportReason": "At least one report reason must stay switched on.",
+    "chatReportNoRoom": "This report is not about a room."
   }
 }

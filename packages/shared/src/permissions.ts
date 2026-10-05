@@ -22,6 +22,7 @@ export const PERMISSIONS = [
   'broadcasts.create',
   'broadcasts.approve',
   'chat.moderate',
+  'chat.rooms.manage',
   'audit.read',
   'settings.manage',
 ] as const;

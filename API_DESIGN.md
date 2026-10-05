@@ -138,6 +138,31 @@ Access tiers are enforced on every read. Items the caller may not see are omitte
 
 A conversation or message the caller has no part in answers 404, never 403, the same as one that never existed. A block answers a neutral 422 (`chatUndeliverable`) in both directions.
 
+### Chat rooms (M12; active members, and staff with `chat.moderate`)
+
+| Method           | Path                                             | Notes                                                                                                   |
+| ---------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| GET              | /chat/rooms                                      | The open rooms. `q`, `categoryId`, `cursor`. Each says whether the caller is in it                      |
+| GET              | /chat/rooms/mine                                 | The rooms the caller is in, newest activity first, with unread counts                                   |
+| GET              | /chat/room-categories                            |                                                                                                         |
+| GET              | /chat/rooms/{id}                                 | The room, the caller's place in it, and whether they can write and why not                              |
+| POST             | /chat/rooms/{id}/join, /leave                    | Joining needs an active membership, a first and last name, and no ban                                   |
+| PATCH            | /chat/rooms/{id}/me                              | Mute, mark as unread                                                                                    |
+| GET              | /chat/rooms/{id}/members                         | The people in the room, for people in it and staff. `q` for mentions                                    |
+| GET, POST        | /chat/rooms/{id}/messages                        | As in a conversation. Sending takes `mentions` and, from a moderator, `announcement`                    |
+| POST             | /chat/rooms/{id}/read, /typing                   |                                                                                                         |
+| PUT, DELETE      | /chat/messages/{id}/reactions/{reaction}         | One of six fixed reactions. Rooms and private conversations                                             |
+| GET              | /chat/rooms/{id}/pins                            |                                                                                                         |
+| POST, DELETE     | /chat/rooms/{id}/pins/{messageId}                | Moderators. Five pins a room                                                                            |
+| DELETE           | /chat/rooms/{id}/messages/{messageId}            | Moderators: the message shows "removed by a moderator"                                                  |
+| POST             | /chat/rooms/{id}/lock, /unlock                   | Moderators. With `minutes`, until then                                                                  |
+| POST             | /chat/rooms/{id}/members/{userId}/remove         | Moderators, with a reason. The person may join again                                                    |
+| GET, POST        | /chat/rooms/{id}/bans, /bans/{banId}/lift        | Moderators, with a reason; for days, or until lifted                                                    |
+
+Editing, deleting and hiding one's own message, search, the stream, blocks and reports are the M11 routes; `POST /chat/reports` also takes a `roomId` (a room as such).
+
+**Who gets what:** a room that doesn't exist, or a caller who may not see rooms at all, answers 404. An active member who is not in a listed room gets its details, and 403 (`chatRoomNotJoined`) for its messages, members and pins. A person in the room who is not a moderator gets 403 for a moderation route; a moderator of another room gets 404 if not in this one. Staff with `chat.moderate` read any room and act as its moderator without joining; they write only if they joined it as a member.
+
 ### Files
 
 | Method | Path            | Notes                                                                                          |
@@ -156,7 +181,8 @@ A conversation or message the caller has no part in answers 404, never 403, the 
 - `/admin/education`, `/admin/guidelines`
 - `/admin/exam-questions` (write, review with `POST /{id}/transitions`, history)
 - `/admin/broadcasts` (create, then `POST /{id}/approve` by a **different** admin)
-- `/admin/chat/reports` (list, one report with the kept messages, `POST /{id}/resolve`) and `/admin/chat/suspensions` (list, suspend, `POST /{id}/lift`), with `chat.moderate`. There is no route for reading conversations, and each look at a report is audited
+- `/admin/chat/reports` (list, one report with the kept messages, `POST /{id}/resolve`) and `/admin/chat/suspensions` (list, suspend, `POST /{id}/lift`), with `chat.moderate`. There is no route for reading conversations, and each look at a report is audited. A report about a room or a room message can also be resolved with `archiveRoom` (needs `chat.rooms.manage`)
+- `/admin/chat/rooms` (list, create, read, `PUT`, `POST /{id}/archive`, `POST /{id}/restore`, `POST /{id}/moderators`, `POST /{id}/moderators/{userId}/remove`), `/admin/chat/room-categories` (list, create, `PUT`, `DELETE` while no room uses it) and `/admin/chat/report-categories` (list, create, `PUT`; switched off, never deleted), with `chat.rooms.manage` (M12)
 - `/admin/audit-logs` (read-only, filterable)
 - `/admin/dashboard` (counts: pending approvals, members by status, upcoming events)
 - `/admin/settings`

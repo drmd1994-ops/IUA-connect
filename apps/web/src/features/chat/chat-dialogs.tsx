@@ -130,6 +130,7 @@ export function MessageSearchDialog({
   const all = useTranslations();
   const t = useTranslations('chat.search');
   const c = useTranslations('chat.conversation');
+  const locale = useLocale();
   const format = useFormatter();
   const label = usePersonLabel();
   const { api, call } = useAuth();
@@ -180,10 +181,10 @@ export function MessageSearchDialog({
           data-testid="chat-search-results"
           className="flex max-h-80 flex-col divide-y divide-border overflow-y-auto"
         >
-          {found.map(({ message, other }) => (
+          {found.map(({ message, other, room }) => (
             <li key={message.id} className="flex flex-col gap-1 py-3">
               <span className="text-xs text-text-muted">
-                {message.mine ? c('you') : label(other)}
+                {message.mine ? c('you') : label(room ? message.sender : other)}
                 {' · '}
                 {format.dateTime(new Date(message.createdAt), {
                   dateStyle: 'medium',
@@ -192,7 +193,11 @@ export function MessageSearchDialog({
                 {!conversationId && (
                   <>
                     {' · '}
-                    {t('with', { name: label(other) })}
+                    {room
+                      ? locale === 'he'
+                        ? room.nameHe
+                        : (room.nameEn ?? room.nameHe)
+                      : t('with', { name: label(other) })}
                   </>
                 )}
               </span>
@@ -201,7 +206,7 @@ export function MessageSearchDialog({
               </span>
               {!conversationId && (
                 <Link
-                  href={`/chat/${message.conversationId}`}
+                  href={room ? `/chat/rooms/${room.id}` : `/chat/${message.conversationId}`}
                   onClick={onClose}
                   className={`${chatLink} text-sm`}
                 >
@@ -222,12 +227,14 @@ export function ReportDialog({
   name,
   onClose,
 }: {
-  target: { messageId: string } | { userId: string };
+  target: { messageId: string } | { userId: string } | { roomId: string };
+  /** The person's name, or the room's. */
   name: string;
   onClose: () => void;
 }) {
   const all = useTranslations();
   const t = useTranslations('chat.report');
+  const rooms = useTranslations('rooms.report');
   const locale = useLocale();
   const { api, call } = useAuth();
   const [categories, setCategories] = useState<Categories | null>(null);
@@ -237,6 +244,7 @@ export function ReportDialog({
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const aboutMessage = 'messageId' in target;
+  const aboutRoom = 'roomId' in target;
 
   useEffect(() => {
     let active = true;
@@ -273,7 +281,13 @@ export function ReportDialog({
 
   return (
     <Modal
-      title={aboutMessage ? t('titleMessage') : t('titlePerson', { name })}
+      title={
+        aboutMessage
+          ? t('titleMessage')
+          : aboutRoom
+            ? rooms('title', { name })
+            : t('titlePerson', { name })
+      }
       closeLabel={t('close')}
       onClose={onClose}
     >
@@ -289,7 +303,7 @@ export function ReportDialog({
       ) : (
         <form onSubmit={send} noValidate className="flex flex-col gap-4">
           <p className="text-sm text-text-muted">
-            {aboutMessage ? t('introMessage') : t('introPerson')}
+            {aboutMessage ? t('introMessage') : aboutRoom ? rooms('intro') : t('introPerson')}
           </p>
           <SelectField
             label={t('category')}
@@ -327,12 +341,15 @@ export function ReportDialog({
 export function ConfirmDialog({
   title,
   confirmLabel,
+  tone = 'danger',
   onConfirm,
   onClose,
   children,
 }: {
   title: string;
   confirmLabel: string;
+  /** "danger" for something that can't be undone; "primary" for an ordinary yes. */
+  tone?: 'danger' | 'primary';
   onConfirm: () => Promise<void>;
   onClose: () => void;
   children: ReactNode;
@@ -359,7 +376,7 @@ export function ConfirmDialog({
       <p>{children}</p>
       {error !== null && <Alert tone="error">{errorMessage(error, all)}</Alert>}
       <div className="flex flex-wrap gap-3">
-        <Button type="button" variant="danger" pending={pending} onClick={() => void confirm()}>
+        <Button type="button" variant={tone} pending={pending} onClick={() => void confirm()}>
           {confirmLabel}
         </Button>
         <Button type="button" variant="secondary" onClick={onClose}>

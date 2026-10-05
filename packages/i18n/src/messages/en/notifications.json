@@ -22,7 +22,8 @@
     "EDUCATION": "Education",
     "GUIDELINES": "Guidelines",
     "WORK": "Your work",
-    "MESSAGES": "Private messages"
+    "MESSAGES": "Private messages",
+    "ROOMS": "Chat rooms"
   },
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
@@ -32,7 +33,8 @@
     "NEW_EVENTS": "An event was published.",
     "EDUCATION": "An education item was published.",
     "GUIDELINES": "A guideline was added or got a new version.",
-    "MESSAGES": "Chat messages from other members. In the app: the number on the Chat link. By email: at most one message a day saying that unread messages are waiting, without their text."
+    "MESSAGES": "Chat messages from other members. In the app: the number on the Chat link. By email: at most one message a day saying that unread messages are waiting, without their text.",
+    "ROOMS": "In a chat room you joined: someone mentioned you, someone replied to you, or a moderator posted an announcement. By email it joins the one-a-day message about unread chat messages."
   },
   "items": {
     "eventRegistered": "You are registered for “{title}”.",
@@ -56,6 +58,9 @@
     "contentGuidelineVersion": "A guideline has a new version: {title}",
     "broadcast": "A message from the association: {title}",
     "chatMessage": "You have a new private message.",
+    "chatMention": "{name} mentioned you in the room “{title}”.",
+    "chatReply": "{name} replied to you in the room “{title}”.",
+    "chatAnnouncement": "An announcement in the room “{title}”.",
     "unknown": "You have a new notification."
   },
   "preferences": {

@@ -39,4 +39,7 @@ export const RATE_LIMITS = {
   chatReportsPerUser: { name: 'chat-reports-user', limit: 10, windowSec: 3600, by: 'user' },
   chatSearchPerUser: { name: 'chat-search-user', limit: 60, windowSec: 60, by: 'user' },
   chatTypingPerUser: { name: 'chat-typing-user', limit: 1, windowSec: 3, by: 'user' },
+  // Chat rooms (M12 plan §3)
+  chatReactionsPerUser: { name: 'chat-reactions-user', limit: 60, windowSec: 60, by: 'user' },
+  chatJoinsPerUser: { name: 'chat-joins-user', limit: 20, windowSec: 3600, by: 'user' },
 } as const satisfies Record<string, RateLimitRule>;

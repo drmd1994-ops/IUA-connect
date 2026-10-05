@@ -17,7 +17,8 @@ interface Waiting {
   userId: string;
   email: string;
   locale: string;
-  conversations: number;
+  /** How many conversations (or room notices) are waiting. */
+  waiting: number;
 }
 
 /**
@@ -86,41 +87,79 @@ export class ChatNotifier implements OnModuleInit {
   }
 
   /**
-   * The "messages are waiting" email. A person gets one when a message has waited unread for
-   * half an hour in a conversation they have not muted or archived, they have had no such
-   * email in the last day, and the message arrived after the last one. The time is recorded
-   * before the email goes out, so a repeated run never sends two.
+   * The "messages are waiting" email. A person gets one when something has waited unread for
+   * half an hour, they have had no such email in the last day, and it arrived after the last
+   * one. "Something" is a private message in a conversation they have not muted or archived
+   * (the "Private messages" switch), or a mention, a reply or an announcement in a room (the
+   * "Chat rooms" switch, which starts off). One email covers both, and never carries a text
+   * or a name. The time is recorded before the email goes out, so a repeated run never sends
+   * two.
    */
   async sendUnreadEmails(now = new Date()): Promise<number> {
     const waitedSince = new Date(now.getTime() - UNREAD_EMAIL_AFTER_MS);
     const lastAllowed = new Date(now.getTime() - UNREAD_EMAIL_EVERY_MS);
-    const waiting = await this.prisma.$queryRaw<Waiting[]>`
-      SELECT u.id AS "userId", u.email::text AS email, u.locale,
-             count(DISTINCT m.conversation_id)::int AS conversations
-      FROM conversation_members m
-      JOIN users u ON u.id = m.user_id
-      LEFT JOIN chat_preferences p ON p.user_id = u.id
-      WHERE u.status = 'ACTIVE'
-        AND u.email_verified_at IS NOT NULL
-        AND m.archived_at IS NULL
-        AND NOT (m.muted AND (m.muted_until IS NULL OR m.muted_until > ${now}))
-        AND (p.unread_emailed_at IS NULL OR p.unread_emailed_at <= ${lastAllowed})
-        AND EXISTS (
-          SELECT 1 FROM messages x
-          WHERE x.conversation_id = m.conversation_id
-            AND x.seq > m.last_read_seq
-            AND x.sender_id IS DISTINCT FROM u.id
-            AND x.deleted_at IS NULL
-            AND x.created_at <= ${waitedSince}
-            AND (p.unread_emailed_at IS NULL OR x.created_at > p.unread_emailed_at)
-            AND NOT EXISTS (
-              SELECT 1 FROM message_hides h WHERE h.message_id = x.id AND h.user_id = u.id
-            )
-        )
-      GROUP BY u.id, u.email, u.locale`;
+    const [direct, rooms] = await Promise.all([
+      this.prisma.$queryRaw<Waiting[]>`
+        SELECT u.id AS "userId", u.email::text AS email, u.locale,
+               count(DISTINCT m.conversation_id)::int AS waiting
+        FROM conversation_members m
+        JOIN conversations c ON c.id = m.conversation_id AND c.kind = 'DIRECT'
+        JOIN users u ON u.id = m.user_id
+        LEFT JOIN chat_preferences p ON p.user_id = u.id
+        WHERE u.status = 'ACTIVE'
+          AND u.email_verified_at IS NOT NULL
+          AND m.archived_at IS NULL
+          AND NOT (m.muted AND (m.muted_until IS NULL OR m.muted_until > ${now}))
+          AND (p.unread_emailed_at IS NULL OR p.unread_emailed_at <= ${lastAllowed})
+          AND EXISTS (
+            SELECT 1 FROM messages x
+            WHERE x.conversation_id = m.conversation_id
+              AND x.seq > m.last_read_seq
+              AND x.sender_id IS DISTINCT FROM u.id
+              AND x.deleted_at IS NULL
+              AND x.created_at <= ${waitedSince}
+              AND (p.unread_emailed_at IS NULL OR x.created_at > p.unread_emailed_at)
+              AND NOT EXISTS (
+                SELECT 1 FROM message_hides h WHERE h.message_id = x.id AND h.user_id = u.id
+              )
+          )
+        GROUP BY u.id, u.email, u.locale`,
+      // Email about rooms starts switched off, so only people with a stored switch get it.
+      this.prisma.$queryRaw<Waiting[]>`
+        SELECT u.id AS "userId", u.email::text AS email, u.locale, count(*)::int AS waiting
+        FROM notifications n
+        JOIN users u ON u.id = n.user_id
+        JOIN notification_preferences s
+          ON s.user_id = u.id AND s.kind = 'ROOMS' AND s.channel = 'EMAIL' AND s.enabled
+        LEFT JOIN chat_preferences p ON p.user_id = u.id
+        WHERE n.kind = 'ROOMS'
+          AND n.read_at IS NULL
+          AND n.created_at <= ${waitedSince}
+          AND (p.unread_emailed_at IS NULL OR n.created_at > p.unread_emailed_at)
+          AND (p.unread_emailed_at IS NULL OR p.unread_emailed_at <= ${lastAllowed})
+          AND u.status = 'ACTIVE'
+          AND u.email_verified_at IS NOT NULL
+        GROUP BY u.id, u.email, u.locale`,
+    ]);
+
+    const people = new Map<string, Waiting & { kinds: ('MESSAGES' | 'ROOMS')[] }>();
+    for (const [kind, rows] of [
+      ['MESSAGES', direct],
+      ['ROOMS', rooms],
+    ] as const) {
+      for (const row of rows) {
+        // The private-messages switch is checked here; the rooms one was part of the query.
+        if (kind === 'MESSAGES' && !(await this.notifier.channels(row.userId, kind)).EMAIL)
+          continue;
+        const entry = people.get(row.userId) ?? { ...row, waiting: 0, kinds: [] };
+        entry.waiting += row.waiting;
+        entry.kinds.push(kind);
+        people.set(row.userId, entry);
+      }
+    }
 
     let sent = 0;
-    for (const person of waiting) {
+    for (const person of people.values()) {
       try {
         await this.prisma.chatPreference.upsert({
           where: { userId: person.userId },
@@ -130,12 +169,13 @@ export class ChatNotifier implements OnModuleInit {
         const locale = localeOf(person.locale);
         const delivered = await this.notifier.email({
           userId: person.userId,
-          kind: 'MESSAGES',
+          // The "stop these emails" link switches off the kind that caused the email.
+          kind: person.kinds[0]!,
           to: person.email,
           locale,
           template: 'chatUnread',
           params: {
-            count: person.conversations,
+            count: person.waiting,
             link: new URL(`/${locale}/chat`, this.env.APP_BASE_URL).toString(),
           },
         });
@@ -147,5 +187,4 @@ export class ChatNotifier implements OnModuleInit {
     return sent;
   }
 }
-
 const localeOf = (value: string): Locale => (isLocale(value) ? value : DEFAULT_LOCALE);
