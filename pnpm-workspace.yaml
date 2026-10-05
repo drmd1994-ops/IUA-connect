@@ -50,6 +50,11 @@ trustPolicyExclude:
 #   version published. Reached only through @next/eslint-plugin-next > fast-glob > micromatch,
 #   which runs at lint time on patterns from this repository's own configuration, never on
 #   input from a visitor. Accepted by the owner on 2026-10-03.
+# - GHSA-86w9-cpqp-85rv (node-forge <=1.4.0, a malformed RSA signature is accepted): no fixed
+#   version published. Reached only through expo > @expo/cli, the developer's command-line tool
+#   for the mobile app, which runs on the developer's computer and in CI. It is not part of the
+#   app that runs on a phone, nor of the API or the site. Accepted by the owner on 2026-10-05.
 auditConfig:
   ignoreGhsas:
     - GHSA-vfj7-8cjw-p6xm
+    - GHSA-86w9-cpqp-85rv

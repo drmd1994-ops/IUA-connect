@@ -825,6 +825,42 @@ No new libraries.
 4. **The legal review now also has to cover files and video in chat,** which are in the demo ahead of it.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
+## M14 Mobile app, part 1 (in progress, started 2026-10-05)
+
+Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved by the owner on 2026-10-05 with the answers in its §11: a demo app on the owner's own phone (Android 16), seen through Expo Go; no push notifications in part 1; fingerprint or face when the app opens; the screens in the plan's order; signed in as long as on the web.
+
+**This section is a running record; the milestone is not finished.** Twelve checkpoints are planned; 2, 3 and 4 are built.
+
+### Built so far
+
+- **Sign-in for an app, on the server** (checkpoint 2). With `client: "app"` a sign-in returns the refresh token in the answer and sets no cookie. The app refreshes and signs out at `/auth/app/refresh` and `/auth/app/logout`, with the token in the body. A refresh token is accepted only the way its own client presents it: a browser's token is refused outside its cookie, and the app's inside one, before anything is used up. Sessions say what started them and, for the app, what the phone is called; "my sessions" shows it. One migration, additions only.
+- **The app's frame** (checkpoint 3): `apps/mobile`, Expo SDK 57 (React Native 0.86), using the shared API client, texts and design tokens. Hebrew and English, starting in the phone's language. A "Connection check" for the first test on a real phone.
+- **Sign-in in the app** (checkpoint 4): email and password, then the authenticator code; the refresh token only in the phone's secure storage; the session restored when the app opens; the phone's fingerprint or face check, with a switch; sign out, and sign out everywhere.
+
+### Verified
+
+- 54 sign-in integration tests pass (7 new); **the existing web sign-in suites pass unchanged.**
+- 15 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again).
+- The app type-checks, lints, and **bundles for Android**. The repository's format check, lint, type check and unit tests pass with the app included.
+
+### Not verified
+
+- **The app has not been run on a phone.** Nobody has seen a screen of it. Everything above is what can be checked without one.
+- **The two unknowns of the plan are still unknown:** whether chat's live connection works on a phone, and how the change of direction behaves when the language is changed.
+- Nothing was tried on an iPhone, and nothing will be in part 1.
+
+### Deviations and findings
+
+- **Separate addresses for the app's refresh and sign-out,** not a field on the existing ones as the plan said. The browser's routes stay exactly as they were.
+- **A security advisory came with Expo's tools** and was accepted by the owner on 2026-10-05: `node-forge` (GHSA-86w9-cpqp-85rv, no fixed version), reached only through Expo's command-line tool, which runs on the developer's computer and in CI and is not part of the app on the phone. Recorded in `pnpm-workspace.yaml`; remove when a fix exists. Two moderate advisories also arrived (`uuid`, `decode-uri-component`, both in Expo's tools or router); they don't fail the check.
+- **Two of the project's own supply-chain rules blocked installs, and were not bypassed.** The 7-day rule: a batch of Expo libraries was 6 days old, so the release before it was installed for each. The trust check refused a sub-dependency of `expo-device`, so that library was left out; the phone's name comes from Android itself.
+- **The app's rules are tested with the same test runner as the other packages,** not with the phone-component test tools the plan listed (`jest-expo`, the React Native testing library). Those are still to be added for the screens.
+- **Passkeys don't work in the app,** as the plan said; the sign-in screen says so.
+
+### Open for the owner
+
+1. **The first test on the phone** (`apps/mobile/README.md`): sign in; close and reopen the app; change the language; and what "Connection check" says. **The owner said on 2026-10-05 what should happen** (the app stays signed in; the page direction changes). **Whether it does on the phone is not known yet.**
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
