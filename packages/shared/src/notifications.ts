@@ -24,6 +24,8 @@ export const NOTIFICATION_KINDS = [
   'WORK',
   /** Private messages in chat: the number on the Chat link, and one email a day at most. */
   'MESSAGES',
+  /** Chat rooms: someone mentioned you or replied to you, or an announcement in your room. */
+  'ROOMS',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -46,6 +48,7 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   GUIDELINES: { app: true, email: false, locked: false },
   WORK: { app: true, email: true, locked: true },
   MESSAGES: { app: true, email: true, locked: false },
+  ROOMS: { app: true, email: false, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -54,6 +57,7 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   'MY_EVENTS',
   'ASSOCIATION',
   'MESSAGES',
+  'ROOMS',
   'NEWS',
   'NEW_EVENTS',
   'EDUCATION',

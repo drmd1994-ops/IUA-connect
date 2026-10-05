@@ -1,6 +1,8 @@
 import {
   EDIT_WINDOW_MS,
   canEdit,
+  lockActive,
+  roomSendState,
   muteActive,
   muteFor,
   pairOf,
@@ -73,5 +75,46 @@ describe('chat rules', () => {
     expect(validIdempotencyKey('with space')).toBe(false);
     expect(validIdempotencyKey('x'.repeat(101))).toBe(false);
     expect(validIdempotencyKey('מפתח')).toBe(false);
+  });
+
+  describe('writing in a room', () => {
+    const room = { archivedAt: null, locked: false, lockedUntil: null, moderatorsOnly: false };
+    const member = { activeMember: true, suspended: false, role: 'MEMBER' as const };
+    const moderator = { ...member, role: 'MODERATOR' as const };
+
+    it('is for people in the room with an active membership who are not suspended', () => {
+      expect(roomSendState(room, member, now)).toBe('none');
+      expect(roomSendState(room, { ...member, role: null }, now)).toBe('notJoined');
+      expect(roomSendState(room, { ...member, activeMember: false }, now)).toBe('membersOnly');
+      expect(roomSendState(room, { ...member, suspended: true }, now)).toBe('suspended');
+    });
+
+    it('stops for members in a locked room and in an announcements room; moderators still write', () => {
+      const locked = { ...room, locked: true };
+      const announcements = { ...room, moderatorsOnly: true };
+      expect(roomSendState(locked, member, now)).toBe('locked');
+      expect(roomSendState(announcements, member, now)).toBe('moderatorsOnly');
+      expect(roomSendState(locked, moderator, now)).toBe('none');
+      expect(roomSendState(announcements, moderator, now)).toBe('none');
+      // A suspended moderator, or one whose membership ended, doesn't write either.
+      expect(roomSendState(room, { ...moderator, suspended: true }, now)).toBe('suspended');
+      expect(roomSendState(room, { ...moderator, activeMember: false }, now)).toBe('membersOnly');
+    });
+
+    it('stops for everyone in an archived room', () => {
+      const archived = { ...room, archivedAt: now };
+      expect(roomSendState(archived, member, now)).toBe('archived');
+      expect(roomSendState(archived, moderator, now)).toBe('archived');
+    });
+
+    it('a lock whose time has passed is no lock', () => {
+      expect(lockActive({ locked: true, lockedUntil: null }, now)).toBe(true);
+      expect(lockActive({ locked: true, lockedUntil: sent(-5) }, now)).toBe(true);
+      expect(lockActive({ locked: true, lockedUntil: sent(5) }, now)).toBe(false);
+      expect(lockActive({ locked: false, lockedUntil: null }, now)).toBe(false);
+      expect(roomSendState({ ...room, locked: true, lockedUntil: sent(5) }, member, now)).toBe(
+        'none',
+      );
+    });
   });
 });

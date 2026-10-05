@@ -129,7 +129,67 @@ export function chatActors(harness: () => Harness, adminToken: () => string) {
   const bodies = (res: { body: { items: { body: string }[] } }) =>
     res.body.items.map((item) => item.body);
 
+  // --- Rooms (M12) ----------------------------------------------------------------------------
+
+  const asAdmin = () => bearer(adminToken());
+  /** A room opened by staff, with a name no other test or run uses. */
+  async function createRoom(extra: object = {}): Promise<string> {
+    const res = await h()
+      .http()
+      .post('/api/v1/admin/chat/rooms')
+      .set(asAdmin())
+      .send({ nameHe: `חדר ${tag()}`, ...extra })
+      .expect(201);
+    return res.body.id as string;
+  }
+  const room = (as: ChatPerson, id: string) =>
+    h().http().get(`/api/v1/chat/rooms/${id}`).set(bearer(as.token));
+  const join = (as: ChatPerson, id: string) =>
+    h().http().post(`/api/v1/chat/rooms/${id}/join`).set(bearer(as.token));
+  const leave = (as: ChatPerson, id: string) =>
+    h().http().post(`/api/v1/chat/rooms/${id}/leave`).set(bearer(as.token));
+  const roomSend = (from: ChatPerson, id: string, body: string, extra: object = {}) =>
+    h()
+      .http()
+      .post(`/api/v1/chat/rooms/${id}/messages`)
+      .set(bearer(from.token))
+      .send({ body, ...extra });
+  const roomMessages = (as: ChatPerson, id: string, query = '') =>
+    h().http().get(`/api/v1/chat/rooms/${id}/messages${query}`).set(bearer(as.token));
+  const makeModerator = (id: string, p: ChatPerson) =>
+    h()
+      .http()
+      .post(`/api/v1/admin/chat/rooms/${id}/moderators`)
+      .set(asAdmin())
+      .send({ userId: p.id })
+      .expect(200);
+  const react = (as: ChatPerson, messageId: string, reaction: string, on = true) =>
+    h()
+      .http()
+      [on ? 'put' : 'delete'](`/api/v1/chat/messages/${messageId}/reactions/${reaction}`)
+      .set(bearer(as.token));
+  /** A room with a moderator and two members in it. */
+  async function roomWith(extra: object = {}) {
+    const id = await createRoom(extra);
+    // One after the other: several sign-ups at once reset connections on some machines.
+    const mod = await member('Mod');
+    const a = await member('Avi');
+    const b = await member('Bella');
+    await makeModerator(id, mod);
+    await join(a, id).expect(200);
+    await join(b, id).expect(200);
+    return { id, mod, a, b };
+  }
   return {
+    createRoom,
+    room,
+    join,
+    leave,
+    roomSend,
+    roomMessages,
+    makeModerator,
+    react,
+    roomWith,
     tag,
     person,
     member,

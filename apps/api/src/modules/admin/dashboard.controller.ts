@@ -36,6 +36,7 @@ export class AdminDashboardController {
     'broadcasts.create',
     'broadcasts.approve',
     'chat.moderate',
+    'chat.rooms.manage',
     'users.read',
     'audit.read',
     'settings.manage',

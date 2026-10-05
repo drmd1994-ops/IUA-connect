@@ -102,6 +102,8 @@ model User {
   chatReportsMade     ChatReport[]             @relation("ChatReporter")
   chatReportsReceived ChatReport[]             @relation("ChatReported")
   chatSuspensions     ChatSuspension[]
+  messageReactions    MessageReaction[]
+  conversationBans    ConversationBan[]
 
   @@map("users")
 }
@@ -751,6 +753,7 @@ model StoredFile {
   educationFile   EducationFile[]   @relation("EducationFile")
   speakerPhoto    Speaker[]
   sessionMaterial SessionMaterial[]
+  roomPicture     Conversation[]    @relation("RoomPicture")
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -1582,6 +1585,8 @@ enum NotificationKind {
   WORK
   /// Private messages in chat (M11): the number on the Chat link, and one email a day at most.
   MESSAGES
+  /// Chat rooms (M12): someone mentioned you or replied to you, or an announcement in your room.
+  ROOMS
 
   @@map("notification_kind")
 }
@@ -1810,12 +1815,16 @@ model Setting {
 enum ConversationKind {
   /// Two people. One conversation per pair.
   DIRECT
+  /// A room the association opened: any active member can join (M12).
+  ROOM
 
   @@map("conversation_kind")
 }
 
 enum ConversationMemberRole {
   MEMBER
+  /// Appointed by staff for one room (M12).
+  MODERATOR
 
   @@map("conversation_member_role")
 }
@@ -1842,6 +1851,8 @@ enum ChatReportAction {
   NONE
   MESSAGE_DELETED
   SUSPENDED
+  /// A reported room was archived (M12).
+  ROOM_ARCHIVED
 
   @@map("chat_report_action")
 }
@@ -1862,14 +1873,40 @@ model Conversation {
   createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  // --- Rooms (M12). Empty for a direct conversation; a database check keeps it so. ---
+  /// A room has a Hebrew name, unique among rooms, and may have an English one.
+  nameHe         String?   @map("name_he") @db.VarChar(120)
+  nameEn         String?   @map("name_en") @db.VarChar(120)
+  descriptionHe  String?   @map("description_he") @db.VarChar(1000)
+  descriptionEn  String?   @map("description_en") @db.VarChar(1000)
+  categoryId     String?   @map("category_id") @db.Uuid
+  /// A picture staff uploaded for the room.
+  pictureFileId  String?   @map("picture_file_id") @db.Uuid
+  /// An announcements room: only moderators write.
+  moderatorsOnly Boolean   @default(false) @map("moderators_only")
+  /// Locked by a moderator: nobody but moderators writes. With a time, until then.
+  locked         Boolean   @default(false)
+  lockedUntil    DateTime? @map("locked_until") @db.Timestamptz(6)
+  /// An archived room leaves the lists and is read-only. Rooms are never deleted.
+  archivedAt     DateTime? @map("archived_at") @db.Timestamptz(6)
+  createdBy      String?   @map("created_by") @db.Uuid
+  /// Kept by the join and leave code, so the list of rooms never counts rows.
+  memberCount    Int       @default(0) @map("member_count")
+
   userLow  User?                @relation("ConversationUserLow", fields: [userLowId], references: [id], onDelete: SetNull)
   userHigh User?                @relation("ConversationUserHigh", fields: [userHighId], references: [id], onDelete: SetNull)
+  category ChatRoomCategory?    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  picture  StoredFile?          @relation("RoomPicture", fields: [pictureFileId], references: [id], onDelete: SetNull)
   members  ConversationMember[]
   messages Message[]
   reports  ChatReport[]
+  pins     MessagePin[]
+  bans     ConversationBan[]
 
   @@unique([userLowId, userHighId])
   @@index([userHighId])
+  @@index([kind, archivedAt, lastMessageAt(sort: Desc)])
+  @@index([categoryId])
   @@map("conversations")
 }
 
@@ -1897,6 +1934,7 @@ model ConversationMember {
 
   @@id([conversationId, userId])
   @@index([userId, archivedAt])
+  @@index([conversationId, role])
   @@map("conversation_members")
 }
 
@@ -1916,15 +1954,23 @@ model Message {
   editedAt       DateTime?                @map("edited_at") @db.Timestamptz(6)
   deletedAt      DateTime?                @map("deleted_at") @db.Timestamptz(6)
   createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Marked by a moderator: it stands out, and the room is told (M12).
+  announcement   Boolean                  @default(false)
+  /// Set when a moderator or staff deleted it, not its sender (M12).
+  removedBy      String?                  @map("removed_by") @db.Uuid
+  /// The people mentioned in it, all of them in the room when it was sent (M12).
+  mentions       String[]                 @default([]) @db.Uuid
   /// Maintained by a trigger: the text after the Hebrew normalisation, as for news.
   searchVector   Unsupported("tsvector")? @map("search_vector")
 
-  conversation Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User?         @relation(fields: [senderId], references: [id], onDelete: SetNull)
-  replyTo      Message?      @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
-  replies      Message[]     @relation("MessageReplies")
+  conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User?             @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  replyTo      Message?          @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      Message[]         @relation("MessageReplies")
   hides        MessageHide[]
   reports      ChatReport[]
+  reactions    MessageReaction[]
+  pins         MessagePin[]
 
   @@unique([conversationId, seq])
   @@unique([senderId, idempotencyKey])
@@ -2043,4 +2089,72 @@ model ChatSuspension {
 
   @@index([userId, startsAt(sort: Desc)])
   @@map("chat_suspensions")
+}
+
+// ---------------------------------------------------------------------------
+// Chat rooms (M12). docs/plans/M12-chat-rooms.md §4. A room is a conversation of kind ROOM.
+// ---------------------------------------------------------------------------
+
+/// What rooms are grouped by on the "Browse rooms" screen. Staff edit them.
+model ChatRoomCategory {
+  id        String @id @db.Uuid
+  key       String @unique @db.VarChar(40)
+  nameHe    String @map("name_he") @db.VarChar(120)
+  nameEn    String @map("name_en") @db.VarChar(120)
+  sortOrder Int    @default(0) @map("sort_order")
+
+  rooms Conversation[]
+
+  @@map("chat_room_categories")
+}
+
+/// One of the fixed reactions a person put on a message. One of each kind per person.
+model MessageReaction {
+  messageId String   @map("message_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  reaction  String   @db.VarChar(16)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, userId, reaction])
+  @@index([userId])
+  @@map("message_reactions")
+}
+
+/// A message a moderator pinned to the top of a room. Five at most (a trigger).
+model MessagePin {
+  conversationId String   @map("conversation_id") @db.Uuid
+  messageId      String   @map("message_id") @db.Uuid
+  pinnedBy       String   @map("pinned_by") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message      Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, messageId])
+  @@index([messageId])
+  @@map("message_pins")
+}
+
+/// A person banned from one room: they can't join it. In force from starts_at until ends_at
+/// (null: until lifted), unless lifted.
+model ConversationBan {
+  id             String    @id @db.Uuid
+  conversationId String    @map("conversation_id") @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  createdBy      String    @map("created_by") @db.Uuid
+  reason         String    @db.VarChar(1000)
+  startsAt       DateTime  @default(now()) @map("starts_at") @db.Timestamptz(6)
+  endsAt         DateTime? @map("ends_at") @db.Timestamptz(6)
+  liftedAt       DateTime? @map("lifted_at") @db.Timestamptz(6)
+  liftedBy       String?   @map("lifted_by") @db.Uuid
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, userId])
+  @@index([userId])
+  @@map("conversation_bans")
 }

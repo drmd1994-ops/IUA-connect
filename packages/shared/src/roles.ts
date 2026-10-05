@@ -35,6 +35,7 @@ export const ROLES = {
       'broadcasts.create',
       'broadcasts.approve',
       'chat.moderate',
+      'chat.rooms.manage',
       'audit.read',
     ],
     requiresMfa: true,
