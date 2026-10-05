@@ -1,5 +1,5 @@
 import { MembershipCard } from '@/features/card';
 
-export default function CardTab() {
+export default function CardScreen() {
   return <MembershipCard />;
 }

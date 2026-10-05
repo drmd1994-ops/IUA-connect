@@ -1,6 +1,7 @@
 {
   "demoBanner": "Demo version: all people and data shown are fictional.",
   "loading": "Loading…",
+  "back": "Back",
   "unreachable": {
     "title": "The server can’t be reached",
     "text": "The app could not reach IUA Connect at {address}. In the demo, the phone must be on the same Wi-Fi as the computer that runs it.",
@@ -33,7 +34,7 @@
     "none": "You have no membership yet. Joining is done on the website.",
     "openCard": "Open my membership card",
     "unread": "{count, plural, =0 {No unread notifications} one {# unread notification} other {# unread notifications}}",
-    "unreadNote": "Notifications are read on the website for now."
+    "openNotices": "Open notifications"
   },
   "language": {
     "title": "Language",
@@ -67,7 +68,6 @@
   },
   "tabs": {
     "home": "Home",
-    "card": "Card",
     "news": "News",
     "events": "Events",
     "me": "Me"
@@ -89,7 +89,12 @@
     "checkInNote": "At the venue, scan the code shown there with your phone’s camera. It opens the website, which records your attendance.",
     "calendarOnSite": "The calendar file is on the website."
   },
+  "notices": {
+    "onSite": "This one opens on the website."
+  },
   "me": {
-    "title": "Me"
+    "title": "Me",
+    "card": "My membership card",
+    "notices": "Notification settings"
   }
 }

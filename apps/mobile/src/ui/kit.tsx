@@ -1,4 +1,5 @@
 import { colors, semantic } from '@iua/ui-tokens';
+import { useRouter } from 'expo-router';
 import { type ReactNode } from 'react';
 import {
   ActivityIndicator,
@@ -118,6 +119,19 @@ export function Button({
       )}
       <Text style={[styles.buttonText, buttonTexts[variant]]}>{label}</Text>
     </Pressable>
+  );
+}
+
+/** The way back from a screen that was opened over another. */
+export function Back() {
+  const t = useTranslations('mobile');
+  const router = useRouter();
+  return (
+    <Button
+      label={t('back')}
+      variant="link"
+      onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+    />
   );
 }
 

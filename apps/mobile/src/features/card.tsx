@@ -10,7 +10,7 @@ import { errorMessage } from '@/errors';
 import { useLocale } from '@/i18n/i18n-provider';
 import { secureStore } from '@/session/secure-store';
 import { useSession } from '@/session/session-provider';
-import { Body, Button, Notice, Screen, Title } from '@/ui/kit';
+import { Back, Body, Button, Notice, Screen, Title } from '@/ui/kit';
 import { CARD_KEY, CODE_REFRESH_MS, type KeptCard, parseKeptCard, verifyUrl } from './card-model';
 
 type MyMembership = components['schemas']['MyMembershipDto'];
@@ -112,6 +112,7 @@ export function MembershipCard() {
   const date = (iso: string) => format.dateTime(new Date(iso), { dateStyle: 'long' });
   return (
     <Screen>
+      <Back />
       <Title>{t('title')}</Title>
       <Body muted>{t('intro')}</Body>
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}

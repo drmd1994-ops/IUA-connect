@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslations } from 'use-intl';
 import { APP_VERSION } from '@/config';
@@ -14,6 +15,7 @@ export function MeScreen() {
   const t = useTranslations('mobile');
   const { session, request } = useSession();
   const lock = useAppLock();
+  const router = useRouter();
   const [error, setError] = useState<unknown>(null);
   const [pending, setPending] = useState(false);
 
@@ -33,6 +35,14 @@ export function MeScreen() {
   return (
     <Screen>
       <Title>{t('me.title')}</Title>
+      <Card>
+        <Button label={t('me.card')} onPress={() => router.push('/card')} />
+        <Button
+          label={t('me.notices')}
+          variant="secondary"
+          onPress={() => router.push('/notifications/settings')}
+        />
+      </Card>
       <LanguageChoice />
 
       <Card>

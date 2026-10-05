@@ -1,4 +1,4 @@
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslations } from 'use-intl';
@@ -34,7 +34,8 @@ function Gate() {
   const t = useTranslations('mobile');
   const { session, status } = useSession();
 
-  if (status === 'signedIn') return <Slot />;
+  // The tabs, and over them the screens opened from a tab; the phone's back button returns.
+  if (status === 'signedIn') return <Stack screenOptions={{ headerShown: false }} />;
   if (status === 'signedOut') return <SignIn />;
   if (status === 'unreachable') {
     return (

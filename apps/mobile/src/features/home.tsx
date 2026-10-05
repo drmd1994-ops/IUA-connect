@@ -60,7 +60,7 @@ export function Home() {
           {membership?.status === 'ACTIVE' && (
             <>
               <Body>{t('active', { date: date(membership.endDate) })}</Body>
-              <Button label={t('openCard')} onPress={() => router.navigate('/card')} />
+              <Button label={t('openCard')} onPress={() => router.push('/card')} />
             </>
           )}
           {membership?.status === 'SUSPENDED' && <Body>{t('suspended')}</Body>}
@@ -73,7 +73,11 @@ export function Home() {
       {unread !== null && (
         <Card>
           <Body>{t('unread', { count: unread })}</Body>
-          <Body muted>{t('unreadNote')}</Body>
+          <Button
+            label={t('openNotices')}
+            variant="secondary"
+            onPress={() => router.push('/notifications')}
+          />
         </Card>
       )}
 
