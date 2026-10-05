@@ -19,7 +19,7 @@ type Report = Schemas['AdminReportDto'];
 type Suspensions = Schemas['AdminSuspensionListDto'];
 type Status = Report['status'];
 type ReportPerson = Report['reporter'];
-type Decision = 'dismiss' | 'deleteMessage' | 'suspend';
+type Decision = 'dismiss' | 'deleteMessage' | 'suspend' | 'archiveRoom';
 
 const STATUSES: Status[] = ['OPEN', 'DISMISSED', 'UPHELD'];
 const link = 'font-semibold text-primary underline underline-offset-4';
@@ -28,6 +28,12 @@ function usePersonName() {
   const t = useTranslations('chat.admin');
   return (person: ReportPerson) =>
     [person.firstName, person.lastName].filter(Boolean).join(' ').trim() || t('unknownPerson');
+}
+
+function useRoomName() {
+  const locale = useLocale();
+  return (room: NonNullable<Report['room']>) =>
+    locale === 'he' ? room.nameHe : (room.nameEn ?? room.nameHe);
 }
 
 /**
@@ -40,6 +46,7 @@ export function ChatReportsPage() {
   const locale = useLocale();
   const format = useFormatter();
   const name = usePersonName();
+  const roomName = useRoomName();
   const { api, call } = useAuth();
   const [status, setStatus] = useState<Status | ''>('OPEN');
   const [page, setPage] = useState(1);
@@ -59,6 +66,10 @@ export function ChatReportsPage() {
       active = false;
     };
   }, [api, call, page, status]);
+
+  // A report about a room as such names the room; nobody is reported.
+  const subject = (item: List['items'][number]) =>
+    item.aboutRoom && item.room ? roomName(item.room) : name(item.reported);
 
   return (
     <div className="flex flex-col gap-6">
@@ -114,13 +125,22 @@ export function ChatReportsPage() {
                         <Link
                           href={`/admin/chat/reports/${item.id}`}
                           className={link}
-                          aria-label={`${t('open')}: ${name(item.reported)}`}
+                          aria-label={`${t('open')}: ${subject(item)}`}
                         >
-                          {name(item.reported)}
+                          {subject(item)}
                         </Link>
                       </td>
                       <td className="p-3">
-                        {item.aboutMessage ? t('aboutMessage') : t('aboutPerson')}
+                        {item.aboutRoom
+                          ? t('aboutRoom')
+                          : item.aboutMessage
+                            ? t('aboutMessage')
+                            : t('aboutPerson')}
+                        {item.room && !item.aboutRoom && (
+                          <span className="block text-text-muted">
+                            {t('inRoom', { name: roomName(item.room) })}
+                          </span>
+                        )}
                       </td>
                       <td className="p-3">
                         {locale === 'he' ? item.category.nameHe : item.category.nameEn}
@@ -276,7 +296,9 @@ export function ChatReportPage({ id }: { id: string }) {
   const locale = useLocale();
   const format = useFormatter();
   const name = usePersonName();
-  const { api, call } = useAuth();
+  const roomName = useRoomName();
+  const m = useTranslations('rooms.room');
+  const { api, call, me } = useAuth();
   const [report, setReport] = useState<Report | null>(null);
   const [decision, setDecision] = useState<Decision>('dismiss');
   const [reason, setReason] = useState('');
@@ -325,7 +347,10 @@ export function ChatReportPage({ id }: { id: string }) {
       ? name(report.reported)
       : senderId === report?.reporter.id
         ? name(report.reporter)
-        : t('unknownPerson');
+        : // In a room the messages around the reported one may be anybody's.
+          report?.room && senderId
+          ? m('unknownPerson')
+          : t('unknownPerson');
   const daysValid =
     days.trim() === '' || (/^\d{1,3}$/.test(days.trim()) && +days >= 1 && +days <= 365);
 
@@ -358,12 +383,22 @@ export function ChatReportPage({ id }: { id: string }) {
                 <dd>{value}</dd>
               </div>
             ))}
-            {(
-              [
-                [t('colReported'), report.reported],
-                [t('colReporter'), report.reporter],
-              ] as const
-            ).map(([term, person]) => (
+            {report.room && (
+              <div className="contents">
+                <dt className="font-semibold">{d('room')}</dt>
+                <dd>
+                  {roomName(report.room)}
+                  {' · '}
+                  <Link href={`/chat/rooms/${report.room.id}`} className={link}>
+                    {d('openRoom')}
+                  </Link>
+                </dd>
+              </div>
+            )}
+            {[
+              ...(report.aboutRoom ? [] : [[t('colReported'), report.reported] as const]),
+              [t('colReporter'), report.reporter] as const,
+            ].map(([term, person]) => (
               <div key={term} className="contents">
                 <dt className="font-semibold">{term}</dt>
                 <dd>
@@ -397,7 +432,11 @@ export function ChatReportPage({ id }: { id: string }) {
             </h2>
             {report.messages.length === 0 ? (
               <p className="text-text-muted">
-                {report.aboutMessage ? d('erased') : d('noMessages')}
+                {report.aboutRoom
+                  ? d('aboutRoom')
+                  : report.aboutMessage
+                    ? d('erased')
+                    : d('noMessages')}
               </p>
             ) : (
               <ol data-testid="report-messages" className="flex flex-col gap-2">
@@ -453,6 +492,11 @@ export function ChatReportPage({ id }: { id: string }) {
                     ['dismiss', true],
                     ['deleteMessage', report.aboutMessage && report.messages.length > 0],
                     ['suspend', report.reported.id !== null],
+                    [
+                      'archiveRoom',
+                      report.room !== null &&
+                        (me?.permissions.includes('chat.rooms.manage') ?? false),
+                    ],
                   ] as const
                 )
                   .filter(([, possible]) => possible)
@@ -465,7 +509,11 @@ export function ChatReportPage({ id }: { id: string }) {
                         checked={decision === value}
                         onChange={() => setDecision(value)}
                       />
-                      <span>{d(value)}</span>
+                      <span>
+                        {value === 'deleteMessage' && report.room
+                          ? d('deleteRoomMessage')
+                          : d(value)}
+                      </span>
                     </label>
                   ))}
               </fieldset>
