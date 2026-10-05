@@ -29,7 +29,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 ## 2. Current state
 
-**The MVP is complete and merged, and so is private chat.** `main` is at M11 (pull request #14, commit `8c2b494`), CI green. **Chat rooms (M12) are built on the branch `feat/chat-rooms`, in a pull request that the owner has not merged yet.**
+**The MVP is complete and merged, and so are private chat and chat rooms.** `main` is at M12 (pull request #17, commit `a1f8184`), CI green.
 
 | Milestone | What it added                                                                              | Merged     |
 | --------- | ------------------------------------------------------------------------------------------ | ---------- |
@@ -48,7 +48,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 **What it runs on:** pnpm 10 and Turborepo, Node 24, TypeScript. API: NestJS 11, Prisma 7, PostgreSQL 16 (portable install at `C:\Users\PC\tools\pgsql`). Web: Next.js 16 on port 3001, Hebrew (right to left) and English, Tailwind v4. Tests: Jest, Vitest, Playwright with axe.
 
-**Test totals at M12 (on its branch):** API 298 unit and 446 integration tests; 105 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
+**Test totals at M12:** API 298 unit and 446 integration tests; 105 browser tests. CI also runs lint, type check, a secret and dependency scan, an OWASP ZAP passive scan and the build.
 
 **How to show it**
 
@@ -207,7 +207,7 @@ What was tried and did not work, so nobody tries it the same way again.
 
 ## 6. Next step
 
-**M12 waits for the owner:** the checkpoint test (`docs/demo/DEMO_SCRIPT.md`, section 9) and the merge of its pull request. After that the next step is the owner's to choose.
+**M13 is in progress** on the branch `feat/chat-groups` (plan: `docs/plans/M13-chat-groups-status.md`, approved on 2026-10-05): group chats, rooms by invitation, online status, forwarding, and pictures, PDF and video in messages. **M12 was merged without the owner's checkpoint test;** it is still owed (`docs/demo/DEMO_SCRIPT.md`, section 9).
 
 1. **The rest of chat,** with its own approved plan before any code:
    - **M13:** files and images in messages, online and "last active" status, rooms by invitation, group chats, forwarding. **Files wait for the legal review:** between doctors they are where patient details travel.

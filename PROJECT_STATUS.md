@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M12 chat rooms built, in a pull request; M11 merged and checked by the owner)_
+_Last updated: 2026-10-05 (M12 chat rooms merged; M13 plan approved, work started)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: built 2026-10-05, in a pull request, not merged.** |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: merged 2026-10-05** (pull request #17). |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -678,7 +678,7 @@ Plan: [`docs/plans/M12-chat-rooms.md`](docs/plans/M12-chat-rooms.md), approved b
 
 No new libraries.
 
-**Not merged.** The work is on the branch `feat/chat-rooms`, in a pull request into `main`. The owner merges, or asks for it.
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #17, squash commit `a1f8184`), with green CI. The security scan (ZAP) failed once in CI without scanning anything and passed when run again; nothing was changed in between. **The owner's checkpoint test has not been done yet.**
 
 ### Delivered
 
@@ -738,7 +738,7 @@ No new libraries.
 ### Open for the owner
 
 1. **Checkpoint test of the demo** (plan §11): two browser windows and the admin area. `docs/demo/DEMO_SCRIPT.md` section 9.
-2. **Merge the pull request,** or ask Claude to.
+2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #17, CI green).
 3. **The wording of the Hebrew room texts.**
 4. **M13 (files, online status, rooms by invitation)** needs its own plan when the owner wants it. Files wait for the legal review.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
@@ -751,6 +751,8 @@ No new libraries.
 
 **M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day.
 
-**M12 (chat rooms)** is built on the branch `feat/chat-rooms` and waits for the owner's checkpoint test and merge. **M13 (files, online status, rooms by invitation)** follows, with its own approved plan.
+**M12 (chat rooms)** was merged on 2026-10-05 (pull request #17). The owner's checkpoint test is still owed.
+
+**M13 (groups, rooms by invitation, online status, forwarding, files and video)** is in progress on the branch `feat/chat-groups`. Its plan, [`docs/plans/M13-chat-groups-status.md`](docs/plans/M13-chat-groups-status.md), was approved by the owner on 2026-10-05.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
