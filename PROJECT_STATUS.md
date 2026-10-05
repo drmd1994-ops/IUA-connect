@@ -839,18 +839,19 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 - **Home and the membership card** (checkpoint 5, on the branch `feat/mobile-screens`, not in a pull request yet): three tabs (Home, Card, Me). Home shows who is signed in, the state of the membership and the number of unread notifications. The card shows the member's name, the kind of membership, until when, and the code that the site's verification page checks, renewed every four minutes. **Without a connection the card is shown as it last was, with its date and without a code,** because a kept code would be refused: the plan said "readable without a connection", and this is what that can honestly mean.
 - **News** (checkpoint 6, same branch): a fourth tab. The list with a category choice and "Show more"; an item with its picture, text, files and references. Member-only items are shown as the API allows, as on the site. A file or a link opens in the phone's browser. The text of an item is drawn by a small reader written for the app (headings, paragraphs, lists, quotes, code, bold, italics, links); the site uses a library for this, and no library was added to the app.
+- **Events** (checkpoint 7, same branch): a fifth tab. The list (upcoming or past, a category, "Show more"); an event with when and where, a map link, its text, registration (register, the waiting list, cancel), and the programme with speakers and materials; choosing sessions and saving them; "My schedule". Times are written in the event's own time zone.
 
 ### Verified
 
 - 54 sign-in integration tests pass (7 new); **the existing web sign-in suites pass unchanged.**
-- 31 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again; the kept card; the reader of an item's text, including that a link is made only of a web or mail address and that HTML stays plain text; file addresses and sizes).
+- 44 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again; the kept card; the reader of an item's text, including that a link is made only of a web or mail address and that HTML stays plain text; file addresses and sizes; what the registration panel says and offers in each state; grouping sessions by day; writing a time range).
 - **On the owner's phone (Android 16, Expo Go, through the tunnel), reported by the owner on 2026-10-05:** the app opens; the connection check says "live updates arrive on this phone"; the page changes sides when the language is changed.
-- The app's server builds the app with the News screens, and the demo server answers the requests they make (the list, a second page, a category, the categories).
+- The app's server builds the app with the News and Events screens, and the demo server answers the requests their lists make. **Registering, cancelling and saving a schedule from the app were not tried by anyone;** the server's side of them is covered by the existing integration tests.
 - The app type-checks, lints, and **bundles for Android**. The repository's format check, lint, type check and unit tests pass with the app included.
 
 ### Not verified
 
-- **The News screens have not been seen on a phone.** Nobody has looked at a list or an item there, in either language.
+- **The News and Events screens have not been seen on a phone.** Nobody has looked at a list, an item or an event there, in either language, or pressed "Register".
 - **Of the first test on the phone, these were not reported:** staying signed in after the app is closed, the fingerprint or face check, the card and its code, and the phone showing among the sessions on the site. Whether the change of direction needed the app closed and opened was not said either.
 - Nothing was tried on an iPhone, and nothing will be in part 1.
 
@@ -861,14 +862,17 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 - **Two of the project's own supply-chain rules blocked installs, and were not bypassed.** The 7-day rule: a batch of Expo libraries was 6 days old, so the release before it was installed for each. The trust check refused a sub-dependency of `expo-device`, so that library was left out; the phone's name comes from Android itself.
 - **The app's rules are tested with the same test runner as the other packages,** not with the phone-component test tools the plan listed (`jest-expo`, the React Native testing library). Those are still to be added for the screens.
 - **Passkeys don't work in the app,** as the plan said; the sign-in screen says so.
-- **The card has a tab of its own** (Home, Card, News, Me). The plan listed Home, News, Events, Chat, Me, with the card under Home. Five tabs is the most that fits; when Events and Chat arrive, the card moves under Home.
+- **The card has a tab of its own** (Home, Card, News, Events, Me). The plan listed Home, News, Events, Chat, Me, with the card under Home. Five tabs is the most that fits; when Chat arrives, the card moves under Home.
+- **There is no ticket code for the door,** though the plan listed one. The project has no such code: attendance is recorded when a member scans the code shown at the venue (M5), which opens the site. The app says so to a registered member. Scanning inside the app would need the camera and a new library, and was not added.
+- **"Add to my calendar" is offered in the app only for an event open to everyone.** The calendar file of a members-only event, and of "My schedule", needs the session, which a browser opened from the app does not have; the app says the file is on the website. Offering it in the app would need a library for saving and sharing files.
+- **How a time range is written was made by hand** (a day, then two times), because not every phone has the browser's range formatting.
 - **Checked route names were switched off in the app.** While the app's server runs, Expo rewrites a generated file wrongly (it lists ordinary source files as screens), and the type check then fails on correct code. CI never had this file, so nothing that CI checks is lost.
 - **The demo's news list holds leftovers of the browser tests** ("Scheduled article 462278" and the like). How they got into the demo database was not looked into. They are fictional; `pnpm db:reset` followed by the seed removes them.
 - **The phone reaches this computer through a tunnel, not over the Wi-Fi** (the plan's Amendment 1, asked for by the owner on 2026-10-05). Over the Wi-Fi, Expo Go never loaded the app, and the cause was not found. With Microsoft's dev tunnels, signed in with the owner's GitHub account, it loaded. While the tunnel runs, the demo server can be reached from the internet by anyone who has the address; it is stopped with the demo. The address changes each time the tunnel is started. The site is not behind the tunnel, so the card's code can't be checked from a second device this way.
 
 ### Open for the owner
 
-1. **The News tab on the phone** (`apps/mobile/README.md`): the list, a category, "Show more", an item with a picture, and a file.
+1. **The News and Events tabs on the phone** (`apps/mobile/README.md`): the lists, an item with a picture and a file; an event, "Register" and "Cancel my registration", choosing sessions, "My schedule".
 2. **The rest of the first test:** close the app and open it again (still signed in, after the fingerprint or face check); the card and its code.
 
 ## Next step

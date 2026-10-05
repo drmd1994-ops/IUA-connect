@@ -25,7 +25,7 @@
     "title": "IUA Connect",
     "signedInAs": "Signed in as {email}",
     "staffNote": "You have a staff role. The admin area is on the website; the app is for members’ everyday use.",
-    "soon": "The app is being built step by step. Events, notifications and chat are not in it yet; they are on the website.",
+    "soon": "The app is being built step by step. Notifications and chat are not in it yet; they are on the website.",
     "membership": "Your membership",
     "active": "Active until {date}",
     "suspended": "Your membership is suspended.",
@@ -69,6 +69,7 @@
     "home": "Home",
     "card": "Card",
     "news": "News",
+    "events": "Events",
     "me": "Me"
   },
   "card": {
@@ -83,6 +84,10 @@
     "fileMb": "{name} ({size} MB)",
     "fileHint": "Opens in the phone’s browser.",
     "fileFailed": "The file couldn’t be opened."
+  },
+  "events": {
+    "checkInNote": "At the venue, scan the code shown there with your phone’s camera. It opens the website, which records your attendance.",
+    "calendarOnSite": "The calendar file is on the website."
   },
   "me": {
     "title": "Me"

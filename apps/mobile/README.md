@@ -68,6 +68,7 @@ The site is not behind the tunnel, so the card's code can't be checked from a se
 - **Change the language** to English and back. The text changes at once; the direction of the page changes after the app is closed and opened again.
 - **The "Card" tab:** your membership card with its code. On a second device, scan the code: the site's verification page should say the membership is valid. Then switch the phone to flight mode and open the tab again: the card is shown as it last was, with its date and without a code.
 - **The "News" tab:** the list; choose a category; "Show more" at the end; open an item with a picture; open one of its files (it opens in the phone's browser); the back link returns to the list. In Hebrew and in English.
+- **The "Events" tab:** upcoming and past; open "Workshop with limited places (demo)" or another event; "Register", then tick sessions and "Save my schedule"; "View my schedule"; "Cancel my registration". On the site, as the same person, the registration shows too.
 - **"Me" → "Connection check" → "Start the check".** It says whether live updates (which chat uses) arrive on your phone. It can take up to thirty seconds. Tell Claude what it says, including the "details for the developer" line.
 - **On the site,** as the same person: **Account → Security**. The phone is listed among your sessions, by its name. Ending it there signs the app out.
 

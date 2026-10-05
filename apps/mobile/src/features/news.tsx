@@ -3,20 +3,20 @@ import { colors, semantic } from '@iua/ui-tokens';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFormatter, useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
 import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';
 import { Body, Button, Heading, Notice, Screen, Title } from '@/ui/kit';
 import { Markdown } from '@/ui/markdown';
-import { sizeParts, useFileUrl, useSignFile } from './files';
+import { Choices, FileLink, Picture, Tag } from '@/ui/parts';
+import { useFileUrl } from './files';
 
 type List = components['schemas']['PublicNewsListDto'];
 type Item = List['items'][number];
 type Category = components['schemas']['NewsCategoryListDto']['items'][number];
 type Article = components['schemas']['PublicNewsDto'];
-type Attachment = Article['attachments'][number];
 
 const PAGE_SIZE = 10;
 
@@ -80,23 +80,18 @@ export function NewsList() {
       <Title>{t('title')}</Title>
       <Body muted>{t('intro')}</Body>
       {categories.length > 0 && (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chips}
-          accessibilityRole="radiogroup"
-          accessibilityLabel={t('category')}
-        >
-          <Chip label={t('allCategories')} selected={category === ''} onPress={() => choose('')} />
-          {categories.map((c) => (
-            <Chip
-              key={c.key}
-              label={locale === 'he' ? c.nameHe : c.nameEn}
-              selected={category === c.key}
-              onPress={() => choose(c.key)}
-            />
-          ))}
-        </ScrollView>
+        <Choices
+          label={t('category')}
+          value={category}
+          onChange={choose}
+          options={[
+            { value: '', label: t('allCategories') },
+            ...categories.map((c) => ({
+              value: c.key,
+              label: locale === 'he' ? c.nameHe : c.nameEn,
+            })),
+          ]}
+        />
       )}
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
       {!shown && error === null && <Body muted>{m('loading')}</Body>}
@@ -111,28 +106,6 @@ export function NewsList() {
         <Button label={m('news.more')} variant="secondary" onPress={() => setPages((n) => n + 1)} />
       )}
     </Screen>
-  );
-}
-
-function Chip({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="radio"
-      accessibilityLabel={label}
-      accessibilityState={{ checked: selected }}
-      style={[styles.chip, selected && styles.chipOn]}
-    >
-      <Text style={[styles.chipText, selected && styles.chipTextOn]}>{label}</Text>
-    </Pressable>
   );
 }
 
@@ -169,9 +142,7 @@ function NewsCard({ item }: { item: Item }) {
         <Text style={styles.cardTitle}>{item.title}</Text>
         {item.summary ? <Text style={styles.summary}>{item.summary}</Text> : null}
         {item.sourceUrl ? <Text style={styles.meta}>{t('news.sourceLabel')}</Text> : null}
-        {item.accessTier !== 'PUBLIC' && (
-          <Text style={styles.tier}>{t('common.tiers.MEMBERS')}</Text>
-        )}
+        {item.accessTier !== 'PUBLIC' && <Tag>{t('common.tiers.MEMBERS')}</Tag>}
       </View>
     </Pressable>
   );
@@ -262,7 +233,7 @@ export function NewsArticle({ slug }: { slug: string }) {
         <View style={styles.section}>
           <Heading>{t('news.attachments')}</Heading>
           {article.attachments.map((file) => (
-            <AttachmentLink key={file.id} file={file} />
+            <FileLink key={file.id} file={file} />
           ))}
         </View>
       )}
@@ -297,75 +268,7 @@ export function NewsArticle({ slug }: { slug: string }) {
   );
 }
 
-function Picture({ fileId, label }: { fileId: string; label: string }) {
-  const url = useFileUrl(fileId);
-  if (!url) return <View style={styles.picture} />;
-  return (
-    <Image
-      source={{ uri: url }}
-      style={styles.picture}
-      contentFit="cover"
-      accessible
-      accessibilityRole="image"
-      accessibilityLabel={label}
-    />
-  );
-}
-
-/** A file of the item. Its signed address lives five minutes, so it is asked for when pressed. */
-function AttachmentLink({ file }: { file: Attachment }) {
-  const t = useTranslations('content.common');
-  const m = useTranslations('mobile.news');
-  const format = useFormatter();
-  const sign = useSignFile();
-  const [failed, setFailed] = useState(false);
-  const [pending, setPending] = useState(false);
-  const size = sizeParts(file.sizeBytes);
-  const name = m(size.unit === 'mb' ? 'fileMb' : 'fileKb', {
-    name: file.originalName,
-    size: format.number(size.value, { maximumFractionDigits: 1 }),
-  });
-
-  async function open() {
-    setPending(true);
-    setFailed(false);
-    try {
-      await Linking.openURL(await sign(file.id));
-    } catch {
-      setFailed(true);
-    } finally {
-      setPending(false);
-    }
-  }
-
-  return (
-    <>
-      <Button
-        label={`${t('download')}: ${name}`}
-        variant="link"
-        hint={m('fileHint')}
-        pending={pending}
-        onPress={() => void open()}
-      />
-      {failed && <Notice tone="error">{m('fileFailed')}</Notice>}
-    </>
-  );
-}
-
 const styles = StyleSheet.create({
-  chips: { gap: 8, paddingVertical: 2 },
-  chip: {
-    minHeight: 48,
-    paddingHorizontal: 16,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: colors.neutral[400],
-    backgroundColor: semantic.surface,
-    justifyContent: 'center',
-  },
-  chipOn: { backgroundColor: semantic.primary, borderColor: semantic.primary },
-  chipText: { fontSize: 15, fontWeight: '600', color: semantic.text },
-  chipTextOn: { color: semantic.onPrimary },
   card: {
     backgroundColor: semantic.surface,
     borderColor: semantic.border,
@@ -385,24 +288,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   summary: { fontSize: 16, lineHeight: 24, color: semantic.textMuted },
-  tier: {
-    alignSelf: 'flex-start',
-    fontSize: 13,
-    fontWeight: '600',
-    color: semantic.textMuted,
-    backgroundColor: colors.neutral[100],
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    overflow: 'hidden',
-  },
   lead: { fontSize: 18, lineHeight: 28, color: semantic.textMuted },
-  picture: {
-    width: '100%',
-    aspectRatio: 16 / 9,
-    borderRadius: 10,
-    backgroundColor: colors.neutral[100],
-  },
   section: { gap: 4 },
   source: { borderWidth: 1, borderColor: semantic.border, borderRadius: 10, padding: 12 },
 });
