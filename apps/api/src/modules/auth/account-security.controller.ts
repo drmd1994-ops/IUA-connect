@@ -146,7 +146,8 @@ export class AccountSecurityController {
     return {
       sessions: sessions.map((session) => ({
         id: session.id,
-        device: describeUserAgent(session.userAgent),
+        device: session.clientName ?? describeUserAgent(session.userAgent),
+        client: session.client,
         ip: session.ip,
         createdAt: session.createdAt.toISOString(),
         lastSeenAt: session.lastSeenAt.toISOString(),

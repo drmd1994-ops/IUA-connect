@@ -10,6 +10,7 @@ import enEvents from './messages/en/events.json';
 import enGroups from './messages/en/groups.json';
 import enDirectory from './messages/en/directory.json';
 import enMembership from './messages/en/membership.json';
+import enMobile from './messages/en/mobile.json';
 import enNotifications from './messages/en/notifications.json';
 import enPortal from './messages/en/portal.json';
 import enRooms from './messages/en/rooms.json';
@@ -26,6 +27,7 @@ import heEvents from './messages/he/events.json';
 import heGroups from './messages/he/groups.json';
 import heDirectory from './messages/he/directory.json';
 import heMembership from './messages/he/membership.json';
+import heMobile from './messages/he/mobile.json';
 import heNotifications from './messages/he/notifications.json';
 import hePortal from './messages/he/portal.json';
 import heRooms from './messages/he/rooms.json';
@@ -67,6 +69,8 @@ export type Messages = {
   chat: typeof heChat;
   rooms: typeof heRooms;
   groups: typeof heGroups;
+  /** Texts only the mobile app shows (M14). The web app doesn't send them to the browser. */
+  mobile: typeof heMobile;
   portal: typeof hePortal;
 };
 
@@ -87,6 +91,7 @@ const MESSAGES: Record<Locale, Messages> = {
     chat: heChat,
     rooms: heRooms,
     groups: heGroups,
+    mobile: heMobile,
     portal: hePortal,
   },
   en: {
@@ -105,6 +110,7 @@ const MESSAGES: Record<Locale, Messages> = {
     chat: enChat,
     rooms: enRooms,
     groups: enGroups,
+    mobile: enMobile,
     portal: enPortal,
   },
 };

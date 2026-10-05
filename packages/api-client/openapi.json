@@ -208,6 +208,61 @@
         ]
       }
     },
+    "/api/v1/auth/app/refresh": {
+      "post": {
+        "operationId": "AuthController_appRefresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppRefreshDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/app/logout": {
+      "post": {
+        "operationId": "AuthController_appLogout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppRefreshDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/password/forgot": {
       "post": {
         "operationId": "AuthController_forgotPassword",
@@ -11119,6 +11174,23 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 1024
+          },
+          "client": {
+            "type": "string",
+            "enum": [
+              "web",
+              "app"
+            ]
+          },
+          "deviceName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "deviceToken": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 256
           }
         },
         "required": [
@@ -11153,6 +11225,17 @@
                 "passkey"
               ]
             }
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "sessionExpiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "deviceToken": {
+            "type": "string"
           }
         },
         "required": [
@@ -11172,6 +11255,23 @@
             "type": "string",
             "minLength": 6,
             "maxLength": 20
+          },
+          "client": {
+            "type": "string",
+            "enum": [
+              "web",
+              "app"
+            ]
+          },
+          "deviceName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "deviceToken": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 256
           }
         },
         "required": [
@@ -11190,11 +11290,36 @@
             "type": "integer",
             "minimum": -9007199254740991,
             "maximum": 9007199254740991
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "sessionExpiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "deviceToken": {
+            "type": "string"
           }
         },
         "required": [
           "accessToken",
           "expiresIn"
+        ],
+        "additionalProperties": false
+      },
+      "AppRefreshDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "refreshToken"
         ],
         "additionalProperties": false
       },
@@ -11421,6 +11546,13 @@
                 "device": {
                   "type": "string"
                 },
+                "client": {
+                  "type": "string",
+                  "enum": [
+                    "WEB",
+                    "APP"
+                  ]
+                },
                 "ip": {
                   "anyOf": [
                     {
@@ -11454,6 +11586,7 @@
               "required": [
                 "id",
                 "device",
+                "client",
                 "ip",
                 "createdAt",
                 "lastSeenAt",

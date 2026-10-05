@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M13 groups, invitations and files built, in a pull request; M12 chat rooms merged)_
+_Last updated: 2026-10-05 (M12 and M13 merged and checked by the owner; the plan for the mobile app, M14, is written and waits for approval)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: merged 2026-10-05** (pull request #17). **M13 Groups, invitations, online status and files in chat: built 2026-10-05, in a pull request, not merged.** |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: merged 2026-10-05** (pull request #17). **M13 Groups, invitations, online status and files in chat: merged 2026-10-05** (pull request #18). |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -678,7 +678,7 @@ Plan: [`docs/plans/M12-chat-rooms.md`](docs/plans/M12-chat-rooms.md), approved b
 
 No new libraries.
 
-**Merged** into `main` on 2026-10-05 at the owner's request (pull request #17, squash commit `a1f8184`), with green CI. The security scan (ZAP) failed once in CI without scanning anything and passed when run again; nothing was changed in between. **The owner's checkpoint test has not been done yet.**
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #17, squash commit `a1f8184`), with green CI. The security scan (ZAP) failed once in CI without scanning anything and passed when run again; nothing was changed in between. **The owner marked the checkpoint test as good on 2026-10-05.**
 
 ### Delivered
 
@@ -716,7 +716,7 @@ No new libraries.
 - **How many open connections one server holds** is still not tested.
 - **The demo script's rooms section** was written from the screens and the seed, not walked through start to finish.
 - **Uploading a room picture** was not tried in a browser; the upload itself is the one news uses.
-- **The Hebrew room texts** were written by Claude and not yet read by the owner.
+- ~~The Hebrew room texts were not yet read by the owner~~ **Read by the owner on 2026-10-05;** no change was asked for.
 
 ### Deviations and findings
 
@@ -737,9 +737,9 @@ No new libraries.
 
 ### Open for the owner
 
-1. **Checkpoint test of the demo** (plan §11): two browser windows and the admin area. `docs/demo/DEMO_SCRIPT.md` section 9.
+1. ~~Checkpoint test of the demo~~ **Marked as good by the owner on 2026-10-05.**
 2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #17, CI green).
-3. **The wording of the Hebrew room texts.**
+3. ~~The wording of the Hebrew room texts~~ **Read by the owner on 2026-10-05;** no change was asked for.
 4. **M13 (files, online status, rooms by invitation)** needs its own plan when the owner wants it. Files wait for the legal review.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
 
@@ -757,7 +757,7 @@ Plan: [`docs/plans/M13-chat-groups-status.md`](docs/plans/M13-chat-groups-status
 
 No new libraries.
 
-**Not merged.** The work is on the branch `feat/chat-groups`, in a pull request into `main`. The owner merges, or asks for it.
+**Merged** into `main` on 2026-10-05 at the owner's request (pull request #18, squash commit `4feef55`), with green CI on the first run. **The owner marked the checkpoint test as good on 2026-10-05.**
 
 ### Delivered
 
@@ -794,8 +794,8 @@ No new libraries.
 - **The screen-reader check** was not done for any chat page since M11; only the automated checks ran.
 - **How many open connections one server holds** is still not tested, and M13 adds a message between server processes every thirty seconds.
 - **The demo script's new section** was written from the screens and the seed, not walked through start to finish.
-- **The Hebrew texts of M13** were written by Claude and not yet read by the owner.
-- **The owner's checkpoint test of M12** was never done; M12 was merged without it.
+- ~~The Hebrew texts of M13 were not yet read by the owner~~ **Read by the owner on 2026-10-05;** no change was asked for.
+- ~~The owner's checkpoint test of M12 was never done~~ **Marked as good by the owner on 2026-10-05,** after both M12 and M13 were merged.
 
 ### Deviations and findings
 
@@ -819,11 +819,47 @@ No new libraries.
 
 ### Open for the owner
 
-1. **Checkpoint test of the demo** (plan §10): `docs/demo/DEMO_SCRIPT.md` section 10, and section 9 for M12, which was never done.
-2. **Merge the pull request,** or ask Claude to.
-3. **The wording of the Hebrew texts** of M12 and M13.
+1. ~~Checkpoint test of the demo~~ **Marked as good by the owner on 2026-10-05,** for M12 and M13.
+2. ~~Merge the pull request~~ merged at the owner's request on 2026-10-05 (pull request #18, CI green).
+3. ~~The wording of the Hebrew texts of M12 and M13~~ **Read by the owner on 2026-10-05;** no change was asked for.
 4. **The legal review now also has to cover files and video in chat,** which are in the demo ahead of it.
 5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
+
+## M14 Mobile app, part 1 (in progress, started 2026-10-05)
+
+Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved by the owner on 2026-10-05 with the answers in its §11: a demo app on the owner's own phone (Android 16), seen through Expo Go; no push notifications in part 1; fingerprint or face when the app opens; the screens in the plan's order; signed in as long as on the web.
+
+**This section is a running record; the milestone is not finished.** Twelve checkpoints are planned; 2, 3 and 4 are built.
+
+### Built so far
+
+- **Sign-in for an app, on the server** (checkpoint 2). With `client: "app"` a sign-in returns the refresh token in the answer and sets no cookie. The app refreshes and signs out at `/auth/app/refresh` and `/auth/app/logout`, with the token in the body. A refresh token is accepted only the way its own client presents it: a browser's token is refused outside its cookie, and the app's inside one, before anything is used up. Sessions say what started them and, for the app, what the phone is called; "my sessions" shows it. One migration, additions only.
+- **The app's frame** (checkpoint 3): `apps/mobile`, Expo SDK 57 (React Native 0.86), using the shared API client, texts and design tokens. Hebrew and English, starting in the phone's language. A "Connection check" for the first test on a real phone.
+- **Sign-in in the app** (checkpoint 4): email and password, then the authenticator code; the refresh token only in the phone's secure storage; the session restored when the app opens; the phone's fingerprint or face check, with a switch; sign out, and sign out everywhere.
+
+### Verified
+
+- 54 sign-in integration tests pass (7 new); **the existing web sign-in suites pass unchanged.**
+- 15 tests of the app's rules pass (the session against a pretend server and a pretend secure storage that records every write; the starting language; when the app locks again).
+- The app type-checks, lints, and **bundles for Android**. The repository's format check, lint, type check and unit tests pass with the app included.
+
+### Not verified
+
+- **The app has not been run on a phone.** Nobody has seen a screen of it. Everything above is what can be checked without one.
+- **The two unknowns of the plan are still unknown:** whether chat's live connection works on a phone, and how the change of direction behaves when the language is changed.
+- Nothing was tried on an iPhone, and nothing will be in part 1.
+
+### Deviations and findings
+
+- **Separate addresses for the app's refresh and sign-out,** not a field on the existing ones as the plan said. The browser's routes stay exactly as they were.
+- **A security advisory came with Expo's tools** and was accepted by the owner on 2026-10-05: `node-forge` (GHSA-86w9-cpqp-85rv, no fixed version), reached only through Expo's command-line tool, which runs on the developer's computer and in CI and is not part of the app on the phone. Recorded in `pnpm-workspace.yaml`; remove when a fix exists. Two moderate advisories also arrived (`uuid`, `decode-uri-component`, both in Expo's tools or router); they don't fail the check.
+- **Two of the project's own supply-chain rules blocked installs, and were not bypassed.** The 7-day rule: a batch of Expo libraries was 6 days old, so the release before it was installed for each. The trust check refused a sub-dependency of `expo-device`, so that library was left out; the phone's name comes from Android itself.
+- **The app's rules are tested with the same test runner as the other packages,** not with the phone-component test tools the plan listed (`jest-expo`, the React Native testing library). Those are still to be added for the screens.
+- **Passkeys don't work in the app,** as the plan said; the sign-in screen says so.
+
+### Open for the owner
+
+1. **The first test on the phone** (`apps/mobile/README.md`): sign in; close and reopen the app; change the language; and what "Connection check" says. **The owner said on 2026-10-05 what should happen** (the app stays signed in; the page direction changes). **Whether it does on the phone is not known yet.**
 
 ## Next step
 
@@ -833,8 +869,10 @@ No new libraries.
 
 **M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day.
 
-**M12 (chat rooms)** was merged on 2026-10-05 (pull request #17). The owner's checkpoint test is still owed.
+**M12 (chat rooms)** was merged on 2026-10-05 (pull request #17), and the owner marked its checkpoint test as good the same day.
 
-**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** is built on the branch `feat/chat-groups` and waits for the owner's checkpoint test and merge. With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against.
+**M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner marked its checkpoint test as good the same day, and read the Hebrew texts of M12 and M13.
+
+**M14 (the mobile app, part 1)** has a written plan, [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), asked for by the owner on 2026-10-05. **It is not approved yet: no app code is written and nothing is installed.** What the plan found: the server needs a second way to sign in that suits an app (today the long-lived part of a session travels only in a browser cookie); passkeys can't work in an app until the site has real hosting with an address; this computer has no mobile tools, and an iPhone app can't be built on Windows.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

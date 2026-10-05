@@ -191,23 +191,36 @@ model Device {
   @@map("devices")
 }
 
+/// What started a session: a browser, which keeps the refresh token in a cookie, or the mobile
+/// app, which keeps it in the phone's secure storage (M14).
+enum SessionClient {
+  WEB
+  APP
+
+  @@map("session_client")
+}
+
 model Session {
-  id                String    @id @db.Uuid
-  userId            String    @map("user_id") @db.Uuid
-  deviceId          String?   @map("device_id") @db.Uuid
-  ip                String?   @db.Inet
-  userAgent         String?   @map("user_agent") @db.VarChar(512)
+  id                String        @id @db.Uuid
+  userId            String        @map("user_id") @db.Uuid
+  deviceId          String?       @map("device_id") @db.Uuid
+  ip                String?       @db.Inet
+  userAgent         String?       @map("user_agent") @db.VarChar(512)
   /// Set when MFA was completed in this session (TOTP challenge, or MFA enrolment).
-  mfaCompletedAt    DateTime? @map("mfa_completed_at") @db.Timestamptz(6)
+  mfaCompletedAt    DateTime?     @map("mfa_completed_at") @db.Timestamptz(6)
   /// Last time the user re-entered their password (and code) in this session.
-  reauthenticatedAt DateTime? @map("reauthenticated_at") @db.Timestamptz(6)
-  lastSeenAt        DateTime  @default(now()) @map("last_seen_at") @db.Timestamptz(6)
+  reauthenticatedAt DateTime?     @map("reauthenticated_at") @db.Timestamptz(6)
+  lastSeenAt        DateTime      @default(now()) @map("last_seen_at") @db.Timestamptz(6)
   /// Idle limit in seconds, fixed when the session is created (shorter for admin roles).
-  idleTimeoutSec    Int       @map("idle_timeout_sec")
-  expiresAt         DateTime  @map("expires_at") @db.Timestamptz(6)
-  revokedAt         DateTime? @map("revoked_at") @db.Timestamptz(6)
-  revokedReason     String?   @map("revoked_reason") @db.VarChar(64)
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  idleTimeoutSec    Int           @map("idle_timeout_sec")
+  expiresAt         DateTime      @map("expires_at") @db.Timestamptz(6)
+  revokedAt         DateTime?     @map("revoked_at") @db.Timestamptz(6)
+  revokedReason     String?       @map("revoked_reason") @db.VarChar(64)
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// A session's refresh token is accepted only the way its client presents it (M14).
+  client            SessionClient @default(WEB)
+  /// What the app called the phone ("Pixel 9 of Noa"), shown in "my sessions".
+  clientName        String?       @map("client_name") @db.VarChar(80)
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   device        Device?        @relation(fields: [deviceId], references: [id], onDelete: SetNull)

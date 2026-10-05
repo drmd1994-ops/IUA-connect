@@ -13,7 +13,7 @@ import { UsersService } from '../users';
 import { AuthTokensService } from './auth-tokens.service';
 import { DevicesService, describeUserAgent } from './devices.service';
 import { checkPassword } from './password/password-policy';
-import { type IssuedTokens, SessionsService } from './sessions.service';
+import { type IssuedTokens, SessionsService, type SessionClientInfo } from './sessions.service';
 
 export type LoginOutcome =
   | { mfaRequired: false; tokens: IssuedTokens; newDeviceCookie: string | null }
@@ -115,6 +115,7 @@ export class AuthService {
     input: { email: string; password: string },
     deviceCookie: string | undefined,
     meta: RequestMeta,
+    from?: SessionClientInfo,
   ): Promise<LoginOutcome> {
     const user = await this.users.findByEmail(input.email);
     if (!user) {
@@ -185,7 +186,7 @@ export class AuthService {
       return { mfaRequired: true, mfaToken, mfaMethods, newDeviceCookie: device.newCookieToken };
     }
 
-    const tokens = await this.startSession(user.id, device.deviceId, false, meta, 'password');
+    const tokens = await this.startSession(user.id, device.deviceId, false, meta, 'password', from);
     return { mfaRequired: false, tokens, newDeviceCookie: device.newCookieToken };
   }
 
@@ -245,8 +246,13 @@ export class AuthService {
     mfa: boolean,
     meta: RequestMeta,
     method: 'password' | 'passkey',
+    from?: SessionClientInfo,
   ): Promise<IssuedTokens> {
-    const tokens = await this.sessions.create({ userId, deviceId, mfa, meta });
+    const tokens = await this.sessions.create({ userId, deviceId, mfa, meta, from });
+    const changes = {
+      ...(method === 'passkey' ? { method } : {}),
+      ...(from?.client === 'APP' ? { client: 'app' } : {}),
+    };
     await this.audit.record({
       action: 'auth.login.success',
       entityType: 'session',
@@ -254,15 +260,21 @@ export class AuthService {
       actorUserId: userId,
       actorIp: meta.ip,
       correlationId: meta.correlationId,
-      ...(method === 'passkey' ? { changes: { method } } : {}),
+      ...(Object.keys(changes).length > 0 ? { changes } : {}),
     });
     return tokens;
   }
 
-  async logout(refreshToken: string | undefined, meta: RequestMeta): Promise<void> {
+  async logout(
+    refreshToken: string | undefined,
+    meta: RequestMeta,
+    /** How the token arrived: in a browser's cookie, or in the body of the app's request. */
+    via: 'WEB' | 'APP' = 'WEB',
+  ): Promise<void> {
     if (!refreshToken) return;
     const session = await this.sessions.sessionForRefreshToken(refreshToken);
-    if (!session) return;
+    // A session is ended only the way its own client asks.
+    if (!session || session.client !== via) return;
     await this.sessions.revoke(session, 'logout');
     await this.audit.record({
       action: 'auth.logout',

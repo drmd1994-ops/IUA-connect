@@ -116,6 +116,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/app/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_appRefresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/app/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_appLogout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/password/forgot": {
         parameters: {
             query?: never;
@@ -3489,6 +3521,10 @@ export interface components {
             /** Format: email */
             email: string;
             password: string;
+            /** @enum {string} */
+            client?: "web" | "app";
+            deviceName?: string;
+            deviceToken?: string;
         };
         LoginResultDto: {
             mfaRequired: boolean;
@@ -3496,14 +3532,29 @@ export interface components {
             expiresIn?: number;
             mfaToken?: string;
             mfaMethods?: ("totp" | "passkey")[];
+            refreshToken?: string;
+            /** Format: date-time */
+            sessionExpiresAt?: string;
+            deviceToken?: string;
         };
         MfaVerifyDto: {
             mfaToken: string;
             code: string;
+            /** @enum {string} */
+            client?: "web" | "app";
+            deviceName?: string;
+            deviceToken?: string;
         };
         TokenDto: {
             accessToken: string;
             expiresIn: number;
+            refreshToken?: string;
+            /** Format: date-time */
+            sessionExpiresAt?: string;
+            deviceToken?: string;
+        };
+        AppRefreshDto: {
+            refreshToken: string;
         };
         PasswordForgotDto: {
             /** Format: email */
@@ -3565,6 +3616,8 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 device: string;
+                /** @enum {string} */
+                client: "WEB" | "APP";
                 ip: string | null;
                 /** Format: date-time */
                 createdAt: string;
@@ -7180,6 +7233,50 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["TokenDto"];
                 };
+            };
+        };
+    };
+    AuthController_appRefresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AppRefreshDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenDto"];
+                };
+            };
+        };
+    };
+    AuthController_appLogout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AppRefreshDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
