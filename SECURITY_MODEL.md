@@ -35,7 +35,7 @@
 ### Authentication and sessions
 
 - Argon2id (`m=19456 KiB, t=2, p=1` minimum, tuned on the target host). Passwords of 12+ characters, checked against a bundled breached-password list.
-- Access JWTs: EdDSA, 10 minutes. Refresh tokens: opaque, random 256-bit, stored hashed, rotated on every use. **Reuse detection revokes the whole family.**
+- Access JWTs: EdDSA, 10 minutes. Refresh tokens: opaque, random 256-bit, stored hashed, rotated on every use. **Reuse detection revokes the whole family.** One exception, since 2026-10-05: a token used less than 10 seconds ago is accepted once more if the token that replaced it was never used. That is a renewal whose answer never reached the browser (the page was reloaded while it was on its way). The lost token is used up at that moment, the event is audited (`auth.refresh.lost_answer`), and any later use of either old token still ends the session.
 - Refresh cookie: `HttpOnly; Secure; SameSite=Strict; Path=/api/v1/auth/refresh`, plus a CSRF double-submit header.
 - MFA: TOTP (RFC 6238) with encrypted secrets and hashed single-use recovery codes. Mandatory for DEPARTMENT_DIRECTOR and every admin role. Passkeys in M1b.
 - Re-authentication required for sensitive changes (email, password, MFA, roles).

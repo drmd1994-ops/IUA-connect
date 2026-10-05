@@ -13,6 +13,15 @@ export type SessionKind = keyof typeof SESSION_POLICY;
 /** Access tokens are short-lived; the refresh token renews them (API_DESIGN.md §3). */
 export const ACCESS_TOKEN_TTL_SEC = 10 * 60;
 
+/**
+ * A refresh token that was just used is accepted once more for this long, when the token that
+ * replaced it was never used (owner decision 2026-10-05). It covers a renewal whose answer never
+ * reached the browser, because the page was reloaded or closed while it was on its way: the
+ * server had already changed the token, and the browser still held the old one. Any other use
+ * of an old token still ends the session.
+ */
+export const REFRESH_REUSE_GRACE_SEC = 10;
+
 /** Sensitive changes (password, MFA) need a password re-entry within this window. */
 export const REAUTH_WINDOW_SEC = 5 * 60;
 
