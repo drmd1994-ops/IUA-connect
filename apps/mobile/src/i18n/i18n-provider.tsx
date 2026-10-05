@@ -5,6 +5,10 @@ import { I18nManager } from 'react-native';
 import { IntlProvider } from 'use-intl';
 import { secureStore } from '@/session/secure-store';
 import { startingLocale } from './locale';
+import { installPluralRules } from './plural-rules';
+
+// Before any text is written: the phone's engine has no plural rule of its own.
+installPluralRules();
 
 const LOCALE_KEY = 'iua.locale';
 
