@@ -62,6 +62,12 @@ The program is Microsoft's dev tunnels (`devtunnel.exe`, kept in `%LOCALAPPDATA%
 
 The site is not behind the tunnel, so the card's code can't be checked from a second device this way.
 
+### A fixed address, and an .apk
+
+The tunnel above gets a new address each time. The demo also has a **named tunnel whose address stays the same**; start it by double-clicking `%LOCALAPPDATA%IUAConnectToolsstart-tunnel.cmd` and leave its window open. It lives as long as it is used at least once in thirty days.
+
+An **.apk** (the app as a file that installs on an Android phone, without Expo Go) is built on GitHub by the workflow "Demo APK": push a branch named `apk/...`, or start the workflow from the Actions page, and download `iua-connect-demo-apk` from the finished run. The server's address is built into the .apk from the repository variables `DEMO_API_URL` and `DEMO_WEB_URL`, so the .apk works only while this computer, `pnpm dev` and the fixed tunnel are running. It is signed with a debug key: it installs on a phone, and can't go to an app store.
+
 ## What to try in this first step
 
 - **Sign in,** close the app completely, and open it again: you should still be signed in, after the phone's fingerprint or face check.

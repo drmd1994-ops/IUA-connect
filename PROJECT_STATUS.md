@@ -924,6 +924,12 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 - **The plan's step 10 is not done:** no component tests were written (the plan promised them for the screens of both parts, with the libraries approved in M14 §6), and the demo has not happened.
 - **Four packages were installed for the "three libraries" approved:** the camera, the clipboard, and the pair for files (saving and sharing), as the plan's table listed them. The project's own install rules let all four through.
 
+### The fixed tunnel and the .apk (M14 amendment 2, asked for by the owner on 2026-10-05)
+
+- **A tunnel with a fixed address exists and was checked:** the demo server and the app's own server answer through it. It is started with `start-tunnel.cmd` (see `apps/mobile/README.md`).
+- **A workflow that builds the .apk on GitHub is written and was started once. It has not run yet:** on 2026-10-05 GitHub reported an incident ("delays in assigning GitHub-hosted runners"), and the build waited in the queue. **No .apk exists yet, and whether the workflow succeeds is not known.** A first build of this kind often needs a correction or two.
+- **For the same reason the checks on `main` after pull request #20 did not run** (the first job was never picked up and the run was cancelled by GitHub), and the checks of pull request #21 were waiting. Neither says anything about the code.
+
 ### Open for the owner
 
 1. **Go through the checklist on the phone** (`docs/demo/MOBILE_CHECKLIST.md`) and tell Claude what does not work.
