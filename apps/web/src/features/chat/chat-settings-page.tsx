@@ -22,6 +22,7 @@ export function ChatSettingsPage() {
 function ChatSettings() {
   const all = useTranslations();
   const t = useTranslations('chat.settings');
+  const g = useTranslations('groups.settings');
   const label = usePersonLabel();
   const { api, call } = useAuth();
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -150,7 +151,44 @@ function ChatSettings() {
               />
               <span className="font-semibold">{t('typing')}</span>
             </label>
+            <label className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                className="mt-1 size-5"
+                checked={settings.showActivity}
+                disabled={pending}
+                onChange={(event) => set({ showActivity: event.target.checked })}
+              />
+              <span>
+                <span className="font-semibold">{g('showActivity')}</span>
+                <span className="block text-sm text-text-muted">{g('showActivityHint')}</span>
+              </span>
+            </label>
           </div>
+
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-2 text-lg font-semibold">{g('invitesFrom')}</legend>
+            {(
+              [
+                ['LISTED', g('invitesListed')],
+                ['CONTACTS', g('invitesContacts')],
+                ['NOBODY', g('invitesNobody')],
+              ] as const
+            ).map(([value, text]) => (
+              <label key={value} className="flex items-start gap-3">
+                <input
+                  type="radio"
+                  name="invitesFrom"
+                  className="mt-1 size-5"
+                  checked={settings.invitesFrom === value}
+                  disabled={pending}
+                  onChange={() => set({ invitesFrom: value })}
+                />
+                <span>{text}</span>
+              </label>
+            ))}
+            <p className="text-sm text-text-muted">{g('invitesNote')}</p>
+          </fieldset>
 
           {saved && <Alert tone="success">{t('saved')}</Alert>}
           <div>

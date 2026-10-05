@@ -11,6 +11,8 @@ import { type Me, useAuth } from '@/features/auth/auth-context';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { ConfirmDialog, MessageSearchDialog, ReportDialog } from './chat-dialogs';
+import { ForwardDialog, NewestLink, forwardItem, useAt, useJumpTo } from './chat-extras';
+import { InvitePanel } from './invite-panel';
 import {
   type Message,
   type Reaction,
@@ -37,7 +39,14 @@ type Bans = components['schemas']['RoomBanListDto']['items'];
 
 type Dialog =
   | {
-      kind: 'deleteAll' | 'deleteMine' | 'report' | 'modRemove' | 'modRemovePerson' | 'modBan';
+      kind:
+        | 'deleteAll'
+        | 'deleteMine'
+        | 'report'
+        | 'forward'
+        | 'modRemove'
+        | 'modRemovePerson'
+        | 'modBan';
       message: Message;
     }
   | { kind: 'details' | 'search' | 'leave' | 'reportRoom' | 'join' };
@@ -54,7 +63,11 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
   const format = useFormatter();
   const text = useRoomText();
   const router = useRouter();
+  const g = useTranslations('groups');
   const { api, call } = useAuth();
+  /** Opened at an earlier message: the messages around it are shown, and new ones not followed. */
+  const at = useAt();
+  const detached = useRef(false);
   const [room, setRoom] = useState<RoomDetail | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState(false);
@@ -109,14 +122,14 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
 
   /** Reads everything, when the reader is in the room and actually looking. */
   const markRead = useCallback(() => {
-    if (document.visibilityState !== 'visible') return;
+    if (document.visibilityState !== 'visible' || detached.current) return;
     call(() =>
       api.POST('/api/v1/chat/rooms/{id}/read', { params: { path: { id } }, body: {} }),
     ).catch(() => undefined);
   }, [api, call, id]);
 
   const catchUp = useCallback(async () => {
-    if (!reads.current) return;
+    if (!reads.current || detached.current) return;
     try {
       for (;;) {
         const page = await call(() =>
@@ -159,12 +172,16 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
   // Opening the room: its details; and, for someone who may read it, its newest messages.
   useEffect(() => {
     let active = true;
+    detached.current = at !== null;
+    atEnd.current = at === null;
     void (async () => {
       const detail = await loadRoom();
       if (!active || !detail || !reads.current) return;
       try {
         const page = await call(() =>
-          api.GET('/api/v1/chat/rooms/{id}/messages', { params: { path: { id } } }),
+          api.GET('/api/v1/chat/rooms/{id}/messages', {
+            params: { path: { id }, query: at === null ? {} : { around: at } },
+          }),
         );
         if (!active) return;
         setMessages(page.items);
@@ -178,7 +195,9 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
     return () => {
       active = false;
     };
-  }, [api, call, id, loadRoom, loadPins, markRead]);
+  }, [api, call, id, loadRoom, loadPins, markRead, at]);
+
+  useJumpTo(at, messages.length > 0, scroller);
 
   // Live events.
   useEffect(() => {
@@ -291,7 +310,7 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
     if (box.scrollTop < 60) void loadEarlier();
   }
 
-  async function send(body: string, mentions: string[]) {
+  async function send(body: string, mentions: string[], attachmentIds: string[]) {
     if (editing) {
       const edited = await call(() =>
         api.PATCH('/api/v1/chat/messages/{id}', {
@@ -311,6 +330,7 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
           ...(reply ? { replyToId: reply.id } : {}),
           ...(mentions.length > 0 ? { mentions } : {}),
           ...(announcement ? { announcement: true } : {}),
+          ...(attachmentIds.length > 0 ? { attachmentIds } : {}),
         },
       }),
     );
@@ -421,7 +441,12 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
         },
       });
     }
-    if (live) {
+    if (inRoom) {
+      items.push(
+        ...forwardItem(message, g('forward.menu'), () => setDialog({ kind: 'forward', message })),
+      );
+    }
+    if (live && message.body) {
       items.push({
         key: 'copy',
         text: c('menu.copy'),
@@ -544,6 +569,7 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
           </h2>
           <p className="truncate text-xs text-text-muted" data-testid="room-members">
             {t('list.members', { count: room.memberCount })}
+            {room.inviteOnly && ` · ${g('room.inviteOnly')}`}
             {room.locked && ` · ${t('list.locked')}`}
             {room.archived && ` · ${t('list.archived')}`}
           </p>
@@ -648,8 +674,13 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
                   <div
                     data-testid="message"
                     data-mine={message.mine}
+                    data-seq={message.seq}
                     data-announcement={message.announcement}
-                    className={`flex items-start gap-2 ${message.mine ? 'flex-row-reverse' : ''}`}
+                    className={`flex items-start gap-2 ${message.mine ? 'flex-row-reverse' : ''} ${
+                      message.seq === at
+                        ? 'rounded-lg outline outline-2 outline-offset-2 outline-primary'
+                        : ''
+                    }`}
                   >
                     {!message.mine && <Avatar person={message.sender} size="size-8" />}
                     <div
@@ -738,6 +769,7 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
             {typingText || (copied ? c('menu.copied') : '')}
           </p>
 
+          {at !== null && <NewestLink href={`/chat/rooms/${id}`} />}
           <div className="flex flex-col gap-2 border-t border-border p-3">
             {actionError !== null && <Alert tone="error">{errorMessage(actionError, all)}</Alert>}
             {room.sendState === 'none' ? (
@@ -759,6 +791,7 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
                 onSend={send}
                 onTyping={editing ? null : signalTyping}
                 suggest={editing ? undefined : suggest}
+                attach={!editing}
                 extra={
                   room.role === 'MODERATOR' && !editing ? (
                     <label className="flex items-center gap-2 text-sm">
@@ -884,6 +917,9 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
           name={personLabel(dialog.message.sender)}
           onClose={() => setDialog(null)}
         />
+      )}
+      {dialog?.kind === 'forward' && (
+        <ForwardDialog message={dialog.message} onClose={() => setDialog(null)} />
       )}
       {dialog?.kind === 'reportRoom' && (
         <ReportDialog target={{ roomId: id }} name={name} onClose={() => setDialog(null)} />
@@ -1022,6 +1058,7 @@ function RoomDetails({
 }) {
   const all = useTranslations();
   const t = useTranslations('rooms');
+  const g = useTranslations('groups');
   const format = useFormatter();
   const text = useRoomText();
   const router = useRouter();
@@ -1205,6 +1242,26 @@ function RoomDetails({
                     call(() =>
                       api.PATCH('/api/v1/chat/rooms/{id}/me', {
                         params: { path: { id } },
+                        body: { pinned: !room.pinned },
+                      }),
+                    ),
+                  )
+                }
+              >
+                {room.pinned ? g('details.unpin') : g('details.pin')}
+              </button>
+            </li>
+          )}
+          {inRoom && (
+            <li>
+              <button
+                type="button"
+                className={row}
+                onClick={() =>
+                  void run(() =>
+                    call(() =>
+                      api.PATCH('/api/v1/chat/rooms/{id}/me', {
+                        params: { path: { id } },
                         body: { markedUnread: true },
                       }),
                     ),
@@ -1247,6 +1304,12 @@ function RoomDetails({
             <h3 id="room-moderation" className="font-semibold">
               {t('moderate.title')}
             </h3>
+            {room.inviteOnly && !room.archived && (
+              <div className="flex flex-col gap-2">
+                <p className="text-sm text-text-muted">{g('room.inviteNote')}</p>
+                <InvitePanel conversationId={id} kind="rooms" title={g('room.invite')} />
+              </div>
+            )}
             {room.locked ? (
               <div>
                 <Button

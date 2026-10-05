@@ -11,7 +11,7 @@ import { TextareaField } from '@/components/ui/textarea-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
-import { personName } from './chat-model';
+import { conversationPath, personName } from './chat-model';
 import { Avatar, chatLink, usePersonLabel } from './chat-parts';
 import { Modal } from './modal';
 
@@ -130,10 +130,14 @@ export function MessageSearchDialog({
   const all = useTranslations();
   const t = useTranslations('chat.search');
   const c = useTranslations('chat.conversation');
+  const g = useTranslations('groups.search');
   const locale = useLocale();
   const format = useFormatter();
   const label = usePersonLabel();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [mine, setMine] = useState(false);
   const [search, setSearch] = useState('');
   const [found, setFound] = useState<Found | null>(null);
   const [pending, setPending] = useState(false);
@@ -148,7 +152,15 @@ export function MessageSearchDialog({
     try {
       const result = await call(() =>
         api.GET('/api/v1/chat/search', {
-          params: { query: { q, ...(conversationId ? { conversationId } : {}) } },
+          params: {
+            query: {
+              q,
+              ...(conversationId ? { conversationId } : {}),
+              ...(from ? { from } : {}),
+              ...(to ? { to } : {}),
+              ...(mine && me ? { senderId: me.id } : {}),
+            },
+          },
         }),
       );
       setFound(result.items);
@@ -161,18 +173,43 @@ export function MessageSearchDialog({
 
   return (
     <Modal title={t('title')} closeLabel={t('close')} onClose={onClose}>
-      <form role="search" onSubmit={find} className="flex items-end gap-3">
-        <TextField
-          label={t('label')}
-          hint={t('hint')}
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          maxLength={100}
-          className="flex-1"
-        />
-        <Button type="submit" pending={pending}>
-          {t('button')}
-        </Button>
+      <form role="search" onSubmit={find} className="flex flex-col gap-3">
+        <div className="flex items-end gap-3">
+          <TextField
+            label={t('label')}
+            hint={t('hint')}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            maxLength={100}
+            className="flex-1"
+          />
+          <Button type="submit" pending={pending}>
+            {t('button')}
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <TextField
+            label={g('from')}
+            type="date"
+            value={from}
+            onChange={(event) => setFrom(event.target.value)}
+          />
+          <TextField
+            label={g('to')}
+            type="date"
+            value={to}
+            onChange={(event) => setTo(event.target.value)}
+          />
+        </div>
+        <label className="flex items-center gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="size-5"
+            checked={mine}
+            onChange={(event) => setMine(event.target.checked)}
+          />
+          <span>{g('mine')}</span>
+        </label>
       </form>
       {error !== null && <Alert tone="error">{errorMessage(error, all)}</Alert>}
       {found?.length === 0 && <p className="text-text-muted">{t('empty')}</p>}
@@ -181,10 +218,10 @@ export function MessageSearchDialog({
           data-testid="chat-search-results"
           className="flex max-h-80 flex-col divide-y divide-border overflow-y-auto"
         >
-          {found.map(({ message, other, room }) => (
+          {found.map(({ message, other, room, group }) => (
             <li key={message.id} className="flex flex-col gap-1 py-3">
               <span className="text-xs text-text-muted">
-                {message.mine ? c('you') : label(room ? message.sender : other)}
+                {message.mine ? c('you') : label(room || group ? message.sender : other)}
                 {' · '}
                 {format.dateTime(new Date(message.createdAt), {
                   dateStyle: 'medium',
@@ -197,22 +234,25 @@ export function MessageSearchDialog({
                       ? locale === 'he'
                         ? room.nameHe
                         : (room.nameEn ?? room.nameHe)
-                      : t('with', { name: label(other) })}
+                      : group
+                        ? g('inGroup', { name: group.name })
+                        : t('with', { name: label(other) })}
                   </>
                 )}
               </span>
               <span dir="auto" className="whitespace-pre-wrap break-words">
-                {message.body}
+                {message.body || g('filesOnly')}
               </span>
-              {!conversationId && (
-                <Link
-                  href={room ? `/chat/rooms/${room.id}` : `/chat/${message.conversationId}`}
-                  onClick={onClose}
-                  className={`${chatLink} text-sm`}
-                >
-                  {t('open')}
-                </Link>
-              )}
+              <Link
+                href={`${conversationPath(
+                  room ? 'ROOM' : group ? 'GROUP' : 'DIRECT',
+                  message.conversationId,
+                )}?at=${message.seq}`}
+                onClick={onClose}
+                className={`${chatLink} text-sm`}
+              >
+                {g('goTo')}
+              </Link>
             </li>
           ))}
         </ul>

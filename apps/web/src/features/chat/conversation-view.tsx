@@ -8,6 +8,7 @@ import { type Me, useAuth } from '@/features/auth/auth-context';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { ConfirmDialog, MessageSearchDialog, ReportDialog } from './chat-dialogs';
+import { ForwardDialog, NewestLink, forwardItem, useAt, useJumpTo } from './chat-extras';
 import {
   type ConversationDetail,
   type Message,
@@ -18,11 +19,19 @@ import {
   messageStatus,
 } from './chat-model';
 import { Avatar, type Subscribe, chatLink, usePersonLabel } from './chat-parts';
-import { Composer, type MenuItem, MessageMenu, MessageText, ReactionChips } from './message-parts';
+import {
+  ActivityMark,
+  Composer,
+  type MenuItem,
+  MessageMenu,
+  MessageText,
+  ReactionChips,
+  useActivity,
+} from './message-parts';
 import { Modal } from './modal';
 
 type Dialog =
-  | { kind: 'deleteAll' | 'deleteMine' | 'report'; message: Message }
+  | { kind: 'deleteAll' | 'deleteMine' | 'report' | 'forward'; message: Message }
   | { kind: 'details' | 'search' | 'block' | 'reportPerson' };
 
 const TYPING_SHOWN_MS = 4000;
@@ -44,7 +53,11 @@ export function ConversationView({
   const r = useTranslations('rooms.room');
   const format = useFormatter();
   const label = usePersonLabel();
+  const g = useTranslations('groups');
   const { api, call } = useAuth();
+  /** Opened at an earlier message: the messages around it are shown, and new ones not followed. */
+  const at = useAt();
+  const detached = useRef(false);
   const [conversation, setConversation] = useState<ConversationDetail | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState(false);
@@ -79,7 +92,7 @@ export function ConversationView({
 
   /** Reads everything, when the reader is actually looking. */
   const markRead = useCallback(() => {
-    if (document.visibilityState !== 'visible') return;
+    if (document.visibilityState !== 'visible' || detached.current) return;
     call(() =>
       api.POST('/api/v1/chat/conversations/{id}/read', { params: { path: { id } }, body: {} }),
     ).catch(() => undefined);
@@ -87,6 +100,7 @@ export function ConversationView({
 
   /** Fetches what came after the newest message the page has. */
   const catchUp = useCallback(async () => {
+    if (detached.current) return;
     try {
       for (;;) {
         const page = await call(() =>
@@ -129,9 +143,15 @@ export function ConversationView({
   // Opening the conversation: its details and its newest messages, and it counts as read.
   useEffect(() => {
     let active = true;
+    detached.current = at !== null;
+    atEnd.current = at === null;
     Promise.all([
       call(() => api.GET('/api/v1/chat/conversations/{id}', { params: { path: { id } } })),
-      call(() => api.GET('/api/v1/chat/conversations/{id}/messages', { params: { path: { id } } })),
+      call(() =>
+        api.GET('/api/v1/chat/conversations/{id}/messages', {
+          params: { path: { id }, query: at === null ? {} : { around: at } },
+        }),
+      ),
     ])
       .then(([detail, page]) => {
         if (!active) return;
@@ -144,7 +164,10 @@ export function ConversationView({
     return () => {
       active = false;
     };
-  }, [api, call, id, markRead]);
+  }, [api, call, id, markRead, at]);
+
+  useJumpTo(at, messages.length > 0, scroller);
+  const activity = useActivity(conversation?.other.id ? [conversation.other.id] : [], subscribe);
 
   // Live events.
   useEffect(() => {
@@ -236,7 +259,7 @@ export function ConversationView({
     if (box.scrollTop < 60) void loadEarlier();
   }
 
-  async function send(text: string) {
+  async function send(text: string, _mentions: string[], attachmentIds: string[]) {
     if (editing) {
       const edited = await call(() =>
         api.PATCH('/api/v1/chat/messages/{id}', {
@@ -251,7 +274,11 @@ export function ConversationView({
     const sent = await call(() =>
       api.POST('/api/v1/chat/conversations/{id}/messages', {
         params: { path: { id }, header: { 'Idempotency-Key': crypto.randomUUID() } },
-        body: { body: text, ...(reply ? { replyToId: reply.id } : {}) },
+        body: {
+          body: text,
+          ...(reply ? { replyToId: reply.id } : {}),
+          ...(attachmentIds.length > 0 ? { attachmentIds } : {}),
+        },
       }),
     );
     atEnd.current = true;
@@ -330,7 +357,10 @@ export function ConversationView({
         },
       });
     }
-    if (!message.deleted) {
+    items.push(
+      ...forwardItem(message, g('forward.menu'), () => setDialog({ kind: 'forward', message })),
+    );
+    if (!message.deleted && message.body) {
       items.push({
         key: 'copy',
         text: t('menu.copy'),
@@ -391,9 +421,12 @@ export function ConversationView({
           {t('conversation.back')}
         </Link>
         <Avatar person={other} size="size-9" />
-        <h2 className="min-w-0 flex-1 truncate text-lg font-semibold" data-testid="chat-with">
-          {name}
-        </h2>
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate text-lg font-semibold" data-testid="chat-with">
+            {name}
+          </h2>
+          {other.id && <ActivityMark activity={activity.get(other.id)} />}
+        </div>
         <Button
           type="button"
           variant="secondary"
@@ -433,7 +466,12 @@ export function ConversationView({
             <div
               data-testid="message"
               data-mine={message.mine}
-              className={`flex items-start gap-1 ${message.mine ? 'flex-row-reverse' : ''}`}
+              data-seq={message.seq}
+              className={`flex items-start gap-1 ${message.mine ? 'flex-row-reverse' : ''} ${
+                message.seq === at
+                  ? 'rounded-lg outline outline-2 outline-offset-2 outline-primary'
+                  : ''
+              }`}
             >
               <div
                 className={`max-w-[80%] min-w-0 rounded-lg border px-3 py-2 ${
@@ -495,6 +533,7 @@ export function ConversationView({
         {typing ? t('conversation.typing', { name }) : copied ? t('menu.copied') : ''}
       </p>
 
+      {at !== null && <NewestLink href={`/chat/${id}`} />}
       <div className="flex flex-col gap-2 border-t border-border p-3">
         {actionError !== null && <Alert tone="error">{errorMessage(actionError, all)}</Alert>}
         {conversation.sendState === 'none' ? (
@@ -515,6 +554,7 @@ export function ConversationView({
             }}
             onSend={send}
             onTyping={editing ? null : signalTyping}
+            attach={!editing}
           />
         ) : (
           <div className="flex flex-col gap-2">
@@ -582,6 +622,9 @@ export function ConversationView({
           name={name}
           onClose={() => setDialog(null)}
         />
+      )}
+      {dialog?.kind === 'forward' && (
+        <ForwardDialog message={dialog.message} onClose={() => setDialog(null)} />
       )}
       {dialog?.kind === 'reportPerson' && other.id && (
         <ReportDialog target={{ userId: other.id }} name={name} onClose={() => setDialog(null)} />
@@ -658,6 +701,7 @@ function Details({
 }) {
   const all = useTranslations();
   const t = useTranslations('chat.details');
+  const g = useTranslations('groups.details');
   const format = useFormatter();
   const router = useRouter();
   const { api, call } = useAuth();
@@ -669,6 +713,7 @@ function Details({
     mute?: 'off' | '8h' | 'week' | 'forever';
     archived?: boolean;
     markedUnread?: true;
+    pinned?: boolean;
   }) {
     setError(null);
     try {
@@ -735,6 +780,15 @@ function Details({
         <li>
           <button type="button" className={row} onClick={() => onOpen('search')}>
             {t('search')}
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            className={row}
+            onClick={() => void change({ pinned: !conversation.pinned })}
+          >
+            {conversation.pinned ? g('unpin') : g('pin')}
           </button>
         </li>
         <li>

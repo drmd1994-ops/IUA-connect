@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   type Message,
+  canAttach,
+  conversationPath,
   initials,
   mentionAt,
   mergeMessages,
@@ -24,6 +26,8 @@ const message = (seq: number, body = `m${seq}`): Message => ({
   announcement: false,
   senderBlocked: false,
   mentions: [],
+  forwarded: false,
+  attachments: [],
   reactions: [],
   editedAt: null,
   createdAt: '2026-10-04T10:00:00.000Z',
@@ -95,6 +99,21 @@ describe('chat model', () => {
     expect(mentionAt('Hello @', 7)).toBeNull();
     // Only what is before the cursor counts.
     expect(mentionAt('@Da and more', 3)).toEqual({ start: 0, query: 'Da' });
+  });
+
+  it('lets a message carry three files, one video at most', () => {
+    const picture = { kind: 'IMAGE' };
+    const video = { kind: 'VIDEO' };
+    expect(canAttach([], 'VIDEO')).toBe(true);
+    expect(canAttach([picture, video], 'IMAGE')).toBe(true);
+    expect(canAttach([picture, video], 'VIDEO')).toBe(false);
+    expect(canAttach([picture, picture, picture], 'DOCUMENT')).toBe(false);
+  });
+
+  it('knows where each kind of conversation is opened', () => {
+    expect(conversationPath('DIRECT', 'x')).toBe('/chat/x');
+    expect(conversationPath('GROUP', 'x')).toBe('/chat/groups/x');
+    expect(conversationPath('ROOM', 'x')).toBe('/chat/rooms/x');
   });
 
   it('merges messages by id and keeps them in order', () => {

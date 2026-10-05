@@ -58,6 +58,8 @@
     "contentGuidelineVersion": "גרסה חדשה של הנחיה: {title}",
     "broadcast": "הודעה מהאיגוד: {title}",
     "chatMessage": "קיבלת הודעה פרטית חדשה.",
+    "chatGroupInvitation": "{name} הזמין/ה אותך לקבוצה ״{title}״.",
+    "chatRoomInvitation": "{name} הזמין/ה אותך לחדר ״{title}״.",
     "chatMention": "{name} אזכר/ה אותך בחדר ״{title}״.",
     "chatReply": "{name} הגיב/ה לך בחדר ״{title}״.",
     "chatAnnouncement": "הודעה חשובה בחדר ״{title}״.",

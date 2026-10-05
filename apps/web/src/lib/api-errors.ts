@@ -33,3 +33,8 @@ export function passwordProblems(error: unknown): string[] {
 export function isApiError(error: unknown, code: string): boolean {
   return error instanceof ApiError && error.code === code;
 }
+
+/** Whether an API error carries this detail code (what exactly went wrong). */
+export function hasErrorDetail(error: unknown, code: string): boolean {
+  return error instanceof ApiError && error.details.some((detail) => detail.code === code);
+}

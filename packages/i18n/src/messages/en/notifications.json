@@ -58,6 +58,8 @@
     "contentGuidelineVersion": "A guideline has a new version: {title}",
     "broadcast": "A message from the association: {title}",
     "chatMessage": "You have a new private message.",
+    "chatGroupInvitation": "{name} invited you to the group “{title}”.",
+    "chatRoomInvitation": "{name} invited you to the room “{title}”.",
     "chatMention": "{name} mentioned you in the room “{title}”.",
     "chatReply": "{name} replied to you in the room “{title}”.",
     "chatAnnouncement": "An announcement in the room “{title}”.",
