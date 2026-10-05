@@ -1,12 +1,12 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M11 merged and checked by the owner; session fix)_
+_Last updated: 2026-10-05 (M12 chat rooms built, in a pull request; M11 merged and checked by the owner)_
 
 ## Summary
 
 | Item                      | Status                                                                                                                                                                                                               |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). |
+| Phase                     | **M2 People & membership: merged 2026-09-30** (pull request #4). M1b Passkeys merged 2026-09-29 (PR #2; the manual Windows Hello check is deferred by the owner until the mobile app exists). M1 Identity merged (PR #1). M0 Foundations complete. **M3 Content core: merged 2026-10-01** (pull request #5). **M4 Content import: merged 2026-10-01** (pull request #6). **M5 Events: merged 2026-10-02** (pull request #7). **M6 Education: merged 2026-10-02** (pull request #8). **M7 Notifications and search: merged 2026-10-02** (pull request #9). **M8 Admin portal completion and dashboards: merged 2026-10-02** (pull request #10). **M9 Pitch readiness: merged 2026-10-03** (pull request #11). **The MVP (M0 to M9) is complete.** M10 Video and push connection points: merged 2026-10-04 (pull request #12). **M11 Private chat: merged 2026-10-05** (pull request #14). **M12 Chat rooms: built 2026-10-05, in a pull request, not merged.** |
 | Mode                      | **Demo / pitch.** A private application to be pitched to the Israeli Urological Association (IUA). Not endorsed by or affiliated with IUA or the Israeli Medical Association (IMA).                                  |
 | Repository                | Git repository initialized in `C:\Users\PC\Desktop\IUA CONNECT` (branch `main`, remote `origin` → `https://github.com/drmd1994-ops/IUA-connect.git`, on GitHub). Work is done on `feat/...` branches and merged through pull requests; the owner merges, or asks for it. |
 | Existing code to preserve | None                                                                                                                                                                                                                 |
@@ -665,12 +665,92 @@ No new libraries.
   - The existing reuse test now waits out the 10 seconds; three tests were added (a lost answer repeated; an old token after its replacement was used; a quick thief). `SECURITY_MODEL.md` describes the rule.
 - **`HANDOFF.md` was brought up to date** with M11.
 
+## M12 Chat rooms (2026-10-05)
+
+Plan: [`docs/plans/M12-chat-rooms.md`](docs/plans/M12-chat-rooms.md), approved by the owner on 2026-10-05 ("i approve the plan") with the recommended answer to every question (plan §12). Owner decisions:
+
+- **Who can join:** any active member. Their name is shown to the people in the room, and they are told before the first join.
+- **Open rooms only.** Rooms by invitation come in M13.
+- **Staff open rooms** and appoint members as moderators of a room.
+- **Staff with the chat permission** can open any room, read it and act as a moderator. Private conversations stay closed to staff.
+- **Reactions:** a fixed set of six, in rooms and in private chat.
+- **Email about rooms** is off at the start. In the app: mentions, replies and announcements, under the bell.
+
+No new libraries.
+
+**Not merged.** The work is on the branch `feat/chat-rooms`, in a pull request into `main`. The owner merges, or asks for it.
+
+### Delivered
+
+- **Chat has two sides:** Private and Rooms. `/chat/rooms` lists the rooms a member is in, with unread numbers; `/chat/rooms/browse` lists every open room, with search and a category filter; `/chat/rooms/[id]` is one room. Side by side on a wide screen, a screen each on a phone, right to left in Hebrew.
+- **Joining and leaving.** Before joining, the member is told that the people in the room will see their first and last name. A member who has not joined sees a room's name, description and number of people, nothing else.
+- **In a room:** messages with the writer's name and picture, replies with a quote, edit and delete as in private chat, copy, "delete for me". Web addresses become links.
+- **Reactions:** six (👍 ❤️ 😂 😮 🙏 ✅), from a message's menu; pressing a reaction under a message adds or takes back your own. **Private chat has them too.**
+- **Mentions:** typing "@" and the start of a name offers the people in the room. The name stands out in the message, and the person gets a notice.
+- **Announcements and pins:** a moderator can send a message as an announcement (it stands out, and the room is told), and pin up to five messages to the top of the room. An **announcements room** takes messages from moderators only.
+- **Moderators** (members the staff appoint): delete a message ("Removed by a moderator" stays in its place), remove a person, ban a person (for days, or until lifted), lock the room (an hour, a day, or until unlocked), see and lift bans. Each needs a reason where it concerns a person, and each is in the audit log. The tools are in the message's menu and under **Details**.
+- **Per room:** mute, mark as unread, search inside it, the list of people, report the room.
+- **Live:** messages, edits, deletions, reactions, pins, locking and "is typing" arrive without refreshing. A person who is removed or banned sees the room close at once.
+- **Notifications:** a new kind, "Chat rooms": a mention, a reply to you, an announcement. In the app they are under the bell, one notice per message, the most personal one. Email about rooms is off unless the member switches it on.
+- **Staff, rooms (`/admin/chat/rooms`, permission `chat.rooms.manage`, IUA admins):** the list; open a room (Hebrew and English name and description, category, picture, "announcements only"); change, archive and restore it; appoint and remove moderators, found among the active members; a page for the room categories and for the report reasons (which had no screen in M11).
+- **Staff, reports:** a report can be about a room message or about a room as such. The reports screen names the room, and offers "archive the room" as a decision.
+- **Demo seed:** five categories and six fictional rooms (General, Announcements, Questions and answers, Professional discussion, Conferences and events, Residents), in Hebrew and English, with a pinned announcement, reactions, a reply, a mention, a message removed by a moderator, one person banned for a week and one report waiting. Nothing medical.
+- **Database:** four new tables and new columns on two existing ones. The migrations only add.
+
+### Verified
+
+- API: **298 unit and 446 integration tests**, all passing (35 of the integration tests are the rooms').
+- **Exit criteria:**
+  - Only people who may be in a room read it: tested on every room route, for someone who is not an active member, a member who has not joined, one who was removed and one who is banned.
+  - Only moderators moderate: every moderation action tested as an ordinary person in the room, as a moderator of another room, as the room's moderator and as staff.
+  - A room of 2,000 members and 10,000 messages: the browse list, the room, a page of messages and the unread count go through an index, and a message sent is one event that doesn't list the people. **This was tested in the database and the API, not with 2,000 open browsers.** The two-second arrival was checked by the browser test in a small room.
+  - The admin access pattern on every new admin route.
+  - No WCAG 2.2 AA violations (axe) on the room pages and dialogs, in Hebrew and English, and on the three admin room pages.
+  - Private chat keeps working: the three M11 integration suites and the four M11 browser tests pass.
+- Playwright (Chromium, production builds, local): the four room tests pass; the whole suite: **105 tests, all passing**.
+- Lint, type check and the formatting check are clean.
+
+### Not verified
+
+- **The screen-reader check** was not done for the room pages (nor, since M11, for the chat pages); only the automated checks ran.
+- **How many open connections one server holds** is still not tested.
+- **The demo script's rooms section** was written from the screens and the seed, not walked through start to finish.
+- **Uploading a room picture** was not tried in a browser; the upload itself is the one news uses.
+- **The Hebrew room texts** were written by Claude and not yet read by the owner.
+
+### Deviations and findings
+
+- **Rooms have their own message routes** (`/chat/rooms/{id}/messages`, `/read`, `/typing`). The plan said the M11 routes would serve rooms too. Keeping them apart left the private-chat rule ("only its two people, anything else is not found") untouched. Editing, deleting and hiding one's own message, and reactions, are shared routes.
+- **A member who has not joined gets a clear refusal, not "not found".** The plan's exit criterion said "the same answer as for an invented id". For a room that "Browse rooms" shows to every active member, that hides nothing, and the page could not tell "join first" from "gone". So: someone who may not see rooms at all gets "not found" on every room route; an active member outside the room gets its details and a refusal (`chatRoomNotJoined`) for its messages, people and pins.
+- **Staff read any room and moderate it, and don't write in it unless they joined it as a member.** The plan said "read it and act as a moderator"; it did not say whether staff write without joining. They don't, so every message in a room is from someone the room's list shows. Joining needs an active membership, for staff as for anyone.
+- **A report about a room as such** uses the existing report columns (the room, no message, no person); no column was added.
+- **The "messages are waiting" email** now says "chat messages" and covers rooms for a member who switched room emails on. Its wording was changed so that it doesn't say "private".
+- **A moderator can't act on another moderator or on themselves;** staff can. The plan said only the first half.
+- **A removed person may join again at once.** To keep someone out, a moderator bans them.
+- **"Is typing" in a room** names one person, or says "several people".
+- **The moderator search on the admin room page** uses the membership list, which needs `membership.read`. IUA admins have both permissions; a role with only `chat.rooms.manage` would see an error there.
+- **The browser tests differ a little from the plan's list:** the member writes in English in the two-window test (Hebrew is covered by the phone test); the report in the browser test is about a room as such, and the report about a room message is covered by the integration test.
+- **Enum values in their own migration:** PostgreSQL can't use a new enum value in the transaction that adds it.
+- **Integration tests that signed several people up at the same moment** failed now and then with a dropped connection. They now create people one after another. Not a product bug as far as could be seen; the cause in the test harness was not tracked down.
+- **The message menu, the reactions and the message box** were moved out of the private conversation screen into a shared file, so rooms and private chat use the same ones.
+- **The running development database** got the demo rooms from `pnpm db:seed`, and test rooms, messages and reports from the browser tests. `pnpm demo:reset` clears them.
+
+### Open for the owner
+
+1. **Checkpoint test of the demo** (plan §11): two browser windows and the admin area. `docs/demo/DEMO_SCRIPT.md` section 9.
+2. **Merge the pull request,** or ask Claude to.
+3. **The wording of the Hebrew room texts.**
+4. **M13 (files, online status, rooms by invitation)** needs its own plan when the owner wants it. Files wait for the legal review.
+5. Still open from M9: the "who" column of the readiness checklist in `DEPLOYMENT.md`.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
 
 **M10 (video and push connection points)** was merged on 2026-10-04 (pull request #12).
 
-**M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day. **M12 (public rooms) and M13 (files, online status)** follow, each with its own approved plan.
+**M11 (private chat)** was merged on 2026-10-05 (pull request #14), and the owner's checkpoint test passed the same day.
+
+**M12 (chat rooms)** is built on the branch `feat/chat-rooms` and waits for the owner's checkpoint test and merge. **M13 (files, online status, rooms by invitation)** follows, with its own approved plan.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

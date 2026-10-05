@@ -74,6 +74,19 @@
 - **Email and push** about messages never carry the text or the sender.
 - **Not protected:** messages are **not end-to-end encrypted**; whoever can read the database can read them. Nothing technical stops a person from typing a patient's details: there is a standing note, a report reason, and staff can delete. This needs the legal review before real use.
 
+### Chat rooms (M12)
+
+- **Who may see rooms:** members with an active membership, and staff with `chat.moderate`. Anyone else gets "not found" from every room route.
+- **Who may read a room:** the people in it, and staff with `chat.moderate`. A member who has not joined sees the room's name, description and number of members, not its messages, its people or its pins. Someone removed or banned is outside from that moment: their open page stops receiving and empties itself.
+- **Joining shows your name.** The people in a room see the first and last name of everyone in it, also of members not listed in the directory. The member is told before the first join, and can't join without a name.
+- **Who may write:** a person in the room with an active membership, not suspended from chat; in an announcements room or a locked room, moderators only. Someone whose membership ended keeps reading the rooms they are in and can't write.
+- **Who may moderate:** the room's own moderators while their membership is active, and staff with `chat.moderate`. A moderator has no power in another room, and can't remove, ban or delete the message of another moderator; staff can. Every moderation action is in the audit log with its reason, without message text.
+- **Who opens rooms:** staff with `chat.rooms.manage` (IUA admins, in a session with two-step verification). They open, change, archive and restore rooms, appoint moderators (active members only), and keep the categories and the report reasons.
+- **Staff in rooms, not in private chat.** Staff with `chat.moderate` can read any room. Private conversations stay closed to them, as in M11.
+- **Mentions** are checked on the server: only people in the room, ten a message. A mention is a notice under the bell; no email unless the person switched room emails on, and then without the text or the sender.
+- **Blocking in a room:** a blocked person's messages are folded for the person who blocked them, and cause no notice. They are not hidden from the room.
+- **Not protected:** as for private chat, nothing is end-to-end encrypted, and nothing technical stops a person typing a patient's details into a room that many people read. The standing note, the report reason, the moderators and the staff are the only protection. This needs the legal review before real use.
+
 ### Secrets and cryptography
 
 - No secrets in the repo. `.env` is git-ignored, and `.env.example` holds placeholders only. Secret scanning (gitleaks) runs in CI and as a pre-commit hook.

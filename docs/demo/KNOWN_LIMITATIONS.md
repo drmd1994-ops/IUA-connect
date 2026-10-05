@@ -2,7 +2,7 @@
 
 What IUA Connect does not do today, written for someone who was not there while it was built. Nothing here is hidden in the demo; this page is so that nothing is promised by mistake.
 
-Last updated: 5 October 2026 (milestone M11, private chat).
+Last updated: 5 October 2026 (milestone M12, chat rooms).
 
 ## 1. It is a demo
 
@@ -32,7 +32,7 @@ These are in the original specification and are **not** in the demo:
 - **CME tracking and certificates.** Events and education items can show CME points; nothing is counted or credited.
 - **A mobile app.** The site works in a phone's browser. There are no push notifications: the place to plug a push service in exists in the code (since M10), but nothing is plugged in and nothing is sent.
 - **Community, case discussions, research collaboration, publications, jobs, mentorship, a surgical logbook, calculators, AI features, governance and voting.** Four of these appear on the member's dashboard as "Coming soon", and can't be clicked.
-- **Most of chat.** Private chat between two members exists since M11 (see "Chat" below). Not built: public rooms and their moderation, reactions, @mentions, pinned messages and announcements (planned as M12); files and images in messages, online and "last active" status, group chats, forwarding (planned as M13, and files only after the legal review); voice and video calls. **Chat between doctors and patients is not planned at all:** patient information is not allowed anywhere in this project.
+- **Parts of chat.** Private chat between two members exists since M11 and rooms since M12 (see "Chat" below). Not built: files and images in messages, online and "last active" status, rooms by invitation, group chats, forwarding (planned as M13, and files only after the legal review); voice and video calls. **Chat between doctors and patients is not planned at all:** patient information is not allowed anywhere in this project.
 - **A full question bank.** The exam section asks one question at a time and remembers answers; there are no timed exams, no question sets and no statistics for teachers.
 - **Video hosting.** A video is a link to where it is already hosted (YouTube, Vimeo). Restricting a video to members has to be done on that host.
 - **A video service.** The place to plug one in exists in the code (since M10); what is plugged in is "links", as described above.
@@ -65,7 +65,24 @@ These are in the original specification and are **not** in the demo:
 - Messages arrive live through one open connection per chat page. **How many open connections one server can hold was not tested.** If the connection can't be opened, the page asks every ten seconds instead.
 - The number on the Chat link refreshes about once a minute on pages other than chat.
 - A long conversation loads 50 messages at a time; there is no "jump to this message" from a search result.
-- The report reasons are rows in the database; there is no screen for editing them yet.
+
+**Chat rooms**
+
+- **Everything said above about encryption and patient details holds for rooms, and matters more,** because many people read a room.
+- **Rooms are opened by staff only,** and all of them are open to every active member. There are no rooms by invitation and no rooms a member opens.
+- **Joining a room shows your first and last name to the people in it,** also if you are not listed in the member directory. The member is told before joining.
+- **Staff with the chat permission can read any room.** Private conversations stay closed to them.
+- **A moderator is a member the staff appointed.** Moderators delete messages, remove and ban people, lock the room, pin and announce. Each action is recorded with its reason. Who the moderators should be is a decision for the association.
+- Six fixed reactions. No custom emoji picker.
+- A mention works only for people in the room, chosen from the names offered while typing "@". Ten a message.
+- Five pinned messages a room.
+- There is no "read by" or "delivered" in a room, only the reader's own unread count.
+- "Is typing" in a room names one person, or says "several people".
+- Notices about rooms (a mention, a reply to you, an announcement) are under the bell. Email about rooms is off unless the member switches it on, and then it is the same one-a-day "messages are waiting" email, without text or sender.
+- A room is archived, never deleted: it leaves the lists and stays readable for the people who were in it.
+- A room's picture can be uploaded by staff; like every upload in the demo it is not scanned for viruses.
+- **A room of 2,000 people and 10,000 messages was tested in the database, not with 2,000 open browsers.** How many open connections one server can hold is still not tested.
+- The moderator search on the admin room page uses the membership list, so it needs the "read memberships" permission too. IUA admins have both.
 
 **Membership**
 

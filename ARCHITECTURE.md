@@ -63,9 +63,9 @@ Why not microservices: one developer, demo mode, and a Windows-native environmen
 | Audit                                                                                              | ✅           | Append-only log                                                                       |
 | Admin                                                                                              | ✅           | Aggregated admin endpoints (dashboard, approvals queue)                               |
 | Import                                                                                             | ✅ (tooling) | One-off CLI to import the curated sample from urology.ima.org.il into seed data       |
-| Chat | ✅ (M11, private chat only) | One-to-one conversations between members: messages, read and delivered markers, blocking, reports and staff review, live through an event stream (ADR 0009). Rooms, attachments and group chats are later milestones; the tables are shared |
+| Chat | ✅ (M11 private chat, M12 rooms) | One-to-one conversations between members: messages, read and delivered markers, blocking, reports and staff review, live through an event stream (ADR 0009). Rooms opened by staff: joining, moderators, announcements, pins, reactions, mentions, bans, on the same tables. Attachments, online status and rooms by invitation are M13 |
 | Payments | ⛔ not built | Membership has a `payment_status` field set by hand. No payment tables or provider interface yet (planned as "schema plus interface"; not done). |
-| Community (public chat rooms: M12), Cases, CME, Research, Publications, Jobs, Mentorship, Logbook, Question Bank | Phase 2      |                                                                                       |
+| Community (beyond chat rooms), Cases, CME, Research, Publications, Jobs, Mentorship, Logbook, Question Bank | Phase 2      |                                                                                       |
 | AI, Calculators, Journal Club, Conference Mode+                                                    | Phase 3      |                                                                                       |
 | Governance / Voting                                                                                | Later        | Voting via an external provider, pending legal review                                 |
 
