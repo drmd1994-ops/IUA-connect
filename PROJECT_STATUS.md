@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-05 (M14 and M15, the mobile app: the members' and visitors' parts of the site are built into the app on the branch `feat/mobile-screens`; almost none of it has been seen on a phone yet; the admin area stays on the site)_
+_Last updated: 2026-10-06 (M14 and M15, the mobile app: the members' and visitors' parts of the site are in the app; an .apk was built and installed on the owner's phone; the owner went through the phone checklist and read the new Hebrew texts, all good; M14 is merged, M15 is in pull request #22; the admin area stays on the site)_
 
 ## Summary
 
@@ -855,10 +855,9 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 ### Not verified
 
-- **No screen built after sign-in has been seen on a phone:** not the card where it is now, News, Events, Notifications or Chat. They were written against the API's typed shapes and they compile; that is all that is known. The first run on the phone will turn up mistakes, and `docs/demo/MOBILE_CHECKLIST.md` is the list to go through.
-- **In particular, never tried:** the keyboard over the box where a message is written; choosing a file, the camera and the upload; the live stream closing in the background and reopening; the list keeping its place when earlier messages are added; right-to-left layout of a conversation; TalkBack; the largest text size.
-- **The app has no component tests.** The plan listed them (`jest-expo`, the React Native testing library): every screen rendering in both languages with a name on every control. They were not written. The rules behind the screens are tested; the screens themselves are not.
-- **Of the first test on the phone, these were not reported:** staying signed in after the app is closed, the fingerprint or face check, the card and its code, and the phone showing among the sessions on the site. Whether the change of direction needed the app closed and opened was not said either.
+- **The owner's report of 2026-10-06:** "i have installed the apk and all works as intended, i have checked the mobile_checklist and the new hebrew text and its all good". With it: the .apk installs and opens on the owner's Android 16 phone; `docs/demo/MOBILE_CHECKLIST.md` was gone through and is marked with that date; the app's new Hebrew texts were read, and no change was asked for.
+- **What that report is and is not:** it is the owner's statement about the whole, not a line-by-line record, and Claude saw none of it on a phone. The lines that need a second person, a room's moderator, another member's card or an event's venue code are marked like the rest, on the owner's word.
+- **The app has no component tests.** The plan listed them (`jest-expo`, the React Native testing library): every screen rendering in both languages with a name on every control. They were not written. The rules behind the screens are tested; the screens themselves are tested by hand only.
 - Nothing was tried on an iPhone, and nothing will be in part 1.
 
 ### Deviations and findings
@@ -881,9 +880,10 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 ### Open for the owner
 
-1. **The checklist on the phone:** `docs/demo/MOBILE_CHECKLIST.md`, with a second person on the site for the chat part. Tell Claude what does not work; expect a list.
-2. Pull request #19 (the plan alone) was closed on 2026-10-05 as redundant, at the owner's word.
-3. **An .apk:** still wanted? It needs the decisions asked on 2026-10-05 (how it is built, and a fixed address for the server).
+1. ~~The checklist on the phone~~ **Gone through by the owner on 2026-10-06; all good.**
+2. ~~Pull requests #19, #20, #21~~ #20 and #21 are merged; #19 was closed as redundant.
+3. ~~An .apk~~ **Built on 2026-10-06 and installed by the owner the same day.**
+4. **The demo** of the milestone, and whether it is then called finished.
 
 ## M15 Mobile app, part 2: the rest of the site, without the admin area (in progress, started 2026-10-05)
 
@@ -909,9 +909,10 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 
 ### Not verified
 
-- **The owner tried the app in Expo Go on 2026-10-05, after M15 was built, and reported "it runs fine".** Which screens and which lines of `docs/demo/MOBILE_CHECKLIST.md` were tried was not said, so no line of the checklist is marked as seen. Before that report, nothing of M15 had been run on a phone or against a server.
-- **In particular, never tried:** the camera reading a code; saving a calendar file and the phone offering a calendar app; the authenticator opening from the app; the photo upload; "confirm it's you"; moving between a visitor's pages and signing in from there.
-- **The integration and browser suites ran in CI for pull request #21** (2026-10-06, green), which was their first run after the chat rules moved packages. For M15 itself they run with its own pull request.
+- **The owner's report of 2026-10-06:** "i have installed the apk and all works as intended, i have checked the mobile_checklist and the new hebrew text and its all good". With it: the .apk installs and opens on the owner's Android 16 phone; `docs/demo/MOBILE_CHECKLIST.md` was gone through and is marked with that date; the app's new Hebrew texts were read, and no change was asked for.
+- **What that report is and is not:** it is the owner's statement about the whole, not a line-by-line record, and Claude saw none of it on a phone. The lines that need a second person, a room's moderator, another member's card or an event's venue code are marked like the rest, on the owner's word.
+- **The integration and browser suites** ran green in CI for pull request #21 (2026-10-06), their first run after the chat rules moved packages. For M15 itself they run with pull request #22.
+- **No component tests** (see "Deviations and findings").
 
 ### Deviations and findings
 
@@ -927,13 +928,16 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 ### The fixed tunnel and the .apk (M14 amendment 2, asked for by the owner on 2026-10-05)
 
 - **A tunnel with a fixed address exists and was checked:** the demo server and the app's own server answer through it. It is started with `start-tunnel.cmd` (see `apps/mobile/README.md`).
-- **The .apk was built on GitHub on 2026-10-06, at the first real attempt** (the attempt of the day before was lost to an incident at GitHub and never ran). It is 57 MB, for phones with 64-bit ARM processors, built for Android 16 (target SDK 36; it installs from Android 7), signed with the debug key. The demo server's fixed address is inside it. **It has not been installed on a phone by anyone yet:** that it builds says nothing about whether it opens.
+- **The .apk was built on GitHub on 2026-10-06, at the first real attempt** (the attempt of the day before was lost to an incident at GitHub and never ran). It is 57 MB, for phones with 64-bit ARM processors, built for Android 16 (target SDK 36; it installs from Android 7), signed with the debug key. The demo server's fixed address is inside it. **The owner installed it on 2026-10-06 and reported that all works as intended.**
 - **The checks on `main` after pull request #20, and those of pull request #21, were lost to the same incident** and were started again on 2026-10-06.
 
 ### Open for the owner
 
-1. **Go through the checklist on the phone** (`docs/demo/MOBILE_CHECKLIST.md`) and tell Claude what does not work.
-2. **Component tests:** still wanted before this is called finished? They are in the approved plan and not written.
+1. ~~Go through the checklist on the phone~~ **Done by the owner on 2026-10-06; all good.**
+2. ~~The wording of the app's new Hebrew texts~~ **Read by the owner on 2026-10-06;** no change was asked for.
+3. **Pull request #22** (this milestone) waits for its checks and then for "merge PR 22".
+4. **Component tests:** still wanted before this is called finished? They are in the approved plan and not written.
+5. **Where the demo server lives:** the tunnel as now, or a hosted machine (a free one and paid ones were looked up for the owner on 2026-10-06; either needs its own plan).
 
 ## Next step
 
@@ -947,6 +951,6 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 
 **M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner marked its checkpoint test as good the same day, and read the Hebrew texts of M12 and M13.
 
-**M14 (the mobile app, part 1)** and **M15 (part 2: the rest of the site, without the admin area)** are in progress: see their sections above. Their screens are built; the checklist on a real phone, component tests and the demo are left.
+**M14 (the mobile app, part 1)** is merged (pull requests #20 and #21) and was checked by the owner on the phone on 2026-10-06; its demo is left. **M15 (part 2: the rest of the site, without the admin area)** is built, checked by the owner the same day, and waits in pull request #22. Component tests were promised by both plans and are not written.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
