@@ -937,7 +937,7 @@ The dependency check in CI began to fail on 2026-10-06, for pull request #22 and
 
 - **`sharp` (high; the server's picture library, part of the running server):** moved from 0.35.4 to 0.35.5. The server's unit tests (301) and the integration tests that process pictures (files, profiles, chat files: 34) pass with it.
 - **`shell-quote` (critical; inside React Native's developer tools, not part of the app on a phone):** pinned to 1.11.0, the fixed version that is more than seven days old.
-- **`source-map-js` (high; inside the test runner's tooling, on developers' computers and in CI only): not fixed yet.** The only fixed version, 1.2.2, was published on 2026-09-30, and the project's own rule refuses a version younger than seven days. It becomes installable on 2026-10-07 at about 14:00 UTC. The rule was not bypassed. **Until then the security check stays red, and pull request #22 is not merged.**
+- **`source-map-js` (high; inside the test runner's tooling, on developers' computers and in CI only): accepted by the owner on 2026-10-06, for one day.** The only fixed version, 1.2.2, was published on 2026-09-30, and the project's own rule refuses a version younger than seven days; it becomes installable on 2026-10-07 at about 14:00 UTC. The rule was not bypassed. The owner was offered waiting or accepting the advisory until then, and chose to accept. **To do on or after 2026-10-07: pin `source-map-js` to 1.2.2 and remove the exception from `pnpm-workspace.yaml`.**
 
 ### Open for the owner
 

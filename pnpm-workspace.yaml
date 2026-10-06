@@ -58,7 +58,14 @@ trustPolicyExclude:
 #   version published. Reached only through expo > @expo/cli, the developer's command-line tool
 #   for the mobile app, which runs on the developer's computer and in CI. It is not part of the
 #   app that runs on a phone, nor of the API or the site. Accepted by the owner on 2026-10-05.
+# - GHSA-68fv-2mgg-jv7q (source-map-js <1.2.2, a crafted source map can stall the process): the
+#   fixed version, 1.2.2, was published on 2026-09-30 and the seven-day rule above refuses it
+#   until 2026-10-07 at about 14:00 UTC. Reached only through vite > postcss, the test runner's
+#   tooling, on developers' computers and in CI; never in the API, the site or the app on a
+#   phone. Accepted by the owner on 2026-10-06, for that one day. REMOVE THIS ENTRY and pin
+#   source-map-js to 1.2.2 as soon as the rule allows it.
 auditConfig:
   ignoreGhsas:
     - GHSA-vfj7-8cjw-p6xm
     - GHSA-86w9-cpqp-85rv
+    - GHSA-68fv-2mgg-jv7q
