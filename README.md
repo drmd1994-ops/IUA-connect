@@ -125,7 +125,7 @@ pnpm dev
 
 #### Demo accounts (seeded by `pnpm db:seed`, development only)
 
-Fictional people on the reserved `demo.test` domain. They all share one demo password: **`olive-grove-demo-2026`**. The seed refuses to run in production, and it runs once (it's skipped if the demo admin already exists).
+Fictional people on the reserved `demo.test` domain. They all share one demo password: **`ilikeIUAconnect11`**. The seed refuses to run in production, and it runs once (it's skipped if the demo admin already exists).
 
 | Account                                                    | What it shows                                                       |
 | ---------------------------------------------------------- | ------------------------------------------------------------------- |

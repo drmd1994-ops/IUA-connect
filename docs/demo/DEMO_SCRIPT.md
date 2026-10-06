@@ -28,7 +28,7 @@ This script was walked through, step by step, on a freshly reset database on 202
 
 5. Check: the home page is in Hebrew, right to left; the footer shows the association's (fictional) contact details.
 
-**Accounts.** All use the password `olive-grove-demo-2026`. Staff accounts then ask for the code from your authenticator ("קוד אימות").
+**Accounts.** All use the password `ilikeIUAconnect11`. Staff accounts then ask for the code from your authenticator ("קוד אימות").
 
 | Who                 | Account                        | Code needed |
 | ------------------- | ------------------------------ | ----------- |

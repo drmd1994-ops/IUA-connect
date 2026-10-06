@@ -16,7 +16,7 @@ import {
  * settings; and the member dashboard with its "Coming soon" actions. Plus axe on every new
  * page. The demo member comes from the seed and is fictional.
  */
-const DEMO_PASSWORD = 'olive-grove-demo-2026';
+const DEMO_PASSWORD = 'ilikeIUAconnect11';
 const MEMBER = { email: 'member.full@demo.test' };
 
 async function expectAccessible(page: Page) {

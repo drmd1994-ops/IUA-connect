@@ -1,6 +1,7 @@
 {
   "demoBanner": "Demo version: all people and data shown are fictional.",
   "loading": "Loading…",
+  "back": "Back",
   "unreachable": {
     "title": "The server can’t be reached",
     "text": "The app could not reach IUA Connect at {address}. In the demo, the phone must be on the same Wi-Fi as the computer that runs it.",
@@ -25,7 +26,14 @@
     "title": "IUA Connect",
     "signedInAs": "Signed in as {email}",
     "staffNote": "You have a staff role. The admin area is on the website; the app is for members’ everyday use.",
-    "soon": "This is the first step of the app: signing in. The membership card, news, events, notifications and chat are added one by one."
+    "membership": "Your membership",
+    "active": "Active until {date}",
+    "suspended": "Your membership is suspended.",
+    "expired": "Your membership ended on {date}.",
+    "none": "You have no membership yet. Joining is done on the website.",
+    "openCard": "Open my membership card",
+    "unread": "{count, plural, =0 {No unread notifications} one {# unread notification} other {# unread notifications}}",
+    "openNotices": "Open notifications"
   },
   "language": {
     "title": "Language",
@@ -56,5 +64,43 @@
     "ok": "Live updates arrive on this phone.",
     "failed": "Live updates did not arrive. Chat will ask the server every few seconds instead.",
     "detail": "Details for the developer: {detail}"
+  },
+  "tabs": {
+    "home": "Home",
+    "news": "News",
+    "events": "Events",
+    "chat": "Chat",
+    "me": "Me"
+  },
+  "card": {
+    "offline": "No connection. This is your card as it was on {date}. The code can’t be shown without a connection, because it changes every few minutes.",
+    "retry": "Try again",
+    "brightness": "Turn the screen’s brightness up if the code doesn’t scan."
+  },
+  "news": {
+    "more": "Show more",
+    "shown": "{shown} of {total} shown",
+    "fileKb": "{name} ({size} KB)",
+    "fileMb": "{name} ({size} MB)",
+    "fileHint": "Opens in the phone’s browser.",
+    "fileFailed": "The file couldn’t be opened."
+  },
+  "events": {
+    "checkInNote": "At the venue, scan the code shown there with your phone’s camera. It opens the website, which records your attendance.",
+    "calendarOnSite": "The calendar file is on the website."
+  },
+  "notices": {
+    "onSite": "This one opens on the website."
+  },
+  "chat": {
+    "pickPhoto": "Photo or video",
+    "pickCamera": "Camera",
+    "pickPdf": "PDF",
+    "noCamera": "The app may not use the camera. You can allow it in the phone’s settings."
+  },
+  "me": {
+    "title": "Me",
+    "card": "My membership card",
+    "notices": "Notification settings"
   }
 }

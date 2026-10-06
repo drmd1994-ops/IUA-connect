@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { API_URL, deviceName } from '@/config';
+import { CARD_KEY } from '@/features/card-model';
 import { useLocale } from '@/i18n/i18n-provider';
 import { secureStore } from './secure-store';
 import { Session, type SessionStatus } from './session-core';
@@ -45,6 +46,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void session.restore();
   }, [session]);
+
+  // Signed out: what the phone kept about the person goes too (the membership card).
+  useEffect(() => {
+    if (status === 'signedOut') void secureStore.remove(CARD_KEY).catch(() => undefined);
+  }, [status]);
 
   const request = useCallback(
     async <T,>(path: string, init?: RequestInit): Promise<T> => {

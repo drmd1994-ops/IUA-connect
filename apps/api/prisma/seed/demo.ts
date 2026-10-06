@@ -15,7 +15,7 @@ import { endOfYear, todayInIsrael } from '../../src/modules/membership/period';
  * Every administrative role requires two-step verification, so the demo admin and directors set up
  * a passkey or an authenticator app at their first sign-in.
  */
-export const DEMO_PASSWORD = 'olive-grove-demo-2026';
+export const DEMO_PASSWORD = 'ilikeIUAconnect11';
 const DOMAIN = 'demo.test';
 
 interface Person {

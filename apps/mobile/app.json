@@ -26,9 +26,6 @@
           "faceIDPermission": "Allow IUA Connect to use Face ID to unlock the app."
         }
       ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }

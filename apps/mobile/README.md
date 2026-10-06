@@ -35,11 +35,46 @@ You need the phone and this computer on **the same Wi-Fi**.
 
 Sign in with a demo account, for example `member.full@demo.test` and the demo password from the main `README.md`.
 
+## If the phone can't reach the computer: the tunnel
+
+On the owner's computer the phone never loaded the app over the Wi-Fi. A tunnel gives the server and the app's own server public `https://` addresses instead; the phone can then be on any network. **While it runs, anyone who has the address can reach the demo server,** so stop it when the demo is over.
+
+The program is Microsoft's dev tunnels (`devtunnel.exe`, kept in `%LOCALAPPDATA%\IUAConnectTools`, signed in once with `devtunnel user login -g`).
+
+1. Start the site and the server (`pnpm dev`).
+2. Open the tunnel, and leave its window open:
+
+   ```powershell
+   & "$env:LOCALAPPDATA\IUAConnectTools\devtunnel.exe" host -p 4000 -p 8081 --allow-anonymous
+   ```
+
+   It prints two addresses, one ending in `-4000…` (the server) and one in `-8081…` (the app's own server). They change each time.
+
+3. Put the first in `apps/mobile/.env` as `EXPO_PUBLIC_API_URL`.
+4. Start the app's own server with the second, in `cmd`:
+
+   ```
+   set EXPO_PACKAGER_PROXY_URL=https://<the address ending in -8081…>
+   pnpm --filter @iua/mobile start
+   ```
+
+5. In Expo Go choose "Enter URL manually" and type `exps://<the address ending in -8081…>` without `https://`, or scan the QR code.
+
+The site is not behind the tunnel, so the card's code can't be checked from a second device this way.
+
 ## What to try in this first step
 
 - **Sign in,** close the app completely, and open it again: you should still be signed in, after the phone's fingerprint or face check.
 - **Change the language** to English and back. The text changes at once; the direction of the page changes after the app is closed and opened again.
-- **"Connection check" → "Start the check".** It says whether live updates (which chat uses) arrive on your phone. It can take up to thirty seconds. Tell Claude what it says, including the "details for the developer" line.
+- **"Me" → "My membership card":** your membership card with its code. On a second device, scan the code: the site's verification page should say the membership is valid. Then switch the phone to flight mode and open the tab again: the card is shown as it last was, with its date and without a code.
+- **The "News" tab:** the list; choose a category; "Show more" at the end; open an item with a picture; open one of its files (it opens in the phone's browser); the back link returns to the list. In Hebrew and in English.
+- **The "Events" tab:** upcoming and past; open "Workshop with limited places (demo)" or another event; "Register", then tick sessions and "Save my schedule"; "View my schedule"; "Cancel my registration". On the site, as the same person, the registration shows too.
+- **Home → "Open notifications",** and "Me" → "Notification settings".
+- **The "Chat" tab,** with a second person signed in on the site: write both ways, send a picture, make a group, join a room.
+
+The full list, to go through line by line, is `docs/demo/MOBILE_CHECKLIST.md`.
+
+- **"Me" → "Connection check" → "Start the check".** It says whether live updates (which chat uses) arrive on your phone. It can take up to thirty seconds. Tell Claude what it says, including the "details for the developer" line.
 - **On the site,** as the same person: **Account → Security**. The phone is listed among your sessions, by its name. Ending it there signs the app out.
 
 ## If something goes wrong
@@ -58,4 +93,6 @@ Sign in with a demo account, for example `member.full@demo.test` and the demo pa
 - The refresh token is kept only in the phone's secure storage (`src/session/`). Nothing else may store it; a test fails if it is written anywhere else.
 - Texts come from `packages/i18n` (the group `mobile` holds what only the app shows). No text is written into the code.
 - Colours and sizes come from `packages/ui-tokens`.
+- The chat rules both front ends share come from `@iua/api-client/chat`; what only the app decides is in `src/chat/model.ts`.
+- One stream of live chat events serves the whole app (`src/chat/events.tsx`); it closes when the app goes to the background.
 - Passkeys don't work in the app: they need a site with real hosting and its own address.
