@@ -120,3 +120,5 @@ Given on 2026-10-05: "1.b 2.approved 3.as proposed".
 3. **The order of §6,** as proposed.
 
 The owner also asked, on the same day and before this plan, for the work to go on without stopping at checkpoints.
+
+**Component tests, 2026-10-06.** Asked what they are and offered three ways (every screen in depth, a reduced set, or dropping them), the owner chose the reduced set: "do as you recommend". That is: every screen drawn in both languages with the general checks, and deep tests for signing in, the card, event registration, a conversation and account security. §5 is read with that change, for the screens of M14 as well.

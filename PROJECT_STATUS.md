@@ -857,7 +857,7 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 
 - **The owner's report of 2026-10-06:** "i have installed the apk and all works as intended, i have checked the mobile_checklist and the new hebrew text and its all good". With it: the .apk installs and opens on the owner's Android 16 phone; `docs/demo/MOBILE_CHECKLIST.md` was gone through and is marked with that date; the app's new Hebrew texts were read, and no change was asked for.
 - **What that report is and is not:** it is the owner's statement about the whole, not a line-by-line record, and Claude saw none of it on a phone. The lines that need a second person, a room's moderator, another member's card or an event's venue code are marked like the rest, on the owner's word.
-- **The app has no component tests.** The plan listed them (`jest-expo`, the React Native testing library): every screen rendering in both languages with a name on every control. They were not written. The rules behind the screens are tested; the screens themselves are tested by hand only.
+- **Screen tests were added on 2026-10-06** (see M15 below): every screen is drawn in both languages by an automatic test, and five flows are tested in depth. What they cannot see is said there.
 - Nothing was tried on an iPhone, and nothing will be in part 1.
 
 ### Deviations and findings
@@ -903,7 +903,7 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 
 ### Verified
 
-- 79 tests of the app's rules pass (16 new in M15: the states of exam practice; which parts of a profile were changed; where a notice or a search result leads; what a scanned code means, including that a code that is not IUA Connect's is not followed; a message's "copy").
+- 79 tests of the app's rules and 120 tests of its screens pass (the screen tests were added after the milestone's screens; of the rule tests, 16 are new in M15: the states of exam practice; which parts of a profile were changed; where a notice or a search result leads; what a scanned code means, including that a code that is not IUA Connect's is not followed; a message's "copy").
 - The app type-checks, lints, and **the whole of it builds for Android** (`expo export`).
 - **A test caught a real mistake before anyone saw it:** the address of exam practice on the site was read as the address of an education item.
 
@@ -912,7 +912,7 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 - **The owner's report of 2026-10-06:** "i have installed the apk and all works as intended, i have checked the mobile_checklist and the new hebrew text and its all good". With it: the .apk installs and opens on the owner's Android 16 phone; `docs/demo/MOBILE_CHECKLIST.md` was gone through and is marked with that date; the app's new Hebrew texts were read, and no change was asked for.
 - **What that report is and is not:** it is the owner's statement about the whole, not a line-by-line record, and Claude saw none of it on a phone. The lines that need a second person, a room's moderator, another member's card or an event's venue code are marked like the rest, on the owner's word.
 - **The integration and browser suites** ran green in CI for pull request #21 (2026-10-06), their first run after the chat rules moved packages. For M15 itself they run with pull request #22.
-- **No component tests** (see "Deviations and findings").
+- **What the screen tests cannot see:** anything that needs a real phone. The keyboard over a text box, the camera, choosing a file, how a screen looks at a size, a real connection. The owner's checklist stands for those.
 
 ### Deviations and findings
 
@@ -922,7 +922,9 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 - **Setting up the authenticator shows no code to scan,** because the authenticator app is on the same phone. The app offers to open it, and shows the key to type.
 - **Recovery codes can be copied, not downloaded as a file.**
 - **Lists with many choices** (hospitals, departments) are a row that scrolls sideways, as everywhere in the app. With many hospitals this is slow to use; a searchable list would be better.
-- **The plan's step 10 is not done:** no component tests were written (the plan promised them for the screens of both parts, with the libraries approved in M14 §6), and the demo has not happened.
+- **Screen tests, in the reduced form the owner chose on 2026-10-06** ("do as you recommend"): not a deep test of every screen, as the plans said, but (a) every one of the app's 41 screens drawn in Hebrew and in English against a pretend server, checked for a missing text, a text that can't be written, a control without a name for a screen reader, and a request nobody foresaw; and (b) deep tests of the five flows where a silent break would matter most: signing in, the membership card, registering for an event, a conversation, and account security. 120 tests; they run with the others in CI. **The demo has not happened.**
+- **The screen tests found two flaws in the app, both fixed:** the "pinned messages" button in a room had no name for a screen reader; and a notice (an error, a success) was not one item for a screen reader, so "alert" was never said of it.
+- **The pretend server's answers are typed from the API's own description,** so a change of the API that the app's screens depend on fails the type check.
 - **Four packages were installed for the "three libraries" approved:** the camera, the clipboard, and the pair for files (saving and sharing), as the plan's table listed them. The project's own install rules let all four through.
 
 ### The fixed tunnel and the .apk (M14 amendment 2, asked for by the owner on 2026-10-05)
@@ -944,7 +946,7 @@ The dependency check in CI began to fail on 2026-10-06, for pull request #22 and
 1. ~~Go through the checklist on the phone~~ **Done by the owner on 2026-10-06; all good.**
 2. ~~The wording of the app's new Hebrew texts~~ **Read by the owner on 2026-10-06;** no change was asked for.
 3. **Pull request #22** (this milestone) waits for its checks and then for "merge PR 22".
-4. **Component tests:** still wanted before this is called finished? They are in the approved plan and not written.
+4. ~~Component tests~~ **Written on 2026-10-06 in the reduced form the owner chose;** in a pull request of their own.
 5. **Where the demo server lives:** the tunnel as now, or a hosted machine (a free one and paid ones were looked up for the owner on 2026-10-06; either needs its own plan).
 
 ## Next step

@@ -459,6 +459,7 @@ export function ThreadScreen({
         <Pressable
           style={styles.pins}
           accessibilityRole="button"
+          accessibilityLabel={`${r('room.pinned')} (${pins.length})`}
           onPress={() => setDialog({ kind: 'pins' })}
         >
           <Text style={styles.pinsText}>{`${r('room.pinned')} (${pins.length})`}</Text>
