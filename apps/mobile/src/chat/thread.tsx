@@ -1,4 +1,5 @@
 import {
+  type Activity,
   type Message,
   type Reaction,
   dayKey,
@@ -6,7 +7,8 @@ import {
   messageStatus,
 } from '@iua/api-client/chat';
 import { colors, semantic } from '@iua/ui-tokens';
-import { useRouter } from 'expo-router';
+import * as Clipboard from 'expo-clipboard';
+import { type Href, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   AppState,
@@ -27,7 +29,7 @@ import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Field, Notice } from '@/ui/kit';
 import { Tag } from '@/ui/parts';
 import { ThreadDetails } from './details';
-import { ForwardSheet, ReportSheet } from './dialogs';
+import { ForwardSheet, MessageSearchSheet, ReportSheet } from './dialogs';
 import { useChatEvents } from './events';
 import { Attachments, Composer, MessageText, ReactionChips, ReactionPicker } from './message';
 import {
@@ -41,6 +43,7 @@ import {
   canWrite,
   messageActions,
   threadPath,
+  threadRoute,
 } from './model';
 import { Confirm, type Person, Row, Sheet, usePersonLabel, useSend } from './ui';
 
@@ -50,14 +53,23 @@ type Dialog =
       message: Message;
     }
   | { kind: 'removePerson' | 'banPerson'; message: Message }
-  | { kind: 'details' | 'pins' | 'join' };
+  | { kind: 'details' | 'pins' | 'join' | 'search' };
 
 const TYPING_SHOWN_MS = 4000;
 /** Close enough to the end to follow new messages down. */
 const NEAR_END = 120;
 
 /** One thread: a private conversation, a group or a room. Its messages, live, and the composer. */
-export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
+export function ThreadScreen({
+  kind,
+  id,
+  at = null,
+}: {
+  kind: ThreadKind;
+  id: string;
+  /** Opened at an earlier message: the messages around it are shown, and new ones not followed. */
+  at?: number | null;
+}) {
   const all = useTranslations();
   const t = useTranslations('chat');
   const r = useTranslations('rooms');
@@ -70,6 +82,8 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
   const { request } = useSession();
   const send = useSend();
   const base = threadPath(kind, id);
+  const detached = useRef(at !== null);
+  const [activity, setActivity] = useState<Activity | null>(null);
   const [meId, setMeId] = useState<string | null>(null);
   const [thread, setThread] = useState<Thread | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -84,7 +98,7 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
   const [revealed, setRevealed] = useState<string[]>([]);
   const list = useRef<FlatList<Message>>(null);
   /** The view follows new messages while the reader is at the end. */
-  const atEnd = useRef(true);
+  const atEnd = useRef(at === null);
   const loadingEarlier = useRef(false);
   const lastSeq = useRef(0);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -114,12 +128,13 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
 
   /** Reads everything, when the reader is actually looking. */
   const markRead = useCallback(() => {
-    if (AppState.currentState !== 'active') return;
+    if (AppState.currentState !== 'active' || detached.current) return;
     send('POST', `${base}/read`, {}).catch(() => undefined);
   }, [send, base]);
 
   /** Fetches what came after the newest message the screen has. */
   const catchUp = useCallback(async () => {
+    if (detached.current) return;
     try {
       for (;;) {
         const page = await request<{ items: Message[]; hasMore: boolean }>(
@@ -167,7 +182,9 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
       // A room that was not joined shows only its door.
       if (opened.kind === 'room' && opened.detail.role === 'NONE') return;
       try {
-        const page = await request<{ items: Message[]; hasMore: boolean }>(`${base}/messages`);
+        const page = await request<{ items: Message[]; hasMore: boolean }>(
+          at === null ? `${base}/messages` : `${base}/messages?around=${at}`,
+        );
         if (!active) return;
         setMessages(page.items);
         setHasMore(page.hasMore);
@@ -181,7 +198,7 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
       active = false;
       clearTimeout(typingTimer.current);
     };
-  }, [request, base, loadThread, markRead, loadPins]);
+  }, [request, base, loadThread, markRead, loadPins, at]);
 
   useChatEvents((event) => {
     if (event.type === 'refresh') {
@@ -211,6 +228,9 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
         break;
       case 'room.left':
         if (event.userId === meId) void loadThread();
+        break;
+      case 'activity':
+        loadActivity();
         break;
       case 'typing':
         if (event.userId === meId) break;
@@ -298,6 +318,17 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
     [request, base, meId],
   );
 
+  const otherId = thread?.kind === 'direct' ? thread.detail.other.id : null;
+  const loadActivity = useCallback(() => {
+    if (!otherId) return;
+    request<{ items: { activity: Activity }[] }>(
+      `/api/v1/chat/activity?userIds=${encodeURIComponent(otherId)}`,
+    )
+      .then((result) => setActivity(result.items[0]?.activity ?? null))
+      .catch(() => undefined);
+  }, [request, otherId]);
+  useEffect(loadActivity, [loadActivity]);
+
   if (error !== null && !thread) {
     return (
       <Frame>
@@ -350,6 +381,7 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
   const actionLabel: Record<MessageAction, string> = {
     reply: t('menu.reply'),
     forward: g('forward.menu'),
+    copy: t('menu.copy'),
     edit: t('menu.edit'),
     deleteAll: t('menu.deleteAll'),
     deleteMine: t('menu.deleteMine'),
@@ -378,6 +410,9 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
         send(action === 'pin' ? 'POST' : 'DELETE', `${base}/pins/${encodeURIComponent(message.id)}`)
           .then(loadPins)
           .catch((caught: unknown) => setActionError(caught));
+        break;
+      case 'copy':
+        void Clipboard.setStringAsync(message.body).catch(() => undefined);
         break;
       default:
         setDialog({ kind: action, message });
@@ -408,9 +443,12 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
     <Frame>
       <View style={styles.header}>
         <Back />
-        <Text style={styles.title} accessibilityRole="header" numberOfLines={2}>
-          {title}
-        </Text>
+        <View style={styles.titleBox}>
+          <Text style={styles.title} accessibilityRole="header" numberOfLines={2}>
+            {title}
+          </Text>
+          {activity && <Text style={styles.activity}>{g(`activity.${activity}`)}</Text>}
+        </View>
         <Button
           label={t('conversation.details')}
           variant="secondary"
@@ -482,7 +520,11 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
                 <Pressable
                   onLongPress={() => setDialog({ kind: 'menu', message })}
                   accessibilityHint={t('menu.open')}
-                  style={[styles.bubble, message.mine ? styles.mine : styles.theirs]}
+                  style={[
+                    styles.bubble,
+                    message.mine ? styles.mine : styles.theirs,
+                    message.seq === at && styles.found,
+                  ]}
                 >
                   {thread.kind !== 'direct' && !message.mine && (
                     <Text style={styles.sender}>{senderName(message)}</Text>
@@ -561,6 +603,15 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
           : ''}
       </Text>
 
+      {at !== null && (
+        <View style={styles.padSmall}>
+          <Button
+            label={g('search.newest')}
+            variant="secondary"
+            onPress={() => router.replace(threadRoute(kind, id) as Href)}
+          />
+        </View>
+      )}
       {!outside && (
         <>
           {actionError !== null && (
@@ -708,12 +759,16 @@ export function ThreadScreen({ kind, id }: { kind: ThreadKind; id: string }) {
           }}
         />
       )}
+      {dialog?.kind === 'search' && (
+        <MessageSearchSheet conversationId={id} onClose={() => setDialog(null)} />
+      )}
       {dialog?.kind === 'details' && (
         <ThreadDetails
           thread={thread}
           title={title}
           onClose={() => setDialog(null)}
           onChanged={() => void loadThread()}
+          onSearch={() => setDialog({ kind: 'search' })}
           onLeft={() => {
             setDialog(null);
             router.replace('/chat');
@@ -831,7 +886,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: semantic.border,
   },
-  title: { flex: 1, fontSize: 18, fontWeight: '600', color: colors.brand[900] },
+  titleBox: { flex: 1 },
+  activity: { fontSize: 13, color: semantic.textMuted },
+  found: { borderColor: semantic.primary, borderWidth: 2 },
+  title: { fontSize: 18, fontWeight: '600', color: colors.brand[900] },
   pins: {
     minHeight: 44,
     justifyContent: 'center',

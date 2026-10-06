@@ -25,6 +25,21 @@
         {
           "faceIDPermission": "Allow IUA Connect to use Face ID to unlock the app."
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow IUA Connect to use the camera to read a code, and to take a picture you send in chat.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow IUA Connect to open the pictures and videos you choose to send.",
+          "cameraPermission": "Allow IUA Connect to use the camera to take a picture you send in chat.",
+          "microphonePermission": false
+        }
       ]
     ]
   }

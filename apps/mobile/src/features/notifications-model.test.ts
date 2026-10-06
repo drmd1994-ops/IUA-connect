@@ -9,10 +9,19 @@ describe('where a notice leads', () => {
     expect(appRoute('/account/schedule')).toBe('/events/schedule');
   });
 
+  it('opens education, guidelines, members and messages inside the app', () => {
+    expect(appRoute('/education/a-b')).toBe('/education/a-b');
+    expect(appRoute('/education/exam')).toBe('/exam');
+    expect(appRoute('/guidelines/123')).toBe('/guidelines/123');
+    expect(appRoute('/members/abc')).toBe('/members/abc');
+    expect(appRoute('/account/notifications/messages/m1')).toBe('/broadcast/m1');
+    expect(appRoute('/account/security')).toBe('/security');
+  });
+
   it('leads nowhere for what the app does not have', () => {
     expect(appRoute(null)).toBeNull();
-    expect(appRoute('/education/x')).toBeNull();
-    expect(appRoute('/guidelines')).toBeNull();
+    expect(appRoute('/admin/news')).toBeNull();
+    expect(appRoute('/account/applications')).toBeNull();
     expect(appRoute('https://elsewhere.example.test/news/x')).toBeNull();
   });
 });

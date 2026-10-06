@@ -1,14 +1,16 @@
 import type { components } from '@iua/api-client';
 import { type Message, personName } from '@iua/api-client/chat';
 import { semantic } from '@iua/ui-tokens';
+import { type Href, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTranslations } from 'use-intl';
+import { useFormatter, useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
 import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';
 import { Body, Button, Field, Notice } from '@/ui/kit';
 import { Choices } from '@/ui/parts';
+import { threadRoute } from './model';
 import { Avatar, type Person, Row, Sheet, usePersonLabel, useSend } from './ui';
 
 type Schemas = components['schemas'];
@@ -274,7 +276,106 @@ export function PeopleSearch({
   );
 }
 
+type Found = Schemas['MessageSearchDto']['items'][number];
+
+/**
+ * Searching the reader's own messages: in one thread, or in all of them. A result opens its
+ * thread at that message.
+ */
+export function MessageSearchSheet({
+  conversationId,
+  onClose,
+}: {
+  conversationId?: string;
+  onClose: () => void;
+}) {
+  const all = useTranslations();
+  const t = useTranslations('chat.search');
+  const g = useTranslations('groups.search');
+  const locale = useLocale();
+  const label = usePersonLabel();
+  const format = useFormatter();
+  const router = useRouter();
+  const { request } = useSession();
+  const [query, setQuery] = useState('');
+  const [found, setFound] = useState<Found[] | null>(null);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+
+  async function search() {
+    if (query.trim().length < 2) return;
+    setPending(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({
+        q: query.trim(),
+        ...(conversationId ? { conversationId } : {}),
+      });
+      const result = await request<{ items: Found[] }>(`/api/v1/chat/search?${params.toString()}`);
+      setFound(result.items);
+    } catch (caught) {
+      setError(caught);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  const where = (item: Found) =>
+    item.room
+      ? locale === 'en'
+        ? (item.room.nameEn ?? item.room.nameHe)
+        : item.room.nameHe
+      : item.group
+        ? g('inGroup', { name: item.group.name })
+        : t('with', { name: label(item.other) });
+  return (
+    <Sheet title={t('title')} onClose={onClose}>
+      <Field
+        label={t('label')}
+        hint={t('hint')}
+        value={query}
+        onChangeText={setQuery}
+        returnKeyType="search"
+        onSubmitEditing={() => void search()}
+      />
+      <Button
+        label={t('button')}
+        pending={pending}
+        disabled={query.trim().length < 2}
+        onPress={() => void search()}
+      />
+      {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
+      {found?.length === 0 && <Body muted>{t('empty')}</Body>}
+      {found?.map((item) => (
+        <View key={item.message.id} style={styles.group}>
+          <Text style={styles.meta}>
+            {`${where(item)} · ${format.dateTime(new Date(item.message.createdAt), {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })}`}
+          </Text>
+          <Text style={styles.name} numberOfLines={3}>
+            {item.message.body}
+          </Text>
+          <Button
+            label={g('goTo')}
+            variant="link"
+            onPress={() => {
+              onClose();
+              const kind = item.room ? 'room' : item.group ? 'group' : 'direct';
+              router.push(
+                `${threadRoute(kind, item.message.conversationId)}?at=${item.message.seq}` as Href,
+              );
+            }}
+          />
+        </View>
+      ))}
+    </Sheet>
+  );
+}
+
 const styles = StyleSheet.create({
+  meta: { fontSize: 13, color: semantic.textMuted },
   label: { fontSize: 16, fontWeight: '600', color: semantic.text },
   group: { gap: 8 },
   person: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 10 },

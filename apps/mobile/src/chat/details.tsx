@@ -30,6 +30,7 @@ export function ThreadDetails({
   title,
   onClose,
   onChanged,
+  onSearch,
   onLeft,
 }: {
   thread: Thread;
@@ -37,6 +38,8 @@ export function ThreadDetails({
   onClose: () => void;
   onChanged: () => void;
   /** The reader is no longer here (left, or marked it unread): back to the list. */
+  /** Search in this thread. */
+  onSearch: () => void;
   onLeft: () => void;
 }) {
   const all = useTranslations();
@@ -156,6 +159,16 @@ export function ThreadDetails({
         onPress={() => void mine({ pinned: !detail.pinned })}
       />
       <Row
+        label={
+          kind === 'direct'
+            ? c('details.search')
+            : kind === 'group'
+              ? g('details.search')
+              : r('details.search')
+        }
+        onPress={onSearch}
+      />
+      <Row
         label={c('details.markUnread')}
         // Leaving the thread, or opening it would read it again at once.
         onPress={() => void mine({ markedUnread: true }).then((done) => done && onLeft())}
@@ -246,6 +259,34 @@ export function ThreadDetails({
         </View>
       )}
 
+      {(runsGroup ||
+        (kind === 'room' &&
+          canModerate &&
+          thread.detail.inviteOnly &&
+          !thread.detail.archived)) && (
+        <View style={styles.group}>
+          {kind === 'room' && (
+            <>
+              <Text style={styles.label}>{g('room.invite')}</Text>
+              <Body muted>{g('room.inviteNote')}</Body>
+              <PeopleSearch
+                path={`/api/v1/chat/invitable?conversationId=${encodeURIComponent(detail.id)}`}
+                exclude={invited}
+                actionLabel={(person) => g('create.addName', { name: person })}
+                onPick={(person) =>
+                  void act(() =>
+                    send('POST', `${base}/invitations`, { userIds: [person.id] }),
+                  ).then(
+                    (done) =>
+                      done && person.id && setInvited((current) => [...current, person.id!]),
+                  )
+                }
+              />
+            </>
+          )}
+          <Waiting base={base} version={version} onError={setError} />
+        </View>
+      )}
       {canModerate && (
         <View style={styles.group}>
           <Text style={styles.label}>{r('moderate.title')}</Text>
@@ -374,6 +415,55 @@ export function ThreadDetails({
       )}
       {ask?.kind === 'report' && <ReportSheet target={ask.target} onClose={() => setAsk(null)} />}
     </Sheet>
+  );
+}
+
+/** Invitations sent from here that nobody answered yet; each can be taken back. */
+function Waiting({
+  base,
+  version,
+  onError,
+}: {
+  base: string;
+  version: number;
+  onError: (error: unknown) => void;
+}) {
+  const g = useTranslations('groups.details');
+  const label = usePersonLabel();
+  const { request } = useSession();
+  const send = useSend();
+  const [items, setItems] = useState<{ id: string; user: Person }[]>([]);
+  const [taken, setTaken] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    request<{ items: { id: string; user: Person }[] }>(`${base}/invitations`)
+      .then((result) => active && setItems(result.items))
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [request, base, version, taken]);
+
+  return (
+    <>
+      <Text style={styles.label}>{g('waiting')}</Text>
+      {items.length === 0 && <Body muted>{g('noWaiting')}</Body>}
+      {items.map((item) => (
+        <View key={item.id} style={styles.person}>
+          <Text style={styles.personName}>{label(item.user)}</Text>
+          <Button
+            label={g('withdrawName', { name: label(item.user) })}
+            variant="link"
+            onPress={() =>
+              void send('DELETE', `/api/v1/chat/invitations/${encodeURIComponent(item.id)}`)
+                .then(() => setTaken((n) => n + 1))
+                .catch(onError)
+            }
+          />
+        </View>
+      ))}
+    </>
   );
 }
 

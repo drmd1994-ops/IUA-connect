@@ -5,6 +5,7 @@ import { type ColorValue } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useTranslations } from 'use-intl';
 import { useChatEvents } from '@/chat/events';
+import { useGuest } from '@/features/visitor';
 import { useSession } from '@/session/session-provider';
 
 /** Simple line drawings for the tabs; the label beside each says what it is. */
@@ -37,12 +38,14 @@ export default function TabsLayout() {
   const t = useTranslations('mobile.tabs');
   const all = useTranslations();
   const { request } = useSession();
+  const { guest } = useGuest();
   const [unread, setUnread] = useState(0);
   const count = useCallback(() => {
+    if (guest) return;
     request<{ conversations: number }>('/api/v1/chat/unread-count')
       .then((result) => setUnread(result.conversations))
       .catch(() => undefined);
-  }, [request]);
+  }, [request, guest]);
   useEffect(count, [count]);
   useChatEvents((event) => {
     if (event.type !== 'typing' && event.type !== 'activity') count();
@@ -65,11 +68,15 @@ export default function TabsLayout() {
         options={{
           title: t('chat'),
           tabBarIcon: icon('chat'),
+          href: guest ? null : undefined,
           tabBarBadge: unread > 0 ? unread : undefined,
           tabBarAccessibilityLabel: all('chat.link.unread', { count: unread }),
         }}
       />
-      <Tabs.Screen name="me" options={{ title: t('me'), tabBarIcon: icon('me') }} />
+      <Tabs.Screen
+        name="me"
+        options={{ title: t('me'), tabBarIcon: icon('me'), href: guest ? null : undefined }}
+      />
     </Tabs>
   );
 }

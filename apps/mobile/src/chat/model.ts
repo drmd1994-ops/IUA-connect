@@ -46,6 +46,7 @@ export function canWrite(thread: Thread): boolean {
 export type MessageAction =
   | 'reply'
   | 'forward'
+  | 'copy'
   | 'edit'
   | 'deleteAll'
   | 'deleteMine'
@@ -61,13 +62,14 @@ export type MessageAction =
  * the API decides again when the action is sent.
  */
 export function messageActions(
-  message: Pick<Message, 'id' | 'mine' | 'deleted' | 'canEdit' | 'senderId'>,
+  message: Pick<Message, 'id' | 'mine' | 'deleted' | 'canEdit' | 'senderId' | 'body'>,
   context: { kind: ThreadKind; canWrite: boolean; canModerate: boolean; pinned: boolean },
 ): MessageAction[] {
   const actions: MessageAction[] = [];
   const live = !message.deleted;
   if (live && context.canWrite) actions.push('reply');
   if (live) actions.push('forward');
+  if (live && message.body) actions.push('copy');
   if (message.canEdit) actions.push('edit');
   if (message.mine && live) actions.push('deleteAll');
   actions.push('deleteMine');

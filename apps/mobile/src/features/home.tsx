@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFormatter, useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
 import { useSession } from '@/session/session-provider';
+import { GuestHome, useGuest } from './visitor';
 import { Body, Button, Card, Heading, Notice, Screen, Title } from '@/ui/kit';
 
 type Me = components['schemas']['MeDto'];
@@ -14,6 +15,11 @@ type MyMembership = components['schemas']['MyMembershipDto'];
  * card, and how many notifications wait. What the app doesn't have yet is said plainly.
  */
 export function Home() {
+  const { guest } = useGuest();
+  return guest ? <GuestHome /> : <MemberHome />;
+}
+
+function MemberHome() {
   const all = useTranslations();
   const t = useTranslations('mobile.home');
   const m = useTranslations('mobile');
@@ -56,7 +62,15 @@ export function Home() {
       {mine && (
         <Card>
           <Heading>{t('membership')}</Heading>
-          {!membership && <Body>{t('none')}</Body>}
+          {!membership && (
+            <>
+              <Body>{t('none')}</Body>
+              <Button
+                label={all('membership.apply.title')}
+                onPress={() => router.push('/applications')}
+              />
+            </>
+          )}
           {membership?.status === 'ACTIVE' && (
             <>
               <Body>{t('active', { date: date(membership.endDate) })}</Body>
@@ -80,6 +94,35 @@ export function Home() {
           />
         </Card>
       )}
+      <Card>
+        <Heading>{t('more')}</Heading>
+        <Button label={all('mobile.scan.title')} onPress={() => router.push('/scan')} />
+        <Button
+          label={all('education.nav')}
+          variant="secondary"
+          onPress={() => router.push('/education')}
+        />
+        <Button
+          label={all('education.list.examLink')}
+          variant="secondary"
+          onPress={() => router.push('/exam')}
+        />
+        <Button
+          label={all('content.guidelines.title')}
+          variant="secondary"
+          onPress={() => router.push('/guidelines')}
+        />
+        <Button
+          label={all('directory.nav')}
+          variant="secondary"
+          onPress={() => router.push('/members')}
+        />
+        <Button
+          label={all('search.page.title')}
+          variant="secondary"
+          onPress={() => router.push('/search')}
+        />
+      </Card>
     </Screen>
   );
 }
