@@ -95,7 +95,8 @@ The full list, to go through line by line, is `docs/demo/MOBILE_CHECKLIST.md`.
 
 ## For developers
 
-- `pnpm --filter @iua/mobile typecheck`, `lint`, `test` (the tests cover the app's rules: the session, the starting language, the lock; they need no phone).
+- `pnpm --filter @iua/mobile typecheck`, `lint`, `test`. `test` runs two kinds, neither needing a phone: `test:rules` (vitest, `*.test.ts`: the session, the starting language, the lock, and what each screen decides) and `test:screens` (jest, `*.test.tsx`: every screen drawn in both languages, and five flows in depth).
+- **A new screen** is added to the list in `src/all-screens.test.tsx`, and what it asks the server to `src/testing/fixtures.ts`. The test then fails for a missing text, a control without a name, or a request without an answer.
 - The refresh token is kept only in the phone's secure storage (`src/session/`). Nothing else may store it; a test fails if it is written anywhere else.
 - Texts come from `packages/i18n` (the group `mobile` holds what only the app shows). No text is written into the code.
 - Colours and sizes come from `packages/ui-tokens`.

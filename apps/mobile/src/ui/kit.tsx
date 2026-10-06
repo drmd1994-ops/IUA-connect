@@ -70,6 +70,8 @@ export function Notice({
   return (
     <View
       style={[styles.notice, noticeTones[tone]]}
+      // One thing for a screen reader, so that "alert" is said of the whole message.
+      accessible
       accessibilityRole={tone === 'error' ? 'alert' : 'text'}
       accessibilityLiveRegion={tone === 'error' ? 'assertive' : 'polite'}
     >
