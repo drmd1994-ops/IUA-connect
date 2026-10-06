@@ -829,7 +829,7 @@ No new libraries.
 
 Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved by the owner on 2026-10-05 with the answers in its §11: a demo app on the owner's own phone (Android 16), seen through Expo Go; no push notifications in part 1; fingerprint or face when the app opens; the screens in the plan's order; signed in as long as on the web.
 
-**This section is a running record; the milestone is not finished.** Every screen of part 1 is built (checkpoints 2 to 10). What is left is checkpoint 12: the checklist on a real phone (`docs/demo/MOBILE_CHECKLIST.md`), what it turns up, and the demo. Checkpoints 2 to 4 were merged on 2026-10-05 (pull request #20); 5 to 10 are on the branch `feat/mobile-screens`, which is not pushed, together with M15 below.
+**This section is a running record; the milestone is not finished.** Every screen of part 1 is built and merged: checkpoints 2 to 4 with pull request #20 (2026-10-05), checkpoints 5 to 10 with pull request #21 (2026-10-06), both with green CI. What is left is checkpoint 12: the checklist on a real phone (`docs/demo/MOBILE_CHECKLIST.md`), what it turns up, and the demo.
 
 ### Built so far
 
@@ -882,7 +882,7 @@ Plan: [`docs/plans/M14-mobile-app.md`](docs/plans/M14-mobile-app.md), approved b
 ### Open for the owner
 
 1. **The checklist on the phone:** `docs/demo/MOBILE_CHECKLIST.md`, with a second person on the site for the chat part. Tell Claude what does not work; expect a list.
-2. **Pull request #19** (the plan alone) is now redundant, since #20 was merged with the same commits; it waits for "close PR 19". The branch `feat/mobile-screens` needs rebasing onto `main` before it can become a pull request.
+2. Pull request #19 (the plan alone) was closed on 2026-10-05 as redundant, at the owner's word.
 3. **An .apk:** still wanted? It needs the decisions asked on 2026-10-05 (how it is built, and a fixed address for the server).
 
 ## M15 Mobile app, part 2: the rest of the site, without the admin area (in progress, started 2026-10-05)
@@ -911,7 +911,7 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 
 - **The owner tried the app in Expo Go on 2026-10-05, after M15 was built, and reported "it runs fine".** Which screens and which lines of `docs/demo/MOBILE_CHECKLIST.md` were tried was not said, so no line of the checklist is marked as seen. Before that report, nothing of M15 had been run on a phone or against a server.
 - **In particular, never tried:** the camera reading a code; saving a calendar file and the phone offering a calendar app; the authenticator opening from the app; the photo upload; "confirm it's you"; moving between a visitor's pages and signing in from there.
-- **The integration and browser suites were not run in this session** after the chat rules moved packages (M14). The site type-checks and the unit tests of all packages pass; CI runs the rest when the branch is pushed.
+- **The integration and browser suites ran in CI for pull request #21** (2026-10-06, green), which was their first run after the chat rules moved packages. For M15 itself they run with its own pull request.
 
 ### Deviations and findings
 
