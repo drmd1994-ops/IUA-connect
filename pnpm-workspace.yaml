@@ -25,6 +25,10 @@ overrides:
   deepmerge-ts: '>=8.0.0 <9'
   # Security fix (GHSA advisories on multer <2.3.0) for @nestjs/platform-express 11.2.5.
   multer: '>=2.3.0 <3'
+  # Security fix (GHSA-pqg4-j6r4-53mv, shell-quote <1.11.0, command injection) for the React Native
+  # developer tools, which are not part of the app on a phone. 1.11.0 exactly: 1.12.0 was less than
+  # seven days old on 2026-10-06. Remove when React Native ships a patched version.
+  shell-quote: 1.11.0
   # Peers that pnpm auto-installs at the newest release, ignoring minimumReleaseAge.
   # Keep these in step with the versions the workspace declares.
   '@types/node': 24.13.6

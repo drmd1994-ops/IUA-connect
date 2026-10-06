@@ -931,6 +931,14 @@ Plan: [`docs/plans/M15-mobile-app-everything.md`](docs/plans/M15-mobile-app-ever
 - **The .apk was built on GitHub on 2026-10-06, at the first real attempt** (the attempt of the day before was lost to an incident at GitHub and never ran). It is 57 MB, for phones with 64-bit ARM processors, built for Android 16 (target SDK 36; it installs from Android 7), signed with the debug key. The demo server's fixed address is inside it. **The owner installed it on 2026-10-06 and reported that all works as intended.**
 - **The checks on `main` after pull request #20, and those of pull request #21, were lost to the same incident** and were started again on 2026-10-06.
 
+### Three new advisories (2026-10-06)
+
+The dependency check in CI began to fail on 2026-10-06, for pull request #22 and equally for `main`: three advisories were published against libraries the project already used. None came with this milestone.
+
+- **`sharp` (high; the server's picture library, part of the running server):** moved from 0.35.4 to 0.35.5. The server's unit tests (301) and the integration tests that process pictures (files, profiles, chat files: 34) pass with it.
+- **`shell-quote` (critical; inside React Native's developer tools, not part of the app on a phone):** pinned to 1.11.0, the fixed version that is more than seven days old.
+- **`source-map-js` (high; inside the test runner's tooling, on developers' computers and in CI only): not fixed yet.** The only fixed version, 1.2.2, was published on 2026-09-30, and the project's own rule refuses a version younger than seven days. It becomes installable on 2026-10-07 at about 14:00 UTC. The rule was not bypassed. **Until then the security check stays red, and pull request #22 is not merged.**
+
 ### Open for the owner
 
 1. ~~Go through the checklist on the phone~~ **Done by the owner on 2026-10-06; all good.**
