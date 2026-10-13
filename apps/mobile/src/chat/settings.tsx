@@ -1,5 +1,5 @@
-import type { components } from '@iua/api-client';
-import { semantic } from '@iua/ui-tokens';
+import type { components } from '@medconnect/api-client';
+import { semantic } from '@medconnect/ui-tokens';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useTranslations } from 'use-intl';

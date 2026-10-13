@@ -1,5 +1,5 @@
-import { ApiError, type components } from '@iua/api-client';
-import { semantic } from '@iua/ui-tokens';
+import { ApiError, type components } from '@medconnect/api-client';
+import { semantic } from '@medconnect/ui-tokens';
 import { useRouter } from 'expo-router';
 import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

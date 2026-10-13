@@ -1,5 +1,5 @@
-import type { components } from '@iua/api-client';
-import { colors, semantic } from '@iua/ui-tokens';
+import type { components } from '@medconnect/api-client';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { type Href, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

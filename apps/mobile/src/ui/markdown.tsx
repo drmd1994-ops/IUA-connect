@@ -1,4 +1,4 @@
-import { colors, semantic } from '@iua/ui-tokens';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { useMemo } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import { type Inline, parseMarkdown } from '@/features/markdown-model';

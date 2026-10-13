@@ -1,5 +1,5 @@
-import { ApiError, type components } from '@iua/api-client';
-import { colors, semantic } from '@iua/ui-tokens';
+import { ApiError, type components } from '@medconnect/api-client';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';

@@ -1,4 +1,4 @@
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { type Answer } from './world';
 
 /**

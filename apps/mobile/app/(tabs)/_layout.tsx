@@ -1,4 +1,4 @@
-import { colors, semantic } from '@iua/ui-tokens';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { Tabs } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { type ColorValue } from 'react-native';

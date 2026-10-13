@@ -1,4 +1,4 @@
-import { toApiError } from '@iua/api-client';
+import { toApiError } from '@medconnect/api-client';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { allText, draw, settle } from '@/testing/draw';
 import { world } from '@/testing/world';

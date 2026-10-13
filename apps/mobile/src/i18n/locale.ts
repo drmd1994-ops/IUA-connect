@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
+import { DEFAULT_LOCALE, type Locale, isLocale } from '@medconnect/i18n';
 
 /**
  * The language the app starts in: the first of the phone's languages that the app has, else

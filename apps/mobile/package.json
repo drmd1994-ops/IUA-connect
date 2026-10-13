@@ -1,5 +1,5 @@
 {
-  "name": "@iua/mobile",
+  "name": "@medconnect/mobile",
   "version": "0.0.0",
   "private": true,
   "description": "Med Connect for phones (Expo). Part 1: the member's app (docs/plans/M14-mobile-app.md).",
@@ -14,10 +14,10 @@
     "test:screens": "jest"
   },
   "dependencies": {
-    "@iua/api-client": "workspace:*",
-    "@iua/i18n": "workspace:*",
-    "@iua/shared": "workspace:*",
-    "@iua/ui-tokens": "workspace:*",
+    "@medconnect/api-client": "workspace:*",
+    "@medconnect/i18n": "workspace:*",
+    "@medconnect/shared": "workspace:*",
+    "@medconnect/ui-tokens": "workspace:*",
     "expo": "~57.0.0",
     "expo-camera": "~57.0.5",
     "expo-clipboard": "~57.0.2",
@@ -44,8 +44,8 @@
     "use-intl": "^4.14.7"
   },
   "devDependencies": {
-    "@iua/eslint-config": "workspace:*",
-    "@iua/tsconfig": "workspace:*",
+    "@medconnect/eslint-config": "workspace:*",
+    "@medconnect/tsconfig": "workspace:*",
     "@testing-library/react-native": "^14.0.1",
     "@types/jest": "30.0.0",
     "@types/react": "~19.2.18",

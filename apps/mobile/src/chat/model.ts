@@ -1,5 +1,5 @@
-import type { components } from '@iua/api-client';
-import type { Message } from '@iua/api-client/chat';
+import type { components } from '@medconnect/api-client';
+import type { Message } from '@medconnect/api-client/chat';
 
 /**
  * What the app's chat decides without the phone or the server. The rules both front ends share

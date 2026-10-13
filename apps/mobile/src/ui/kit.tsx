@@ -1,4 +1,4 @@
-import { colors, semantic } from '@iua/ui-tokens';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { useRouter } from 'expo-router';
 import { type ReactNode } from 'react';
 import {

@@ -1,5 +1,5 @@
-import { ApiError, type components } from '@iua/api-client';
-import { colors, semantic } from '@iua/ui-tokens';
+import { ApiError, type components } from '@medconnect/api-client';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';

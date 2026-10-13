@@ -1,5 +1,5 @@
-import type { components } from '@iua/api-client';
-import { semantic } from '@iua/ui-tokens';
+import type { components } from '@medconnect/api-client';
+import { semantic } from '@medconnect/ui-tokens';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { File, Paths } from 'expo-file-system';
 import { type Href, useRouter } from 'expo-router';

@@ -25,7 +25,7 @@ You need the phone and this computer on **the same Wi-Fi**.
 5. **Start the app's own server,** in a second PowerShell window:
 
    ```powershell
-   pnpm --filter @iua/mobile start
+   pnpm --filter @medconnect/mobile start
    ```
 
    A QR code appears.
@@ -55,7 +55,7 @@ The program is Microsoft's dev tunnels (`devtunnel.exe`, kept in `%LOCALAPPDATA%
 
    ```
    set EXPO_PACKAGER_PROXY_URL=https://<the address ending in -8081…>
-   pnpm --filter @iua/mobile start
+   pnpm --filter @medconnect/mobile start
    ```
 
 5. In Expo Go choose "Enter URL manually" and type `exps://<the address ending in -8081…>` without `https://`, or scan the QR code.
@@ -95,11 +95,11 @@ The full list, to go through line by line, is `docs/demo/MOBILE_CHECKLIST.md`.
 
 ## For developers
 
-- `pnpm --filter @iua/mobile typecheck`, `lint`, `test`. `test` runs two kinds, neither needing a phone: `test:rules` (vitest, `*.test.ts`: the session, the starting language, the lock, and what each screen decides) and `test:screens` (jest, `*.test.tsx`: every screen drawn in both languages, and five flows in depth).
+- `pnpm --filter @medconnect/mobile typecheck`, `lint`, `test`. `test` runs two kinds, neither needing a phone: `test:rules` (vitest, `*.test.ts`: the session, the starting language, the lock, and what each screen decides) and `test:screens` (jest, `*.test.tsx`: every screen drawn in both languages, and five flows in depth).
 - **A new screen** is added to the list in `src/all-screens.test.tsx`, and what it asks the server to `src/testing/fixtures.ts`. The test then fails for a missing text, a control without a name, or a request without an answer.
 - The refresh token is kept only in the phone's secure storage (`src/session/`). Nothing else may store it; a test fails if it is written anywhere else.
 - Texts come from `packages/i18n` (the group `mobile` holds what only the app shows). No text is written into the code.
 - Colours and sizes come from `packages/ui-tokens`.
-- The chat rules both front ends share come from `@iua/api-client/chat`; what only the app decides is in `src/chat/model.ts`.
+- The chat rules both front ends share come from `@medconnect/api-client/chat`; what only the app decides is in `src/chat/model.ts`.
 - One stream of live chat events serves the whole app (`src/chat/events.tsx`); it closes when the app goes to the background.
 - Passkeys don't work in the app: they need a site with real hosting and its own address.

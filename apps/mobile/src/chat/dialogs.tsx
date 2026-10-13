@@ -1,6 +1,6 @@
-import type { components } from '@iua/api-client';
-import { type Message, personName } from '@iua/api-client/chat';
-import { semantic } from '@iua/ui-tokens';
+import type { components } from '@medconnect/api-client';
+import { type Message, personName } from '@medconnect/api-client/chat';
+import { semantic } from '@medconnect/ui-tokens';
 import { type Href, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

@@ -1,5 +1,5 @@
-import { initials, personName } from '@iua/api-client/chat';
-import { colors, semantic } from '@iua/ui-tokens';
+import { initials, personName } from '@medconnect/api-client/chat';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { Image } from 'expo-image';
 import { type ReactNode, useCallback, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

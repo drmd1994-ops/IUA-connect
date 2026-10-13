@@ -1,4 +1,4 @@
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useFormatter, useTranslations } from 'use-intl';

@@ -1,5 +1,5 @@
-import { ApiError, type components } from '@iua/api-client';
-import { colors, semantic } from '@iua/ui-tokens';
+import { ApiError, type components } from '@medconnect/api-client';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { Image } from 'expo-image';
 import { type Href, useRouter } from 'expo-router';
 import { type ReactNode, useEffect, useState } from 'react';
