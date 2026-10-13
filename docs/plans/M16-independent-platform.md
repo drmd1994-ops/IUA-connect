@@ -1,6 +1,6 @@
 # M16: an independent platform, with a section for the association
 
-**Status: proposed on 2026-10-13. Not approved. Nothing of it is built.**
+**Status: approved by the owner on 2026-10-13, with the answers in §11. The name is still to be chosen (it is needed at step 8).**
 
 Asked for by the owner on 2026-10-13: "i want to build the app as independent from the association but make a subsection for the association", and "for now we continue the build without a server".
 
@@ -156,4 +156,12 @@ None expected.
 
 ## 11. Owner answers
 
-None yet.
+Given on 2026-10-13: "1.you propose pleae 2.make it for urologists in israel for now with the option to include more spichealtys 3.the platform's 4.yes 5.like you proposed 6.yes 7.me for now". With the seven answered, the plan is approved.
+
+1. **The name: Claude proposes, the owner chooses.** Proposed the same day: Collega (קולגה), Urolink (אורולינק), MedKesher (מדקשר), Tzevet (צוות). None was checked for a trademark or a free web address; that is done before one is used in public. Steps 2 to 7 do not need the name.
+2. **For urologists in Israel now, built so that other specialties can be added.** So: a specialty is data, not something written into the code or the texts. The product starts with one specialty, urology, and its subspecialties.
+3. **The division of §3 stands, and education and exam practice are the platform's.**
+4. **"Yes".** Taken as: agreed that the demo's organisation is fictional until the association agrees in writing. **This is Claude's reading;** if the owner meant that the association has already agreed, the owner says so, and its agreement in writing is what §5 asks for.
+5. **Platform staff read an organisation's membership files only with a named permission, and it is logged.**
+6. **The internal package names are renamed too.**
+7. **The owner operates the product for now,** as a person. The texts that name the operator say so with a placeholder until the owner gives the wording.
