@@ -49,6 +49,12 @@ const PAGES = [
   '/admin/settings',
   // M9
   '/accessibility',
+  // M16 (the signed-in views are checked in organisations.spec.ts)
+  '/organisations',
+  '/organisations/first-organisation',
+  '/organisations/first-organisation/news',
+  '/organisations/first-organisation/events',
+  '/organisations/first-organisation/membership',
 ];
 
 for (const locale of ['he', 'en'] as const) {

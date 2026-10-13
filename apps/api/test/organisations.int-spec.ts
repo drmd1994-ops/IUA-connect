@@ -656,6 +656,15 @@ describe('the platform and its organisations, as readers see them (integration)'
           expect(
             (['society', 'college', 'platform'] as const).filter((o) => listed.includes(rooms[o])),
           ).toEqual((['society', 'college', 'platform'] as const).filter((o) => opens(reader, o)));
+          // Asking for one organisation's rooms narrows the list; it never opens it.
+          const narrowed = await h
+            .http()
+            .get(`/api/v1/chat/rooms?q=${word}&organisation=${college.id}`)
+            .set(key(who))
+            .expect(200);
+          expect((narrowed.body.items as { id: string }[]).map((item) => item.id)).toEqual(
+            opens(reader, 'college') ? [rooms.college] : [],
+          );
         }
         for (const owner of ['society', 'college', 'platform'] as const) {
           const room = await h.http().get(`/api/v1/chat/rooms/${rooms[owner]}`).set(key(who));

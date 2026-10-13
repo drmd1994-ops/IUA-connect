@@ -9,6 +9,8 @@ import { SelectField } from '@/components/ui/select-field';
 import { TextField } from '@/components/ui/text-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
+import { BackToSection, WithOrganisation } from '@/features/organisations/organisation-page';
+import { type Organisation, sectionHref } from '@/features/organisations/organisations';
 import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { useDepartments, useLocalName, useReference } from './reference';
@@ -32,11 +34,18 @@ export function useDateFormat() {
   };
 }
 
-export function MembershipPage() {
-  return <RequireSignIn>{() => <MembershipView />}</RequireSignIn>;
+/** The reader's membership in one organisation: its state, their application, or the form. */
+export function MembershipPage({ slug }: { slug: string }) {
+  return (
+    <WithOrganisation slug={slug}>
+      {(organisation) => (
+        <RequireSignIn>{() => <MembershipView organisation={organisation} />}</RequireSignIn>
+      )}
+    </WithOrganisation>
+  );
 }
 
-function MembershipView() {
+function MembershipView({ organisation }: { organisation: Organisation }) {
   const t = useTranslations();
   const { api, call } = useAuth();
   const [data, setData] = useState<{
@@ -51,7 +60,11 @@ function MembershipView() {
   useEffect(() => {
     let active = true;
     Promise.all([
-      call(() => api.GET('/api/v1/me/membership')),
+      call(() =>
+        api.GET('/api/v1/me/membership', {
+          params: { query: { organisation: organisation.id } },
+        }),
+      ),
       call(() => api.GET('/api/v1/verification-requests/mine')),
       call(() => api.GET('/api/v1/me/profile')),
     ])
@@ -59,7 +72,10 @@ function MembershipView() {
         if (!active) return;
         setData({
           membership,
-          applications: applications.items,
+          // The person's applications to every organisation come together; this page is one's.
+          applications: applications.items.filter(
+            (item) => item.organisation.id === organisation.id,
+          ),
           profileComplete: !!profile.firstName && !!profile.lastName,
         });
       })
@@ -67,23 +83,24 @@ function MembershipView() {
     return () => {
       active = false;
     };
-  }, [api, call, version]);
+  }, [api, call, version, organisation.id]);
 
   const latest = data?.applications[0];
   const open = latest && (latest.state === 'PENDING_DIRECTOR' || latest.state === 'PENDING_ADMIN');
 
   return (
     <PageFrame>
+      <BackToSection organisation={organisation} />
       <h1 className="text-3xl font-semibold text-brand-900">{t('membership.membership.title')}</h1>
       {error !== null && <Alert tone="error">{errorMessage(error, t)}</Alert>}
       {!data && error === null && <p role="status">{t('membership.common.loading')}</p>}
       {data && (
         <>
-          <MembershipSummary data={data.membership} />
+          <MembershipSummary data={data.membership} organisation={organisation} />
           {latest && <ApplicationStatus application={latest} onChanged={reload} />}
           {!open &&
             (data.profileComplete ? (
-              <ApplyForm onApplied={reload} />
+              <ApplyForm organisation={organisation} onApplied={reload} />
             ) : (
               <section className="flex flex-col gap-3">
                 <h2 className="text-xl font-semibold">{t('membership.apply.title')}</h2>
@@ -102,7 +119,13 @@ function MembershipView() {
   );
 }
 
-function MembershipSummary({ data }: { data: MyMembership }) {
+function MembershipSummary({
+  data,
+  organisation,
+}: {
+  data: MyMembership;
+  organisation: Organisation;
+}) {
   const t = useTranslations('membership.membership');
   const name = useLocalName();
   const { date, dateTime } = useDateFormat();
@@ -119,7 +142,7 @@ function MembershipSummary({ data }: { data: MyMembership }) {
       </dl>
       {membership.status === 'ACTIVE' && (
         <Link
-          href="/account/membership/card"
+          href={sectionHref(organisation.slug, 'membership/card')}
           className="self-start rounded-md bg-primary px-5 py-2.5 font-semibold text-on-primary hover:bg-primary-hover"
         >
           {t('viewCard')}
@@ -242,7 +265,13 @@ function ApplicationStatus({
   );
 }
 
-function ApplyForm({ onApplied }: { onApplied: () => void }) {
+function ApplyForm({
+  organisation,
+  onApplied,
+}: {
+  organisation: Organisation;
+  onApplied: () => void;
+}) {
   const t = useTranslations();
   const name = useLocalName();
   const { api, call } = useAuth();
@@ -255,7 +284,10 @@ function ApplyForm({ onApplied }: { onApplied: () => void }) {
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState(false);
   const departments = useDepartments(hospitalId);
-  const types = (reference?.types ?? []).filter((type) => type.selfApply);
+  // The list holds every organisation's membership types; one applies here to this one.
+  const types = (reference?.types ?? []).filter(
+    (type) => type.selfApply && type.organisation.id === organisation.id,
+  );
   const type = types.find((candidate) => candidate.id === typeId);
 
   async function submit(event: FormEvent) {

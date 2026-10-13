@@ -41,8 +41,9 @@ test.setTimeout(420_000);
 const MEMBER_PAGES = [
   '',
   '/account/profile',
-  '/account/membership',
-  '/account/membership/card',
+  '/organisations/first-organisation',
+  '/organisations/first-organisation/membership',
+  '/organisations/first-organisation/membership/card',
   '/account/schedule',
   '/account/exam-results',
   '/account/notifications',
@@ -340,7 +341,8 @@ test('reflow: no sideways scrolling at 320 px (as at 400% zoom)', async ({ brows
   for (const path of [
     '/he',
     '/he/account/profile',
-    '/he/account/membership/card',
+    '/he/organisations/first-organisation',
+    '/he/organisations/first-organisation/membership/card',
     '/he/account/notifications',
     '/he/account/notifications/preferences',
     '/he/members',

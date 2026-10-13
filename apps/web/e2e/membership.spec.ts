@@ -124,7 +124,7 @@ test('register → director approves → admin approves → the card verifies', 
   // The member now has an active membership and a card.
   await member.goto('/en/account/membership');
   await expect(member.getByTestId('membership-summary')).toContainText('Active');
-  const tokenResponse = member.waitForResponse('**/api/v1/me/membership/card-token');
+  const tokenResponse = member.waitForResponse('**/api/v1/me/membership/card-token*');
   await member.getByRole('link', { name: 'Show my membership card' }).click();
   const { token } = (await (await tokenResponse).json()) as { token: string };
   await expect(

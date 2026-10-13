@@ -10,7 +10,7 @@ const SECTIONS = [
   { key: 'events', href: '/events' },
   { key: 'education', href: '/education' },
   { key: 'guidelines', href: '/guidelines' },
-  { key: 'membership', href: '/account/membership' },
+  { key: 'membership', href: '/organisations' },
 ] as const;
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {

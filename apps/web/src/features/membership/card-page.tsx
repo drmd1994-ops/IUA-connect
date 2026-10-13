@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
+import { BackToSection, WithOrganisation } from '@/features/organisations/organisation-page';
+import type { Organisation } from '@/features/organisations/organisations';
 import { errorMessage, isApiError } from '@/lib/api-errors';
 import { useDateFormat } from './membership-page';
 import { QrCode } from './qr-code';
@@ -16,11 +18,17 @@ type Membership = NonNullable<components['schemas']['MyMembershipDto']['membersh
 /** Tokens live 5 minutes; fetch a new one well before that. */
 const REFRESH_MS = 4 * 60 * 1000;
 
-export function CardPage() {
-  return <RequireSignIn>{() => <Card />}</RequireSignIn>;
+export function CardPage({ slug }: { slug: string }) {
+  return (
+    <WithOrganisation slug={slug}>
+      {(organisation) => (
+        <RequireSignIn>{() => <Card organisation={organisation} />}</RequireSignIn>
+      )}
+    </WithOrganisation>
+  );
 }
 
-function Card() {
+function Card({ organisation }: { organisation: Organisation }) {
   const t = useTranslations();
   const locale = useLocale();
   const format = useFormatter();
@@ -36,7 +44,11 @@ function Card() {
   useEffect(() => {
     let active = true;
     Promise.all([
-      call(() => api.GET('/api/v1/me/membership')),
+      call(() =>
+        api.GET('/api/v1/me/membership', {
+          params: { query: { organisation: organisation.id } },
+        }),
+      ),
       call(() => api.GET('/api/v1/me/profile')),
     ])
       .then(([membership, profile]) => {
@@ -50,13 +62,17 @@ function Card() {
     return () => {
       active = false;
     };
-  }, [api, call]);
+  }, [api, call, organisation.id]);
 
   useEffect(() => {
     if (details?.membership?.status !== 'ACTIVE') return;
     let active = true;
     const fetchToken = () =>
-      call(() => api.GET('/api/v1/me/membership/card-token'))
+      call(() =>
+        api.GET('/api/v1/me/membership/card-token', {
+          params: { query: { organisation: organisation.id } },
+        }),
+      )
         .then((result) => active && setToken({ value: result.token, at: new Date() }))
         .catch((caught: unknown) => active && setError(caught));
     void fetchToken();
@@ -65,7 +81,7 @@ function Card() {
       active = false;
       window.clearInterval(timer);
     };
-  }, [api, call, details]);
+  }, [api, call, details, organisation.id]);
 
   const membership = details?.membership;
   const verifyUrl =
@@ -75,6 +91,7 @@ function Card() {
 
   return (
     <PageFrame>
+      <BackToSection organisation={organisation} />
       <div>
         <h1 className="text-3xl font-semibold text-brand-900">{t('membership.card.title')}</h1>
         <p className="mt-2 text-text-muted">{t('membership.card.intro')}</p>
@@ -90,7 +107,7 @@ function Card() {
           data-testid="membership-card"
         >
           <p className="text-sm font-semibold uppercase tracking-wide text-brand-800">
-            {t('membership.card.association')}
+            {name(organisation)}
           </p>
           <p className="text-2xl font-semibold">{details.person}</p>
           <p>{name(membership.type)}</p>

@@ -11898,6 +11898,7 @@ export interface operations {
             query?: {
                 q?: string;
                 categoryId?: string;
+                organisation?: string;
                 cursor?: string;
                 limit?: number;
             };
@@ -11922,6 +11923,7 @@ export interface operations {
             query?: {
                 q?: string;
                 categoryId?: string;
+                organisation?: string;
                 cursor?: string;
                 limit?: number;
             };

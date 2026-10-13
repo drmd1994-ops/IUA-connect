@@ -6,6 +6,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/auth-context';
 import { useLocalName } from '@/features/membership/reference';
 import { useNoticeText } from '@/features/notifications/notifications-page';
+import { sectionHref } from '@/features/organisations/organisations';
 import { Link } from '@/i18n/navigation';
 
 type Schemas = components['schemas'];
@@ -54,7 +55,8 @@ export function MemberDashboard() {
   const { api, call, me } = useAuth();
 
   const membership = useLoaded<Membership>(
-    async () => (await call(() => api.GET('/api/v1/me/membership'))).membership,
+    // One panel: a person in several organisations sees the first here, and all in their sections.
+    async () => (await call(() => api.GET('/api/v1/me/memberships'))).items[0] ?? null,
     [api, call],
   );
   const notices = useLoaded<Notices>(
@@ -131,11 +133,17 @@ export function MemberDashboard() {
                 )}
               </p>
               <p className="flex flex-wrap gap-4">
-                <Link href="/account/membership" className={link}>
+                <Link
+                  href={sectionHref(membership.organisation.slug, 'membership')}
+                  className={link}
+                >
                   {h('membership.open')}
                 </Link>
                 {membership.status === 'ACTIVE' && (
-                  <Link href="/account/membership/card" className={link}>
+                  <Link
+                    href={sectionHref(membership.organisation.slug, 'membership/card')}
+                    className={link}
+                  >
                     {h('membership.card')}
                   </Link>
                 )}
@@ -145,7 +153,7 @@ export function MemberDashboard() {
             <>
               <p>{h('membership.none')}</p>
               <p>
-                <Link href="/account/membership" className={link}>
+                <Link href="/organisations" className={link}>
                   {h('membership.apply')}
                 </Link>
               </p>
