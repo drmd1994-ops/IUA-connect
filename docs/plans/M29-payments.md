@@ -1,8 +1,12 @@
-# M27: Payments: membership fees and event fees
+# M29: Payments: membership fees and event fees
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Phase 2 (not in the roadmap's list; needed for real use). Size: L. Needs first: M17 and M18. The association's bank or payment provider, and its accountant.
+Track: Phase 2 (not in the roadmap's list; needed for real use). Size: L. Needs first: M19 and M20. The association's bank or payment provider, and its accountant.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. Two different things now. (a) An organisation's membership fees: the money is the association's, and is paid straight into its own account with its payment provider; the platform never holds it. (b) Anything the operator charges for the platform itself, which is a business decision not yet made, and which the app stores' billing rules affect.
 
 ## 1. Goal
 

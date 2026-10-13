@@ -1,8 +1,12 @@
-# M32: Governance: bodies, meetings, documents and surveys
+# M34: Governance: bodies, meetings, documents and surveys
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
 Track: After Phase 3. Size: M. Needs first: The association's bylaws, to model its bodies correctly.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. An organisation-section feature: the association's bodies, meetings and surveys live in its section, not in the platform.
 
 ## 1. Goal
 
@@ -23,7 +27,7 @@ Members see the association's board and committees, their meetings and published
 
 **Not in**
 
-- Elections and binding votes (M33).
+- Elections and binding votes (M35).
 - A full document-management system.
 
 ## 3. Rules

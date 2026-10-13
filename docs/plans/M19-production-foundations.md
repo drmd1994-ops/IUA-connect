@@ -1,14 +1,18 @@
-# M17: Production foundations (the engineering half of the readiness gate)
+# M19: Production foundations (the engineering half of the readiness gate)
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Readiness. Size: L. Needs first: The association's decision to go ahead; M16 helps but is not required.
+Track: Readiness. Size: L. Needs first: The association's decision to go ahead; M18 helps but is not required.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. The operator is the owner or the owner's legal entity, not the association. The host and its region are the operator's choice; a lawyer says whether Israeli physicians' data must stay in Israel.
 
 ## 1. Goal
 
 Every stand-in the demo uses is replaced by something fit for real members' data, and the server refuses to start in production without them.
 
-**Why:** `DEPLOYMENT.md` lists 13 items before real data. Items 5 to 9 and 12 are engineering; this milestone is those. The rest (legal, outside tests) is M18.
+**Why:** `DEPLOYMENT.md` lists 13 items before real data. Items 5 to 9 and 12 are engineering; this milestone is those. The rest (legal, outside tests) is M20.
 
 ## 2. Scope
 
@@ -25,8 +29,8 @@ Every stand-in the demo uses is replaced by something fit for real members' data
 
 **Not in**
 
-- Legal and privacy review, the outside security test, the load test (M18).
-- Payments (M27), push notifications (M19).
+- Legal and privacy review, the outside security test, the load test (M20).
+- Payments (M29), push notifications (M21).
 
 ## 3. Rules
 

@@ -1,8 +1,12 @@
-# M22: The surgical logbook and the resident hub
+# M24: The surgical logbook and the resident hub
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Phase 2. Size: L. Needs first: The legal review of M18 for real use (this is the most sensitive data so far). The MedOps file format, from the owner.
+Track: Phase 2. Size: L. Needs first: The legal review of M20 for real use (this is the most sensitive data so far). The MedOps file format, from the owner.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. A platform feature. The liability for a patient's details slipping in sits with the operator, so the legal review matters more.
 
 ## 1. Goal
 

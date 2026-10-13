@@ -1,8 +1,12 @@
-# M24: Case discussions and the case of the week
+# M26: Case discussions and the case of the week
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Phase 2. Size: L. Needs first: M18's legal review before real use. Best after M23 (it reuses comments and moderation).
+Track: Phase 2. Size: L. Needs first: M20's legal review before real use. Best after M25 (it reuses comments and moderation).
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. A platform feature. The moderators who review every case are recruited by the operator.
 
 ## 1. Goal
 
@@ -37,7 +41,7 @@ A member presents a de-identified case in a fixed form; colleagues discuss it; s
 
 ## 4. What is built
 
-**Data:** `cases`, case images (purpose CASE, own read rule), comments (shared with M23), polls and votes.
+**Data:** `cases`, case images (purpose CASE, own read rule), comments (shared with M25), polls and votes.
 
 - Server: a `cases` module; the review queue; image handling stricter than chat's. Site and app: the form, the case, the discussion, the queue.
 

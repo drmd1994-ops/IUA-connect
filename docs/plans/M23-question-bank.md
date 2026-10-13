@@ -1,8 +1,12 @@
-# M21: The full question bank
+# M23: The full question bank
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
 Track: Phase 2. Size: M. Needs first: Questions. Today there are ten sample ones; a bank needs hundreds, written and reviewed by physicians.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. A platform feature, open to verified users. The people who write and review questions are recruited by the operator.
 
 ## 1. Goal
 

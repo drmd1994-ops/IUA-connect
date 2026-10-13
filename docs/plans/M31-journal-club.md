@@ -1,8 +1,12 @@
-# M29: Journal club
+# M31: Journal club
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Phase 3. Size: S to M. Needs first: M25 (publications) and M23 (comments) make it small. AI summaries need M31.
+Track: Phase 3. Size: S to M. Needs first: M27 (publications) and M25 (comments) make it small. AI summaries need M33.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. A platform feature, or one an organisation runs in its section.
 
 ## 1. Goal
 
@@ -22,7 +26,7 @@ Each month an article is presented with a summary and an expert's commentary, an
 **Not in**
 
 - Hosting the article's full text (copyright): a link only.
-- AI-written summaries, until M31; then clearly marked and citing the article, as the specification requires.
+- AI-written summaries, until M33; then clearly marked and citing the article, as the specification requires.
 
 ## 3. Rules
 

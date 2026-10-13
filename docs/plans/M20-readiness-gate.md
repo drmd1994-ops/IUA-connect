@@ -1,8 +1,12 @@
-# M18: The readiness gate: reviews, outside tests, and the first real members
+# M20: The readiness gate: reviews, outside tests, and the first real members
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Readiness. Size: L (mostly not coding). Needs first: M17. People outside the project: a lawyer, a security tester, a screen-reader user, the association's office.
+Track: Readiness. Size: L (mostly not coding). Needs first: M19. People outside the project: a lawyer, a security tester, a screen-reader user, the association's office.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. The operator signs the gate, and most likely needs a legal entity first. Added to the list: an agreement with each organisation that has a section, saying who answers for its members' data. "How real members come in" becomes: people sign up and are verified (M17); the association's members reach its section through their membership there.
 
 ## 1. Goal
 

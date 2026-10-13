@@ -1,8 +1,12 @@
-# M28: Clinical calculators
+# M30: Clinical calculators
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
 Track: Phase 3. Size: M. Needs first: A named physician to review every formula and interpretation.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. A platform feature. Open calculators are also a reason for a physician to try the product before colleagues are there.
 
 ## 1. Goal
 

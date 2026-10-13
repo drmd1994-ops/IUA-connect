@@ -1,8 +1,12 @@
-# M23: Professional communities
+# M25: Professional communities
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
 Track: Phase 2. Size: L. Needs first: Nothing technical. A decision on how it differs from chat rooms, which exist.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. Communities are a platform feature for verified users. An organisation may have communities of its own for its members.
 
 ## 1. Goal
 
@@ -23,7 +27,7 @@ Members post and discuss by subspecialty: a post with comments that stays findab
 
 **Not in**
 
-- Case discussions (M24): they have their own form and stricter rules.
+- Case discussions (M26): they have their own form and stricter rules.
 - Anonymous posting.
 - Members opening their own communities.
 

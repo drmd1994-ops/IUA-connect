@@ -1,8 +1,12 @@
-# M16: the demo on a hosted service (Railway)
+# M18: the demo on a hosted service (Railway)
 
 **Status: proposed on 2026-10-07, rewritten the same day for Railway after the owner said "start m16 for a 5$ plan on railway". Not approved yet: the choice of host is the owner's and is taken as given; the rest of this plan, and the cost in §5, wait for the owner's word. Nothing of it is built.**
 
 Track: Operate. Size: M. Needs first: a Railway account opened by the owner (Claude does not open accounts or enter payment details).
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. Deferred by the owner on 2026-10-13 ("for now we continue the build without a server"). The host is not chosen: this text is the Railway version; the owner then asked for hosts in Israel and has not picked one. When it is taken up again it is hosted under the product's new name, in the operator's own account, and after M16 and M17, so that what is hosted is already the independent product. The demo's organisation stays fictional until the real association agrees to be shown.
 
 ## 1. What I checked before writing this
 
@@ -39,7 +43,7 @@ Track: Operate. Size: M. Needs first: a Railway account opened by the owner (Cla
 7. The .apk rebuilt with the hosted address; an icon and a start screen of its own.
 8. The tunnel kept and documented as the fallback.
 
-**Moved out of this milestone, into M16b, if the owner agrees**
+**Moved out of this milestone, into M18b, if the owner agrees**
 
 - Passkeys in the app, and email links that open the app. Both need the fixed address this milestone provides, and both need an app library and settings files served by the site. They are separable, and the demo is useful without them.
 
@@ -47,10 +51,10 @@ Track: Operate. Size: M. Needs first: a Railway account opened by the owner (Cla
 
 | Item                 | Where                                                |
 | -------------------- | ---------------------------------------------------- |
-| Real members' data   | M17 and M18                                          |
+| Real members' data   | M19 and M20                                          |
 | A bought domain name | Not needed; can be added later in Railway's settings |
-| Sending real email   | M17                                                  |
-| Hosting in Israel    | M17 (Railway has no Israeli region)                  |
+| Sending real email   | M19                                                  |
+| Hosting in Israel    | M19 (Railway has no Israeli region)                  |
 
 ## 4. Rules
 
@@ -106,7 +110,7 @@ Track: Operate. Size: M. Needs first: a Railway account opened by the owner (Cla
 
 1. **The cost:** about $8 to $13 a month with everything always on, not $5. Go ahead on that basis?
 2. **Sleep when idle,** to stay near $5, accepting a short wait after a pause? (Proposed: start always-on, read the real cost after a week, then decide.)
-3. **Passkeys in the app and email links that open the app:** in this milestone, or as M16b afterwards? (Proposed: afterwards.)
+3. **Passkeys in the app and email links that open the app:** in this milestone, or as M18b afterwards? (Proposed: afterwards.)
 4. **The demo password:** you choose it and type it into Railway yourself; Claude never needs to see it. Agreed?
 5. **Who else gets the address?**
 

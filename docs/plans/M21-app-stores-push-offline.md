@@ -1,8 +1,12 @@
-# M19: The app in the stores, push notifications, and limited offline use
+# M21: The app in the stores, push notifications, and limited offline use
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Operate. Size: L. Needs first: M18 for publishing (the stores ask for a privacy policy and a real service). Push and offline can be built before it.
+Track: Operate. Size: L. Needs first: M20 for publishing (the stores ask for a privacy policy and a real service). Push and offline can be built before it.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. The store accounts are the operator's, under the product's new name.
 
 ## 1. Goal
 

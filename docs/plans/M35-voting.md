@@ -1,8 +1,12 @@
-# M33: Voting and elections
+# M35: Voting and elections
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: After Phase 3. Size: XL, and the riskiest. Needs first: M32, M18, a legal opinion on electronic voting under the bylaws, and an outside review of the design before any code.
+Track: After Phase 3. Size: XL, and the riskiest. Needs first: M34, M20, a legal opinion on electronic voting under the bylaws, and an outside review of the design before any code.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. An organisation-section feature. With the platform run by a third party, using an existing audited voting service is even more clearly the right answer.
 
 ## 1. Goal
 

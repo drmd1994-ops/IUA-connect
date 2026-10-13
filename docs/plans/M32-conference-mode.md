@@ -1,8 +1,12 @@
-# M30: Conference mode
+# M32: Conference mode
 
 **Status: proposed on 2026-10-07. Not approved. Nothing of it is built.** Written at the owner's request ("build all the plans for the rest of the milestones according to the roadmap"). This is the plan at the depth that can be written today. When the milestone's turn comes, its §1 is redone against the code as it then stands and the plan is confirmed again before any code.
 
-Track: Phase 3. Size: M. Needs first: M19's push notifications make reminders useful. A real conference to try it at.
+Track: Phase 3. Size: M. Needs first: M21's push notifications make reminders useful. A real conference to try it at.
+
+## 0. What independence changes here (2026-10-13)
+
+The owner decided on 2026-10-13 to build the product as independent of the association, with a section for it (plan M16). This plan was written before that, and its number moved up by two. A feature that an organisation uses for its own events.
 
 ## 1. Goal
 
@@ -15,11 +19,11 @@ During a conference the app shows what is on now and next, reminds a member of t
 **In**
 
 - "Now" and "Next" for an event, and "my schedule" as the first screen while an event runs.
-- Session reminders (push, if M19 is done; otherwise in the app).
+- Session reminders (push, if M21 is done; otherwise in the app).
 - Live polls run by the session's chair; results shown live.
 - Audience questions: sent, up-voted, answered or hidden by a moderator.
 - Feedback on a session, anonymous.
-- Attendance per session by scanning the session's code (feeds CME, M20).
+- Attendance per session by scanning the session's code (feeds CME, M22).
 - In the app first; the site shows the same.
 
 **Not in**
