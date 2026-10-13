@@ -16,7 +16,13 @@ export function lockoutMinutes(previousLockouts: number): number {
 }
 
 export interface AccessProfile {
-  roles: { key: string; requiresMfa: boolean; permissions: PermissionKey[] }[];
+  roles: {
+    key: string;
+    requiresMfa: boolean;
+    permissions: PermissionKey[];
+    /** The organisation the role is held in; null when it is held on the platform. */
+    organisationId: string | null;
+  }[];
   /** Holds at least one role that requires MFA. */
   requiresMfa: boolean;
 }
@@ -112,6 +118,7 @@ export class UsersService {
     const grants = await this.prisma.userRole.findMany({
       where: { userId },
       select: {
+        organisationId: true,
         role: {
           select: {
             key: true,
@@ -121,7 +128,8 @@ export class UsersService {
         },
       },
     });
-    const roles = grants.map(({ role }) => ({
+    const roles = grants.map(({ role, organisationId }) => ({
+      organisationId,
       key: role.key,
       requiresMfa: role.requiresMfa,
       permissions: role.permissions.map((p) => p.permission.key).filter(isPermissionKey),
@@ -129,15 +137,23 @@ export class UsersService {
     return { roles, requiresMfa: roles.some((role) => role.requiresMfa) };
   }
 
-  /** Grants an unscoped role (idempotent). Scoped grants (e.g. directors) arrive in M2. */
-  async grantRole(userId: string, roleKey: string, grantedBy: string | null): Promise<void> {
+  /**
+   * Grants a role without a department scope (idempotent), on the platform or, when an
+   * organisation is named, inside it.
+   */
+  async grantRole(
+    userId: string,
+    roleKey: string,
+    grantedBy: string | null,
+    organisationId: string | null = null,
+  ): Promise<void> {
     const role = await this.prisma.role.findUniqueOrThrow({ where: { key: roleKey } });
     const existing = await this.prisma.userRole.findFirst({
-      where: { userId, roleId: role.id, scopeType: 'NONE' },
+      where: { userId, roleId: role.id, scopeType: 'NONE', organisationId },
     });
     if (existing) return;
     await this.prisma.userRole.create({
-      data: { id: uuidv7(), userId, roleId: role.id, scopeType: 'NONE', grantedBy },
+      data: { id: uuidv7(), userId, roleId: role.id, scopeType: 'NONE', grantedBy, organisationId },
     });
   }
 }

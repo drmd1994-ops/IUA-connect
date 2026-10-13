@@ -13,7 +13,11 @@ import {
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { Authenticated, RequirePermission } from '../../common/decorators/access.decorators';
+import {
+  Authenticated,
+  RequirePermission,
+  RequireScopedPermission,
+} from '../../common/decorators/access.decorators';
 import { RATE_LIMITS } from '../../common/decorators/rate-limit.decorator';
 import { hitUserLimit } from '../../common/guards/user-rate-limit';
 import { type RequestMeta, Meta } from '../../common/request-meta';
@@ -77,14 +81,17 @@ export class ChatReportsController {
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/chat')
-@RequirePermission('chat.moderate')
+@RequireScopedPermission('chat.moderate')
 export class ChatAdminController {
   constructor(private readonly reports: ChatReportsService) {}
 
   @Get('reports')
   @ApiOkResponse({ type: AdminReportListDto })
-  list(@Query() query: AdminReportListQueryDto): Promise<AdminReportListDto> {
-    return this.reports.list(query);
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: AdminReportListQueryDto,
+  ): Promise<AdminReportListDto> {
+    return this.reports.list(principalOf(req), query);
   }
 
   @Get('reports/:id')
@@ -109,13 +116,16 @@ export class ChatAdminController {
     return this.reports.resolve(principalOf(req), id, body, meta);
   }
 
+  // A suspension stops a person writing anywhere in chat: the platform's staff decide it.
   @Get('suspensions')
+  @RequirePermission('chat.moderate')
   @ApiOkResponse({ type: AdminSuspensionListDto })
   suspensions(@Query() query: AdminSuspensionListQueryDto): Promise<AdminSuspensionListDto> {
     return this.reports.suspensions(query.page);
   }
 
   @Post('suspensions')
+  @RequirePermission('chat.moderate')
   @ApiCreatedResponse({ type: AdminSuspensionDto })
   suspend(
     @Req() req: RequestWithPrincipal,
@@ -126,6 +136,7 @@ export class ChatAdminController {
   }
 
   @Post('suspensions/:id/lift')
+  @RequirePermission('chat.moderate')
   @HttpCode(200)
   @ApiOkResponse({ type: AdminSuspensionDto })
   lift(

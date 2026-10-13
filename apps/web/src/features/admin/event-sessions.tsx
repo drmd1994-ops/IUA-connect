@@ -77,7 +77,11 @@ export function EventSessions({ event }: { event: Event }) {
     let active = true;
     Promise.all([
       call(() => api.GET('/api/v1/admin/events/{eventId}/sessions', { params: path })),
-      call(() => api.GET('/api/v1/admin/speakers', { params: { query: { pageSize: 100 } } })),
+      call(() =>
+        api.GET('/api/v1/admin/speakers', {
+          params: { query: { pageSize: 100, eventId: event.id } },
+        }),
+      ),
     ])
       .then(([list, people]) => {
         if (!active) return;

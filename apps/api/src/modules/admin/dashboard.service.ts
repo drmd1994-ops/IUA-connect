@@ -1,6 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { type PermissionKey } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import {
+  type StaffScope,
+  coversNothing,
+  narrowTo,
+  organisationWhere,
+  ownedWhere,
+  scopeOf,
+} from '../../common/auth/scope';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { reportsWhere } from '../chat';
 import { todayInIsrael } from '../membership';
 import { type AdminDashboardDto } from './dashboard.dto';
 
@@ -12,50 +22,82 @@ const UPCOMING_SHOWN = 5;
  * The numbers on the admin dashboard (M8 plan §2.1). Read-only counts over what the other
  * screens manage; each part is counted only for a person who may act on it, and each number
  * is the size of the list its tile links to.
+ *
+ * A permission is held on the platform or in an organisation (M16), so each number counts only
+ * what the person's place covers: an organisation's office sees its own applicants and
+ * members, never another's. `owner` narrows the page to one organisation, or to the platform's
+ * own things.
  */
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async get(principal: Principal, now = new Date()): Promise<AdminDashboardDto> {
-    const can = (permission: Parameters<Principal['permissions']['has']>[0]) =>
-      principal.permissions.has(permission);
+  async get(principal: Principal, owner?: string, now = new Date()): Promise<AdminDashboardDto> {
+    /** Where the person may use the permission, within the owner the page is about. */
+    const at = (permission: PermissionKey): StaffScope | null => {
+      const scope = narrowTo(scopeOf(principal, permission), owner);
+      return coversNothing(scope) ? null : scope;
+    };
+    /** The parts that are about the platform itself: not on an organisation's page. */
+    const platform = (permission: PermissionKey): boolean =>
+      (owner === undefined || owner === 'platform') && principal.permissions.has(permission);
+
+    /** For what only organisations have (members, applicants): the platform's part is empty. */
+    const inOrganisations = (permission: PermissionKey): StaffScope | null => {
+      const scope = at(permission);
+      return scope && (scope.everywhere || scope.organisationIds.length > 0) ? scope : null;
+    };
+
+    const office = inOrganisations('membership.approve.final');
+    const registry = inOrganisations('membership.read');
+    const newsReview = at('news.review');
+    const educationReview = platform('education.review');
+    const approver = at('broadcasts.approve');
+    const eventStaff = at('events.manage');
+    const moderator = at('chat.moderate');
     const [applications, members, review, broadcasts, events, accounts, chat] = await Promise.all([
-      can('membership.approve.final') ? this.applications() : null,
-      can('membership.read') ? this.members() : null,
-      can('news.review') || can('education.review')
-        ? this.review(can('news.review'), can('education.review'))
-        : null,
-      can('broadcasts.approve') ? this.broadcasts() : null,
-      can('events.manage') ? this.events(now) : null,
-      can('users.read') ? this.accounts(now) : null,
-      can('chat.moderate') ? this.chat() : null,
+      office ? this.applications(office) : null,
+      registry ? this.members(registry) : null,
+      newsReview || educationReview ? this.review(newsReview, educationReview) : null,
+      approver ? this.broadcasts(approver) : null,
+      eventStaff ? this.events(eventStaff, now) : null,
+      platform('users.read') ? this.accounts(now) : null,
+      moderator ? this.chat(moderator) : null,
     ]);
     return { applications, members, review, broadcasts, events, accounts, chat };
   }
 
-  private async chat() {
-    return { openReports: await this.prisma.chatReport.count({ where: { status: 'OPEN' } }) };
+  private async chat(scope: StaffScope) {
+    return {
+      openReports: await this.prisma.chatReport.count({
+        where: { status: 'OPEN', ...reportsWhere(scope) },
+      }),
+    };
   }
 
-  private async applications() {
+  private async applications(scope: StaffScope) {
+    const mine = organisationWhere(scope);
     const [waitingDirector, waitingAssociation] = await Promise.all([
-      this.prisma.verificationRequest.count({ where: { state: 'PENDING_DIRECTOR' } }),
-      this.prisma.verificationRequest.count({ where: { state: 'PENDING_ADMIN' } }),
+      this.prisma.verificationRequest.count({ where: { ...mine, state: 'PENDING_DIRECTOR' } }),
+      this.prisma.verificationRequest.count({ where: { ...mine, state: 'PENDING_ADMIN' } }),
     ]);
     return { waitingDirector, waitingAssociation };
   }
 
-  private async members() {
+  private async members(scope: StaffScope) {
     const today = todayInIsrael();
-    const current = { status: 'ACTIVE', endDate: { gte: today } } as const;
+    const mine = organisationWhere(scope);
+    const current = { ...mine, status: 'ACTIVE', endDate: { gte: today } } as const;
     const [active, suspended, expired, types, byType] = await Promise.all([
       this.prisma.membership.count({ where: current }),
-      this.prisma.membership.count({ where: { status: 'SUSPENDED' } }),
-      this.prisma.membership.count({ where: { status: 'ACTIVE', endDate: { lt: today } } }),
+      this.prisma.membership.count({ where: { ...mine, status: 'SUSPENDED' } }),
+      this.prisma.membership.count({
+        where: { ...mine, status: 'ACTIVE', endDate: { lt: today } },
+      }),
       this.prisma.membershipType.findMany({
+        where: mine,
         select: { id: true, key: true, nameHe: true, nameEn: true },
-        orderBy: { sortOrder: 'asc' },
+        orderBy: [{ organisation: { nameEn: 'asc' } }, { sortOrder: 'asc' }],
       }),
       this.prisma.membership.groupBy({ by: ['typeId'], where: current, _count: { id: true } }),
     ]);
@@ -72,28 +114,31 @@ export class DashboardService {
     };
   }
 
-  private async review(news: boolean, education: boolean) {
+  private async review(news: StaffScope | null, education: boolean) {
     const [newsCount, educationCount, questionCount] = await Promise.all([
-      news ? this.prisma.news.count({ where: { status: 'IN_REVIEW' } }) : null,
+      news
+        ? this.prisma.news.count({ where: { status: 'IN_REVIEW', AND: [ownedWhere(news)] } })
+        : null,
       education ? this.prisma.educationItem.count({ where: { status: 'IN_REVIEW' } }) : null,
       education ? this.prisma.examQuestion.count({ where: { status: 'IN_REVIEW' } }) : null,
     ]);
     return { news: newsCount, education: educationCount, examQuestions: questionCount };
   }
 
-  private async broadcasts() {
+  private async broadcasts(scope: StaffScope) {
     return {
       waitingApproval: await this.prisma.broadcast.count({
-        where: { status: 'PENDING_APPROVAL' },
+        where: { status: 'PENDING_APPROVAL', AND: [ownedWhere(scope)] },
       }),
     };
   }
 
-  private async events(now: Date) {
+  private async events(scope: StaffScope, now: Date) {
     const where = {
-      status: 'PUBLISHED',
+      status: 'PUBLISHED' as const,
       startAt: { gte: now, lt: new Date(now.getTime() + UPCOMING_DAYS * DAY) },
-    } as const;
+      AND: [ownedWhere(scope)],
+    };
     const [rows, upcomingTotal] = await Promise.all([
       this.prisma.event.findMany({
         where,

@@ -1,4 +1,5 @@
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { slugify } from '../../src/modules/news/slug';
@@ -16,7 +17,7 @@ const EDITOR_EMAIL = 'editor@demo.test';
 const ADMIN_EMAIL = 'admin@demo.test';
 
 type Status = 'DRAFT' | 'IN_REVIEW' | 'SCHEDULED' | 'PUBLISHED' | 'ARCHIVED';
-type Tier = 'PUBLIC' | 'MEMBERS' | 'TYPES';
+type Tier = 'PUBLIC' | 'VERIFIED' | 'MEMBERS' | 'TYPES';
 
 interface NewsSeed {
   status: Status;
@@ -187,7 +188,7 @@ const GUIDELINES: GuidelineSeed[] = [
     sourceOrg: 'Example Urology Society (fictional)',
     officialUrl: 'https://guidelines.example.test/members',
     subspecialty: 'COMMUNITY',
-    tier: 'MEMBERS',
+    tier: 'VERIFIED',
     titleHe: 'הנחיה לדוגמה לחברים בלבד (בדויה)',
     titleEn: 'Sample members-only guideline (fictional)',
     summaryHe: FICTIONAL_SUMMARY_HE,
@@ -235,6 +236,7 @@ export async function seedDemoContent(prisma: PrismaClient): Promise<void> {
           email: EDITOR_EMAIL,
           passwordHash,
           emailVerifiedAt: new Date(now - 60 * DAY),
+          verifiedAt: new Date(now - 60 * DAY),
           locale: 'he',
         },
       });
@@ -249,9 +251,18 @@ export async function seedDemoContent(prisma: PrismaClient): Promise<void> {
           languages: ['he', 'en'],
         },
       });
-      await tx.userRole.create({
-        data: { id: uuidv7(), userId: editor, roleId: editorRole.id, grantedBy: admin.id },
-      });
+      // An editor of the organisation's news, and of the platform's library (M16).
+      for (const organisationId of [FIRST_ORGANISATION.id, null]) {
+        await tx.userRole.create({
+          data: {
+            id: uuidv7(),
+            userId: editor,
+            roleId: editorRole.id,
+            organisationId,
+            grantedBy: admin.id,
+          },
+        });
+      }
 
       const categories = {
         association: await category(tx, 'association', 'הודעות האיגוד', 'Association updates', 1),
@@ -266,6 +277,7 @@ export async function seedDemoContent(prisma: PrismaClient): Promise<void> {
         await tx.news.create({
           data: {
             id,
+            organisationId: FIRST_ORGANISATION.id,
             slug: slugify(item.he.title),
             status: item.status,
             categoryId: categories[item.category],

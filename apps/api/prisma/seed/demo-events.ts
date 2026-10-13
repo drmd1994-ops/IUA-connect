@@ -1,4 +1,5 @@
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { slugify } from '../../src/modules/news/slug';
@@ -197,6 +198,7 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
           email: EVENT_ADMIN_EMAIL,
           passwordHash,
           emailVerifiedAt: new Date(now - 60 * DAY),
+          verifiedAt: new Date(now - 60 * DAY),
           locale: 'he',
         },
       });
@@ -212,7 +214,13 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
         },
       });
       await tx.userRole.create({
-        data: { id: uuidv7(), userId: eventAdmin, roleId: role.id, grantedBy: admin },
+        data: {
+          id: uuidv7(),
+          userId: eventAdmin,
+          roleId: role.id,
+          organisationId: FIRST_ORGANISATION.id,
+          grantedBy: admin,
+        },
       });
 
       const categories = {
@@ -226,6 +234,7 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
         await tx.speaker.create({
           data: {
             id,
+            organisationId: FIRST_ORGANISATION.id,
             translations: {
               create: [
                 { locale: 'he', ...speaker.he, bio: 'מרצה בדוי לצורכי ההדגמה.' },
@@ -245,6 +254,7 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
         await tx.event.create({
           data: {
             id,
+            organisationId: FIRST_ORGANISATION.id,
             slug: slugify(seed.he.title),
             status: seed.status,
             categoryId: categories[seed.category],

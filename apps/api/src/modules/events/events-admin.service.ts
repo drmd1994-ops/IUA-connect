@@ -1,13 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
+import { type Principal } from '../../common/auth/principal';
+import {
+  OWNER_PROBLEM_CODES,
+  covers,
+  ownedWhere,
+  ownerOfNew,
+  scopeOf,
+} from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { type Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { AccessService } from '../access';
+import { AccessService, tierFitsOwner } from '../access';
 import { AuditService } from '../audit';
 import { FilesService } from '../files';
+import { ORGANISATION_REF } from '../organisations';
 import { parseIfMatch, sanitizeMarkdown, slugify, uniqueSlug } from '../news';
 import { cancelProblem, publishProblem } from './event-rules';
 import { ContentAnnouncer } from '../notifications';
@@ -22,7 +31,11 @@ import {
   type UpdateEventCategoryDto,
 } from './events.dto';
 
-const INCLUDE = { translations: true, image: true } satisfies Prisma.EventInclude;
+const INCLUDE = {
+  translations: true,
+  image: true,
+  organisation: { select: ORGANISATION_REF },
+} satisfies Prisma.EventInclude;
 type Row = Prisma.EventGetPayload<{ include: typeof INCLUDE }>;
 type Locale = 'he' | 'en';
 
@@ -44,6 +57,9 @@ export interface EventActor {
  * Event management (M5 plan §2.1, §3). An event admin creates, edits, publishes and cancels
  * events; there is no second reviewer. Saves carry the version they were loaded with
  * (If-Match), so two admins can't overwrite each other. Every change is audited.
+ *
+ * An event belongs to an organisation or to the platform (M16), and events.manage is used where
+ * it is held: an event of an owner the caller does not work for reads as "not found".
  */
 @Injectable()
 export class EventsAdminService {
@@ -56,8 +72,14 @@ export class EventsAdminService {
     private readonly announcer: ContentAnnouncer,
   ) {}
 
-  async list(query: AdminEventListQueryDto): Promise<AdminEventListDto> {
+  async list(principal: Principal, query: AdminEventListQueryDto): Promise<AdminEventListDto> {
+    const scope = scopeOf(principal, 'events.manage');
+    if (query.organisation && !covers(scope, query.organisation)) {
+      throw new AppException('NOT_FOUND');
+    }
     const where: Prisma.EventWhereInput = {
+      AND: [ownedWhere(scope)],
+      ...(query.organisation ? { organisationId: query.organisation } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.q
         ? { translations: { some: { title: { contains: query.q, mode: 'insensitive' } } } }
@@ -66,7 +88,10 @@ export class EventsAdminService {
     const [rows, total] = await Promise.all([
       this.prisma.event.findMany({
         where,
-        include: { translations: { select: { locale: true, title: true } } },
+        include: {
+          translations: { select: { locale: true, title: true } },
+          organisation: { select: ORGANISATION_REF },
+        },
         orderBy: [{ startAt: { sort: 'desc', nulls: 'first' } }, { id: 'desc' }],
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
@@ -76,6 +101,7 @@ export class EventsAdminService {
     return {
       items: rows.map((row) => ({
         id: row.id,
+        organisation: row.organisation,
         slug: row.slug,
         status: row.status,
         titleHe: row.translations.find((t) => t.locale === 'he')?.title ?? null,
@@ -92,14 +118,39 @@ export class EventsAdminService {
     };
   }
 
-  async get(id: string): Promise<AdminEventDto> {
-    const row = await this.prisma.event.findUnique({ where: { id }, include: INCLUDE });
-    if (!row) throw new AppException('NOT_FOUND');
-    return { ...view(row), typeIds: await this.access.allowedTypes('event', id) };
+  async get(principal: Principal, id: string): Promise<AdminEventDto> {
+    return this.describe(await this.mine(principal, id));
   }
 
-  async create(input: EventInputDto, actor: EventActor): Promise<AdminEventDto> {
-    await this.validate(input);
+  /** An event the caller manages, or "not found": another owner's does not exist for them. */
+  private async mine(principal: Principal, id: string): Promise<Row> {
+    const row = await this.prisma.event.findUnique({ where: { id }, include: INCLUDE });
+    if (!row || !covers(scopeOf(principal, 'events.manage'), row.organisationId)) {
+      throw new AppException('NOT_FOUND');
+    }
+    return row;
+  }
+
+  private async describe(row: Row): Promise<AdminEventDto> {
+    return { ...view(row), typeIds: await this.access.allowedTypes('event', row.id) };
+  }
+
+  /** The event as it is now, for the answer to a change the caller was allowed to make. */
+  private async after(id: string): Promise<AdminEventDto> {
+    return this.describe(
+      await this.prisma.event.findUniqueOrThrow({ where: { id }, include: INCLUDE }),
+    );
+  }
+
+  async create(
+    principal: Principal,
+    input: EventInputDto,
+    actor: EventActor,
+  ): Promise<AdminEventDto> {
+    const owner = ownerOfNew(scopeOf(principal, 'events.manage'), input.organisationId);
+    if ('problem' in owner) throw invalid('organisationId', OWNER_PROBLEM_CODES[owner.problem]);
+    const { organisationId } = owner;
+    await this.validate(input, organisationId);
     const base = input.slug ?? slugify((input.translations.he ?? input.translations.en)!.title);
     const slug = await uniqueSlug(base, async (candidate) =>
       Boolean(await this.prisma.event.findUnique({ where: { slug: candidate } })),
@@ -111,6 +162,7 @@ export class EventsAdminService {
           id,
           slug,
           status: 'DRAFT',
+          organisationId,
           createdBy: actor.userId,
           ...columns(input),
           translations: { create: translations(input) },
@@ -120,25 +172,28 @@ export class EventsAdminService {
     });
     if (input.imageFileId) await this.files.markAttached(input.imageFileId);
     await this.record('event.create', id, actor);
-    return this.get(id);
+    return this.after(id);
   }
 
   /** Replaces the event (If-Match must carry its current version). Cancelled events are closed. */
   async update(
+    principal: Principal,
     id: string,
     input: EventInputDto,
     ifMatch: string | undefined,
     actor: EventActor,
   ): Promise<AdminEventDto> {
-    const row = await this.prisma.event.findUnique({ where: { id }, include: INCLUDE });
-    if (!row) throw new AppException('NOT_FOUND');
+    const row = await this.mine(principal, id);
+    if (input.organisationId !== undefined && input.organisationId !== row.organisationId) {
+      throw invalid('organisationId', 'ownerCannotChange');
+    }
     if (parseIfMatch(ifMatch) !== row.version) {
       throw new AppException('PRECONDITION_FAILED', [{ code: 'eventChanged' }]);
     }
     if (row.status === 'CANCELLED') {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'eventCancelled' }]);
     }
-    await this.validate(input);
+    await this.validate(input, row.organisationId);
     if (row.status === 'PUBLISHED') {
       // What made it publishable must stay true while it is public.
       const problem = publishProblem({ ...checkOf(input), status: 'DRAFT' });
@@ -172,12 +227,11 @@ export class EventsAdminService {
     if (row.status === 'PUBLISHED' && movedOrRescheduled(row, input)) {
       await this.registrations.notifyRegistrants(id, 'eventChanged');
     }
-    return this.get(id);
+    return this.after(id);
   }
 
-  async publish(id: string, actor: EventActor): Promise<AdminEventDto> {
-    const row = await this.prisma.event.findUnique({ where: { id }, include: INCLUDE });
-    if (!row) throw new AppException('NOT_FOUND');
+  async publish(principal: Principal, id: string, actor: EventActor): Promise<AdminEventDto> {
+    const row = await this.mine(principal, id);
     const problem = publishProblem({
       status: row.status,
       startAt: row.startAt,
@@ -201,13 +255,18 @@ export class EventsAdminService {
       translations: row.translations,
       link: `/events/${row.slug}`,
       accessTier: row.accessTier,
+      organisationId: row.organisationId,
     });
-    return this.get(id);
+    return this.after(id);
   }
 
-  async cancel(id: string, reason: string, actor: EventActor): Promise<AdminEventDto> {
-    const row = await this.prisma.event.findUnique({ where: { id } });
-    if (!row) throw new AppException('NOT_FOUND');
+  async cancel(
+    principal: Principal,
+    id: string,
+    reason: string,
+    actor: EventActor,
+  ): Promise<AdminEventDto> {
+    const row = await this.mine(principal, id);
     const problem = cancelProblem(row.status, reason);
     if (problem) throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: problem }]);
     const { count } = await this.prisma.event.updateMany({
@@ -222,13 +281,12 @@ export class EventsAdminService {
     if (count === 0) throw new AppException('CONFLICT', [{ code: 'eventChanged' }]);
     await this.record('event.cancel', id, actor);
     await this.registrations.notifyRegistrants(id, 'eventCancelled', { reason: reason.trim() });
-    return this.get(id);
+    return this.after(id);
   }
 
   /** Only a draft is deleted; a published event is cancelled instead (M5 plan §3). */
-  async remove(id: string, actor: EventActor): Promise<void> {
-    const row = await this.prisma.event.findUnique({ where: { id }, select: { status: true } });
-    if (!row) throw new AppException('NOT_FOUND');
+  async remove(principal: Principal, id: string, actor: EventActor): Promise<void> {
+    const row = await this.mine(principal, id);
     if (row.status !== 'DRAFT') {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'eventNotDeletable' }]);
     }
@@ -287,7 +345,10 @@ export class EventsAdminService {
     if (!fits) throw invalid('startAt', 'eventSessionsOutside');
   }
 
-  private async validate(input: EventInputDto): Promise<void> {
+  private async validate(input: EventInputDto, organisationId: string | null): Promise<void> {
+    if (!tierFitsOwner(input.accessTier, organisationId)) {
+      throw invalid('accessTier', 'tierNeedsOrganisation');
+    }
     if (input.categoryId) {
       const category = await this.prisma.eventCategory.findFirst({
         where: { id: input.categoryId, active: true },
@@ -295,11 +356,11 @@ export class EventsAdminService {
       });
       if (!category) throw invalid('categoryId', 'unknownCategory');
     }
-    if (input.accessTier === 'TYPES') {
-      const count = await this.prisma.membershipType.count({
-        where: { id: { in: input.typeIds } },
-      });
-      if (count !== new Set(input.typeIds).size) throw invalid('typeIds', 'unknownMembershipType');
+    if (
+      input.accessTier === 'TYPES' &&
+      (await this.access.typesNotOf(organisationId, input.typeIds)).length
+    ) {
+      throw invalid('typeIds', 'unknownMembershipType');
     }
     if (input.imageFileId) {
       const image = await this.prisma.storedFile.findFirst({
@@ -391,6 +452,7 @@ function view(row: Row): Omit<AdminEventDto, 'typeIds'> {
   };
   return {
     id: row.id,
+    organisation: row.organisation,
     slug: row.slug,
     status: row.status,
     categoryId: row.categoryId,

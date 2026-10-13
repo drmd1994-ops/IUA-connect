@@ -1,7 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
-import { LEVELS, STATUSES, TIERS } from './education.dto';
+import { LEVELS, PLATFORM_TIERS, STATUSES, TIERS } from './education.dto';
 import { MAX_OPTIONS, MIN_OPTIONS } from './exam-rules';
 
 const locale = z.enum(['he', 'en']);
@@ -35,7 +35,7 @@ export class ExamQuestionInputDto extends createZodDto(
       /** Leave out for all levels. */
       level: z.enum(LEVELS).nullable().optional(),
       subspecialtyId: z.uuid().nullable().optional(),
-      accessTier: z.enum(TIERS).default('PUBLIC'),
+      accessTier: z.enum(PLATFORM_TIERS).default('PUBLIC'),
       /** The membership types allowed to practise it, when accessTier is TYPES. */
       typeIds: z.array(z.uuid()).max(10).default([]),
       translations: z

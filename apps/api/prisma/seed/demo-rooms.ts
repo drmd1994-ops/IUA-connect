@@ -1,4 +1,5 @@
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 
 /**
@@ -241,6 +242,7 @@ export async function seedDemoRooms(prisma: PrismaClient): Promise<void> {
       data: {
         id,
         kind: 'ROOM',
+        organisationId: FIRST_ORGANISATION.id,
         nameHe: seed.nameHe,
         nameEn: seed.nameEn,
         descriptionHe: seed.descriptionHe,

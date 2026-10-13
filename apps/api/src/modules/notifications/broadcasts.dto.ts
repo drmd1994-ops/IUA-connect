@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 
 export const BROADCAST_STATUSES = ['DRAFT', 'PENDING_APPROVAL', 'SENT', 'REJECTED'] as const;
 const status = z.enum(BROADCAST_STATUSES);
@@ -13,7 +14,10 @@ const text = z.strictObject({
 });
 
 const audience = z.strictObject({
-  /** True: every active member. False: the membership types listed. */
+  /**
+   * True: everyone the sender speaks to (an organisation's active members; for the platform,
+   * every verified person). False: the membership types listed.
+   */
   all: z.boolean(),
   typeIds: z.array(z.uuid()).max(20).default([]),
 });
@@ -21,6 +25,11 @@ const audience = z.strictObject({
 /** The whole message (create, and replace). A draft may be incomplete. */
 export class BroadcastInputDto extends createZodDto(
   z.strictObject({
+    /**
+     * Who sends it: an organisation, to its members, or null for the platform itself. Said
+     * when the message is created and never changed; may be left out when it can only be one.
+     */
+    organisationId: z.uuid().nullable().optional(),
     audience,
     translations: z
       .strictObject({ he: text.optional(), en: text.optional() })
@@ -35,6 +44,8 @@ export class BroadcastRejectDto extends createZodDto(
 export class BroadcastListQueryDto extends createZodDto(
   z.strictObject({
     status: status.optional(),
+    /** Only this organisation's messages. Left out: all the reader works on. */
+    organisation: z.uuid().optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),
     pageSize: z.coerce.number().int().min(1).max(100).default(25),
   }),
@@ -44,6 +55,8 @@ const person = z.strictObject({ id: z.uuid(), name: nullableString() });
 
 const broadcast = z.strictObject({
   id: z.uuid(),
+  /** Who sends it; null: the platform itself. */
+  organisation: organisationRefSchema.nullable(),
   status,
   audience: z.strictObject({ all: z.boolean(), typeIds: z.array(z.uuid()) }),
   translations: z.strictObject({

@@ -198,13 +198,13 @@ test('a member joins the directory; another member finds people by name in Hebre
   const member = await newPage(browser);
   const outsider = await newPage(browser);
 
-  // Signed out, and signed in without a membership: no directory.
+  // Signed out, and signed in with an account that is not verified: no directory.
   await outsider.goto('/en/members');
   await expect(outsider.getByText('Please sign in to view this page.')).toBeVisible();
   await registerAndSignIn(outsider, uniqueEmail('m7-outsider'));
   await outsider.goto('/en/members');
   await expect(
-    outsider.getByText('The directory is open to members with an active membership.'),
+    outsider.getByText('The directory is open to physicians whose account has been verified.'),
   ).toBeVisible();
   await expect(outsider.getByTestId('directory-list')).toHaveCount(0);
   await expectAccessible(outsider);

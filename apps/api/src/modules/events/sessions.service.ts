@@ -1,12 +1,21 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import {
+  OWNER_PROBLEM_CODES,
+  covers,
+  coversNothing,
+  ownedWhere,
+  ownerOfNew,
+  scopeOf,
+} from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import { FilesService } from '../files';
+import { ORGANISATION_REF } from '../organisations';
 import { type EventActor } from './events-admin.service';
 import { EventsPublicService } from './events-public.service';
 import {
@@ -31,6 +40,7 @@ type SessionRow = Prisma.EventSessionGetPayload<{ include: typeof SESSION }>;
 
 const SPEAKER = {
   translations: true,
+  organisation: { select: ORGANISATION_REF },
   _count: { select: { sessions: true } },
 } satisfies Prisma.SpeakerInclude;
 type SpeakerRow = Prisma.SpeakerGetPayload<{ include: typeof SPEAKER }>;
@@ -45,7 +55,8 @@ function pick<T extends { locale: string }>(rows: T[], locale: Locale): T {
 
 /**
  * Sessions and speakers (M5 plan §2.2). Sessions belong to one event and lie inside its time
- * span. Speakers are records shared between events (not accounts). Session materials are files
+ * span. Speakers are records shared between the events of one owner (not accounts): a session
+ * names speakers from the list of its event's owner (M16). Session materials are files
  * from the files module; whoever may see the event may read them.
  */
 @Injectable()
@@ -58,10 +69,25 @@ export class SessionsService implements OnModuleInit {
     private readonly audit: AuditService,
   ) {}
 
-  /** Speaker photos and session materials are readable by whoever may see one of their events. */
+  /**
+   * Speaker photos and session materials are readable by whoever may see one of their events,
+   * and by the event staff of the owner of the speaker's list or of the session's event.
+   */
   onModuleInit(): void {
     this.files.registerReadRule({
       canRead: async (fileId, principal) => {
+        const staff = principal ? scopeOf(principal, 'events.manage') : null;
+        if (staff && !coversNothing(staff)) {
+          const [speakers, sessions] = await Promise.all([
+            this.prisma.speaker.count({
+              where: { AND: [ownedWhere(staff)], photoFileId: fileId },
+            }),
+            this.prisma.eventSession.count({
+              where: { materials: { some: { fileId } }, event: { AND: [ownedWhere(staff)] } },
+            }),
+          ]);
+          if (speakers + sessions > 0) return true;
+        }
         const live = {
           status: { in: ['PUBLISHED', 'CANCELLED'] },
         } satisfies Prisma.EventWhereInput;
@@ -77,7 +103,7 @@ export class SessionsService implements OnModuleInit {
               },
             },
           },
-          select: { id: true, accessTier: true },
+          select: { id: true, accessTier: true, organisationId: true },
         });
         if (events.length === 0) return null;
         const viewer = await this.access.viewerOf(principal);
@@ -91,10 +117,27 @@ export class SessionsService implements OnModuleInit {
 
   // --- Speakers -------------------------------------------------------------------------------
 
-  async listSpeakers(query: AdminSpeakerListQueryDto): Promise<AdminSpeakerListDto> {
-    const where: Prisma.SpeakerWhereInput = query.q
-      ? { translations: { some: { name: { contains: query.q, mode: 'insensitive' } } } }
-      : {};
+  async listSpeakers(
+    principal: Principal,
+    query: AdminSpeakerListQueryDto,
+  ): Promise<AdminSpeakerListDto> {
+    const scope = scopeOf(principal, 'events.manage');
+    let ofEvent: { organisationId: string | null } | undefined;
+    if (query.eventId) {
+      const event = await this.prisma.event.findUnique({
+        where: { id: query.eventId },
+        select: { organisationId: true },
+      });
+      if (!event || !covers(scope, event.organisationId)) throw new AppException('NOT_FOUND');
+      ofEvent = { organisationId: event.organisationId };
+    }
+    const where: Prisma.SpeakerWhereInput = {
+      AND: [ownedWhere(scope)],
+      ...ofEvent,
+      ...(query.q
+        ? { translations: { some: { name: { contains: query.q, mode: 'insensitive' } } } }
+        : {}),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.speaker.findMany({
         where,
@@ -108,12 +151,19 @@ export class SessionsService implements OnModuleInit {
     return { items: rows.map(speakerView), page: query.page, pageSize: query.pageSize, total };
   }
 
-  async createSpeaker(input: SpeakerInputDto, actor: EventActor): Promise<AdminSpeakerDto> {
+  async createSpeaker(
+    principal: Principal,
+    input: SpeakerInputDto,
+    actor: EventActor,
+  ): Promise<AdminSpeakerDto> {
+    const owner = ownerOfNew(scopeOf(principal, 'events.manage'), input.organisationId);
+    if ('problem' in owner) throw invalid('organisationId', OWNER_PROBLEM_CODES[owner.problem]);
     await this.validatePhoto(input.photoFileId);
     const id = uuidv7();
     await this.prisma.speaker.create({
       data: {
         id,
+        organisationId: owner.organisationId,
         photoFileId: input.photoFileId ?? null,
         translations: { create: speakerTexts(input) },
       },
@@ -124,11 +174,18 @@ export class SessionsService implements OnModuleInit {
   }
 
   async updateSpeaker(
+    principal: Principal,
     id: string,
     input: SpeakerInputDto,
     actor: EventActor,
   ): Promise<AdminSpeakerDto> {
-    await this.getSpeaker(id);
+    const found = await this.getSpeaker(id, principal);
+    if (
+      input.organisationId !== undefined &&
+      input.organisationId !== (found.organisation?.id ?? null)
+    ) {
+      throw invalid('organisationId', 'ownerCannotChange');
+    }
     await this.validatePhoto(input.photoFileId);
     await this.prisma.$transaction([
       this.prisma.speakerTranslation.deleteMany({ where: { speakerId: id } }),
@@ -145,8 +202,8 @@ export class SessionsService implements OnModuleInit {
     return this.getSpeaker(id);
   }
 
-  async removeSpeaker(id: string, actor: EventActor): Promise<void> {
-    const speaker = await this.getSpeaker(id);
+  async removeSpeaker(principal: Principal, id: string, actor: EventActor): Promise<void> {
+    const speaker = await this.getSpeaker(id, principal);
     if (speaker.sessionCount > 0) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'speakerInUse' }]);
     }
@@ -154,9 +211,13 @@ export class SessionsService implements OnModuleInit {
     await this.record('speaker.delete', 'speaker', id, actor);
   }
 
-  private async getSpeaker(id: string): Promise<AdminSpeakerDto> {
+  /** The speaker; with a caller, only one of a list they keep (anyone else's is "not found"). */
+  private async getSpeaker(id: string, principal?: Principal): Promise<AdminSpeakerDto> {
     const row = await this.prisma.speaker.findUnique({ where: { id }, include: SPEAKER });
     if (!row) throw new AppException('NOT_FOUND');
+    if (principal && !covers(scopeOf(principal, 'events.manage'), row.organisationId)) {
+      throw new AppException('NOT_FOUND');
+    }
     return speakerView(row);
   }
 
@@ -240,7 +301,7 @@ export class SessionsService implements OnModuleInit {
   private async editableEvent(eventId: string, forChange: boolean) {
     const event = await this.prisma.event.findUnique({
       where: { id: eventId },
-      select: { id: true, status: true, startAt: true, endAt: true },
+      select: { id: true, status: true, startAt: true, endAt: true, organisationId: true },
     });
     if (!event) throw new AppException('NOT_FOUND');
     if (forChange && event.status === 'CANCELLED') {
@@ -250,7 +311,7 @@ export class SessionsService implements OnModuleInit {
   }
 
   private async validateSession(
-    event: { startAt: Date | null; endAt: Date | null },
+    event: { startAt: Date | null; endAt: Date | null; organisationId: string | null },
     input: SessionInputDto,
   ): Promise<void> {
     // Sessions lie inside their event (M5 plan §5), so the event needs its dates first.
@@ -262,7 +323,10 @@ export class SessionsService implements OnModuleInit {
       throw invalid('startAt', 'sessionOutsideEvent');
     }
     if (input.speakerIds.length) {
-      const count = await this.prisma.speaker.count({ where: { id: { in: input.speakerIds } } });
+      // Only speakers from the list of the event's owner: another's do not exist here.
+      const count = await this.prisma.speaker.count({
+        where: { id: { in: input.speakerIds }, organisationId: event.organisationId },
+      });
       if (count !== new Set(input.speakerIds).size) throw invalid('speakerIds', 'unknownSpeaker');
     }
     if (input.materialFileIds.length) {
@@ -360,6 +424,7 @@ function speakerView(row: SpeakerRow): AdminSpeakerDto {
   };
   return {
     id: row.id,
+    organisation: row.organisation,
     photoFileId: row.photoFileId,
     translations: { he: text('he'), en: text('en') },
     sessionCount: row._count.sessions,

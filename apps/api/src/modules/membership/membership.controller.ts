@@ -13,6 +13,7 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nest
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import { Authenticated } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
+import { OrganisationQueryDto, OrganisationsService } from '../organisations';
 import { ApplicationsService } from './applications.service';
 import {
   ApplicationDto,
@@ -20,24 +21,44 @@ import {
   ApplyDto,
   DecisionDto,
   MyMembershipDto,
+  MyMembershipsDto,
   ReviewApplicationDto,
   ReviewApplicationListDto,
   ReviewQueryDto,
 } from './membership.dto';
 import { MembershipsService } from './memberships.service';
 
-/** The signed-in member's membership (API_DESIGN.md §4 "Me"). */
+/**
+ * The signed-in person's memberships (API_DESIGN.md §4 "Me"). A membership is in an
+ * organisation; `organisation` may be left out while it can only mean one (M16).
+ */
 @ApiTags('membership')
 @ApiBearerAuth()
-@Controller('me/membership')
+@Controller('me')
 @Authenticated()
 export class MyMembershipController {
-  constructor(private readonly memberships: MembershipsService) {}
+  constructor(
+    private readonly memberships: MembershipsService,
+    private readonly organisations: OrganisationsService,
+  ) {}
 
-  @Get()
+  @Get('membership')
   @ApiOkResponse({ type: MyMembershipDto })
-  mine(@Req() req: RequestWithPrincipal): Promise<MyMembershipDto> {
-    return this.memberships.mine(principalOf(req).userId);
+  async mine(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: OrganisationQueryDto,
+  ): Promise<MyMembershipDto> {
+    const { userId } = principalOf(req);
+    const organisationId = await this.organisations.meantForMember(query.organisation, userId);
+    if (!organisationId) return { membership: null, history: [] };
+    return this.memberships.mine(userId, organisationId);
+  }
+
+  /** Every membership the person holds, one per organisation. */
+  @Get('memberships')
+  @ApiOkResponse({ type: MyMembershipsDto })
+  async all(@Req() req: RequestWithPrincipal): Promise<MyMembershipsDto> {
+    return { items: await this.memberships.all(principalOf(req).userId) };
   }
 }
 
@@ -45,6 +66,10 @@ export class MyMembershipController {
  * Membership applications (API_DESIGN.md §4 "Verification"). Reviewing needs
  * membership.approve.department (own departments) or membership.approve.final; the service checks
  * which, because the stage is inferred from the application. Audited by the service.
+ *
+ * An application is to an organisation (M16): final approval is its office's, so
+ * membership.approve.final is used where it is held, and an application to another organisation
+ * reads as "not found".
  */
 @ApiTags('membership')
 @ApiBearerAuth()
@@ -85,8 +110,11 @@ export class ApplicationsController {
   async queue(
     @Req() req: RequestWithPrincipal,
     @Query() query: ReviewQueryDto,
+    @Meta() meta: RequestMeta,
   ): Promise<ReviewApplicationListDto> {
-    return { items: await this.applications.queue(principalOf(req), query.stage) };
+    return {
+      items: await this.applications.queue(principalOf(req), query.stage, query.organisation, meta),
+    };
   }
 
   @Post(':id/decisions')

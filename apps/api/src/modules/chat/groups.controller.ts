@@ -414,7 +414,7 @@ export class GroupsController {
       const principal = principalOf(req);
       const me = principal.userId;
       await hitUserLimit(this.limits, RATE_LIMITS.chatUploadsPerUser, me, res);
-      await this.access.ensureActiveMember(principal);
+      this.access.ensureVerified(principal);
       await this.access.ensureNotSuspended(me);
       if (!file) {
         throw new AppException('VALIDATION_FAILED', [{ field: 'file', code: 'fileMissing' }]);

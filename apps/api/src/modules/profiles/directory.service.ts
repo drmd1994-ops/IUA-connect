@@ -5,10 +5,8 @@ import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import { FilesService } from '../files';
-import { todayInIsrael } from '../membership';
 import {
   type ConsentInputDto,
   type ConsentsDto,
@@ -56,12 +54,11 @@ const SHOWN = ['MEMBERS', 'PUBLIC'] as const;
 export class DirectoryService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly access: AccessService,
     private readonly files: FilesService,
     private readonly audit: AuditService,
   ) {}
 
-  /** A listed member's photo is readable by active members, when the member shows it. */
+  /** A listed person's photo is readable by verified people, when its owner shows it. */
   onModuleInit(): void {
     this.files.registerReadRule({
       canRead: async (fileId, principal) => {
@@ -70,7 +67,7 @@ export class DirectoryService implements OnModuleInit {
           select: { userId: true },
         });
         if (!profile) return null;
-        if (!principal || !(await this.isActiveMember(principal))) return false;
+        if (!principal?.verified) return false;
         const listed = await this.prisma.profile.count({
           where: {
             ...this.listed(),
@@ -84,7 +81,7 @@ export class DirectoryService implements OnModuleInit {
   }
 
   async list(principal: Principal, query: DirectoryQueryDto): Promise<DirectoryListDto> {
-    await this.ensureActiveMember(principal);
+    this.ensureVerified(principal);
     const where: Prisma.ProfileWhereInput = {
       ...this.listed(),
       ...(query.q ? { userId: { in: await this.matching(query.q) } } : {}),
@@ -123,7 +120,7 @@ export class DirectoryService implements OnModuleInit {
 
   /** One listed member. Not listed, not active and never existed all answer "not found". */
   async get(principal: Principal, id: string): Promise<DirectoryMemberDto> {
-    await this.ensureActiveMember(principal);
+    this.ensureVerified(principal);
     const row = await this.prisma.profile.findFirst({
       where: { ...this.listed(), userId: id },
       include: INCLUDE,
@@ -212,7 +209,7 @@ export class DirectoryService implements OnModuleInit {
     );
   }
 
-  /** Whether these people are listed today (opted in, usable account, active membership). */
+  /** Whether these people are listed today (opted in, usable account, verified). */
   async listedAmong(userIds: readonly string[]): Promise<Set<string>> {
     if (userIds.length === 0) return new Set();
     const rows = await this.prisma.profile.findMany({
@@ -292,24 +289,25 @@ export class DirectoryService implements OnModuleInit {
 
   // --- Internals ------------------------------------------------------------------------------
 
-  /** Opted in, a usable account, and a membership that is active today. */
+  /**
+   * Opted in, a usable account, and known to the platform as a physician (M16; before that, a
+   * membership of the association that was active today). The directory is the platform's:
+   * belonging to an organisation neither lists a person nor hides them.
+   */
   private listed(): Prisma.ProfileWhereInput {
     return {
       directoryOptIn: true,
       user: {
         status: 'ACTIVE',
         emailVerifiedAt: { not: null },
-        membership: { status: 'ACTIVE', endDate: { gte: todayInIsrael() } },
+        verifiedAt: { not: null },
       },
     };
   }
 
-  private async isActiveMember(principal: Principal): Promise<boolean> {
-    return (await this.access.viewerOf(principal)).activeTypeId !== null;
-  }
-
-  private async ensureActiveMember(principal: Principal): Promise<void> {
-    if (!(await this.isActiveMember(principal))) {
+  /** The directory is for people the platform knows as physicians. */
+  private ensureVerified(principal: Principal): void {
+    if (!principal.verified) {
       throw new AppException('FORBIDDEN', [{ code: 'membersOnly' }]);
     }
   }

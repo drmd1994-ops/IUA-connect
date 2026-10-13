@@ -7,6 +7,7 @@ import {
   grantRole,
   signIn,
   signInAdmin,
+  signInPlatformAdmin,
   signInWithMfa,
   startHarness,
 } from './auth-harness';
@@ -15,6 +16,7 @@ import {
 describe('events (integration)', () => {
   let h: Harness;
   let admin: { accessToken: string };
+  let platform: { accessToken: string };
   let types: Record<string, string>;
   const run = Date.now();
   const future = (days: number, hour = 7) =>
@@ -23,6 +25,8 @@ describe('events (integration)', () => {
   beforeAll(async () => {
     h = await startHarness();
     admin = await signInWithMfa(h, 'event-admin', (email) => grantRole(h, email, 'EVENT_ADMIN'));
+    // The categories are a list the platform keeps, shared by every organisation's events.
+    platform = await signInPlatformAdmin(h, 'event-categories');
     const res = await h.http().get('/api/v1/membership-types').expect(200);
     types = Object.fromEntries(
       (res.body.items as { key: string; id: string }[]).map((t) => [t.key, t.id]),
@@ -209,7 +213,7 @@ describe('events (integration)', () => {
     const category = await h
       .http()
       .post('/api/v1/admin/events/categories')
-      .set(as(admin))
+      .set(as(platform))
       .send({ key: `list_${run}`, nameHe: 'רשימה', nameEn: 'List' })
       .expect(201);
     const categoryId = category.body.id as string;
@@ -320,7 +324,7 @@ describe('events (integration)', () => {
       const category = await h
         .http()
         .post('/api/v1/admin/events/categories')
-        .set(as(admin))
+        .set(as(platform))
         .send({ key, nameHe: 'רמות', nameEn: 'Tiers' })
         .expect(201);
       const categoryId = category.body.id as string;

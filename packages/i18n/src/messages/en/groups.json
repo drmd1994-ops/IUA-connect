@@ -31,7 +31,7 @@
     "left": "You are no longer in this group.",
     "admin": "Runs the group",
     "cannot": {
-      "membersOnly": "Your membership isn’t active, so you can read this group but not write in it.",
+      "membersOnly": "Your account isn’t verified as a physician’s yet, so you can read this group but not write in it.",
       "suspended": "The association’s staff suspended you from sending messages. You can still read."
     }
   },

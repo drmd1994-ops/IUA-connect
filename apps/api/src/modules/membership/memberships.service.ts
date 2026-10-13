@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { ORGANISATION_REF } from '../organisations';
 import { type MyMembershipDto } from './membership.dto';
 import { endOfYear, isExpired, isoDate, todayInIsrael } from './period';
 
@@ -17,17 +18,26 @@ export interface Grant {
   reason?: string | null;
 }
 
-type MembershipWithType = Prisma.MembershipGetPayload<{ include: { type: true } }>;
+export const MEMBERSHIP_PARTS = {
+  type: true,
+  organisation: { select: ORGANISATION_REF },
+} satisfies Prisma.MembershipInclude;
 
-/** Members' memberships: the current one per user, with its append-only history. */
+type MembershipWithType = Prisma.MembershipGetPayload<{ include: typeof MEMBERSHIP_PARTS }>;
+
+/**
+ * Members' memberships: one per person in an organisation, with its append-only history. A
+ * person may belong to several organisations (M16).
+ */
 @Injectable()
 export class MembershipsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async mine(userId: string): Promise<MyMembershipDto> {
+  /** The person's membership in one organisation. */
+  async mine(userId: string, organisationId: string): Promise<MyMembershipDto> {
     const membership = await this.prisma.membership.findUnique({
-      where: { userId },
-      include: { type: true, history: { orderBy: { at: 'desc' } } },
+      where: { userId_organisationId: { userId, organisationId } },
+      include: { ...MEMBERSHIP_PARTS, history: { orderBy: { at: 'desc' } } },
     });
     if (!membership) return { membership: null, history: [] };
     return {
@@ -36,8 +46,18 @@ export class MembershipsService {
     };
   }
 
+  /** Every membership the person holds, the organisations in name order. */
+  async all(userId: string): Promise<NonNullable<MyMembershipDto['membership']>[]> {
+    const rows = await this.prisma.membership.findMany({
+      where: { userId, organisation: { active: true } },
+      include: MEMBERSHIP_PARTS,
+      orderBy: [{ organisation: { nameEn: 'asc' } }, { id: 'asc' }],
+    });
+    return rows.map((row) => describe(row));
+  }
+
   /**
-   * Makes the user a member of the type, for the current calendar year (inside the caller's
+   * Makes the user a member of the type, in the type's organisation, for the current calendar year (inside the caller's
    * transaction). An existing membership changes type and is reactivated; its period is kept
    * unless it has lapsed. Returns the end date.
    */
@@ -46,8 +66,15 @@ export class MembershipsService {
     const type = await tx.membershipType.findUniqueOrThrow({ where: { id: input.typeId } });
     const paymentStatus = type.annualFee ? 'UNPAID' : 'NOT_REQUIRED';
     const existing = await tx.membership.findUnique({
-      where: { userId: input.userId },
+      where: {
+        userId_organisationId: { userId: input.userId, organisationId: type.organisationId },
+      },
       include: { type: true },
+    });
+    // Whoever an organisation accepts as a member is known to the platform as a physician.
+    await tx.user.updateMany({
+      where: { id: input.userId, verifiedAt: null },
+      data: { verifiedAt: new Date() },
     });
 
     if (!existing) {
@@ -57,6 +84,7 @@ export class MembershipsService {
         data: {
           id,
           userId: input.userId,
+          organisationId: type.organisationId,
           typeId: type.id,
           status: 'ACTIVE',
           startDate: today,
@@ -139,6 +167,7 @@ export function describe(
 ): NonNullable<MyMembershipDto['membership']> {
   return {
     id: membership.id,
+    organisation: membership.organisation,
     type: {
       id: membership.type.id,
       key: membership.type.key,

@@ -17,6 +17,7 @@ describe('chat groups, invitations, activity and files (integration)', () => {
     member,
     listed,
     endMembership,
+    unverify,
     start,
     send,
     list,
@@ -165,10 +166,18 @@ describe('chat groups, invitations, activity and files (integration)', () => {
       expect(page.items[0].sender.id).toBe(a.id);
     });
 
-    it('a member whose membership ended reads their groups and can’t write', async () => {
+    it('a membership that ends changes nothing in a group: the person keeps the platform', async () => {
       const { id, a, b } = await groupOf();
       await groupSend(a, id, 'Before').expect(201);
       await endMembership(b, 'expire');
+      expect((await get(b, `groups/${id}`).expect(200)).body.sendState).toBe('none');
+      await groupSend(b, id, 'Still here').expect(201);
+    });
+
+    it('someone who is no longer verified reads their groups and can’t write', async () => {
+      const { id, a, b } = await groupOf();
+      await groupSend(a, id, 'Before').expect(201);
+      await unverify(b);
       expect((await get(b, `groups/${id}`).expect(200)).body.sendState).toBe('membersOnly');
       expect((await get(b, `groups/${id}/messages`).expect(200)).body.items).toHaveLength(1);
       expect(code(await groupSend(b, id, 'After').expect(403))).toBe('membersOnly');
@@ -439,9 +448,9 @@ describe('chat groups, invitations, activity and files (integration)', () => {
       await post(a, `groups/${id}/invitations`, { userIds: [contactsOnly.id] }).expect(204);
       expect(await invitations(contactsOnly)).toHaveLength(1);
 
-      // A person whose membership ended can be invited and can't accept.
+      // A person who is no longer verified can be invited and can't accept.
       await post(a, `groups/${id}/invitations`, { userIds: [ended.id] }).expect(204);
-      await endMembership(ended, 'expire');
+      await unverify(ended);
       const waiting = await invitationTo(ended, id);
       expect(code(await post(ended, `invitations/${waiting.id}/accept`).expect(403))).toBe(
         'membersOnly',
@@ -977,7 +986,7 @@ describe('chat groups, invitations, activity and files (integration)', () => {
       await h.http().post('/api/v1/chat/attachments').set(bearer(a.token)).expect(400);
       // Nothing is left behind in the temporary folder's place in the database for a refusal.
       const outsider = await member();
-      await endMembership(outsider, 'expire');
+      await unverify(outsider);
       await upload(outsider, png, 'a.png').expect(403);
 
       const one = (await upload(a, png, 'one.png').expect(201)).body;

@@ -1,11 +1,12 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 import { NEWS_ACTIONS } from './news-workflow';
 import { MAX_BODY_LENGTH } from './markdown';
 import { SLUG_PATTERN } from './slug';
 
-const TIERS = ['PUBLIC', 'MEMBERS', 'TYPES'] as const;
+const TIERS = ['PUBLIC', 'VERIFIED', 'MEMBERS', 'TYPES'] as const;
 const STATUSES = ['DRAFT', 'IN_REVIEW', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED'] as const;
 
 const translationInput = z.strictObject({
@@ -28,6 +29,11 @@ export class NewsInputDto extends createZodDto(
   z
     .strictObject({
       slug: z.string().trim().max(120).regex(SLUG_PATTERN).optional(),
+      /**
+       * Whose item it is: an organisation, or null for the platform's own. Said when it is
+       * created and never changed. It may be left out when the writer can only mean one.
+       */
+      organisationId: z.uuid().nullable().optional(),
       categoryId: z.uuid().nullable().optional(),
       accessTier: z.enum(TIERS).default('PUBLIC'),
       /** The membership types allowed to read it, when accessTier is TYPES. */
@@ -67,6 +73,8 @@ const translationView = z.strictObject({
 export class AdminNewsDto extends createZodDto(
   z.strictObject({
     id: z.uuid(),
+    /** Whose item it is; null: the platform's own. */
+    organisation: organisationRefSchema.nullable(),
     slug: nullableString(),
     status: z.enum(STATUSES),
     categoryId: z.uuid().nullable(),
@@ -101,6 +109,8 @@ export class AdminNewsDto extends createZodDto(
 export class AdminNewsListQueryDto extends createZodDto(
   z.strictObject({
     status: z.enum(STATUSES).optional(),
+    /** Only this organisation's items. Left out: all the reader works on. */
+    organisation: z.uuid().optional(),
     q: z.string().trim().max(100).optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),
     pageSize: z.coerce.number().int().min(1).max(100).default(25),
@@ -112,6 +122,7 @@ export class AdminNewsListDto extends createZodDto(
     items: z.array(
       z.strictObject({
         id: z.uuid(),
+        organisation: organisationRefSchema.nullable(),
         slug: nullableString(),
         status: z.enum(STATUSES),
         titleHe: nullableString(),

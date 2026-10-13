@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import { slugify, uniqueSlug } from '../../src/modules/news/slug';
 
@@ -111,6 +112,7 @@ export async function seedImport(
           await tx.news.create({
             data: {
               id,
+              organisationId: FIRST_ORGANISATION.id,
               slug,
               status: 'PUBLISHED',
               categoryId: category.id,
@@ -176,6 +178,7 @@ export async function seedImport(
         await tx.event.create({
           data: {
             id: uuidv7(),
+            organisationId: FIRST_ORGANISATION.id,
             slug,
             status: 'DRAFT',
             accessTier: 'PUBLIC',

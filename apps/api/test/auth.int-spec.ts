@@ -438,7 +438,7 @@ describe('identity: registration, sign-in, sessions (M1)', () => {
   describe('roles and MFA', () => {
     it('gives admin-role holders short sessions and no permissions until MFA', async () => {
       const email = await createVerifiedUser(h, 'admin');
-      await grantRole(h, email, 'IUA_ADMIN');
+      await grantRole(h, email, 'PLATFORM_ADMIN');
       const { accessToken } = await signIn(h, email);
 
       const me = await h
@@ -447,7 +447,7 @@ describe('identity: registration, sign-in, sessions (M1)', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
       expect(me.body).toMatchObject({
-        roles: ['IUA_ADMIN'],
+        roles: ['PLATFORM_ADMIN'],
         permissions: [],
         mfaEnrollmentRequired: true,
         session: { mfa: false },

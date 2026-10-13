@@ -4,10 +4,12 @@ import type { components } from '@iua/api-client';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { type ReactNode, useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
+import { SelectField } from '@/components/ui/select-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { useLocalName } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
+import { PLATFORM } from './owners';
 
 type Dashboard = components['schemas']['AdminDashboardDto'];
 
@@ -24,19 +26,34 @@ export function AdminDashboard() {
   const locale = useLocale();
   const format = useFormatter();
   const name = useLocalName();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
+  // Whose numbers (M16): everything the person works on, one organisation's, or the platform's.
+  const [owner, setOwner] = useState('');
+  const places = [
+    ...(me?.organisations ?? []).map((held) => ({
+      value: held.organisation.id,
+      label: name(held.organisation),
+    })),
+    ...(me?.platformPermissions.length
+      ? [{ value: PLATFORM, label: t('content.common.owner.platform') }]
+      : []),
+  ];
   const [data, setData] = useState<Dashboard | null>(null);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
     let active = true;
-    call(() => api.GET('/api/v1/admin/dashboard'))
+    call(() =>
+      api.GET('/api/v1/admin/dashboard', {
+        params: { query: owner ? { owner } : {} },
+      }),
+    )
       .then((result) => active && setData(result))
       .catch((caught: unknown) => active && setError(caught));
     return () => {
       active = false;
     };
-  }, [api, call]);
+  }, [api, call, owner]);
 
   const empty =
     data !== null &&
@@ -54,6 +71,16 @@ export function AdminDashboard() {
         <h1 className="text-3xl font-semibold text-brand-900">{d('title')}</h1>
         <p className="mt-2 text-text-muted">{d('intro')}</p>
       </div>
+      {places.length > 1 && (
+        <SelectField
+          label={d('view.label')}
+          className="max-w-sm"
+          placeholder={d('view.all')}
+          value={owner}
+          onChange={(event) => setOwner(event.target.value)}
+          options={places}
+        />
+      )}
       {error !== null && <Alert tone="error">{errorMessage(error, t)}</Alert>}
       {!data && error === null && <p role="status">{t('membership.common.loading')}</p>}
       {empty && <Alert>{d('nothing')}</Alert>}

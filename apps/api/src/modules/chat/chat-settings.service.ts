@@ -65,7 +65,7 @@ export class ChatSettingsService {
    * set "nobody", with no block in either direction. Everyone else is simply not found.
    */
   async people(principal: Principal, q: string): Promise<ChatPeopleDto> {
-    await this.access.ensureActiveMember(principal);
+    this.access.ensureVerified(principal);
     const found = await this.directory.find(q, PEOPLE_LIMIT, 0);
     const reachable = await this.access.reachable(
       principal.userId,

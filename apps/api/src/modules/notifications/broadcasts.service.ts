@@ -2,6 +2,14 @@ import { Inject, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import {
+  OWNER_PROBLEM_CODES,
+  covers,
+  mayActOn,
+  ownedWhere,
+  ownerOfNew,
+  scopeOf,
+} from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { APP_CONFIG } from '../../config/config.module';
@@ -11,6 +19,7 @@ import { JobQueue } from '../../infra/jobs/job-queue';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
+import { ORGANISATION_REF } from '../organisations';
 import {
   type BroadcastAction,
   canEdit,
@@ -31,13 +40,20 @@ import { Notifier } from './notifier';
 export const BROADCAST_DELIVER_JOB = 'notifications.deliver-broadcasts';
 const EMAIL_BATCH = 100;
 
-const INCLUDE = { translations: true } satisfies Prisma.BroadcastInclude;
+const INCLUDE = {
+  translations: true,
+  organisation: { select: ORGANISATION_REF },
+} satisfies Prisma.BroadcastInclude;
 type Row = Prisma.BroadcastGetPayload<{ include: typeof INCLUDE }>;
 
 /**
  * Broadcasts (M7 plan §2.6): a message one admin writes and a different admin approves. On
  * approval, everyone in the audience at that moment gets a delivery row (so nobody receives
  * it twice and only they can read it) and a notice in the app; the emails follow from a job.
+ *
+ * A message has a sender (M16): an organisation writes to its own active members, and the
+ * platform to every verified person. Its staff are the sender's staff, and nobody else's
+ * message exists for them.
  */
 @Injectable()
 export class BroadcastsService implements OnModuleInit {
@@ -65,7 +81,15 @@ export class BroadcastsService implements OnModuleInit {
   // --- Admin ----------------------------------------------------------------------------------
 
   async list(query: BroadcastListQueryDto, principal: Principal): Promise<AdminBroadcastListDto> {
-    const where: Prisma.BroadcastWhereInput = query.status ? { status: query.status } : {};
+    const scope = scopeOf(principal, 'broadcasts.create');
+    if (query.organisation && !covers(scope, query.organisation)) {
+      throw new AppException('NOT_FOUND');
+    }
+    const where: Prisma.BroadcastWhereInput = {
+      AND: [ownedWhere(scope)],
+      ...(query.organisation ? { organisationId: query.organisation } : {}),
+      ...(query.status ? { status: query.status } : {}),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.broadcast.findMany({
         where,
@@ -86,7 +110,7 @@ export class BroadcastsService implements OnModuleInit {
   }
 
   async get(id: string, principal: Principal): Promise<AdminBroadcastDto> {
-    const row = await this.row(id);
+    const row = await this.row(id, principal);
     return view(row, await this.names([row.createdBy, row.decidedBy]), principal.userId);
   }
 
@@ -107,12 +131,19 @@ export class BroadcastsService implements OnModuleInit {
       const found = await existing();
       if (found) return this.get(found.id, principal);
     }
-    await this.validateAudience(input);
+    const owner = ownerOfNew(scopeOf(principal, 'broadcasts.create'), input.organisationId);
+    if ('problem' in owner) {
+      throw new AppException('VALIDATION_FAILED', [
+        { field: 'organisationId', code: OWNER_PROBLEM_CODES[owner.problem] },
+      ]);
+    }
+    await this.validateAudience(input, owner.organisationId);
     const id = uuidv7();
     try {
       await this.prisma.broadcast.create({
         data: {
           id,
+          organisationId: owner.organisationId,
           createdBy: principal.userId,
           idempotencyKey: key,
           ...audienceColumns(input),
@@ -135,9 +166,14 @@ export class BroadcastsService implements OnModuleInit {
     principal: Principal,
     meta: RequestMeta,
   ): Promise<AdminBroadcastDto> {
-    const row = await this.row(id);
+    const row = await this.row(id, principal);
     this.ensureAuthorCanEdit(row, principal);
-    await this.validateAudience(input);
+    if (input.organisationId !== undefined && input.organisationId !== row.organisationId) {
+      throw new AppException('VALIDATION_FAILED', [
+        { field: 'organisationId', code: 'ownerCannotChange' },
+      ]);
+    }
+    await this.validateAudience(input, row.organisationId);
     await this.prisma.$transaction(async (tx) => {
       // Changing a message that was sent back makes it a draft again.
       const { count } = await tx.broadcast.updateMany({
@@ -162,14 +198,14 @@ export class BroadcastsService implements OnModuleInit {
 
   /** Only the author deletes, and only a message that was not sent. */
   async remove(id: string, principal: Principal, meta: RequestMeta): Promise<void> {
-    const row = await this.row(id);
+    const row = await this.row(id, principal);
     this.ensureAuthorCanEdit(row, principal);
     await this.prisma.broadcast.deleteMany({ where: { id, status: row.status } });
     await this.record('broadcast.delete', id, principal, meta);
   }
 
   async submit(id: string, principal: Principal, meta: RequestMeta): Promise<AdminBroadcastDto> {
-    const row = await this.row(id);
+    const row = await this.row(id, principal);
     this.ensureStep('SUBMIT', row, principal);
     const hebrew = row.translations.find((t) => t.locale === 'he');
     const problem = submitProblem({
@@ -198,7 +234,7 @@ export class BroadcastsService implements OnModuleInit {
     principal: Principal,
     meta: RequestMeta,
   ): Promise<AdminBroadcastDto> {
-    const row = await this.row(id);
+    const row = await this.row(id, principal);
     this.ensureStep('REJECT', row, principal);
     const { count } = await this.prisma.broadcast.updateMany({
       where: { id, status: 'PENDING_APPROVAL' },
@@ -220,7 +256,7 @@ export class BroadcastsService implements OnModuleInit {
    * reached. Two approvals at once: the second finds it already sent and changes nothing.
    */
   async approve(id: string, principal: Principal, meta: RequestMeta): Promise<AdminBroadcastDto> {
-    const row = await this.row(id);
+    const row = await this.row(id, principal);
     this.ensureStep('APPROVE', row, principal);
     const hebrew = row.translations.find((t) => t.locale === 'he');
     const english = row.translations.find((t) => t.locale === 'en');
@@ -240,7 +276,7 @@ export class BroadcastsService implements OnModuleInit {
       }
       const reached = await tx.$executeRaw`
         INSERT INTO broadcast_deliveries (broadcast_id, user_id)
-        SELECT ${id}::uuid, u.id ${audienceSql(row)}
+        SELECT DISTINCT ${id}::uuid, u.id ${audienceSql(row)}
         ON CONFLICT DO NOTHING`;
       if (reached === 0) {
         throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'broadcastNoRecipients' }]);
@@ -272,11 +308,11 @@ export class BroadcastsService implements OnModuleInit {
   }
 
   /** How many people the message would reach if it were sent now. */
-  async audience(id: string): Promise<BroadcastAudienceDto> {
-    const row = await this.row(id);
+  async audience(id: string, principal: Principal): Promise<BroadcastAudienceDto> {
+    const row = await this.row(id, principal);
     if (row.status === 'SENT') return { count: row.recipientCount ?? 0 };
     const counted = await this.prisma.$queryRaw<{ count: bigint }[]>`
-      SELECT count(*) AS count ${audienceSql(row)}`;
+      SELECT count(DISTINCT u.id) AS count ${audienceSql(row)}`;
     return { count: Number(counted[0]!.count) };
   }
 
@@ -370,9 +406,12 @@ export class BroadcastsService implements OnModuleInit {
 
   // --- Internals ------------------------------------------------------------------------------
 
-  private async row(id: string): Promise<Row> {
+  /** A message of a sender the caller writes for, or "not found". */
+  private async row(id: string, principal: Principal): Promise<Row> {
     const row = await this.prisma.broadcast.findUnique({ where: { id }, include: INCLUDE });
-    if (!row) throw new AppException('NOT_FOUND');
+    if (!row || !covers(scopeOf(principal, 'broadcasts.create'), row.organisationId)) {
+      throw new AppException('NOT_FOUND');
+    }
     return row;
   }
 
@@ -388,7 +427,7 @@ export class BroadcastsService implements OnModuleInit {
   private ensureStep(action: BroadcastAction, row: Row, principal: Principal): void {
     const problem = stepProblem(action, row, {
       userId: principal.userId,
-      canApprove: principal.permissions.has('broadcasts.approve'),
+      canApprove: mayActOn(principal, 'broadcasts.approve', row.organisationId),
     });
     if (!problem) return;
     if (problem === 'forbidden') throw new AppException('FORBIDDEN');
@@ -398,10 +437,16 @@ export class BroadcastsService implements OnModuleInit {
     throw new AppException('FORBIDDEN', [{ code: problem }]);
   }
 
-  private async validateAudience(input: BroadcastInputDto): Promise<void> {
+  /** An organisation writes to its own membership types; the platform may name any. */
+  private async validateAudience(
+    input: BroadcastInputDto,
+    organisationId: string | null,
+  ): Promise<void> {
     if (input.audience.all) return;
     const ids = [...new Set(input.audience.typeIds)];
-    const known = await this.prisma.membershipType.count({ where: { id: { in: ids } } });
+    const known = await this.prisma.membershipType.count({
+      where: { id: { in: ids }, ...(organisationId ? { organisationId } : {}) },
+    });
     if (ids.length === 0 || known !== ids.length) {
       throw new AppException('VALIDATION_FAILED', [
         { field: 'audience.typeIds', code: 'broadcastUnknownType' },
@@ -445,17 +490,35 @@ export class BroadcastsService implements OnModuleInit {
 }
 
 /**
- * "FROM … WHERE …" for the people a broadcast reaches: verified, active accounts with an
- * active membership today, of the chosen types when the audience is not everyone.
+ * "FROM … WHERE …" for the people a broadcast reaches, among active accounts with a confirmed
+ * email address:
+ * - an organisation's message: its members whose membership is active today, of the chosen
+ *   types when the audience is not all of them;
+ * - the platform's message: every verified person, or, when types are chosen, the people with
+ *   an active membership of one of them.
+ * A person in two organisations can match twice: callers count and insert each person once.
  */
-function audienceSql(row: { audienceAll: boolean; typeIds: string[] }): Prisma.Sql {
+function audienceSql(row: {
+  organisationId: string | null;
+  audienceAll: boolean;
+  typeIds: string[];
+}): Prisma.Sql {
+  if (row.organisationId === null && row.audienceAll) {
+    return Prisma.sql`
+      FROM users u
+      WHERE u.status = 'ACTIVE'
+        AND u.email_verified_at IS NOT NULL
+        AND u.verified_at IS NOT NULL`;
+  }
   return Prisma.sql`
     FROM users u
     JOIN memberships m ON m.user_id = u.id
+    JOIN organisations o ON o.id = m.organisation_id AND o.active
     WHERE u.status = 'ACTIVE'
       AND u.email_verified_at IS NOT NULL
       AND m.status = 'ACTIVE'
       AND m.end_date >= (now() AT TIME ZONE 'Asia/Jerusalem')::date
+      AND (${row.organisationId}::uuid IS NULL OR m.organisation_id = ${row.organisationId}::uuid)
       AND (${row.audienceAll} OR m.type_id = ANY(${row.typeIds}::uuid[]))`;
 }
 
@@ -487,6 +550,7 @@ function view(row: Row, names: Map<string, string | null>, viewerId: string): Ad
   const en = text('en');
   return {
     id: row.id,
+    organisation: row.organisation,
     status: row.status,
     audience: { all: row.audienceAll, typeIds: row.typeIds },
     translations: { ...(he ? { he } : {}), ...(en ? { en } : {}) },

@@ -1,20 +1,21 @@
-import { Body, Controller, Get, Put, Req } from '@nestjs/common';
+import { Body, Controller, Get, Put, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import {
   Public,
-  RequireAnyPermission,
+  RequireAnyScopedPermission,
   RequirePermission,
 } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
-import { AdminDashboardDto } from './dashboard.dto';
+import { AdminDashboardDto, AdminDashboardQueryDto } from './dashboard.dto';
 import { DashboardService } from './dashboard.service';
 import { PublicSettingsDto, SettingsDto } from './settings.dto';
 import { SettingsService } from './settings.service';
 
 /**
- * The admin dashboard. Open to anyone who holds a permission of one of the admin screens; the
- * answer holds only the parts that person may act on.
+ * The admin dashboard. Open to anyone who holds a permission of one of the admin screens, on
+ * the platform or in an organisation; the answer holds only the parts that person may act on,
+ * counted only over what is theirs to act on (M16).
  */
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -23,7 +24,7 @@ export class AdminDashboardController {
   constructor(private readonly dashboard: DashboardService) {}
 
   @Get()
-  @RequireAnyPermission(
+  @RequireAnyScopedPermission(
     'membership.read',
     'membership.approve.final',
     'institutions.manage',
@@ -42,8 +43,11 @@ export class AdminDashboardController {
     'settings.manage',
   )
   @ApiOkResponse({ type: AdminDashboardDto })
-  get(@Req() req: RequestWithPrincipal): Promise<AdminDashboardDto> {
-    return this.dashboard.get(principalOf(req));
+  get(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: AdminDashboardQueryDto,
+  ): Promise<AdminDashboardDto> {
+    return this.dashboard.get(principalOf(req), query.owner);
   }
 }
 

@@ -89,7 +89,12 @@ test('editor writes → reviewer schedules → the article appears; members-only
   const members = { en: `Members article ${suffix}`, he: `ידיעה לחברים ${suffix}` };
 
   const editorEmail = uniqueEmail('m3-editor');
-  await signInAndAddPasskey(editor, editorEmail, createAdmin(editorEmail, 'CONTENT_EDITOR'));
+  // The editor works in the demo's organisation: only an organisation's news can be for its members.
+  await signInAndAddPasskey(
+    editor,
+    editorEmail,
+    createAdmin(editorEmail, 'CONTENT_EDITOR', 'first-organisation'),
+  );
   const reviewerEmail = uniqueEmail('m3-reviewer');
   await signInAndAddPasskey(reviewer, reviewerEmail, createAdmin(reviewerEmail));
 

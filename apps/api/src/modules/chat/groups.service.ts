@@ -56,7 +56,7 @@ export class GroupsService {
   /** Makes a group with its maker as the admin and nobody else in it yet. */
   async create(principal: Principal, name: string, meta: RequestMeta): Promise<GroupDto> {
     const me = principal.userId;
-    await this.access.ensureActiveMember(principal);
+    this.access.ensureVerified(principal);
     await this.access.ensureNotSuspended(me);
     // The people invited see who invites them, so the maker needs a name.
     await this.access.ensureNamed(me);
@@ -412,7 +412,7 @@ export class GroupsService {
   }
 
   private async sendState(principal: Principal): Promise<GroupSendState> {
-    if (!(await this.access.isActiveMember(principal))) return 'membersOnly';
+    if (!this.access.isVerified(principal)) return 'membersOnly';
     if (await this.access.suspended(principal.userId)) return 'suspended';
     return 'none';
   }

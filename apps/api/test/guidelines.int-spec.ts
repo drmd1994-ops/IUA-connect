@@ -8,6 +8,7 @@ import {
   signInAdmin,
   signInWithMfa,
   startHarness,
+  verifyPhysician,
 } from './auth-harness';
 
 /** M3 checkpoint 6: guidelines (metadata, versions, summaries) under the access tiers. */
@@ -202,9 +203,9 @@ describe('guidelines (integration)', () => {
   });
 
   describe('access tiers', () => {
-    const ids: Record<'public' | 'members' | 'full', string> = {
+    const ids: Record<'public' | 'verified' | 'full', string> = {
       public: '',
-      members: '',
+      verified: '',
       full: '',
     };
     const readers: Record<string, string | null> = {};
@@ -239,7 +240,7 @@ describe('guidelines (integration)', () => {
       // A subspecialty filter narrows the public list; the three items are told apart by ID.
       subKey = subspecialty.key;
       ids.public = (await create({ subspecialtyId: subspecialty.id })).id;
-      ids.members = (await create({ subspecialtyId: subspecialty.id, accessTier: 'MEMBERS' })).id;
+      ids.verified = (await create({ subspecialtyId: subspecialty.id, accessTier: 'VERIFIED' })).id;
       ids.full = (
         await create({
           subspecialtyId: subspecialty.id,
@@ -248,20 +249,26 @@ describe('guidelines (integration)', () => {
         })
       ).id;
       readers.anonymous = null;
+      // An account the platform does not know as a physician's.
       readers.noMembership = (await signIn(h, await createVerifiedUser(h, 'reader'))).accessToken;
+      // A physician the platform knows, in no organisation.
+      const verifiedEmail = await createVerifiedUser(h, 'reader');
+      await verifyPhysician(h, verifiedEmail);
+      readers.verified = (await signIn(h, verifiedEmail)).accessToken;
       readers.full = await member('FULL_MEMBER');
       readers.student = await member('STUDENT');
       readers.suspended = await member('FULL_MEMBER', 'suspend');
       readers.expired = await member('FULL_MEMBER', 'expire');
     });
 
-    const expected: Record<string, ('public' | 'members' | 'full')[]> = {
+    const expected: Record<string, ('public' | 'verified' | 'full')[]> = {
       anonymous: ['public'],
       noMembership: ['public'],
-      full: ['public', 'members', 'full'],
-      student: ['public', 'members'],
-      suspended: ['public'],
-      expired: ['public'],
+      verified: ['public', 'verified'],
+      full: ['public', 'verified', 'full'],
+      student: ['public', 'verified'],
+      suspended: ['public', 'verified'],
+      expired: ['public', 'verified'],
     };
 
     for (const [who, visible] of Object.entries(expected)) {
@@ -271,7 +278,7 @@ describe('guidelines (integration)', () => {
           `/api/v1/guidelines?subspecialty=${subKey}&pageSize=50`,
         ).expect(200);
         const listed = (list.body.items as { id: string }[]).map((i) => i.id);
-        for (const key of ['public', 'members', 'full'] as const) {
+        for (const key of ['public', 'verified', 'full'] as const) {
           const shown = visible.includes(key);
           // Newest first and 50 per page: this run's three items are on the first page.
           expect(listed.includes(ids[key])).toBe(shown);

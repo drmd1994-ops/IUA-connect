@@ -2,6 +2,7 @@ import { PERMISSIONS, ROLES, ROLE_KEYS, uuidv7 } from '@iua/shared';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import {
   CHAT_REPORT_CATEGORIES,
+  FIRST_ORGANISATION,
   HOSPITALS,
   MEMBERSHIP_TYPES,
   SUBSPECIALTIES,
@@ -11,8 +12,9 @@ import {
 /**
  * Reference layer: permissions, roles and the role → permission mapping, from the catalogue in
  * @iua/shared (the code is the source of truth, so mappings removed from the code are removed from
- * the database); then membership types, subspecialties, hospitals and departments (M2), which are
- * inserted when missing and otherwise left as admins edited them. Idempotent.
+ * the database); then the first organisation and its membership types (M16), subspecialties,
+ * hospitals and departments (M2), which are inserted when missing and otherwise left as admins
+ * edited them. Idempotent.
  */
 export async function seedReference(prisma: PrismaClient): Promise<void> {
   const permissionIds = new Map<string, string>();
@@ -62,13 +64,21 @@ async function seedChat(prisma: PrismaClient): Promise<void> {
   console.log(`seed: reference layer — ${CHAT_REPORT_CATEGORIES.length} chat report categories`);
 }
 
-/** Membership types, subspecialties, hospitals and their urology departments (M2). */
+/**
+ * The first organisation with its membership types; subspecialties, hospitals and their urology
+ * departments (M2).
+ */
 async function seedInstitutions(prisma: PrismaClient): Promise<void> {
+  const organisation = await prisma.organisation.upsert({
+    where: { id: FIRST_ORGANISATION.id },
+    update: {},
+    create: { ...FIRST_ORGANISATION },
+  });
   for (const [index, type] of MEMBERSHIP_TYPES.entries()) {
     await prisma.membershipType.upsert({
-      where: { key: type.key },
+      where: { organisationId_key: { organisationId: organisation.id, key: type.key } },
       update: {},
-      create: { id: uuidv7(), ...type, sortOrder: index + 1 },
+      create: { id: uuidv7(), organisationId: organisation.id, ...type, sortOrder: index + 1 },
     });
   }
   for (const [index, subspecialty] of SUBSPECIALTIES.entries()) {

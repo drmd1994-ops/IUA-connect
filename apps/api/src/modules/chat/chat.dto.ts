@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 import {
   CONVERSATIONS_PAGE_SIZE,
   MESSAGES_PAGE_SIZE,
@@ -488,6 +489,8 @@ const roomCategory = z.strictObject({
 /** A room as a reader sees it in a list. What is theirs alone is empty until they join. */
 const room = z.strictObject({
   id: z.uuid(),
+  /** Whose room it is: an organisation's, for its members; null: the platform's own. */
+  organisation: organisationRefSchema.nullable(),
   nameHe: z.string(),
   nameEn: nullableString(),
   descriptionHe: nullableString(),
@@ -642,6 +645,11 @@ const optionalText = (max: number) =>
 
 export class AdminRoomInputDto extends createZodDto(
   z.strictObject({
+    /**
+     * Whose room it is: an organisation's, or null for the platform's own. Said when the room
+     * is opened and never changed; may be left out when it can only be one.
+     */
+    organisationId: z.uuid().nullable().optional(),
     nameHe: z.string().trim().min(2).max(120),
     nameEn: optionalText(120),
     descriptionHe: optionalText(1000),
@@ -657,6 +665,7 @@ export class AdminRoomInputDto extends createZodDto(
 
 const adminRoom = z.strictObject({
   id: z.uuid(),
+  organisation: organisationRefSchema.nullable(),
   nameHe: z.string(),
   nameEn: nullableString(),
   descriptionHe: nullableString(),
@@ -678,6 +687,8 @@ export class AdminRoomDto extends createZodDto(adminRoom) {}
 export class AdminRoomListQueryDto extends createZodDto(
   z.strictObject({
     q: z.string().trim().min(2).max(100).optional(),
+    /** Only this organisation's rooms. Left out: all the reader manages. */
+    organisation: z.uuid().optional(),
     archived: z.enum(['true', 'false']).optional(),
     page: z.coerce.number().int().min(1).max(500).default(1),
   }),

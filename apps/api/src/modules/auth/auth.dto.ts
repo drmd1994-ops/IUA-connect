@@ -2,6 +2,7 @@ import { LOCALES } from '@iua/i18n';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 
 const email = z.email().max(254).trim().toLowerCase();
 /** Login accepts any length the policy might once have allowed; bounded to keep hashing cheap. */
@@ -97,8 +98,26 @@ export class MeDto extends createZodDto(
     email: z.string(),
     emailVerified: z.boolean(),
     locale,
+    /** Every role the person holds, on the platform or in an organisation. */
     roles: z.array(z.string()),
+    /**
+     * Everything the person may do somewhere, on the platform or in an organisation: what a
+     * screen needs to decide whether to show itself. Where each applies is in the two fields
+     * below, and the server checks it on every request.
+     */
     permissions: z.array(z.string()),
+    /** What the person may do about the platform's own things. */
+    platformPermissions: z.array(z.string()),
+    /** The organisations the person is staff of, and what they may do in each. */
+    organisations: z.array(
+      z.strictObject({
+        organisation: organisationRefSchema,
+        roles: z.array(z.string()),
+        permissions: z.array(z.string()),
+      }),
+    ),
+    /** Known to the platform as a physician: the key to chat, the directory and the library. */
+    verified: z.boolean(),
     mfaEnabled: z.boolean(),
     /** Holds a role that requires MFA but hasn't enrolled: the UI must send them to setup. */
     mfaEnrollmentRequired: z.boolean(),

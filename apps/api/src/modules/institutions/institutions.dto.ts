@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { organisationRefSchema } from '../organisations';
 
 const name = z.string().trim().min(1).max(200);
 const city = z.string().trim().min(1).max(100);
@@ -46,6 +47,8 @@ export const MEMBERSHIP_IDENTIFIERS = [
 export class MembershipTypeDto extends createZodDto(
   z.strictObject({
     id: z.uuid(),
+    /** The organisation whose membership type it is. */
+    organisation: organisationRefSchema,
     key: z.string(),
     nameHe: z.string(),
     nameEn: z.string(),
@@ -55,6 +58,13 @@ export class MembershipTypeDto extends createZodDto(
     selfApply: z.boolean(),
     /** Applications go to the department director first (not STUDENT). */
     directorApproval: z.boolean(),
+  }),
+) {}
+
+export class MembershipTypeQueryDto extends createZodDto(
+  z.strictObject({
+    /** Only this organisation's types. Left out: those of every organisation. */
+    organisation: z.uuid().optional(),
   }),
 ) {}
 

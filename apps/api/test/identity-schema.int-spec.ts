@@ -60,7 +60,7 @@ describe('identity schema and reference seed', () => {
         `INSERT INTO user_roles (id, user_id, role_id, scope_type) VALUES ($1, $2, $3, 'NONE')`,
         [uuidv7(), userId, roleIdCache],
       );
-    const roleIdCache = await roleId('IUA_ADMIN');
+    const roleIdCache = await roleId('PLATFORM_ADMIN');
     await grant();
     await expect(grant()).rejects.toMatchObject({ code: '23505' });
   });

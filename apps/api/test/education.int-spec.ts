@@ -8,6 +8,7 @@ import {
   signInAdmin,
   signInWithMfa,
   startHarness,
+  verifyPhysician,
 } from './auth-harness';
 
 /** M6 checkpoints 1–3: education items, the review workflow, courses and the public library. */
@@ -24,7 +25,7 @@ describe('education (integration)', () => {
     let editorEmail = '';
     const signedIn = await signInWithMfa(h, 'edu-editor', (email) => {
       editorEmail = email;
-      return grantRole(h, email, 'CONTENT_EDITOR');
+      return grantRole(h, email, 'CONTENT_EDITOR', 'platform');
     });
     editor = { accessToken: signedIn.accessToken, email: editorEmail };
     reviewer = await signInAdmin(h, 'edu-reviewer');
@@ -320,7 +321,7 @@ describe('education (integration)', () => {
   describe('courses', () => {
     it('keeps lessons in order, refuses a course as a lesson, and locks hidden lessons', async () => {
       const open = await published();
-      const membersOnly = await published(article({ accessTier: 'MEMBERS' }));
+      const membersOnly = await published(article({ accessTier: 'VERIFIED' }));
       const draft = await create();
       const another = await create(article({ type: 'COURSE' }));
       const course = await create(article({ type: 'COURSE' }));
@@ -364,9 +365,9 @@ describe('education (integration)', () => {
   });
 
   describe('access tiers', () => {
-    const slugs: Record<'public' | 'members' | 'full', string> = {
+    const slugs: Record<'public' | 'verified' | 'full', string> = {
       public: '',
-      members: '',
+      verified: '',
       full: '',
     };
     const readers: Record<string, string | null> = {};
@@ -406,25 +407,31 @@ describe('education (integration)', () => {
       membersFile = await pdf();
       const base = { type: 'CASE', subspecialtyId: subspecialty.id };
       slugs.public = (await published(article(base))).slug;
-      slugs.members = (
-        await published(article({ ...base, accessTier: 'MEMBERS', fileIds: [membersFile] }))
+      slugs.verified = (
+        await published(article({ ...base, accessTier: 'VERIFIED', fileIds: [membersFile] }))
       ).slug;
       slugs.full = (
         await published(article({ ...base, accessTier: 'TYPES', typeIds: [types.FULL_MEMBER] }))
       ).slug;
       readers.anonymous = null;
+      // An account the platform does not know as a physician's.
       readers.noMembership = (await signIn(h, await createVerifiedUser(h, 'reader'))).accessToken;
+      // A physician the platform knows, in no organisation.
+      const verifiedEmail = await createVerifiedUser(h, 'reader');
+      await verifyPhysician(h, verifiedEmail);
+      readers.verified = (await signIn(h, verifiedEmail)).accessToken;
       readers.full = await member('FULL_MEMBER');
       readers.student = await member('STUDENT');
       readers.suspended = await member('FULL_MEMBER', 'suspend');
     });
 
-    const expected: Record<string, ('public' | 'members' | 'full')[]> = {
+    const expected: Record<string, ('public' | 'verified' | 'full')[]> = {
       anonymous: ['public'],
       noMembership: ['public'],
-      full: ['public', 'members', 'full'],
-      student: ['public', 'members'],
-      suspended: ['public'],
+      verified: ['public', 'verified'],
+      full: ['public', 'verified', 'full'],
+      student: ['public', 'verified'],
+      suspended: ['public', 'verified'],
     };
 
     for (const [who, visible] of Object.entries(expected)) {
@@ -434,7 +441,7 @@ describe('education (integration)', () => {
           `/api/v1/education?type=CASE&subspecialty=${subKey}&pageSize=50`,
         ).expect(200);
         const listed = (list.body.items as { slug: string }[]).map((i) => i.slug);
-        for (const name of ['public', 'members', 'full'] as const) {
+        for (const name of ['public', 'verified', 'full'] as const) {
           const shown = visible.includes(name);
           expect(listed.includes(slugs[name])).toBe(shown);
           const res = await read(readers[who]!, publicPath(slugs[name]));
@@ -442,7 +449,7 @@ describe('education (integration)', () => {
         }
         // The file of the members-only item follows the item.
         const file = await read(readers[who]!, `/api/v1/files/${membersFile}/url`);
-        expect(file.status).toBe(visible.includes('members') ? 200 : 404);
+        expect(file.status).toBe(visible.includes('verified') ? 200 : 404);
       });
     }
   });

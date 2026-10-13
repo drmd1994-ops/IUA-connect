@@ -81,6 +81,8 @@ class FixtureModule implements NestModule {
               roles: [],
               mfaEnrollmentRequired: false,
               permissions: new Set(header.split(',').filter(Boolean) as PermissionKey[]),
+              organisationPermissions: new Map(),
+              verified: true,
             };
           }
           next();

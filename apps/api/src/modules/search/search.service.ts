@@ -36,8 +36,7 @@ export class SearchService {
 
     const groups = await Promise.all(
       types.map(async (type): Promise<Group> => {
-        if (type === 'members')
-          return this.members(principal, viewer.activeTypeId, query, limit, offset);
+        if (type === 'members') return this.members(principal, query, limit, offset);
         const page = await this.provider.content({
           type,
           query: query.q,
@@ -56,15 +55,14 @@ export class SearchService {
     };
   }
 
-  /** Listed members whose visible name matches. Nothing for anyone but an active member. */
+  /** Listed people whose visible name matches. Nothing for anyone but a verified person. */
   private async members(
     principal: Principal | null,
-    activeTypeId: string | null,
     query: SearchQueryDto,
     limit: number,
     offset: number,
   ): Promise<Group> {
-    if (!principal || !activeTypeId) return { type: 'members', total: 0, items: [] };
+    if (!principal?.verified) return { type: 'members', total: 0, items: [] };
     const found = await this.directory.find(query.q, limit, offset);
     return {
       type: 'members',

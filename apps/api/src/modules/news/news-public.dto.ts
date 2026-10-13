@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 
 const locale = z.enum(['he', 'en']);
 
@@ -9,6 +10,8 @@ export class PublicNewsQueryDto extends createZodDto(
     /** The reader's language; items without it fall back to Hebrew. */
     locale: locale.default('he'),
     category: z.string().max(64).optional(),
+    /** Only the news of this organisation. */
+    organisation: z.uuid().optional(),
     tag: z.string().max(60).optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),
     pageSize: z.coerce.number().int().min(1).max(50).default(12),
@@ -32,7 +35,9 @@ const summaryShape = z.strictObject({
   /** The original date for imported items, otherwise when it was published. */
   date: z.iso.datetime(),
   featuredImageFileId: z.uuid().nullable(),
-  accessTier: z.enum(['PUBLIC', 'MEMBERS', 'TYPES']),
+  accessTier: z.enum(['PUBLIC', 'VERIFIED', 'MEMBERS', 'TYPES']),
+  /** Who published it: an organisation, or null for the platform itself. */
+  organisation: organisationRefSchema.nullable(),
   /** Imported items: where the original was published. */
   sourceUrl: nullableString(),
   /** The language of the text returned. */

@@ -1,5 +1,6 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
+import { mayActOn } from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
@@ -92,7 +93,7 @@ export class ChatMessages implements OnModuleInit {
               select: {
                 deletedAt: true,
                 conversationId: true,
-                conversation: { select: { kind: true } },
+                conversation: { select: { kind: true, organisationId: true } },
               },
             },
           },
@@ -102,8 +103,11 @@ export class ChatMessages implements OnModuleInit {
         const live = uses.map((use) => use.message).filter((message) => !message.deletedAt);
         if (live.length === 0) return false;
         if (
-          principal.permissions.has('chat.moderate') &&
-          live.some((message) => message.conversation.kind === 'ROOM')
+          live.some(
+            (message) =>
+              message.conversation.kind === 'ROOM' &&
+              mayActOn(principal, 'chat.moderate', message.conversation.organisationId),
+          )
         ) {
           return true;
         }

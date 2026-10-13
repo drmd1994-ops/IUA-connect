@@ -18,7 +18,7 @@ import { Pager } from '@/features/content/pager';
 import { useDateFormat } from '@/features/membership/membership-page';
 import { useLocalName, useReference } from '@/features/membership/reference';
 import { errorMessage } from '@/lib/api-errors';
-import { type Tier, TierFields } from './tier-fields';
+import { type Tier, TierFields, platformTier } from './tier-fields';
 
 type Schemas = components['schemas'];
 type List = Schemas['AdminGuidelineListDto'];
@@ -238,7 +238,7 @@ function GuidelineForm({
       ...(evidenceLevel.trim() ? { evidenceLevel: evidenceLevel.trim() } : {}),
       status,
       subspecialtyId: subspecialtyId || null,
-      accessTier: tier,
+      accessTier: platformTier(tier),
       typeIds: tier === 'TYPES' ? typeIds : [],
       translations: { he: text(titleHe, summaryHe), en: text(titleEn, summaryEn) },
     };
@@ -400,6 +400,7 @@ function GuidelineForm({
             typesLabel={g('types')}
             tier={tier}
             typeIds={typeIds}
+            owner={null}
             onChange={(nextTier, nextTypes) => {
               setTier(nextTier);
               setTypeIds(nextTypes);

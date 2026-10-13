@@ -1,4 +1,5 @@
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   createVerifiedUser,
@@ -153,6 +154,7 @@ describe('admin: dashboard and settings (integration)', () => {
           .post('/api/v1/admin/events')
           .set(as(admin))
           .send({
+            organisationId: DEFAULT_ORGANISATION,
             startAt: start.toISOString(),
             endAt: new Date(start.getTime() + 60 * 60 * 1000).toISOString(),
             locationName: 'Example Hall',

@@ -29,6 +29,7 @@ export async function seedDemoPortal(prisma: PrismaClient): Promise<void> {
         email: SUPER_ADMIN_EMAIL,
         passwordHash,
         emailVerifiedAt: new Date(Date.now() - 60 * DAY),
+        verifiedAt: new Date(Date.now() - 60 * DAY),
         locale: 'he',
       },
     });

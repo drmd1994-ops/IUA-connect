@@ -249,7 +249,7 @@ describe('identity: passkeys (M1b)', () => {
   describe('administrators', () => {
     it('can meet the MFA requirement with a passkey alone, and must keep one factor', async () => {
       const email = await createVerifiedUser(h, 'pk-admin');
-      await grantRole(h, email, 'IUA_ADMIN');
+      await grantRole(h, email, 'PLATFORM_ADMIN');
       const { accessToken } = await signIn(h, email);
       const before = await h.http().get('/api/v1/me').set(bearer(accessToken)).expect(200);
       expect(before.body).toMatchObject({ permissions: [], mfaEnrollmentRequired: true });
@@ -278,7 +278,7 @@ describe('identity: passkeys (M1b)', () => {
 
     it('may turn off the authenticator app while a passkey remains', async () => {
       const email = await createVerifiedUser(h, 'pk-admin-totp');
-      await grantRole(h, email, 'IUA_ADMIN');
+      await grantRole(h, email, 'PLATFORM_ADMIN');
       const { accessToken } = await signIn(h, email);
       const setup = await h
         .http()

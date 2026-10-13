@@ -20,7 +20,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { type EducationAction, HistoryList, ReviewPanel, useCanEdit } from './education-review';
 import { MarkdownEditor } from './markdown-editor';
-import { type Tier, TierFields } from './tier-fields';
+import { type Tier, TierFields, platformTier } from './tier-fields';
 
 type Schemas = components['schemas'];
 type Item = Schemas['AdminEducationDto'];
@@ -98,7 +98,7 @@ function toBody(draft: Draft) {
     cmePoints: draft.cme.trim() ? Number(draft.cme) : null,
     externalUrl: linked && draft.link.trim() ? draft.link.trim() : null,
     videoPending: linked && !draft.link.trim() && draft.pending,
-    accessTier: draft.tier,
+    accessTier: platformTier(draft.tier),
     typeIds: draft.tier === 'TYPES' ? draft.typeIds : [],
     coverFileId: draft.cover?.id ?? null,
     fileIds: draft.files.map((file) => file.id),
@@ -400,6 +400,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
               typesLabel={e('types')}
               tier={draft.tier}
               typeIds={draft.typeIds}
+              owner={null}
               onChange={(tier, typeIds) => set({ tier, typeIds })}
             />
           </div>

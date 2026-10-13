@@ -1,10 +1,12 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { type Principal } from '../../common/auth/principal';
+import { coversNothing, ownedWhere, scopeOf } from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { FilesService } from '../files';
+import { ORGANISATION_REF } from '../organisations';
 import { placesLeft, registrationProblem } from './schedule-rules';
 import {
   type PublicEventDto,
@@ -12,7 +14,11 @@ import {
   type PublicEventQueryDto,
 } from './events.dto';
 
-const INCLUDE = { translations: true, category: true } satisfies Prisma.EventInclude;
+const INCLUDE = {
+  translations: true,
+  category: true,
+  organisation: { select: ORGANISATION_REF },
+} satisfies Prisma.EventInclude;
 type Row = Prisma.EventGetPayload<{ include: typeof INCLUDE }>;
 type Locale = 'he' | 'en';
 
@@ -32,13 +38,23 @@ export class EventsPublicService implements OnModuleInit {
     private readonly files: FilesService,
   ) {}
 
-  /** An event's image is readable by whoever may see the event. */
+  /**
+   * An event's image is readable by whoever may see the event, and, whatever its state, by
+   * the event staff of its owner (a colleague's draft).
+   */
   onModuleInit(): void {
     this.files.registerReadRule({
       canRead: async (fileId, principal) => {
+        const staff = principal ? scopeOf(principal, 'events.manage') : null;
+        if (staff && !coversNothing(staff)) {
+          const theirs = await this.prisma.event.count({
+            where: { AND: [ownedWhere(staff)], imageFileId: fileId },
+          });
+          if (theirs > 0) return true;
+        }
         const events = await this.prisma.event.findMany({
           where: { ...LIVE, imageFileId: fileId },
-          select: { id: true, accessTier: true },
+          select: { id: true, accessTier: true, organisationId: true },
         });
         if (events.length === 0) return null;
         const viewer = await this.access.viewerOf(principal);
@@ -59,6 +75,7 @@ export class EventsPublicService implements OnModuleInit {
       endAt: upcoming ? { gt: now } : { lte: now },
       AND: [await this.access.visibleWhere('event', viewer)],
       ...(query.category ? { category: { key: query.category } } : {}),
+      ...(query.organisation ? { organisationId: query.organisation } : {}),
     };
     const [rows, total] = await Promise.all([
       this.prisma.event.findMany({
@@ -127,6 +144,7 @@ function summary(row: Row, locale: Locale) {
   const text = pick(row, locale);
   return {
     slug: row.slug,
+    organisation: row.organisation,
     title: text.title,
     summary: text.summary,
     category: row.category

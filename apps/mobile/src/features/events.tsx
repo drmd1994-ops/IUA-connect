@@ -193,7 +193,11 @@ function EventCard({ item }: { item: Item }) {
             <Tag>{locale === 'he' ? item.category.nameHe : item.category.nameEn}</Tag>
           )}
           {item.cmeAvailable && <Tag tone="success">{t('events.list.cme')}</Tag>}
-          {item.accessTier !== 'PUBLIC' && <Tag>{t('content.common.tiers.MEMBERS')}</Tag>}
+          {item.accessTier !== 'PUBLIC' && (
+            <Tag>
+              {t(`content.common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`)}
+            </Tag>
+          )}
         </View>
       </View>
     </Pressable>

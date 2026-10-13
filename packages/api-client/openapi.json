@@ -928,6 +928,57 @@
         ]
       }
     },
+    "/api/v1/organisations": {
+      "get": {
+        "operationId": "OrganisationsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationListDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "organisations"
+        ]
+      }
+    },
+    "/api/v1/organisations/{slugOrId}": {
+      "get": {
+        "operationId": "OrganisationsController_find",
+        "parameters": [
+          {
+            "name": "slugOrId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganisationDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "organisations"
+        ]
+      }
+    },
     "/api/v1/hospitals": {
       "get": {
         "operationId": "ReferenceController_hospitals",
@@ -1003,7 +1054,18 @@
     "/api/v1/membership-types": {
       "get": {
         "operationId": "ReferenceController_membershipTypes",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1623,7 +1685,18 @@
     "/api/v1/me/membership": {
       "get": {
         "operationId": "MyMembershipController_mine",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1631,6 +1704,32 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MyMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "membership"
+        ]
+      }
+    },
+    "/api/v1/me/memberships": {
+      "get": {
+        "operationId": "MyMembershipController_all",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyMembershipsDto"
                 }
               }
             }
@@ -1694,6 +1793,16 @@
                 "director",
                 "admin"
               ]
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
             }
           }
         ],
@@ -1863,6 +1972,16 @@
                 "PAID",
                 "WAIVED"
               ]
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
             }
           },
           {
@@ -2216,7 +2335,18 @@
     "/api/v1/me/membership/card-token": {
       "get": {
         "operationId": "CardTokenController_issue",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -2488,6 +2618,16 @@
                 "PUBLISHED",
                 "ARCHIVED"
               ]
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
             }
           },
           {
@@ -2934,6 +3074,16 @@
             "in": "query",
             "schema": {
               "maxLength": 64,
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
               "type": "string"
             }
           },
@@ -3484,6 +3634,16 @@
                 "PUBLISHED",
                 "CANCELLED"
               ]
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
             }
           },
           {
@@ -4047,6 +4207,16 @@
             "in": "query",
             "schema": {
               "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
               "type": "string"
             }
           },
@@ -4833,6 +5003,16 @@
             "in": "query",
             "schema": {
               "maxLength": 64,
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
               "type": "string"
             }
           },
@@ -6208,6 +6388,16 @@
                 "SENT",
                 "REJECTED"
               ]
+            }
+          },
+          {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
             }
           },
           {
@@ -8868,6 +9058,16 @@
             }
           },
           {
+            "name": "organisation",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
             "name": "archived",
             "required": false,
             "in": "query",
@@ -10371,7 +10571,26 @@
     "/api/v1/admin/dashboard": {
       "get": {
         "operationId": "AdminDashboardController_get",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "owner",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "platform"
+                },
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                }
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -10429,7 +10648,8 @@
               "type": "string",
               "enum": [
                 "SUPER_ADMIN",
-                "IUA_ADMIN",
+                "PLATFORM_ADMIN",
+                "ORG_ADMIN",
                 "CONTENT_EDITOR",
                 "EVENT_ADMIN",
                 "DEPARTMENT_DIRECTOR",
@@ -11649,6 +11869,67 @@
               "type": "string"
             }
           },
+          "platformPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "organisations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "organisation",
+                "roles",
+                "permissions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "verified": {
+            "type": "boolean"
+          },
           "mfaEnabled": {
             "type": "boolean"
           },
@@ -11681,6 +11962,9 @@
           "locale",
           "roles",
           "permissions",
+          "platformPermissions",
+          "organisations",
+          "verified",
           "mfaEnabled",
           "mfaEnrollmentRequired",
           "session"
@@ -11932,6 +12216,118 @@
         ],
         "additionalProperties": false
       },
+      "OrganisationListDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "nameHe": {
+                  "type": "string"
+                },
+                "nameEn": {
+                  "type": "string"
+                },
+                "descriptionHe": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "descriptionEn": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "slug",
+                "nameHe",
+                "nameEn",
+                "descriptionHe",
+                "descriptionEn"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "OrganisationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "nameHe": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "descriptionHe": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "descriptionEn": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "nameHe",
+          "nameEn",
+          "descriptionHe",
+          "descriptionEn"
+        ],
+        "additionalProperties": false
+      },
       "HospitalListDto": {
         "type": "object",
         "properties": {
@@ -12059,6 +12455,32 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
+                },
                 "key": {
                   "type": "string"
                 },
@@ -12085,6 +12507,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "key",
                 "nameHe",
                 "nameEn",
@@ -13525,6 +13948,11 @@
             "type": "string",
             "maxLength": 255
           },
+          "organisation": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
           "csv": {
             "type": "string",
             "minLength": 1,
@@ -13704,6 +14132,32 @@
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
+                  "organisation": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "slug": {
+                        "type": "string"
+                      },
+                      "nameHe": {
+                        "type": "string"
+                      },
+                      "nameEn": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "slug",
+                      "nameHe",
+                      "nameEn"
+                    ],
+                    "additionalProperties": false
+                  },
                   "type": {
                     "type": "object",
                     "properties": {
@@ -13760,6 +14214,7 @@
                 },
                 "required": [
                   "id",
+                  "organisation",
                   "type",
                   "status",
                   "startDate",
@@ -13862,6 +14317,117 @@
         ],
         "additionalProperties": false
       },
+      "MyMembershipsDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
+                },
+                "type": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "nameHe",
+                    "nameEn",
+                    "key"
+                  ],
+                  "additionalProperties": false
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ACTIVE",
+                    "SUSPENDED",
+                    "EXPIRED"
+                  ]
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "paymentStatus": {
+                  "type": "string",
+                  "enum": [
+                    "NOT_REQUIRED",
+                    "UNPAID",
+                    "PAID",
+                    "WAIVED"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "organisation",
+                "type",
+                "status",
+                "startDate",
+                "endDate",
+                "paymentStatus"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
       "ApplyDto": {
         "type": "object",
         "properties": {
@@ -13897,6 +14463,32 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "nameHe": {
+                "type": "string"
+              },
+              "nameEn": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "nameHe",
+              "nameEn"
+            ],
+            "additionalProperties": false
           },
           "state": {
             "type": "string",
@@ -14060,6 +14652,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "state",
           "type",
           "hospital",
@@ -14083,6 +14676,32 @@
                   "type": "string",
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
                 },
                 "state": {
                   "type": "string",
@@ -14246,6 +14865,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "state",
                 "type",
                 "hospital",
@@ -14276,6 +14896,32 @@
                   "type": "string",
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
                 },
                 "state": {
                   "type": "string",
@@ -14515,6 +15161,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "state",
                 "type",
                 "hospital",
@@ -14562,6 +15209,32 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "nameHe": {
+                "type": "string"
+              },
+              "nameEn": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "nameHe",
+              "nameEn"
+            ],
+            "additionalProperties": false
           },
           "state": {
             "type": "string",
@@ -14801,6 +15474,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "state",
           "type",
           "hospital",
@@ -14826,6 +15500,32 @@
                   "type": "string",
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "organisation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "nameHe": {
+                      "type": "string"
+                    },
+                    "nameEn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
                 },
                 "type": {
                   "type": "object",
@@ -14960,6 +15660,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "type",
                 "status",
                 "startDate",
@@ -15006,6 +15707,32 @@
                 "type": "string",
                 "format": "uuid",
                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "organisation": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
               },
               "type": {
                 "type": "object",
@@ -15140,6 +15867,7 @@
             },
             "required": [
               "id",
+              "organisation",
               "type",
               "status",
               "startDate",
@@ -15350,6 +16078,39 @@
               }
             ]
           },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "type": {
             "anyOf": [
               {
@@ -15381,6 +16142,7 @@
         "required": [
           "valid",
           "name",
+          "organisation",
           "type"
         ],
         "additionalProperties": false
@@ -15563,6 +16325,39 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "slug": {
                   "anyOf": [
                     {
@@ -15622,6 +16417,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -15694,6 +16490,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "slug",
                 "status",
                 "titleHe",
@@ -15881,6 +16678,18 @@
             "maxLength": 120,
             "pattern": "^[a-z0-9א-ת]+(-[a-z0-9א-ת]+)*$"
           },
+          "organisationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "categoryId": {
             "anyOf": [
               {
@@ -15898,6 +16707,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -16043,6 +16853,39 @@
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "slug": {
             "anyOf": [
               {
@@ -16080,6 +16923,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -16480,6 +17324,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "slug",
           "status",
           "categoryId",
@@ -16697,8 +17542,42 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
+                  ]
+                },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
                   ]
                 },
                 "sourceUrl": {
@@ -16732,6 +17611,7 @@
                 "date",
                 "featuredImageFileId",
                 "accessTier",
+                "organisation",
                 "sourceUrl",
                 "locale",
                 "fallback"
@@ -16837,8 +17717,42 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
+            ]
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "sourceUrl": {
@@ -16939,6 +17853,7 @@
           "date",
           "featuredImageFileId",
           "accessTier",
+          "organisation",
           "sourceUrl",
           "locale",
           "fallback",
@@ -17000,6 +17915,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -17118,7 +18034,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
-              "MEMBERS",
+              "VERIFIED",
               "TYPES"
             ]
           },
@@ -17265,6 +18181,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -17456,7 +18373,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
-              "MEMBERS",
+              "VERIFIED",
               "TYPES"
             ]
           },
@@ -17662,6 +18579,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -17824,6 +18742,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -17926,6 +18845,39 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "slug": {
                   "type": "string"
                 },
@@ -17987,6 +18939,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -18007,6 +18960,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "slug",
                 "status",
                 "titleHe",
@@ -18191,6 +19145,18 @@
             "maxLength": 120,
             "pattern": "^[a-z0-9א-ת]+(-[a-z0-9א-ת]+)*$"
           },
+          "organisationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "categoryId": {
             "anyOf": [
               {
@@ -18317,6 +19283,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -18396,6 +19363,39 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "slug": {
             "type": "string"
@@ -18593,6 +19593,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -18731,6 +19732,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "slug",
           "status",
           "categoryId",
@@ -19154,6 +20156,39 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "photoFileId": {
                   "anyOf": [
                     {
@@ -19276,6 +20311,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "photoFileId",
                 "translations",
                 "sessionCount"
@@ -19310,6 +20346,18 @@
       "SpeakerInputDto": {
         "type": "object",
         "properties": {
+          "organisationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "photoFileId": {
             "anyOf": [
               {
@@ -19393,6 +20441,39 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "photoFileId": {
             "anyOf": [
@@ -19516,6 +20597,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "photoFileId",
           "translations",
           "sessionCount"
@@ -20149,6 +21231,39 @@
                 "slug": {
                   "type": "string"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "title": {
                   "type": "string"
                 },
@@ -20244,6 +21359,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -20261,6 +21377,7 @@
               },
               "required": [
                 "slug",
+                "organisation",
                 "title",
                 "summary",
                 "category",
@@ -20308,6 +21425,39 @@
         "properties": {
           "slug": {
             "type": "string"
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "title": {
             "type": "string"
@@ -20404,6 +21554,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -20530,6 +21681,7 @@
         },
         "required": [
           "slug",
+          "organisation",
           "title",
           "summary",
           "category",
@@ -20800,6 +21952,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -20957,7 +22110,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
-              "MEMBERS",
+              "VERIFIED",
               "TYPES"
             ]
           },
@@ -21187,6 +22340,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -21701,6 +22855,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -21881,6 +23036,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -22123,6 +23279,7 @@
                   "type": "string",
                   "enum": [
                     "PUBLIC",
+                    "VERIFIED",
                     "MEMBERS",
                     "TYPES"
                   ]
@@ -22218,7 +23375,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
-              "MEMBERS",
+              "VERIFIED",
               "TYPES"
             ]
           },
@@ -22395,6 +23552,7 @@
             "type": "string",
             "enum": [
               "PUBLIC",
+              "VERIFIED",
               "MEMBERS",
               "TYPES"
             ]
@@ -23136,6 +24294,39 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "status": {
                   "type": "string",
                   "enum": [
@@ -23338,6 +24529,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "status",
                 "audience",
                 "translations",
@@ -23382,6 +24574,18 @@
       "BroadcastInputDto": {
         "type": "object",
         "properties": {
+          "organisationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "audience": {
             "type": "object",
             "properties": {
@@ -23462,6 +24666,39 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "status": {
             "type": "string",
@@ -23665,6 +24902,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "status",
           "audience",
           "translations",
@@ -26865,6 +28103,39 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "nameHe": {
                   "type": "string"
                 },
@@ -27028,6 +28299,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "nameHe",
                 "nameEn",
                 "descriptionHe",
@@ -27115,6 +28387,39 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "nameHe": {
             "type": "string"
@@ -27370,6 +28675,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "nameHe",
           "nameEn",
           "descriptionHe",
@@ -28211,6 +29517,39 @@
                   "format": "uuid",
                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "nameHe": {
                   "type": "string"
                 },
@@ -28375,6 +29714,7 @@
               },
               "required": [
                 "id",
+                "organisation",
                 "nameHe",
                 "nameEn",
                 "descriptionHe",
@@ -28420,6 +29760,18 @@
       "AdminRoomInputDto": {
         "type": "object",
         "properties": {
+          "organisationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "nameHe": {
             "type": "string",
             "minLength": 2,
@@ -28503,6 +29855,39 @@
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "organisation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "nameHe": {
             "type": "string"
@@ -28668,6 +30053,7 @@
         },
         "required": [
           "id",
+          "organisation",
           "nameHe",
           "nameEn",
           "descriptionHe",
@@ -30118,6 +31504,39 @@
                 "role": {
                   "type": "string"
                 },
+                "organisation": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "scope": {
                   "type": "string"
                 },
@@ -30132,6 +31551,7 @@
               },
               "required": [
                 "role",
+                "organisation",
                 "scope",
                 "grantedAt",
                 "removable"
@@ -30139,33 +31559,75 @@
               "additionalProperties": false
             }
           },
-          "membership": {
+          "memberships": {
             "anyOf": [
               {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uuid",
-                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "organisation": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "typeKey": {
+                      "type": "string"
+                    },
+                    "endDate": {
+                      "type": "string"
+                    }
                   },
-                  "status": {
-                    "type": "string"
-                  },
-                  "typeKey": {
-                    "type": "string"
-                  },
-                  "endDate": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "id",
-                  "status",
-                  "typeKey",
-                  "endDate"
-                ],
-                "additionalProperties": false
+                  "required": [
+                    "id",
+                    "organisation",
+                    "status",
+                    "typeKey",
+                    "endDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verifiedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
               },
               {
                 "type": "null"
@@ -30187,7 +31649,8 @@
           "lockedUntil",
           "openSessions",
           "roleGrants",
-          "membership"
+          "memberships",
+          "verifiedAt"
         ],
         "additionalProperties": false
       },
@@ -30212,6 +31675,18 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 64
+          },
+          "organisationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "reason": {
             "type": "string",
@@ -30242,6 +31717,14 @@
                 "scope": {
                   "type": "string"
                 },
+                "level": {
+                  "type": "string",
+                  "enum": [
+                    "platform",
+                    "organisation",
+                    "either"
+                  ]
+                },
                 "permissions": {
                   "type": "array",
                   "items": {
@@ -30250,6 +31733,8 @@
                       "users.read",
                       "users.manage",
                       "roles.manage",
+                      "organisations.manage",
+                      "organisations.access",
                       "membership.read",
                       "membership.manage",
                       "membership.approve.department",
@@ -30282,6 +31767,7 @@
                 "key",
                 "requiresTwoStep",
                 "scope",
+                "level",
                 "permissions",
                 "holders"
               ],

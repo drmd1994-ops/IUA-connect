@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { AccessService } from '../access';
+import { AccessService, organisationsOf } from '../access';
 import { DirectoryService } from '../profiles';
+import { type RoomKey } from './chat-rules';
 import { type SendState } from './chat.dto';
 
 export interface ChatSettings {
@@ -27,8 +28,9 @@ export const DEFAULT_CHAT_SETTINGS: ChatSettings = {
 
 /**
  * Who may use chat and who may write to whom (M11 plan §3). Reading one's own conversations
- * needs only a signed-in account; starting a conversation and sending need an active
- * membership. Someone who can't be written to looks exactly like someone who doesn't exist.
+ * needs only a signed-in account; starting a conversation and sending need an account the
+ * platform knows as a physician's (M16; before that, an active membership of the association).
+ * A room opens by its owner: the platform's to verified people, an organisation's to its members. Someone who can't be written to looks exactly like someone who doesn't exist.
  */
 @Injectable()
 export class ChatAccess {
@@ -38,14 +40,27 @@ export class ChatAccess {
     private readonly directory: DirectoryService,
   ) {}
 
-  async isActiveMember(principal: Principal): Promise<boolean> {
-    return (await this.access.viewerOf(principal)).activeTypeId !== null;
+  /** The key to private chat, groups and the platform's rooms. */
+  isVerified(principal: Principal): boolean {
+    return principal.verified;
   }
 
-  async ensureActiveMember(principal: Principal): Promise<void> {
-    if (!(await this.isActiveMember(principal))) {
+  ensureVerified(principal: Principal): void {
+    if (!this.isVerified(principal)) {
       throw new AppException('FORBIDDEN', [{ code: 'membersOnly' }]);
     }
+  }
+
+  /** What opens rooms to the caller: see `roomOpensTo`. */
+  async roomKey(principal: Principal): Promise<RoomKey> {
+    const viewer = await this.access.viewerOf(principal);
+    return { verified: viewer.verified, organisationIds: organisationsOf(viewer) };
+  }
+
+  /** The same for another person (may they be invited, or made a moderator). */
+  async roomKeyOf(userId: string): Promise<RoomKey> {
+    const viewer = await this.access.viewerOfUser(userId);
+    return { verified: viewer.verified, organisationIds: organisationsOf(viewer) };
   }
 
   /** Whether staff suspended this person from sending, now. */
@@ -162,7 +177,7 @@ export class ChatAccess {
    * the web shows a neutral text unless the reader made the block themselves.
    */
   async sendState(principal: Principal, otherId: string | null): Promise<SendState> {
-    if (!(await this.isActiveMember(principal))) return 'membersOnly';
+    if (!this.isVerified(principal)) return 'membersOnly';
     if (await this.suspended(principal.userId)) return 'suspended';
     if (!otherId) return 'unavailable';
     const other = await this.prisma.user.findUnique({

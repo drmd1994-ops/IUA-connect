@@ -1,6 +1,7 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import { type StaffScope, covers, mayActOn, scopeOf } from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { Prisma } from '../../generated/prisma/client';
@@ -9,6 +10,7 @@ import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
 import { DirectoryService, type PersonCard } from '../profiles';
 import { ChatAccess } from './chat-access';
+import { roomOpensTo } from './chat-rules';
 import { ChatStream } from './chat-stream';
 import {
   type AdminReportDto,
@@ -46,7 +48,9 @@ const REPORT_SELECT = {
   resolution: true,
   createdAt: true,
   category: { select: { key: true, nameHe: true, nameEn: true } },
-  conversation: { select: { id: true, kind: true, nameHe: true, nameEn: true } },
+  conversation: {
+    select: { id: true, kind: true, nameHe: true, nameEn: true, organisationId: true },
+  },
 } satisfies Prisma.ChatReportSelect;
 type ReportRow = Prisma.ChatReportGetPayload<{ select: typeof REPORT_SELECT }>;
 
@@ -64,6 +68,11 @@ type SuspensionRow = Prisma.ChatSuspensionGetPayload<{ select: typeof SUSPENSION
  * Reports and what staff do about them (M11 plan §2.11, §2.14). Staff never browse
  * conversations: a report shows the reported message with the five before and after it, as
  * they were when it was reported, and every look at a report is written to the audit log.
+ *
+ * A report about a room of an organisation, or about a message in one, is for that
+ * organisation's chat staff (M16); every other report (private chat, groups, the platform's
+ * rooms) is for the platform's. Suspending a person from chat reaches the whole platform, so
+ * only the platform's staff do it.
  */
 @Injectable()
 export class ChatReportsService implements OnModuleInit {
@@ -169,6 +178,7 @@ export class ChatReportsService implements OnModuleInit {
         select: {
           id: true,
           inviteOnly: true,
+          organisationId: true,
           members: { where: { userId: me }, select: { userId: true } },
         },
       });
@@ -176,7 +186,7 @@ export class ChatReportsService implements OnModuleInit {
       // A room by invitation exists only for the people in it.
       if (
         room.members.length === 0 &&
-        (room.inviteOnly || !(await this.access.isActiveMember(principal)))
+        (room.inviteOnly || !roomOpensTo(await this.access.roomKey(principal), room.organisationId))
       ) {
         throw new AppException('NOT_FOUND');
       }
@@ -237,8 +247,11 @@ export class ChatReportsService implements OnModuleInit {
 
   // --- Staff ----------------------------------------------------------------------------------
 
-  async list(query: AdminReportListQueryDto): Promise<AdminReportListDto> {
-    const where = query.status ? { status: query.status } : {};
+  async list(principal: Principal, query: AdminReportListQueryDto): Promise<AdminReportListDto> {
+    const where: Prisma.ChatReportWhereInput = {
+      ...reportsWhere(scopeOf(principal, 'chat.moderate')),
+      ...(query.status ? { status: query.status } : {}),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.chatReport.findMany({
         where,
@@ -263,8 +276,7 @@ export class ChatReportsService implements OnModuleInit {
 
   /** One report with the kept messages. Each look is written to the audit log. */
   async get(principal: Principal, id: string, meta: RequestMeta): Promise<AdminReportDto> {
-    const row = await this.prisma.chatReport.findUnique({ where: { id }, select: REPORT_SELECT });
-    if (!row) throw new AppException('NOT_FOUND');
+    const row = await this.mine(principal, id);
     await this.audit.record({
       action: 'chat.report.view',
       correlationId: meta.correlationId,
@@ -287,8 +299,7 @@ export class ChatReportsService implements OnModuleInit {
     meta: RequestMeta,
   ): Promise<AdminReportDto> {
     const me = principal.userId;
-    const row = await this.prisma.chatReport.findUnique({ where: { id }, select: REPORT_SELECT });
-    if (!row) throw new AppException('NOT_FOUND');
+    const row = await this.mine(principal, id);
     if (row.status !== 'OPEN') throw new AppException('CONFLICT', [{ code: 'chatReportClosed' }]);
     if (row.reporterId === me || row.reportedUserId === me) {
       throw new AppException('FORBIDDEN', [{ code: 'chatReportOwn' }]);
@@ -299,12 +310,18 @@ export class ChatReportsService implements OnModuleInit {
     if (input.decision === 'suspend' && !row.reportedUserId) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatReportNoPerson' }]);
     }
+    // A suspension reaches the whole platform; an organisation's staff ban from their rooms.
+    if (input.decision === 'suspend' && !principal.permissions.has('chat.moderate')) {
+      throw new AppException('FORBIDDEN');
+    }
     if (input.decision === 'archiveRoom') {
       if (row.conversation?.kind !== 'ROOM') {
         throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatReportNoRoom' }]);
       }
       // Archiving a room is the room managers' decision, also when it starts from a report.
-      if (!principal.permissions.has('chat.rooms.manage')) throw new AppException('FORBIDDEN');
+      if (!mayActOn(principal, 'chat.rooms.manage', row.conversation.organisationId)) {
+        throw new AppException('FORBIDDEN');
+      }
     }
 
     // Claimed first, so two reviewers can't both act on it.
@@ -358,6 +375,19 @@ export class ChatReportsService implements OnModuleInit {
       select: REPORT_SELECT,
     });
     return this.detail(principal, after);
+  }
+
+  /**
+   * A report the caller reviews, or "not found": a report about another owner's room does not
+   * exist for them.
+   */
+  private async mine(principal: Principal, id: string): Promise<ReportRow> {
+    const row = await this.prisma.chatReport.findUnique({ where: { id }, select: REPORT_SELECT });
+    const owner = row?.conversation?.organisationId ?? null;
+    if (!row || !covers(scopeOf(principal, 'chat.moderate'), owner)) {
+      throw new AppException('NOT_FOUND');
+    }
+    return row;
   }
 
   async suspensions(page: number): Promise<AdminSuspensionListDto> {
@@ -503,6 +533,23 @@ export class ChatReportsService implements OnModuleInit {
       canResolve: row.status === 'OPEN' && row.reporterId !== me && row.reportedUserId !== me,
     };
   }
+}
+
+/**
+ * The reports a scope of `chat.moderate` covers: those about an organisation's room are that
+ * organisation's; every other report (private chat, groups, the platform's rooms, a person as
+ * such) is the platform's.
+ */
+export function reportsWhere(scope: StaffScope): Prisma.ChatReportWhereInput {
+  if (scope.everywhere) return {};
+  return {
+    OR: [
+      ...(scope.platform
+        ? [{ conversationId: null }, { conversation: { organisationId: null } }]
+        : []),
+      { conversation: { organisationId: { in: [...scope.organisationIds] } } },
+    ],
+  };
 }
 
 function personOf(id: string | null, cards: Map<string, PersonCard>) {

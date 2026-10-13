@@ -8,6 +8,7 @@ import {
 import { Authenticated } from '../../common/decorators/access.decorators';
 import { AppException } from '../../common/errors/app.exception';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { ORGANISATION_REF } from '../organisations';
 import { UsersService } from '../users';
 import { MeDto, UpdateMeDto } from './auth.dto';
 import { userLocale } from './auth.service';
@@ -43,13 +44,36 @@ export class MeController {
     const mfaFactors = await this.prisma.mfaFactor.count({
       where: { userId: user.id, confirmedAt: { not: null } },
     });
+    const profile = await this.users.accessProfile(user.id);
+    const staffOf = await this.prisma.organisation.findMany({
+      where: { id: { in: [...principal.organisationPermissions.keys()] } },
+      select: ORGANISATION_REF,
+      orderBy: [{ nameEn: 'asc' }, { id: 'asc' }],
+    });
+    const organisations = staffOf.map((organisation) => ({
+      organisation,
+      roles: [
+        ...new Set(
+          profile.roles
+            .filter((role) => role.organisationId === organisation.id)
+            .map((role) => role.key),
+        ),
+      ].sort(),
+      permissions: [...(principal.organisationPermissions.get(organisation.id) ?? [])].sort(),
+    }));
+    const platformPermissions = [...principal.permissions].sort();
     return {
       id: user.id,
       email: user.email,
       emailVerified: user.emailVerifiedAt !== null,
       locale: userLocale(user),
-      roles: [...principal.roles],
-      permissions: [...principal.permissions].sort(),
+      roles: [...new Set(profile.roles.map((role) => role.key))].sort(),
+      permissions: [
+        ...new Set([...platformPermissions, ...organisations.flatMap((held) => held.permissions)]),
+      ].sort(),
+      platformPermissions,
+      organisations,
+      verified: principal.verified,
       mfaEnabled: mfaFactors > 0,
       mfaEnrollmentRequired: principal.mfaEnrollmentRequired,
       session: { id: principal.sessionId, mfa: principal.mfa },

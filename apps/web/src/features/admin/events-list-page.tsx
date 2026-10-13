@@ -26,7 +26,7 @@ export function EventsListPage() {
   const t = useTranslations();
   const locale = useLocale();
   const { dateTime } = useEventTime();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
   const [status, setStatus] = useState<EventStatus | ''>('');
   const [search, setSearch] = useState('');
   const [q, setQ] = useState('');
@@ -58,9 +58,11 @@ export function EventsListPage() {
           <Link href="/admin/events/speakers" className={link}>
             {t('events.admin.speakersLink')}
           </Link>
-          <Link href="/admin/events/categories" className={link}>
-            {t('events.admin.categoriesLink')}
-          </Link>
+          {me?.platformPermissions.includes('events.manage') && (
+            <Link href="/admin/events/categories" className={link}>
+              {t('events.admin.categoriesLink')}
+            </Link>
+          )}
           <Link
             href="/admin/events/new"
             className="rounded-md bg-primary px-5 py-2.5 font-semibold text-on-primary hover:bg-primary-hover"

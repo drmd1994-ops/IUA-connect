@@ -180,13 +180,25 @@ export class PostgresSearch extends SearchProvider {
 
 /** The access tiers, for an item table aliased `x`. */
 function visible(entity: string, viewer: SearchViewer): Prisma.Sql {
-  if (!viewer.activeTypeId) return Prisma.sql`x.access_tier = 'PUBLIC'`;
-  return Prisma.sql`(
-    x.access_tier IN ('PUBLIC', 'MEMBERS')
-    OR EXISTS (
+  const open = [Prisma.sql`x.access_tier = 'PUBLIC'`];
+  if (viewer.verified) open.push(Prisma.sql`x.access_tier = 'VERIFIED'`);
+  if (viewer.memberships.length > 0) {
+    // "Members" is of the organisation that owns the item; only news and events have an owner.
+    if (OWNED.has(entity)) {
+      const organisationIds = viewer.memberships.map((held) => held.organisationId);
+      open.push(
+        Prisma.sql`(x.access_tier = 'MEMBERS' AND x.organisation_id = ANY(${organisationIds}::uuid[]))`,
+      );
+    }
+    const typeIds = viewer.memberships.map((held) => held.typeId);
+    open.push(Prisma.sql`EXISTS (
       SELECT 1 FROM content_access_rules r
       WHERE r.entity_type = ${entity} AND r.entity_id = x.id
-        AND r.membership_type_id = ${viewer.activeTypeId}::uuid
-    )
-  )`;
+        AND r.membership_type_id = ANY(${typeIds}::uuid[])
+    )`);
+  }
+  return Prisma.sql`(${Prisma.join(open, ' OR ')})`;
 }
+
+/** The kinds of content an organisation can own (`content_access_rules.entity_type`). */
+const OWNED: ReadonlySet<string> = new Set(['news', 'event']);

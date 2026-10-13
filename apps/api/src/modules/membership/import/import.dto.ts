@@ -6,7 +6,12 @@ import { nullableString } from '../../../common/dto/nullable-string';
 const csv = z.string().min(1).max(1_000_000);
 
 export class ImportDryRunDto extends createZodDto(
-  z.strictObject({ fileName: z.string().trim().max(255).optional(), csv }),
+  z.strictObject({
+    fileName: z.string().trim().max(255).optional(),
+    /** The organisation the file's members belong to. May be left out when it can only be one. */
+    organisation: z.uuid().optional(),
+    csv,
+  }),
 ) {}
 
 /** Applying needs the same file as the dry run (only its keyed hash was kept). */

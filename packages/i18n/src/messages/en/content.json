@@ -10,13 +10,20 @@
     "fallbackNotice": "This item isn’t available in this language yet, so it is shown in another language.",
     "tiers": {
       "PUBLIC": "Everyone",
+      "VERIFIED": "Verified physicians",
       "MEMBERS": "Members only",
       "TYPES": "Selected membership types"
     },
     "notFoundTitle": "Not found",
     "notFoundBody": "This item doesn’t exist, or it is open only to members. If you are a member, please sign in.",
     "download": "Download",
-    "opensInNewTab": "(opens in a new tab)"
+    "opensInNewTab": "(opens in a new tab)",
+    "owner": {
+      "label": "Whose is it",
+      "hint": "The organisation this belongs to, or the platform itself. It can’t be changed afterwards.",
+      "platform": "The platform",
+      "of": "Belongs to: {owner}"
+    }
   },
   "news": {
     "title": "News",

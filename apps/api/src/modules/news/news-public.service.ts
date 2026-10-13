@@ -1,19 +1,23 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { type Principal } from '../../common/auth/principal';
+import { coversNothing, ownedWhere, scopeOfAny } from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import { FilesService } from '../files';
+import { ORGANISATION_REF } from '../organisations';
 import {
   type PublicNewsDto,
   type PublicNewsListDto,
   type PublicNewsQueryDto,
 } from './news-public.dto';
+import { NEWS_STAFF } from './news-admin.service';
 
 const INCLUDE = {
   translations: true,
   category: true,
+  organisation: { select: ORGANISATION_REF },
   tags: { include: { tag: true } },
   attachments: { include: { file: true }, orderBy: { sortOrder: 'asc' } },
 } satisfies Prisma.NewsInclude;
@@ -37,17 +41,28 @@ export class NewsPublicService implements OnModuleInit {
     private readonly files: FilesService,
   ) {}
 
-  /** Images and attachments of an article are readable by whoever may read the article. */
+  /**
+   * Images and attachments of an article are readable by whoever may read the article, and,
+   * whatever its state, by the news staff of its owner (a colleague's draft).
+   */
   onModuleInit(): void {
     this.files.registerReadRule({
       canRead: async (fileId, principal) => {
+        const uses = [{ featuredImageFileId: fileId }, { attachments: { some: { fileId } } }];
+        const staff = principal ? scopeOfAny(principal, NEWS_STAFF) : null;
+        if (staff && !coversNothing(staff)) {
+          const theirs = await this.prisma.news.count({
+            where: { AND: [ownedWhere(staff)], OR: uses },
+          });
+          if (theirs > 0) return true;
+        }
         const items = await this.prisma.news.findMany({
           where: {
             ...LIVE,
             status: { in: ['PUBLISHED', 'ARCHIVED'] },
-            OR: [{ featuredImageFileId: fileId }, { attachments: { some: { fileId } } }],
+            OR: uses,
           },
-          select: { id: true, accessTier: true },
+          select: { id: true, accessTier: true, organisationId: true },
         });
         if (items.length === 0) return null;
         const viewer = await this.access.viewerOf(principal);
@@ -66,6 +81,7 @@ export class NewsPublicService implements OnModuleInit {
       status: 'PUBLISHED',
       AND: [await this.access.visibleWhere('news', viewer)],
       ...(query.category ? { category: { key: query.category } } : {}),
+      ...(query.organisation ? { organisationId: query.organisation } : {}),
       ...(query.tag ? { tags: { some: { tag: { name: query.tag } } } } : {}),
     };
     const [rows, total] = await Promise.all([
@@ -132,6 +148,7 @@ function summary(row: Row, locale: Locale) {
     date: (row.sourcePublishedAt ?? row.publishedAt)!.toISOString(),
     featuredImageFileId: row.featuredImageFileId,
     accessTier: row.accessTier,
+    organisation: row.organisation,
     sourceUrl: row.sourceUrl,
     locale: text.locale,
     fallback: text.fallback,

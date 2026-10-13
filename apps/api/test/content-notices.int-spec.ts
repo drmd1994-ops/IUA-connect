@@ -1,5 +1,6 @@
 import { ContentAnnouncer } from '../src/modules/notifications';
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   createVerifiedUser,
@@ -28,7 +29,11 @@ describe('notices about new content (integration)', () => {
     h = await startHarness();
     announcer = h.app.get(ContentAnnouncer);
     editor = await signInWithMfa(h, 'notice-editor', (email) =>
-      grantRole(h, email, 'CONTENT_EDITOR'),
+      // The organisation's news, and the platform's library.
+      Promise.all([
+        grantRole(h, email, 'CONTENT_EDITOR'),
+        grantRole(h, email, 'CONTENT_EDITOR', 'platform'),
+      ]).then(() => undefined),
     );
     admin = await signInAdmin(h, 'notice-admin');
     const res = await h.http().get('/api/v1/membership-types').expect(200);
@@ -49,7 +54,11 @@ describe('notices about new content (integration)', () => {
       .http()
       .post('/api/v1/admin/news')
       .set(as(editor))
-      .send({ translations: { he: { title, body: 'גוף', summary: 'תקציר' } }, ...extra })
+      .send({
+        organisationId: DEFAULT_ORGANISATION,
+        translations: { he: { title, body: 'גוף', summary: 'תקציר' } },
+        ...extra,
+      })
       .expect(201);
     const step = (who: { accessToken: string }, action: string) =>
       h
@@ -69,6 +78,7 @@ describe('notices about new content (integration)', () => {
       .post('/api/v1/admin/events')
       .set(as(admin))
       .send({
+        organisationId: DEFAULT_ORGANISATION,
         startAt: new Date(Date.UTC(2031, 5, 10, 7)).toISOString(),
         endAt: new Date(Date.UTC(2031, 5, 10, 16)).toISOString(),
         locationName: 'Example Hall',

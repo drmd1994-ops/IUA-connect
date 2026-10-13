@@ -2,6 +2,7 @@ import { PERMISSIONS, ROLE_KEYS } from '@iua/shared';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 
 export const ACCOUNT_STATES = ['ACTIVE', 'LOCKED', 'DISABLED'] as const;
 const state = z.enum(ACCOUNT_STATES);
@@ -49,6 +50,8 @@ export class AccountDto extends createZodDto(
     roleGrants: z.array(
       z.strictObject({
         role: z.string(),
+        /** The organisation the role is held in; null: held on the platform. */
+        organisation: organisationRefSchema.nullable(),
         /** NONE, or what the role is limited to (a department, a subspecialty). */
         scope: z.string(),
         grantedAt: z.iso.datetime(),
@@ -56,14 +59,23 @@ export class AccountDto extends createZodDto(
         removable: z.boolean(),
       }),
     ),
-    membership: z
-      .strictObject({
-        id: z.uuid(),
-        status: z.string(),
-        typeKey: z.string(),
-        endDate: z.string(),
-      })
+    /**
+     * The person's memberships, one per organisation. Null for staff who may not look into
+     * organisations (`organisations.access`): a membership is the organisation's business.
+     */
+    memberships: z
+      .array(
+        z.strictObject({
+          id: z.uuid(),
+          organisation: organisationRefSchema,
+          status: z.string(),
+          typeKey: z.string(),
+          endDate: z.string(),
+        }),
+      )
       .nullable(),
+    /** Known to the platform as a physician, and since when. */
+    verifiedAt: z.iso.datetime().nullable(),
   }),
 ) {}
 
@@ -75,6 +87,8 @@ export class AccountActionDto extends createZodDto(
 export class RoleChangeDto extends createZodDto(
   z.strictObject({
     role: z.string().trim().min(1).max(64),
+    /** The organisation to hold the role in. Left out or null: on the platform. */
+    organisationId: z.uuid().nullable().optional(),
     reason: z.string().trim().min(3).max(500),
   }),
 ) {}
@@ -87,6 +101,8 @@ export class RoleListDto extends createZodDto(
         requiresTwoStep: z.boolean(),
         /** NONE, DEPARTMENT or SUBSPECIALTY. */
         scope: z.string(),
+        /** Where it is held: "platform", "organisation" or "either". */
+        level: z.enum(['platform', 'organisation', 'either']),
         permissions: z.array(z.enum(PERMISSIONS)),
         /** How many accounts hold it. */
         holders: z.number().int(),

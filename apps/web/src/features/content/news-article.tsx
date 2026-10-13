@@ -88,7 +88,8 @@ function ArticleView({ article }: { article: Article }) {
               {format.dateTime(new Date(article.date), { dateStyle: 'long' })}
             </time>
             {article.category && ` · ${name(article.category)}`}
-            {article.accessTier !== 'PUBLIC' && ` · ${t('content.common.tiers.MEMBERS')}`}
+            {article.accessTier !== 'PUBLIC' &&
+              ` · ${t(`content.common.tiers.${article.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`)}`}
           </p>
           <h1
             className="mt-2 text-3xl font-semibold leading-tight text-brand-900"

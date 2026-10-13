@@ -13,6 +13,7 @@ import { StoredImage, useUpload } from '@/features/content/files';
 import { Pager } from '@/features/content/pager';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
+import { OwnerField, OwnerLine, firstOwner, ownerInput } from './owners';
 
 type Schemas = components['schemas'];
 type RoomList = Schemas['AdminRoomListDto'];
@@ -37,7 +38,7 @@ export function ChatRoomsPage() {
   const g = useTranslations('groups.admin');
   const locale = useLocale();
   const name = usePersonName();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
   const [show, setShow] = useState<Show>('open');
   const [page, setPage] = useState(1);
   const [list, setList] = useState<RoomList | null>(null);
@@ -75,9 +76,11 @@ export function ChatRoomsPage() {
         >
           {t('new')}
         </Link>
-        <Link href="/admin/chat/rooms/settings" className={link}>
-          {t('settings')}
-        </Link>
+        {me?.platformPermissions.includes('chat.rooms.manage') && (
+          <Link href="/admin/chat/rooms/settings" className={link}>
+            {t('settings')}
+          </Link>
+        )}
       </div>
       <SelectField
         label={t('show')}
@@ -191,7 +194,9 @@ export function ChatRoomEditorPage({ id }: { id?: string }) {
   const router = useRouter();
   const upload = useUpload();
   const pictureId = useId();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
+  // Whose the room is (M16): the platform's, for verified people, or an organisation's.
+  const [owner, setOwner] = useState(() => firstOwner(me, 'chat.rooms.manage'));
   const [room, setRoom] = useState<Room | null>(null);
   const [draft, setDraft] = useState<Draft>(() => toDraft(null));
   const [categories, setCategories] = useState<RoomCategory[]>([]);
@@ -263,7 +268,11 @@ export function ChatRoomEditorPage({ id }: { id?: string }) {
         setDraft(toDraft(updated));
         setSaved(true);
       } else {
-        const created = await call(() => api.POST('/api/v1/admin/chat/rooms', { body }));
+        const created = await call(() =>
+          api.POST('/api/v1/admin/chat/rooms', {
+            body: { ...body, ...ownerInput(me, 'chat.rooms.manage', owner) },
+          }),
+        );
         router.push(`/admin/chat/rooms/${created.id}`);
       }
     } catch (caught) {
@@ -308,6 +317,11 @@ export function ChatRoomEditorPage({ id }: { id?: string }) {
       {room?.archived && <Alert tone="warning">{t('stateArchived')}</Alert>}
       {(!id || room) && (
         <form onSubmit={save} noValidate className="flex max-w-2xl flex-col gap-4">
+          {room ? (
+            <OwnerLine permission="chat.rooms.manage" organisation={room.organisation} />
+          ) : (
+            <OwnerField permission="chat.rooms.manage" value={owner} onChange={setOwner} />
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField
               label={e('nameHe')}

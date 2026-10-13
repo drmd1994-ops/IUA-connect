@@ -30,6 +30,13 @@ const subspecialty = {
   nameHe: 'אורולוגיה אונקולוגית',
   nameEn: 'Urologic oncology',
 };
+/** A fictional organisation with a section on the platform. */
+const organisation = {
+  id: 'o-1',
+  slug: 'sample-society',
+  nameHe: 'אגודה לדוגמה',
+  nameEn: 'A sample society',
+};
 const hospital = { id: 'h-1', nameHe: 'בית חולים לדוגמה', nameEn: 'Sample Hospital' };
 
 export const me: S['MeDto'] = {
@@ -39,6 +46,9 @@ export const me: S['MeDto'] = {
   locale: 'he',
   roles: [],
   permissions: [],
+  platformPermissions: [],
+  organisations: [],
+  verified: true,
   mfaEnabled: false,
   mfaEnrollmentRequired: false,
   session: { id: 's-1', mfa: false },
@@ -47,6 +57,7 @@ export const me: S['MeDto'] = {
 export const membership: S['MyMembershipDto'] = {
   membership: {
     id: 'm-1',
+    organisation,
     type: { id: 't-1', key: 'full', nameHe: 'חבר/ה מן המניין', nameEn: 'Full member' },
     status: 'ACTIVE',
     startDate: '2025-01-01',
@@ -122,6 +133,7 @@ const newsItem = {
   featuredImageFileId: 'f-1',
   accessTier: 'MEMBERS' as const,
   sourceUrl: null,
+  organisation,
   locale: 'en' as const,
   fallback: false,
 };
@@ -138,6 +150,7 @@ export const article: S['PublicNewsDto'] = {
 
 const eventItem = {
   slug: 'workshop',
+  organisation,
   title: 'Workshop with limited places',
   summary: 'One place only.',
   category: { key: 'course', nameHe: 'קורסים', nameEn: 'Courses' },
@@ -306,6 +319,7 @@ export const group: S['GroupDto'] = {
 };
 const roomListed = {
   id: 'r-1',
+  organisation,
   nameHe: 'חדר כללי',
   nameEn: 'General room',
   descriptionHe: 'חדר לדוגמה',
@@ -615,6 +629,7 @@ export const everything: Record<string, Answer> = {
     items: [
       {
         id: 't-1',
+        organisation,
         key: 'full',
         nameHe: 'חבר/ה מן המניין',
         nameEn: 'Full member',
@@ -628,6 +643,7 @@ export const everything: Record<string, Answer> = {
     items: [
       {
         id: 'app-1',
+        organisation,
         state: 'PENDING_DIRECTOR',
         type: { id: 't-1', key: 'full', nameHe: 'חבר/ה מן המניין', nameEn: 'Full member' },
         hospital,

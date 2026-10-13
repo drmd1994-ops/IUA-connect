@@ -1,4 +1,10 @@
-import { type Harness, bearer, createVerifiedUser, signIn } from './auth-harness';
+import {
+  DEFAULT_ORGANISATION,
+  type Harness,
+  bearer,
+  createVerifiedUser,
+  signIn,
+} from './auth-harness';
 
 export interface ChatPerson {
   id: string;
@@ -85,6 +91,13 @@ export function chatActors(harness: () => Harness, adminToken: () => string) {
       .send(how === 'suspend' ? { reason: 'Test' } : {})
       .expect(200);
 
+  /**
+   * The platform no longer knows the person as a physician. (A membership that ends does not
+   * do this: the person keeps the platform. How verification is given and withdrawn is M17.)
+   */
+  const unverify = (p: ChatPerson) =>
+    h().db.query('UPDATE users SET verified_at = NULL WHERE id = $1', [p.id]);
+
   const start = (from: ChatPerson, toId: string) =>
     h().http().post('/api/v1/chat/conversations').set(bearer(from.token)).send({ userId: toId });
   const send = (from: ChatPerson, id: string, body: string, extra: object = {}) =>
@@ -138,7 +151,7 @@ export function chatActors(harness: () => Harness, adminToken: () => string) {
       .http()
       .post('/api/v1/admin/chat/rooms')
       .set(asAdmin())
-      .send({ nameHe: `חדר ${tag()}`, ...extra })
+      .send({ organisationId: DEFAULT_ORGANISATION, nameHe: `חדר ${tag()}`, ...extra })
       .expect(201);
     return res.body.id as string;
   }
@@ -196,6 +209,7 @@ export function chatActors(harness: () => Harness, adminToken: () => string) {
     listed,
     consent,
     endMembership,
+    unverify,
     start,
     send,
     messages,

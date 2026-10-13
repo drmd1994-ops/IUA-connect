@@ -1,6 +1,6 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { uuidv7 } from '@iua/shared';
+import { ROLES, type RoleKey, roleFits, uuidv7 } from '@iua/shared';
 import { Secret, TOTP } from 'otpauth';
 import { Client } from 'pg';
 import request from 'supertest';
@@ -11,7 +11,14 @@ import { PushProvider } from '../src/infra/push/push-provider';
 import { type RateLimitHit, RateLimitStore } from '../src/infra/rate-limit/rate-limit.store';
 import { VideoProvider } from '../src/infra/video/video-provider';
 import { testEnv } from '../src/testing/test-env';
+import { FIRST_ORGANISATION } from '../prisma/seed/reference-data';
 import { testAppUrl } from './test-db';
+
+/**
+ * The organisation the reference seed makes, with the membership types the suites use. A suite
+ * that is not about organisations works inside it; `createOrganisation` makes another.
+ */
+export const DEFAULT_ORGANISATION = FIRST_ORGANISATION.id;
 
 /** Collects emails instead of writing them to the outbox. */
 export class CapturingMailer extends Mailer {
@@ -162,12 +169,68 @@ export async function signIn(
   return { accessToken: res.body.accessToken, jar };
 }
 
-export async function grantRole(h: Harness, email: string, roleKey: string): Promise<void> {
+/**
+ * Grants a role. Where: `'platform'`, an organisation's id, or (the default) where an
+ * organisation's staff would hold it: in the default organisation when the role can be held in
+ * one, otherwise on the platform.
+ */
+export async function grantRole(
+  h: Harness,
+  email: string,
+  roleKey: string,
+  where: 'default' | 'platform' | (string & {}) = 'default',
+): Promise<void> {
+  const organisationId =
+    where === 'platform'
+      ? null
+      : where === 'default'
+        ? roleKey in ROLES && roleFits(roleKey as RoleKey, true)
+          ? DEFAULT_ORGANISATION
+          : null
+        : where;
   await h.db.query(
-    `INSERT INTO user_roles (id, user_id, role_id, scope_type)
-     SELECT $1, u.id, r.id, 'NONE' FROM users u, roles r WHERE u.email = $2 AND r.key = $3`,
-    [uuidv7(), email, roleKey],
+    `INSERT INTO user_roles (id, user_id, role_id, scope_type, organisation_id)
+     SELECT $1, u.id, r.id, 'NONE', $4::uuid FROM users u, roles r
+     WHERE u.email = $2 AND r.key = $3`,
+    [uuidv7(), email, roleKey, organisationId],
   );
+}
+
+/** Both of an administrator's roles: the default organisation's office, and the platform. */
+export async function grantAdmin(h: Harness, email: string): Promise<void> {
+  await grantRole(h, email, 'ORG_ADMIN', DEFAULT_ORGANISATION);
+  await grantRole(h, email, 'PLATFORM_ADMIN', 'platform');
+}
+
+/** Marks an account as a physician the platform knows (what a membership also does). */
+export async function verifyPhysician(h: Harness, email: string): Promise<void> {
+  await h.db.query(
+    'UPDATE users SET verified_at = now() WHERE email = $1 AND verified_at IS NULL',
+    [email],
+  );
+}
+
+/** Another organisation, with one membership type of its own. Returns their ids. */
+export async function createOrganisation(
+  h: Harness,
+  label = 'org',
+): Promise<{ id: string; slug: string; typeId: string }> {
+  const id = uuidv7();
+  const slug = `${label}-${id.slice(-12)}`;
+  await h.db.query(
+    `INSERT INTO organisations (id, slug, name_he, name_en, updated_at)
+     VALUES ($1, $2, $3, $4, now())`,
+    [id, slug, `ארגון ${slug}`, `Organisation ${slug}`],
+  );
+  const typeId = uuidv7();
+  await h.db.query(
+    `INSERT INTO membership_types
+       (id, organisation_id, key, name_he, name_en, identifier, self_apply, director_approval,
+        sort_order, updated_at)
+     VALUES ($1, $2, 'MEMBER', 'חבר', 'Member', 'NONE', true, false, 1, now())`,
+    [typeId, id],
+  );
+  return { id, slug, typeId };
 }
 
 export const bearer = (token: string) => ({ Authorization: `Bearer ${token}` });
@@ -225,9 +288,20 @@ export async function signInWithMfa(
   return { email, accessToken, userId: rows[0]!.id };
 }
 
-/** An IUA admin in an MFA session. */
+/**
+ * An administrator in an MFA session: of the default organisation's office and of the platform.
+ * Holding both, they say whose a new item is (`organisationId`) where it could be either's.
+ */
 export const signInAdmin = (h: Harness, label = 'admin') =>
-  signInWithMfa(h, label, (email) => grantRole(h, email, 'IUA_ADMIN'));
+  signInWithMfa(h, label, (email) => grantAdmin(h, email));
+
+/** An administrator of one organisation only, in an MFA session. */
+export const signInOrganisationAdmin = (h: Harness, organisationId: string, label = 'office') =>
+  signInWithMfa(h, label, (email) => grantRole(h, email, 'ORG_ADMIN', organisationId));
+
+/** An administrator of the platform only, in an MFA session. */
+export const signInPlatformAdmin = (h: Harness, label = 'platform-admin') =>
+  signInWithMfa(h, label, (email) => grantRole(h, email, 'PLATFORM_ADMIN', 'platform'));
 
 type Method = 'get' | 'post' | 'patch' | 'put' | 'delete';
 
@@ -252,6 +326,6 @@ export async function expectAdminOnly(
   await call((await signIn(h, member)).accessToken).expect(403);
 
   const noMfa = await createVerifiedUser(h, 'admin-no-mfa');
-  await grantRole(h, noMfa, 'IUA_ADMIN');
+  await grantAdmin(h, noMfa);
   await call((await signIn(h, noMfa)).accessToken).expect(403);
 }

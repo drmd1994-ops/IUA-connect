@@ -5,6 +5,18 @@
  * §6); every person in the system is fictional.
  */
 
+/**
+ * The first organisation with a section on the platform (M16). Its id is fixed, so that the
+ * migration that moved the existing data into it and this seed agree on which one it is. The
+ * membership types below are its types.
+ */
+export const FIRST_ORGANISATION = {
+  id: '00000000-0000-7000-8000-000000000001',
+  slug: 'first-organisation',
+  nameHe: 'הארגון הראשון',
+  nameEn: 'The first organisation',
+} as const;
+
 export interface MembershipTypeSeed {
   key: string;
   nameHe: string;

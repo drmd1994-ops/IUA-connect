@@ -3,9 +3,11 @@ import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
 import { type DiscoveryService, type MetadataScanner, type Reflector } from '@nestjs/core';
 import {
   ANY_PERMISSIONS_KEY,
+  ANY_SCOPED_PERMISSIONS_KEY,
   IS_AUTHENTICATED_KEY,
   IS_PUBLIC_KEY,
   PERMISSIONS_KEY,
+  SCOPED_PERMISSIONS_KEY,
 } from './decorators/access.decorators';
 
 export interface RouteDeclaration {
@@ -40,6 +42,8 @@ export function findUndeclaredRoutes(
       const permissions = [
         ...(reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets) ?? []),
         ...(reflector.getAllAndOverride<string[]>(ANY_PERMISSIONS_KEY, targets) ?? []),
+        ...(reflector.getAllAndOverride<string[]>(SCOPED_PERMISSIONS_KEY, targets) ?? []),
+        ...(reflector.getAllAndOverride<string[]>(ANY_SCOPED_PERMISSIONS_KEY, targets) ?? []),
       ];
       if (!isPublic && !isAuthenticated && !permissions.length) {
         undeclared.push({ controller: metatype.name, handler: methodName });
@@ -55,6 +59,11 @@ export interface DeclaredRoute extends RouteDeclaration {
   /** The path under the API prefix, e.g. "admin/users/:id". */
   path: string;
   access: 'public' | 'authenticated' | 'permission' | 'undeclared';
+  /**
+   * The permission may be held inside an organisation (M16): the handler checks whose thing it
+   * touches. Such a route needs a test with two organisations.
+   */
+  scoped: boolean;
 }
 
 /** Every controller route with its method, path and access declaration. */
@@ -79,9 +88,22 @@ export function listRoutes(
       if (handlerPath === undefined) continue; // not a route
 
       const targets = [handler, metatype];
+      // A route that also names a platform permission is the platform's staff's alone, whatever
+      // its controller says: the guard asks for both.
+      const platformOnly = Boolean(
+        reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets)?.length ||
+        reflector.getAllAndOverride<string[]>(ANY_PERMISSIONS_KEY, targets)?.length,
+      );
+      const scoped =
+        !platformOnly &&
+        Boolean(
+          reflector.getAllAndOverride<string[]>(SCOPED_PERMISSIONS_KEY, targets)?.length ||
+          reflector.getAllAndOverride<string[]>(ANY_SCOPED_PERMISSIONS_KEY, targets)?.length,
+        );
       const access = reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, targets)
         ? 'public'
-        : reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets)?.length ||
+        : scoped ||
+            reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, targets)?.length ||
             reflector.getAllAndOverride<string[]>(ANY_PERMISSIONS_KEY, targets)?.length
           ? 'permission'
           : reflector.getAllAndOverride<boolean>(IS_AUTHENTICATED_KEY, targets)
@@ -95,7 +117,14 @@ export function listRoutes(
             .map((part) => part.replace(/^\/+|\/+$/g, ''))
             .filter(Boolean)
             .join('/');
-          routes.push({ controller: metatype.name, handler: methodName, method, path, access });
+          routes.push({
+            controller: metatype.name,
+            handler: methodName,
+            method,
+            path,
+            access,
+            scoped,
+          });
         }
       }
     }
