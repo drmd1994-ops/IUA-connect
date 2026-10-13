@@ -46,7 +46,7 @@ jobs:
           java-version: 17
       - run: pnpm install --frozen-lockfile
       - name: Build the packages the app uses
-        run: pnpm --filter "@iua/mobile^..." build
+        run: pnpm --filter "@medconnect/mobile^..." build
       - name: Make the Android project
         working-directory: apps/mobile
         run: pnpm exec expo prebuild --platform android --no-install

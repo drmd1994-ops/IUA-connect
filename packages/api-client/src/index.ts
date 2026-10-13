@@ -1,8 +1,8 @@
 import createClient, { type Client } from 'openapi-fetch';
-import type { ErrorEnvelope } from '@iua/shared';
+import type { ErrorEnvelope } from '@medconnect/shared';
 // Only this small file, not the whole shared package: the rest brings the schema library with
 // it, which would be downloaded by every visitor for nothing.
-import { CORRELATION_ID_HEADER } from '@iua/shared/correlation';
+import { CORRELATION_ID_HEADER } from '@medconnect/shared/correlation';
 import { type paths } from './schema';
 
 export type { components, paths } from './schema';
@@ -73,7 +73,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
- * The standard error envelope (the same shape as errorEnvelopeSchema in @iua/shared, checked by
+ * The standard error envelope (the same shape as errorEnvelopeSchema in @medconnect/shared, checked by
  * hand so the browser doesn't need the schema library).
  */
 export function isErrorEnvelope(body: unknown): body is ErrorEnvelope {

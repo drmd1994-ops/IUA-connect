@@ -26,6 +26,6 @@ The open decisions behind lines 1, 4 and 13 are listed in `docs/demo/KNOWN_LIMIT
 
 ## Build artefacts
 
-- API: `pnpm --filter @iua/api build` → `apps/api/dist`, start with `node dist/main.js`. Run `prisma migrate deploy` with the owner connection before starting a new version.
-- Web: `pnpm --filter @iua/web build` → `next start`. The web app renders per request (nonce-based CSP).
+- API: `pnpm --filter @medconnect/api build` → `apps/api/dist`, start with `node dist/main.js`. Run `prisma migrate deploy` with the owner connection before starting a new version.
+- Web: `pnpm --filter @medconnect/web build` → `next start`. The web app renders per request (nonce-based CSP).
 - Docker images are used in CI/deployment only (DEVELOPMENT_ROADMAP.md); none are required locally. Dockerfiles are added with the first staging environment.

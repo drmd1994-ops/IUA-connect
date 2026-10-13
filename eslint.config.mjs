@@ -1,5 +1,5 @@
 // Root config: lints repository tooling (tools/scripts). Each app and package has its own eslint.config.mjs.
-import base from '@iua/eslint-config/base';
+import base from '@medconnect/eslint-config/base';
 
 export default [
   // The importer is a workspace package with its own config and lint task.

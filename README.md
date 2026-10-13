@@ -167,14 +167,14 @@ The admins, the directors, the editor and the event admin must have two-step ver
 
 ### Troubleshooting
 
-| Symptom                                                 | Fix                                                                                                                                                                                   |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `running scripts is disabled on this system` (pnpm.ps1) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or run `pnpm.cmd` instead of `pnpm`                                                                                            |
-| `EADDRINUSE :::3001`                                    | Another app uses port 3001. Stop it, or run the web app on another port: `pnpm --filter @iua/web exec next dev --port 3002` and add `http://localhost:3002` to `WEB_ORIGIN` in `.env` |
-| `setup:dev` can't connect to PostgreSQL                 | Server not running (see step 2), or wrong password in `PG_SUPERUSER_URL`                                                                                                              |
-| `Node.js 24 LTS is required`                            | See step 1; open a new terminal after installing                                                                                                                                      |
-| Files show as modified with only line-ending changes    | The repo uses LF (`.gitattributes`). Recommended: `git config --global core.autocrlf input`                                                                                           |
-| Hebrew looks wrong in the PowerShell console            | Console output only; run `chcp 65001` for UTF-8. The app itself is unaffected                                                                                                         |
+| Symptom                                                 | Fix                                                                                                                                                                                          |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `running scripts is disabled on this system` (pnpm.ps1) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or run `pnpm.cmd` instead of `pnpm`                                                                                                   |
+| `EADDRINUSE :::3001`                                    | Another app uses port 3001. Stop it, or run the web app on another port: `pnpm --filter @medconnect/web exec next dev --port 3002` and add `http://localhost:3002` to `WEB_ORIGIN` in `.env` |
+| `setup:dev` can't connect to PostgreSQL                 | Server not running (see step 2), or wrong password in `PG_SUPERUSER_URL`                                                                                                                     |
+| `Node.js 24 LTS is required`                            | See step 1; open a new terminal after installing                                                                                                                                             |
+| Files show as modified with only line-ending changes    | The repo uses LF (`.gitattributes`). Recommended: `git config --global core.autocrlf input`                                                                                                  |
+| Hebrew looks wrong in the PowerShell console            | Console output only; run `chcp 65001` for UTF-8. The app itself is unaffected                                                                                                                |
 
 ## Everyday commands
 
@@ -183,7 +183,7 @@ The admins, the directors, the editor and the event admin must have two-step ver
 | `pnpm dev`                                     | API + web in watch mode                                                   |
 | `pnpm test`                                    | Unit tests (all packages), including the deny-by-default route gate       |
 | `pnpm test:integration`                        | API integration tests against `iua_connect_test`                          |
-| `pnpm --filter @iua/web e2e`                   | Playwright end-to-end + accessibility tests (see TESTING.md)              |
+| `pnpm --filter @medconnect/web e2e`            | Playwright end-to-end + accessibility tests (see TESTING.md)              |
 | `pnpm demo:reset`                              | Development only: rebuild the demo from nothing (**deletes dev data**)    |
 | `pnpm job:run <job>`                           | Run one background job now, e.g. `notifications.content-digest`           |
 | `pnpm admin:create --email <address>`          | Development only: create a fictional administrator                        |

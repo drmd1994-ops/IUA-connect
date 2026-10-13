@@ -1,5 +1,5 @@
 {
-  "extends": "@iua/tsconfig/library.json",
+  "extends": "@medconnect/tsconfig/library.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist"

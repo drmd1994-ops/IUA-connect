@@ -1,4 +1,4 @@
-import { errorEnvelopeSchema } from '@iua/shared';
+import { errorEnvelopeSchema } from '@medconnect/shared';
 import { describe, expect, it } from 'vitest';
 import { ApiError, createApiClient, isErrorEnvelope, toApiError } from './index';
 

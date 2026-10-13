@@ -5,7 +5,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import base from './base.mjs';
 
-/** Next.js web rules, including the ban on hard-coded UI text (all strings come from @iua/i18n). */
+/** Next.js web rules, including the ban on hard-coded UI text (all strings come from @medconnect/i18n). */
 export default tseslint.config(
   ...base,
   {

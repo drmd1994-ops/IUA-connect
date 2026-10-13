@@ -1,11 +1,11 @@
 # Testing
 
-| Layer                  | Tool                                                               | Where                                                      | Command                      |
-| ---------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- | ---------------------------- |
-| API unit               | Jest + ts-jest (+ Supertest for pipeline tests without a database) | `apps/api/src/**/*.spec.ts`                                | `pnpm test`                  |
-| API integration        | Jest + Supertest + real PostgreSQL                                 | `apps/api/test/**/*.int-spec.ts`                           | `pnpm test:integration`      |
-| Packages and web units | Vitest                                                             | `packages/*/src/**/*.test.ts`, `apps/web/src/**/*.test.ts` | `pnpm test`                  |
-| E2E + accessibility    | Playwright + axe                                                   | `apps/web/e2e/**/*.spec.ts`                                | `pnpm --filter @iua/web e2e` |
+| Layer                  | Tool                                                               | Where                                                      | Command                             |
+| ---------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- | ----------------------------------- |
+| API unit               | Jest + ts-jest (+ Supertest for pipeline tests without a database) | `apps/api/src/**/*.spec.ts`                                | `pnpm test`                         |
+| API integration        | Jest + Supertest + real PostgreSQL                                 | `apps/api/test/**/*.int-spec.ts`                           | `pnpm test:integration`             |
+| Packages and web units | Vitest                                                             | `packages/*/src/**/*.test.ts`, `apps/web/src/**/*.test.ts` | `pnpm test`                         |
+| E2E + accessibility    | Playwright + axe                                                   | `apps/web/e2e/**/*.spec.ts`                                | `pnpm --filter @medconnect/web e2e` |
 
 ## What the M0 suites prove
 
@@ -178,14 +178,14 @@ Most suites replace the rate-limit store with an unlimited one (they sign in far
 ## End-to-end tests
 
 ```powershell
-pnpm --filter @iua/web exec playwright install chromium   # once
-pnpm --filter @iua/web e2e
+pnpm --filter @medconnect/web exec playwright install chromium   # once
+pnpm --filter @medconnect/web e2e
 ```
 
 - Locally the tests reuse `pnpm dev` if it's running (API on 4000, web on 3001), or start it. They run in **Chromium and Microsoft Edge**; Edge skips the journeys that create accounts.
 - Emails are read from the `outbox/` folder, and administrators are created with `pnpm admin:create`, so the dev database must be set up (`pnpm setup:dev`).
 - **Registration is limited to 5 per IP per hour**, and every local run comes from `localhost`. Each full run registers 2 accounts, so after two or three runs in an hour the sign-up test fails with "Too many attempts". Restart the API (`pnpm dev`) to reset the in-memory counters.
-- **If a local run loses its sign-ins halfway,** the API restarted under it: in `pnpm dev` the API restarts whenever a file it watches changes. Run against the builds instead, as CI does: `pnpm build`, stop `pnpm dev`, then `$env:CI = '1'; pnpm --filter @iua/web e2e` (found in M11).
+- **If a local run loses its sign-ins halfway,** the API restarted under it: in `pnpm dev` the API restarts whenever a file it watches changes. Run against the builds instead, as CI does: `pnpm build`, stop `pnpm dev`, then `$env:CI = '1'; pnpm --filter @medconnect/web e2e` (found in M11).
 - In CI the e2e job runs `pnpm setup:dev` on a fresh database, builds, and runs Chromium against the production builds. On failure the Playwright report is attached to the run.
 
 ## Conventions
