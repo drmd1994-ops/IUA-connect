@@ -45,7 +45,7 @@ describe('Home', () => {
     world.routes = { ...member, 'GET /api/v1/me/membership': { membership: null, history: [] } };
     await draw(<Home />);
     await fireEvent.press(screen.getByLabelText('Apply for membership'));
-    expect(world.pushed).toEqual(['/applications']);
+    expect(world.pushed).toEqual(['/organisation']);
   });
 
   it('shows a visitor what is open, and the way to sign in', async () => {

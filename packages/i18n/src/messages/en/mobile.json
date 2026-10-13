@@ -102,7 +102,7 @@
   },
   "me": {
     "title": "Me",
-    "card": "My membership card",
+    "organisation": "My organisation",
     "notices": "Notification settings"
   },
   "languages": {

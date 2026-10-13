@@ -5,6 +5,9 @@
  */
 export interface KeptCard {
   person: string;
+  /** The organisation the membership is in. Absent on a card kept before M16. */
+  organisationHe?: string;
+  organisationEn?: string;
   typeHe: string;
   typeEn: string;
   status: 'ACTIVE' | 'SUSPENDED' | 'EXPIRED';

@@ -111,6 +111,7 @@ export function NewsList() {
 
 /** One item of the list; the whole card opens it. */
 function NewsCard({ item }: { item: Item }) {
+  const all = useTranslations();
   const t = useTranslations('content');
   const locale = useLocale();
   const format = useFormatter();
@@ -142,6 +143,15 @@ function NewsCard({ item }: { item: Item }) {
         <Text style={styles.cardTitle}>{item.title}</Text>
         {item.summary ? <Text style={styles.summary}>{item.summary}</Text> : null}
         {item.sourceUrl ? <Text style={styles.meta}>{t('news.sourceLabel')}</Text> : null}
+        <Text style={styles.meta}>
+          {all('organisations.owner.from', {
+            name: item.organisation
+              ? locale === 'he'
+                ? item.organisation.nameHe
+                : item.organisation.nameEn
+              : all('common.app.name'),
+          })}
+        </Text>
         {item.accessTier !== 'PUBLIC' && (
           <Tag>{t(`common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`)}</Tag>
         )}

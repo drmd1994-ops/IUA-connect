@@ -67,6 +67,8 @@ export function MembershipCard() {
         }
         const fresh: KeptCard = {
           person: [profile.firstName, profile.lastName].filter(Boolean).join(' '),
+          organisationHe: mine.membership.organisation.nameHe,
+          organisationEn: mine.membership.organisation.nameEn,
           typeHe: mine.membership.type.nameHe,
           typeEn: mine.membership.type.nameEn,
           status: mine.membership.status,
@@ -125,7 +127,11 @@ export function MembershipCard() {
       {known && !offline && card?.status !== 'ACTIVE' && <Notice>{t('noActive')}</Notice>}
       {card && (card.status === 'ACTIVE' || offline) && (
         <View style={styles.card} accessible={false}>
-          <Text style={styles.association}>{t('association')}</Text>
+          {card.organisationHe && card.organisationEn && (
+            <Text style={styles.association}>
+              {locale === 'he' ? card.organisationHe : card.organisationEn}
+            </Text>
+          )}
           <Text style={styles.person} accessibilityRole="header">
             {card.person}
           </Text>

@@ -489,6 +489,10 @@ export const everything: Record<string, Answer> = {
   ...families,
   'GET /api/v1/me': me,
   'GET /api/v1/me/membership': membership,
+  'GET /api/v1/me/memberships': { items: [membership.membership!] } satisfies S['MyMembershipsDto'],
+  'GET /api/v1/organisations': {
+    items: [{ ...organisation, descriptionHe: 'אגודה בדויה, לצורך הדגמה.', descriptionEn: null }],
+  } satisfies S['OrganisationListDto'],
   'GET /api/v1/me/membership/card-token': { token: 'card-token' },
   'GET /api/v1/me/profile': profile,
   'GET /api/v1/me/consents': {

@@ -161,8 +161,7 @@
     "qrLabel": "QR code for verifying the membership of {name}",
     "validUntil": "Valid until {date}",
     "refreshed": "Code refreshed at {time}",
-    "noActive": "The card is available once your membership is active.",
-    "association": "Israeli Urological Association"
+    "noActive": "The card is available once your membership is active."
   },
   "verify": {
     "title": "Membership verification",
