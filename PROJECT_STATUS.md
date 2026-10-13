@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-13 (M16, an independent platform with a section for an organisation: part 1, the server and the data, is built and in a pull request; part 2, the site, the app, the new name and the demo, is not started)_
+_Last updated: 2026-10-14 (M16: part 1 is merged; part 2, the site, the app, the name "Med Connect" and the fictional demo organisation, is built and in a pull request)_
 
 ## Summary
 
@@ -949,7 +949,7 @@ The dependency check in CI began to fail on 2026-10-06, for pull request #22 and
 4. ~~Component tests~~ **Written on 2026-10-06 in the reduced form the owner chose;** in a pull request of their own.
 5. **Where the demo server lives:** the tunnel as now, or a hosted machine (a free one and paid ones were looked up for the owner on 2026-10-06; either needs its own plan).
 
-## M16 An independent platform, with a section for an organisation (in progress, started 2026-10-13)
+## M16 An independent platform, with a section for an organisation (built; started 2026-10-13, part 2 in a pull request)
 
 Plan: `docs/plans/M16-independent-platform.md`, approved by the owner on 2026-10-13 with seven answers (the plan is in pull request #25). The milestone has two parts. **Part 1, this one: the server and the data (plan steps 2 to 5).** Part 2 (steps 6 to 10: the organisation's section on the site and in the app, the new name, the fictional demo organisation, documents) is not started.
 
@@ -991,6 +991,54 @@ Plan: `docs/plans/M16-independent-platform.md`, approved by the owner on 2026-10
 1. The five deviations above: confirm, or say what should be different.
 2. The product's new name (needed for part 2): Collega, Urolink, MedKesher, Tzevet, or another.
 3. Merge pull request #25 (the plans), so that the approved plan is on `main`.
+
+### Part 2: the site, the app, the name and the demo (plan steps 6 to 10; built 2026-10-13 and 14)
+
+Part 1 was merged on 2026-10-13 (pull request #26), after the owner confirmed the five deviations listed above and asked for the browser tests to be run on this computer first. The plans were merged the same day (pull request #25). **The product's name, chosen by the owner: Med Connect, in Hebrew "מד קונקט".**
+
+**Built**
+
+- **The site (step 6):** a section for each organisation (`/organisations/<address name>`): who it is, the reader's membership, the card, its news, upcoming events and rooms, and its own news and events lists. Membership and the card moved into the section; the old addresses lead there. The platform's news and events lists say whose each item is. The header has "Organisations", which opens the section directly while there is one organisation.
+- **The app (step 7):** one screen with the same division, reached from "Me": the card, the membership, the application, and the organisation's rooms, news and events. The five tabs stay. The card carries the name of the organisation the membership is in.
+- **The name (step 8):** 89 texts in each language were read and decided one by one: the product's name where the product is meant; "the organisation" where a membership or its approval is meant; "the staff" where chat moderation is meant; "verified physician" where "member" meant someone the platform is open to. No text names a real association. Also the name in two-step verification, passkeys, calendar files, the app's name and identifiers. The internal packages are `@medconnect/...`.
+- **A message to members says who sent it** (the organisation, or the platform), on the server, the site and the app. It did not before; the plan's rule asks for it.
+- **The demo (step 9):** the demo's organisation is "The Sample Urological Society (fictional)", with a description that says it is made up. The demo's news, rooms and messages speak of "the society". The sample imported from a real association's website is out of the seed, and was taken out of this computer's demo database with `pnpm import:remove` (8 news items, 9 guideline entries, 1 event). The importer and its fixtures stay in the repository, unused.
+- **Documents (step 10):** decision record 0010 ("a platform with organisations"); `PRODUCT_REQUIREMENTS.md`, `ARCHITECTURE.md`, `SECURITY_MODEL.md`, `DATABASE_DESIGN.md` and `API_DESIGN.md` each have a section on what holds since M16 and a note at the top; `README.md` and `HANDOFF.md` describe the product as it is; the original specification is kept as it was, marked as history.
+- **A developer command:** `pnpm admin:create --role <role> --organisation <address name>` places a staff role inside an organisation.
+
+**Verified**
+
+- Unit tests: every package passes (server 391 tests, app 131 screen tests and 79 rule tests, site, texts, shared packages), after the rename.
+- Integration tests on PostgreSQL: all 48 suites, 542 tests, in one run after the rename.
+- The migrations and both seed layers from an empty database, twice (the second run changes nothing).
+- Browser tests (Playwright, Chromium, against production builds, on the owner’s computer): one full run after everything, 118 of 121 passed. See "Not verified" for the other three.
+- Lint, formatting and type checks for the server, the site, the app and the tools.
+
+**Not verified**
+
+- **Three browser tests did not pass cleanly in the full run.** One quoted an old sentence ("waiting for the association") and was corrected; re-run by itself it passed on its second attempt, after a sign-in step timed out on the first, just after the servers started. One ("the rooms fit a phone, in Hebrew") looks for a demo room by its new name, which this computer’s demo database does not have until it is rebuilt. One chat test ("is typing") failed once and passed on its retry.
+- GitHub’s checks did not run (the account’s billing; the owner said not to run tests on GitHub for now).
+- Nothing was looked at by a person in a browser or on the phone. The Hebrew texts were not read by a Hebrew reader.
+- The app was not run on a phone or built into an .apk under its new name and identifier; its screens were drawn and checked by the tests only.
+- The migration was not tried on a separate copy with before-and-after counts, as the plan’s test list asks (open since part 1).
+
+**Deviations and findings**
+
+- **The design documents were not rewritten line by line.** Each got a section that says what holds since M16, a note at the top saying how to read the older text, and corrections where a line was plainly wrong (the list of roles, the approval chain). Older sentences that say "the association" remain in them.
+- **Names the rename did not touch,** on purpose: the local databases and their roles (`iua_connect`, `iua_owner`, `iua_app`, and the setting `iua.app_role`, which is in applied migrations and on this computer), cookie and token names (changing them signs everyone out for no gain), the demo password, the unused importer's folder, the repository's name on GitHub and the folder on this computer, and the approved plans, which are history.
+- **The rooms browser can be narrowed to one organisation** (a small server addition for the section's rooms list), with a test that narrowing never opens a room.
+- **The browser test of imported items was removed** together with the imported sample. The import keeps its integration tests.
+- **The browser tests found two faults in the new section before it was committed,** both fixed: its texts were not sent to the browser, and that made the page wider than a narrow screen.
+- **The rename was committed in five parts.** Windows refused the pre-commit check's command for 247 files at once ("the command line is too long"); the check was not skipped.
+- **The texts in the app that lead to the card, the membership and the application still use one unnamed organisation** (the person's own). With one organisation that is the same thing; with several, those three screens need the organisation named, as the site's already do.
+- **"Med Connect" was not checked for a trademark or a free web address.** It is a common name. That is done before it is used in public.
+
+**Open for the owner**
+
+1. **Rebuild the demo database** (`pnpm demo:reset`): the demo's older rows on this computer still say "the association" in a few places (a room's name, some sample texts), because the seed does not rewrite what it already loaded. The rebuild deletes the development data, including any account you made yourself, so it is yours to decide. Two browser tests depend on it.
+2. Look at the result in a browser and on the phone; read the Hebrew texts (89 changed).
+3. The demo password still contains the old name. Change it?
+4. GitHub's checks are still blocked by the account's billing; the project rule asks for green checks before a milestone ends.
 
 ## Next step
 

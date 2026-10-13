@@ -85,7 +85,7 @@ test('an admin follows the dashboard, disables an account, finds it in the audit
   await expect(dashboard.getByRole('heading', { name: 'Waiting for review' })).toBeVisible();
   await expect(dashboard.getByRole('heading', { name: 'Members', exact: true })).toBeVisible();
   await expect(dashboard.getByTestId('tile-applications')).toContainText(
-    'waiting for the association',
+    'waiting for the organisation',
   );
   await expectAccessible(admin);
   await dashboard.getByRole('link', { name: 'Open the messages' }).click();
