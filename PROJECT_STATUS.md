@@ -971,7 +971,7 @@ Plan: `docs/plans/M16-independent-platform.md`, approved by the owner on 2026-10
 
 ### Not verified
 
-- The browser tests (Playwright) were not run locally; CI runs them.
+- GitHub's checks did not run: Actions is blocked by the account's billing, and the owner said on 2026-10-13 not to run tests on GitHub for now. Everything was run on the owner's computer instead. The browser tests (Playwright, Chromium, against production builds): 107 of 110 passed in one full run; the three that failed were fixed and passed when re-run by themselves. The full run was not repeated after the fixes.
 - Nothing was looked at by a person in a browser or on the phone after this change.
 - The migration was run on the development and test databases, not on a separate copy with before-and-after counts as the plan's test list asks.
 
@@ -983,6 +983,7 @@ Plan: `docs/plans/M16-independent-platform.md`, approved by the owner on 2026-10
 - **Roles are given only by a super administrator,** also an organisation's own staff roles. Who appoints an organisation's staff was not in the plan.
 - **The member import tells an organisation's office whether an email address already has an account** (the report says "new account" or "new membership"). That sits uneasily with "a person who never applied to it does not exist for it".
 - **Suspending a person from all of chat is the platform's decision.** An organisation's chat staff ban from their own rooms.
+- **The browser tests found three tests written for the old model, and no fault in the product.** A news editor created "on the platform" has no "members" setting to choose, so `pnpm admin:create` learned `--organisation <address name>` and the test's editor now works in the organisation; a test quoted the directory's old sentence; and a chat test assumed an unread counter of exactly one, which fails on a database that earlier runs have used.
 - Two bugs of this change were caught by the existing tests and one by seeding an empty database, and fixed: a role could be granted twice (a lost `NULLS NOT DISTINCT`); the dashboard showed an empty "members" tile on the platform's page; a sample guideline still used the "members" setting.
 
 ### Open for the owner

@@ -39,15 +39,26 @@ export async function linkFromOutbox(to: string, template: string): Promise<stri
 
 /**
  * Creates a fictional staff account with the development CLI (a super admin unless another
- * unscoped role is named); returns its password.
+ * unscoped role is named); returns its password. The role is held on the platform, or inside the
+ * organisation whose address name is given.
  */
-export function createAdmin(email: string, role = 'SUPER_ADMIN'): string {
+export function createAdmin(email: string, role = 'SUPER_ADMIN', organisation?: string): string {
   // Run pnpm's own entry point with Node (no shell), as `pnpm e2e` sets npm_execpath.
   const pnpmEntry = process.env.npm_execpath;
   if (!pnpmEntry) throw new Error('Run the end-to-end tests through pnpm (pnpm e2e).');
   const output = execFileSync(
     process.execPath,
-    [pnpmEntry, 'admin:create', '--email', email, '--role', role, '--locale', 'en'],
+    [
+      pnpmEntry,
+      'admin:create',
+      '--email',
+      email,
+      '--role',
+      role,
+      '--locale',
+      'en',
+      ...(organisation ? ['--organisation', organisation] : []),
+    ],
     { cwd: REPO_ROOT, encoding: 'utf8' },
   );
   const password = /Password \(shown once, store it safely\): (\S+)/.exec(output)?.[1];

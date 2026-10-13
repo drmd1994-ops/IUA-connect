@@ -131,10 +131,15 @@ test('two members write to each other and see it arrive without refreshing', asy
   await expect(log(ruth).getByText('This message was deleted').last()).toBeVisible();
 
   // A message that arrives while Ruth is elsewhere shows as a number on the Chat link.
+  // Ruth may have unread rooms left by an earlier run on this database: count from where she is.
   await ruth.goto('/en/account/profile');
+  await expect(ruth.getByTestId('chat-link')).toBeVisible();
+  await ruth.waitForLoadState('networkidle');
+  const count = ruth.getByTestId('chat-count');
+  const before = (await count.count()) ? Number(await count.textContent()) : 0;
   await send(noa, 'הודעה', `עוד הודעה ${tag}`);
   await ruth.reload();
-  await expect(ruth.getByTestId('chat-count')).toHaveText('1');
+  await expect(count).toHaveText(String(before + 1));
   await ruth.getByTestId('chat-link').click();
   await expect(ruth.getByTestId('conversation-list').getByTestId('unread-count')).toBeVisible();
   await expectAccessible(ruth);

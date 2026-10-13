@@ -1,9 +1,10 @@
 /**
- * `pnpm admin:create --email <address> [--role SUPER_ADMIN] [--locale he|en] [--reset-password]`
+ * `pnpm admin:create --email <address> [--role SUPER_ADMIN] [--organisation <slug>] [--locale he|en]
+ * [--reset-password]`
  *
  * Development only (docs/plans/M1-identity.md §3 "First administrator"). Creates a verified,
- * fictional account and grants it an unscoped administrative role. A strong password is generated
- * and printed once. The account must enrol in MFA at first sign-in (every admin role requires it).
+ * fictional account and grants it an unscoped administrative role: on the platform itself, or with
+ * --organisation inside that organisation. A strong password is generated and printed once. The account must enrol in MFA at first sign-in (every admin role requires it).
  * Running it again for an existing address only grants the role (and a new password with
  * --reset-password). Refuses to run in production and accepts only reserved example domains.
  */
@@ -11,7 +12,7 @@ import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { LOCALES } from '@iua/i18n';
-import { ROLES, ROLE_KEYS, type RoleKey, uuidv7 } from '@iua/shared';
+import { ROLES, ROLE_KEYS, type RoleKey, roleFits, uuidv7 } from '@iua/shared';
 import { config as loadEnv } from 'dotenv';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
@@ -28,6 +29,7 @@ export function parseCliArgs(argv: string[]) {
     options: {
       email: { type: 'string' },
       role: { type: 'string', default: 'SUPER_ADMIN' },
+      organisation: { type: 'string' },
       locale: { type: 'string', default: 'he' },
       'reset-password': { type: 'boolean', default: false },
     },
@@ -50,9 +52,17 @@ export function parseCliArgs(argv: string[]) {
   if (ROLES[role].scope !== 'NONE') {
     throw new CliError(`${role} is scoped (e.g. to a department); scoped roles arrive in M2.`);
   }
+  const organisation = values.organisation?.trim() || null;
+  if (!roleFits(role, organisation !== null)) {
+    throw new CliError(
+      organisation
+        ? `${role} is held on the platform, not inside an organisation.`
+        : `${role} is held inside an organisation: add --organisation <slug>.`,
+    );
+  }
   const locale = values.locale as (typeof LOCALES)[number];
   if (!LOCALES.includes(locale)) throw new CliError(`Locale must be one of: ${LOCALES.join(', ')}`);
-  return { email, role, locale, resetPassword: values['reset-password'] };
+  return { email, role, organisation, locale, resetPassword: values['reset-password'] };
 }
 
 /** 24 random characters (about 143 bits): comfortably passes the password policy. */
@@ -74,6 +84,13 @@ async function main(): Promise<void> {
   try {
     const role = await prisma.role.findUnique({ where: { key: args.role } });
     if (!role) throw new CliError('Roles are not seeded yet. Run `pnpm db:seed`.');
+    const organisation = args.organisation
+      ? await prisma.organisation.findUnique({ where: { slug: args.organisation } })
+      : null;
+    if (args.organisation && !organisation) {
+      throw new CliError(`No organisation has the address name "${args.organisation}".`);
+    }
+    const organisationId = organisation?.id ?? null;
 
     let user = await prisma.user.findUnique({ where: { email: args.email } });
     let password: string | null = null;
@@ -102,11 +119,11 @@ async function main(): Promise<void> {
     }
 
     const granted = await prisma.userRole.findFirst({
-      where: { userId: user.id, roleId: role.id, scopeType: 'NONE' },
+      where: { userId: user.id, roleId: role.id, scopeType: 'NONE', organisationId },
     });
     if (!granted) {
       await prisma.userRole.create({
-        data: { id: uuidv7(), userId: user.id, roleId: role.id, scopeType: 'NONE' },
+        data: { id: uuidv7(), userId: user.id, roleId: role.id, scopeType: 'NONE', organisationId },
       });
     }
     await prisma.auditLog.create({
@@ -116,12 +133,17 @@ async function main(): Promise<void> {
         entityType: 'user',
         entityId: user.id,
         correlationId: `cli-${uuidv7()}`,
-        changes: { role: args.role, created: password !== null && !args.resetPassword },
+        changes: {
+          role: args.role,
+          organisationId,
+          created: password !== null && !args.resetPassword,
+        },
       },
     });
 
     const signIn = `${process.env.APP_BASE_URL ?? 'http://localhost:3001'}/${args.locale}/login`;
-    console.log(`\n✔ ${args.email} holds ${args.role}.`);
+    const where = organisation ? `in ${organisation.slug}` : 'on the platform';
+    console.log(`\n✔ ${args.email} holds ${args.role} ${where}.`);
     if (password) {
       console.log(`  Password (shown once, store it safely): ${password}`);
     } else {

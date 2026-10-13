@@ -74,7 +74,35 @@ describe('pnpm admin:create (development only)', () => {
     expect(rows[0].n).toBe(1);
   });
 
+  it('grants a role inside an organisation, and a second one on the platform', async () => {
+    const email = uniqueEmail('org-editor');
+    const inside = createAdmin([
+      '--email',
+      email,
+      '--role',
+      'CONTENT_EDITOR',
+      '--organisation',
+      'first-organisation',
+    ]);
+    expect(inside.status).toBe(0);
+    expect(inside.output).toContain('holds CONTENT_EDITOR in first-organisation');
+    expect(createAdmin(['--email', email, '--role', 'CONTENT_EDITOR']).status).toBe(0);
+    const { rows } = await h.db.query(
+      `SELECT o.slug FROM user_roles ur JOIN users u ON u.id = ur.user_id
+       LEFT JOIN organisations o ON o.id = ur.organisation_id
+       WHERE u.email = $1 ORDER BY o.slug NULLS LAST`,
+      [email],
+    );
+    expect(rows.map((row) => row.slug)).toEqual(['first-organisation', null]);
+  });
+
   it.each([
+    [['--email', 'x@example.test', '--role', 'ORG_ADMIN'], 'add --organisation'],
+    [['--email', 'x@example.test', '--organisation', 'first-organisation'], 'held on the platform'],
+    [
+      ['--email', 'x@example.test', '--role', 'ORG_ADMIN', '--organisation', 'no-such'],
+      'No organisation has',
+    ],
     [['--email', 'real.person@gmail.com'], 'fictional people only'],
     [['--email', 'x@example.test', '--role', 'DEPARTMENT_DIRECTOR'], 'scoped'],
     [['--email', 'x@example.test', '--role', 'OWNER'], 'Unknown role'],

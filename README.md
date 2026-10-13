@@ -119,7 +119,7 @@ pnpm dev
   ```powershell
   pnpm admin:create --email admin@example.test
   ```
-  The password is printed once. At first sign-in the account is sent to **Account security** to set up two-step verification (an authenticator app such as Google or Microsoft Authenticator); every administrative role requires it. Options: `--role IUA_ADMIN`, `--locale en`, `--reset-password`.
+  The password is printed once. At first sign-in the account is sent to **Account security** to set up two-step verification (an authenticator app such as Google or Microsoft Authenticator); every administrative role requires it. Options: `--role PLATFORM_ADMIN` (held on the platform), `--role ORG_ADMIN --organisation first-organisation` (held inside an organisation), `--locale en`, `--reset-password`.
 - **Account security** (`/he/account/security`): passkeys, two-step verification with recovery codes, password change, and active sessions.
 - **Passkeys:** on Account security, **Add a passkey** opens Windows Hello (or your phone or security key). Afterwards, **Sign in with a passkey** on the sign-in page signs you in without a password. Passkeys only work on the site's own address (`localhost` in development).
 
