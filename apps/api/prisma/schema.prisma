@@ -65,6 +65,8 @@ model User {
   lockedUntil      DateTime?  @map("locked_until") @db.Timestamptz(6)
   locale           String     @default("he") @db.VarChar(8)
   lastLoginAt      DateTime?  @map("last_login_at") @db.Timestamptz(6)
+  /// Known to the platform as a physician since then (M16). Empty: not verified.
+  verifiedAt       DateTime?  @map("verified_at") @db.Timestamptz(6)
   createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
 
@@ -76,7 +78,7 @@ model User {
   recoveryCodes       RecoveryCode[]
   authTokens          AuthToken[]
   profile             Profile?
-  membership          Membership?
+  memberships         Membership[]
   applications        VerificationRequest[]
   files               StoredFile[]
   newsAuthored        News[]
@@ -158,20 +160,25 @@ enum RoleScopeType {
 /// A role granted to a user, optionally scoped (e.g. DEPARTMENT_DIRECTOR of one department).
 /// scope_id gets its foreign key when departments/subspecialties exist (M2).
 model UserRole {
-  id        String        @id @db.Uuid
-  userId    String        @map("user_id") @db.Uuid
-  roleId    String        @map("role_id") @db.Uuid
-  scopeType RoleScopeType @default(NONE) @map("scope_type")
-  scopeId   String?       @map("scope_id") @db.Uuid
-  grantedBy String?       @map("granted_by") @db.Uuid
-  grantedAt DateTime      @default(now()) @map("granted_at") @db.Timestamptz(6)
+  id             String        @id @db.Uuid
+  userId         String        @map("user_id") @db.Uuid
+  roleId         String        @map("role_id") @db.Uuid
+  scopeType      RoleScopeType @default(NONE) @map("scope_type")
+  scopeId        String?       @map("scope_id") @db.Uuid
+  /// The organisation the role is held in. Empty: held on the platform. (M16)
+  organisationId String?       @map("organisation_id") @db.Uuid
+  grantedBy      String?       @map("granted_by") @db.Uuid
+  grantedAt      DateTime      @default(now()) @map("granted_at") @db.Timestamptz(6)
 
   user          User  @relation("UserRoles", fields: [userId], references: [id], onDelete: Cascade)
   role          Role  @relation(fields: [roleId], references: [id], onDelete: Restrict)
   grantedByUser User? @relation("RolesGrantedBy", fields: [grantedBy], references: [id], onDelete: SetNull)
 
   /// Uniqueness treats NULL scope_id as equal (NULLS NOT DISTINCT), set in the migration.
-  @@unique([userId, roleId, scopeType, scopeId])
+  organisation Organisation? @relation(fields: [organisationId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, roleId, scopeType, scopeId, organisationId])
+  @@index([organisationId])
   @@map("user_roles")
 }
 
@@ -408,9 +415,40 @@ enum MembershipIdentifier {
 }
 
 /// FULL_MEMBER, NON_FULL_MEMBER, RESIDENT, STUDENT, HONORARY_MEMBER (ADR 0004).
+/// An organisation that has a section of its own on the platform (M16): its members, their
+/// membership and card, its news, events, rooms and messages. The platform stands without any.
+model Organisation {
+  id            String   @id @db.Uuid
+  /// In addresses. Lower-case letters, digits and dashes.
+  slug          String   @unique @db.VarChar(64)
+  nameHe        String   @map("name_he") @db.VarChar(200)
+  nameEn        String   @map("name_en") @db.VarChar(200)
+  descriptionHe String?  @map("description_he")
+  descriptionEn String?  @map("description_en")
+  /// An organisation that is not active keeps its data and shows nowhere.
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  membershipTypes MembershipType[]
+  memberships     Membership[]
+  news            News[]
+  events          Event[]
+  broadcasts      Broadcast[]
+  rooms           Conversation[]
+  speakers        Speaker[]
+  staff           UserRole[]
+  importBatches   ImportBatch[]
+  applications    VerificationRequest[]
+
+  @@map("organisations")
+}
+
 model MembershipType {
   id               String               @id @db.Uuid
-  key              String               @unique @db.VarChar(64)
+  /// Whose it is. Every one belongs to an organisation. (M16)
+  organisationId   String               @map("organisation_id") @db.Uuid
+  key              String               @db.VarChar(64)
   nameHe           String               @map("name_he") @db.VarChar(200)
   nameEn           String               @map("name_en") @db.VarChar(200)
   identifier       MembershipIdentifier @default(NONE)
@@ -426,10 +464,12 @@ model MembershipType {
   createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  organisation Organisation          @relation(fields: [organisationId], references: [id], onDelete: Restrict)
   memberships  Membership[]
   applications VerificationRequest[]
   accessRules  ContentAccessRule[]
 
+  @@unique([organisationId, key])
   @@map("membership_types")
 }
 
@@ -556,7 +596,9 @@ enum MembershipSource {
 /// membership_history. Periods run by calendar year and end on 31 December (owner, 2026-09-29).
 model Membership {
   id             String           @id @db.Uuid
-  userId         String           @unique @map("user_id") @db.Uuid
+  userId         String           @map("user_id") @db.Uuid
+  /// Whose it is. Every one belongs to an organisation. (M16)
+  organisationId String           @map("organisation_id") @db.Uuid
   typeId         String           @map("type_id") @db.Uuid
   status         MembershipStatus @default(ACTIVE)
   startDate      DateTime         @map("start_date") @db.Date
@@ -566,14 +608,19 @@ model Membership {
   /// Specialist certificate or medical licence number: AES-256-GCM ciphertext. Never shown or logged.
   identifierEnc  String?          @map("identifier_enc")
   /// Keyed hash of the same number, so one number can't hold two memberships.
-  identifierHash String?          @unique @map("identifier_hash") @db.VarChar(128)
+  identifierHash String?          @map("identifier_hash") @db.VarChar(128)
   createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type    MembershipType      @relation(fields: [typeId], references: [id], onDelete: Restrict)
-  history MembershipHistory[]
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         MembershipType      @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  history      MembershipHistory[]
+  organisation Organisation        @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
+  /// One membership in an organisation; a person may belong to several organisations.
+  @@unique([userId, organisationId])
+  /// A licence or certificate number is one person's within an organisation.
+  @@unique([organisationId, identifierHash])
   @@index([status, endDate])
   @@map("memberships")
 }
@@ -627,6 +674,8 @@ enum VerificationState {
 model VerificationRequest {
   id             String            @id @db.Uuid
   userId         String            @map("user_id") @db.Uuid
+  /// The organisation applied to: that of the membership type. (M16)
+  organisationId String            @map("organisation_id") @db.Uuid
   typeId         String            @map("type_id") @db.Uuid
   hospitalId     String?           @map("hospital_id") @db.Uuid
   departmentId   String?           @map("department_id") @db.Uuid
@@ -639,11 +688,12 @@ model VerificationRequest {
   updatedAt      DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
   closedAt       DateTime?         @map("closed_at") @db.Timestamptz(6)
 
-  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type       MembershipType         @relation(fields: [typeId], references: [id], onDelete: Restrict)
-  hospital   Hospital?              @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
-  department Department?            @relation(fields: [departmentId], references: [id], onDelete: Restrict)
-  decisions  VerificationDecision[]
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         MembershipType         @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  hospital     Hospital?              @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  department   Department?            @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  decisions    VerificationDecision[]
+  organisation Organisation           @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@index([state, departmentId])
   @@index([userId])
@@ -691,16 +741,20 @@ enum ImportBatchStatus {
 /// keyed hash of the file, never the file: applying requires the same file again, so certificate
 /// and licence numbers are not kept here.
 model ImportBatch {
-  id          String            @id @db.Uuid
-  createdBy   String?           @map("created_by") @db.Uuid
-  fileName    String?           @map("file_name") @db.VarChar(255)
-  contentHash String            @map("content_hash") @db.VarChar(128)
-  status      ImportBatchStatus @default(DRY_RUN)
+  id             String            @id @db.Uuid
+  createdBy      String?           @map("created_by") @db.Uuid
+  /// Whose it is. Every one belongs to an organisation. (M16)
+  organisationId String            @map("organisation_id") @db.Uuid
+  fileName       String?           @map("file_name") @db.VarChar(255)
+  contentHash    String            @map("content_hash") @db.VarChar(128)
+  status         ImportBatchStatus @default(DRY_RUN)
   /// Per-row outcome (line, email, action, reasons) and totals. No identifiers.
-  report      Json
-  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
-  appliedAt   DateTime?         @map("applied_at") @db.Timestamptz(6)
-  appliedBy   String?           @map("applied_by") @db.Uuid
+  report         Json
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  appliedAt      DateTime?         @map("applied_at") @db.Timestamptz(6)
+  appliedBy      String?           @map("applied_by") @db.Uuid
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@index([createdAt])
   @@map("import_batches")
@@ -786,7 +840,9 @@ model StoredFile {
 /// Who may read a content item. Everything defaults to PUBLIC (D7).
 enum AccessTier {
   PUBLIC
-  /// Anyone with an active membership.
+  /// Anyone the platform knows as a physician, in any organisation or none. (M16)
+  VERIFIED
+  /// Active members of the organisation that owns the item. Not for the platform's own items.
   MEMBERS
   /// Active members of the membership types listed in content_access_rules.
   TYPES
@@ -853,6 +909,8 @@ model News {
   submittedBy         String?    @map("submitted_by") @db.Uuid
   featuredImageFileId String?    @map("featured_image_file_id") @db.Uuid
   accessTier          AccessTier @default(PUBLIC) @map("access_tier")
+  /// Whose it is. Empty: the platform's own. (M16)
+  organisationId      String?    @map("organisation_id") @db.Uuid
   /// When a SCHEDULED item goes live.
   publishAt           DateTime?  @map("publish_at") @db.Timestamptz(6)
   publishedAt         DateTime?  @map("published_at") @db.Timestamptz(6)
@@ -877,9 +935,11 @@ model News {
   attachments   NewsAttachment[]
   tags          NewsTag[]
   history       NewsHistory[]
+  organisation  Organisation?     @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@index([status, publishedAt(sort: Desc)])
   @@index([status, publishAt])
+  @@index([organisationId])
   @@map("news")
 }
 
@@ -1088,6 +1148,8 @@ model Event {
   capacity         Int?
   cmeAvailable     Boolean          @default(false) @map("cme_available")
   accessTier       AccessTier       @default(PUBLIC) @map("access_tier")
+  /// Whose it is. Empty: the platform's own. (M16)
+  organisationId   String?          @map("organisation_id") @db.Uuid
   /// Imported events (M4 fixtures): the page of the source site.
   sourceUrl        String?          @unique @map("source_url") @db.VarChar(500)
   publishedAt      DateTime?        @map("published_at") @db.Timestamptz(6)
@@ -1106,8 +1168,10 @@ model Event {
   registrations EventRegistration[]
   attendance    EventAttendance[]
   reminders     EventReminder[]
+  organisation  Organisation?       @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@index([status, startAt])
+  @@index([organisationId])
   @@map("events")
 }
 
@@ -1167,15 +1231,19 @@ model EventSessionTranslation {
 
 /// A speaker is a record, not an account (M5 plan §2.2). Demo speakers are fictional.
 model Speaker {
-  id          String   @id @db.Uuid
-  photoFileId String?  @map("photo_file_id") @db.Uuid
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id             String   @id @db.Uuid
+  /// Whose list of speakers the record is in; empty: the platform's. (M16)
+  organisationId String?  @map("organisation_id") @db.Uuid
+  photoFileId    String?  @map("photo_file_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   photo        StoredFile?          @relation(fields: [photoFileId], references: [id], onDelete: SetNull)
+  organisation Organisation?        @relation(fields: [organisationId], references: [id], onDelete: Restrict)
   translations SpeakerTranslation[]
   sessions     SessionSpeaker[]
 
+  @@index([organisationId])
   @@map("speakers")
 }
 
@@ -1659,23 +1727,25 @@ model NotificationPreference {
 /// worked out when a person opens their notices (their switches, their membership), so publishing
 /// costs the same however many accounts there are. Publishing an item again tells nobody twice. The access tier is kept as it was when the item was published.
 model ContentAnnouncement {
-  id         String           @id @db.Uuid
+  id             String           @id @db.Uuid
   /// "news", "event", "education", "guideline" or "guideline_version".
-  entityType String           @map("entity_type") @db.VarChar(40)
-  entityId   String           @map("entity_id") @db.Uuid
-  kind       NotificationKind
+  entityType     String           @map("entity_type") @db.VarChar(40)
+  entityId       String           @map("entity_id") @db.Uuid
+  kind           NotificationKind
   /// The message key of the notice, e.g. "contentNews".
-  type       String           @db.VarChar(60)
-  titleHe    String?          @map("title_he") @db.VarChar(300)
-  titleEn    String?          @map("title_en") @db.VarChar(300)
+  type           String           @db.VarChar(60)
+  titleHe        String?          @map("title_he") @db.VarChar(300)
+  titleEn        String?          @map("title_en") @db.VarChar(300)
   /// A path inside the site, without the language prefix.
-  link       String           @db.VarChar(500)
-  accessTier AccessTier       @map("access_tier")
+  link           String           @db.VarChar(500)
+  accessTier     AccessTier       @map("access_tier")
+  /// Who published the item: an organisation, or null for the platform. Decides who "members" are.
+  organisationId String?          @map("organisation_id") @db.Uuid
   /// The membership types that may read it, when the tier is TYPES.
-  typeIds    String[]         @default([]) @map("type_ids") @db.Uuid
-  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  typeIds        String[]         @default([]) @map("type_ids") @db.Uuid
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
   /// Set when a daily summary took it; null means the next summary lists it.
-  digestedAt DateTime?        @map("digested_at") @db.Timestamptz(6)
+  digestedAt     DateTime?        @map("digested_at") @db.Timestamptz(6)
 
   reads AnnouncementRead[]
 
@@ -1727,6 +1797,8 @@ model Broadcast {
   id             String          @id @db.Uuid
   status         BroadcastStatus @default(DRAFT)
   createdBy      String          @map("created_by") @db.Uuid
+  /// Whose it is. Empty: the platform's own. (M16)
+  organisationId String?         @map("organisation_id") @db.Uuid
   /// True: every active member. False: the membership types in type_ids.
   audienceAll    Boolean         @default(true) @map("audience_all")
   typeIds        String[]        @default([]) @map("type_ids") @db.Uuid
@@ -1745,9 +1817,11 @@ model Broadcast {
 
   translations BroadcastTranslation[]
   deliveries   BroadcastDelivery[]
+  organisation Organisation?          @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@unique([createdBy, idempotencyKey])
   @@index([status, createdAt(sort: Desc)])
+  @@index([organisationId])
   @@map("broadcasts")
 }
 
@@ -1908,16 +1982,18 @@ enum ChatReportAction {
 /// conversation, smaller id first; a database check keeps the order and the unique index keeps
 /// one conversation per pair.
 model Conversation {
-  id            String           @id @db.Uuid
-  kind          ConversationKind @default(DIRECT)
-  userLowId     String?          @map("user_low_id") @db.Uuid
-  userHighId    String?          @map("user_high_id") @db.Uuid
+  id             String           @id @db.Uuid
+  kind           ConversationKind @default(DIRECT)
+  /// Whose it is. Empty: the platform's own. (M16)
+  organisationId String?          @map("organisation_id") @db.Uuid
+  userLowId      String?          @map("user_low_id") @db.Uuid
+  userHighId     String?          @map("user_high_id") @db.Uuid
   /// The number of the newest message; the next message gets last_seq + 1 under a row lock.
-  lastSeq       Int              @default(0) @map("last_seq")
+  lastSeq        Int              @default(0) @map("last_seq")
   /// When the newest message was sent: the list shows the newest activity first.
-  lastMessageAt DateTime?        @map("last_message_at") @db.Timestamptz(6)
-  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  lastMessageAt  DateTime?        @map("last_message_at") @db.Timestamptz(6)
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // --- Rooms (M12). Empty for a direct conversation; a database check keeps it so. ---
   /// A room has a Hebrew name, unique among rooms, and may have an English one.
@@ -1941,21 +2017,23 @@ model Conversation {
   /// A room by invitation: not listed, not found, joined only by accepting an invitation (M13).
   inviteOnly     Boolean   @default(false) @map("invite_only")
 
-  userLow     User?                    @relation("ConversationUserLow", fields: [userLowId], references: [id], onDelete: SetNull)
-  userHigh    User?                    @relation("ConversationUserHigh", fields: [userHighId], references: [id], onDelete: SetNull)
-  category    ChatRoomCategory?        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  picture     StoredFile?              @relation("RoomPicture", fields: [pictureFileId], references: [id], onDelete: SetNull)
-  members     ConversationMember[]
-  messages    Message[]
-  reports     ChatReport[]
-  pins        MessagePin[]
-  bans        ConversationBan[]
-  invitations ConversationInvitation[]
+  userLow      User?                    @relation("ConversationUserLow", fields: [userLowId], references: [id], onDelete: SetNull)
+  userHigh     User?                    @relation("ConversationUserHigh", fields: [userHighId], references: [id], onDelete: SetNull)
+  category     ChatRoomCategory?        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  picture      StoredFile?              @relation("RoomPicture", fields: [pictureFileId], references: [id], onDelete: SetNull)
+  members      ConversationMember[]
+  messages     Message[]
+  reports      ChatReport[]
+  pins         MessagePin[]
+  bans         ConversationBan[]
+  invitations  ConversationInvitation[]
+  organisation Organisation?            @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@unique([userLowId, userHighId])
   @@index([userHighId])
   @@index([kind, archivedAt, lastMessageAt(sort: Desc)])
   @@index([categoryId])
+  @@index([organisationId])
   @@map("conversations")
 }
 

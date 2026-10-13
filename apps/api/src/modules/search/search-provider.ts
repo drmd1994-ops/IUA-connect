@@ -4,9 +4,12 @@ import { type Locale } from '@iua/i18n';
 export const CONTENT_SEARCH_TYPES = ['news', 'events', 'education', 'guidelines'] as const;
 export type ContentSearchType = (typeof CONTENT_SEARCH_TYPES)[number];
 
-/** Who is searching: the membership type when their membership is active, or null. */
+/** Who is searching, as the access tiers see them (the same as `Viewer` of the access module). */
 export interface SearchViewer {
-  activeTypeId: string | null;
+  /** Known to the platform as a physician. */
+  verified: boolean;
+  /** The active memberships: the organisation and the membership type of each. */
+  memberships: readonly { organisationId: string; typeId: string }[];
 }
 
 export interface SearchHit {

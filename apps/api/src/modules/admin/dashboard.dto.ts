@@ -5,6 +5,14 @@ import { nullableNumber, nullableString } from '../../common/dto/nullable-string
 const count = z.number().int();
 
 /**
+ * Whose numbers to show: an organisation's (its id), or the platform's own (`platform`). Left
+ * out: everything the person works on, together.
+ */
+export class AdminDashboardQueryDto extends createZodDto(
+  z.strictObject({ owner: z.union([z.literal('platform'), z.uuid()]).optional() }),
+) {}
+
+/**
  * The admin dashboard: what is waiting, counted when the page opens. A part is null when the
  * person may not act on it; the page then leaves that tile out.
  */

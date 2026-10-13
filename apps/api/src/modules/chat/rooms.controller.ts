@@ -24,7 +24,11 @@ import {
 } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { Authenticated, RequirePermission } from '../../common/decorators/access.decorators';
+import {
+  Authenticated,
+  RequirePermission,
+  RequireScopedPermission,
+} from '../../common/decorators/access.decorators';
 import { RATE_LIMITS } from '../../common/decorators/rate-limit.decorator';
 import { AppException } from '../../common/errors/app.exception';
 import { hitUserLimit } from '../../common/guards/user-rate-limit';
@@ -352,21 +356,29 @@ export class RoomsController {
 }
 
 /**
- * Rooms in the admin area (chat.rooms.manage, IUA admins, only in a session that completed
- * two-step verification): open, edit and archive rooms, appoint moderators, and keep the
- * lists of room categories and report reasons.
+ * Rooms in the admin area (chat.rooms.manage, only in a session that completed two-step
+ * verification): open, edit and archive rooms, appoint moderators, and keep the lists of room
+ * categories and report reasons.
+ *
+ * A room is an organisation's or the platform's own, and chat.rooms.manage is used where it is
+ * held (M16): the service checks the owner, and another owner's room reads as "not found". The
+ * two lists (room categories, report reasons) are the platform's: its staff keep them, and an
+ * organisation's staff read the categories.
  */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/chat')
-@RequirePermission('chat.rooms.manage')
+@RequireScopedPermission('chat.rooms.manage')
 export class RoomsAdminController {
   constructor(private readonly admin: RoomsAdminService) {}
 
   @Get('rooms')
   @ApiOkResponse({ type: AdminRoomListDto })
-  list(@Query() query: AdminRoomListQueryDto): Promise<AdminRoomListDto> {
-    return this.admin.list(query);
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: AdminRoomListQueryDto,
+  ): Promise<AdminRoomListDto> {
+    return this.admin.list(principalOf(req), query);
   }
 
   @Post('rooms')
@@ -381,8 +393,8 @@ export class RoomsAdminController {
 
   @Get('rooms/:id')
   @ApiOkResponse({ type: AdminRoomDto })
-  get(@Param('id', uuid()) id: string): Promise<AdminRoomDto> {
-    return this.admin.get(id);
+  get(@Req() req: RequestWithPrincipal, @Param('id', uuid()) id: string): Promise<AdminRoomDto> {
+    return this.admin.get(principalOf(req), id);
   }
 
   @Put('rooms/:id')
@@ -449,6 +461,7 @@ export class RoomsAdminController {
   }
 
   @Post('room-categories')
+  @RequirePermission('chat.rooms.manage')
   @ApiCreatedResponse({ type: AdminRoomCategoryDto })
   createCategory(
     @Req() req: RequestWithPrincipal,
@@ -459,6 +472,7 @@ export class RoomsAdminController {
   }
 
   @Put('room-categories/:id')
+  @RequirePermission('chat.rooms.manage')
   @ApiOkResponse({ type: AdminRoomCategoryDto })
   updateCategory(
     @Req() req: RequestWithPrincipal,
@@ -470,6 +484,7 @@ export class RoomsAdminController {
   }
 
   @Delete('room-categories/:id')
+  @RequirePermission('chat.rooms.manage')
   @HttpCode(204)
   @ApiNoContentResponse()
   removeCategory(
@@ -481,12 +496,14 @@ export class RoomsAdminController {
   }
 
   @Get('report-categories')
+  @RequirePermission('chat.rooms.manage')
   @ApiOkResponse({ type: AdminReportCategoriesDto })
   reportCategories(): Promise<AdminReportCategoriesDto> {
     return this.admin.reportCategories();
   }
 
   @Post('report-categories')
+  @RequirePermission('chat.rooms.manage')
   @ApiCreatedResponse({ type: AdminReportCategoryDto })
   createReportCategory(
     @Req() req: RequestWithPrincipal,
@@ -497,6 +514,7 @@ export class RoomsAdminController {
   }
 
   @Put('report-categories/:id')
+  @RequirePermission('chat.rooms.manage')
   @ApiOkResponse({ type: AdminReportCategoryDto })
   updateReportCategory(
     @Req() req: RequestWithPrincipal,

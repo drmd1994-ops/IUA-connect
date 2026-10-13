@@ -11,6 +11,7 @@ import { AttendanceService } from './attendance.service';
 import { CalendarService } from './calendar.service';
 import { CheckInTokens } from './check-in-token';
 import { EventMailer } from './event-mailer';
+import { EventOwnerGuard } from './event-owner.guard';
 import { EventsPublicService } from './events-public.service';
 import {
   EventRegistrationController,
@@ -45,6 +46,7 @@ import { SessionsService } from './sessions.service';
     AttendanceService,
     CheckInTokens,
     EventMailer,
+    EventOwnerGuard,
     EventRemindersJob,
   ],
   exports: [EventsAdminService, EventsPublicService],

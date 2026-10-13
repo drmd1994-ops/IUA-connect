@@ -1,7 +1,16 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
-import { uuidv7 } from '@iua/shared';
+import { type PermissionKey, uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import {
+  OWNER_PROBLEM_CODES,
+  covers,
+  ownedWhere,
+  ownerOfNew,
+  permissionsOn,
+  scopeOf,
+  scopeOfAny,
+} from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { APP_CONFIG } from '../../config/config.module';
@@ -9,9 +18,10 @@ import { type Env } from '../../config/env.schema';
 import { type Prisma } from '../../generated/prisma/client';
 import { ContentAnnouncer, Notifier } from '../notifications';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { AccessService } from '../access';
+import { AccessService, tierFitsOwner } from '../access';
 import { AuditService } from '../audit';
 import { FilesService, type FileView } from '../files';
+import { ORGANISATION_REF } from '../organisations';
 import { sanitizeMarkdown } from './markdown';
 import {
   type AdminNewsDto,
@@ -26,8 +36,16 @@ import { slugify, uniqueSlug } from './slug';
 
 type Tx = Prisma.TransactionClient;
 
+/** Whoever holds one of these somewhere works on news there. */
+export const NEWS_STAFF = [
+  'news.create',
+  'news.review',
+  'news.publish',
+] as const satisfies readonly PermissionKey[];
+
 const INCLUDE = {
   translations: true,
+  organisation: { select: ORGANISATION_REF },
   attachments: { include: { file: true }, orderBy: { sortOrder: 'asc' } },
   tags: { include: { tag: true } },
   featuredImage: true,
@@ -38,8 +56,12 @@ type NewsRow = Prisma.NewsGetPayload<{ include: typeof INCLUDE }>;
 
 /**
  * Editing and the review workflow for news (M3 plan §2.3 and §3). Editors (news.create) write
- * drafts and submit them; IUA admins (news.review, news.publish) send back, publish or schedule.
+ * drafts and submit them; reviewers (news.review, news.publish) send back, publish or schedule.
  * Every transition goes into the item's append-only history and the audit log.
+ *
+ * An item belongs to an organisation or to the platform (M16), and each permission is used
+ * where it is held: an organisation's editor never sees, by list or by id, an item of another
+ * organisation or of the platform.
  */
 @Injectable()
 export class NewsAdminService {
@@ -57,8 +79,14 @@ export class NewsAdminService {
 
   // --- Reading --------------------------------------------------------------------------------
 
-  async list(query: AdminNewsListQueryDto): Promise<AdminNewsListDto> {
+  async list(principal: Principal, query: AdminNewsListQueryDto): Promise<AdminNewsListDto> {
+    const scope = scopeOfAny(principal, NEWS_STAFF);
+    if (query.organisation && !covers(scope, query.organisation)) {
+      throw new AppException('NOT_FOUND');
+    }
     const where: Prisma.NewsWhereInput = {
+      AND: [ownedWhere(scope)],
+      ...(query.organisation ? { organisationId: query.organisation } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.q
         ? { translations: { some: { title: { contains: query.q, mode: 'insensitive' } } } }
@@ -67,7 +95,11 @@ export class NewsAdminService {
     const [rows, total] = await Promise.all([
       this.prisma.news.findMany({
         where,
-        include: { translations: { select: { locale: true, title: true } }, revision: true },
+        include: {
+          translations: { select: { locale: true, title: true } },
+          revision: true,
+          organisation: { select: ORGANISATION_REF },
+        },
         orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
@@ -77,6 +109,7 @@ export class NewsAdminService {
     return {
       items: rows.map((row) => ({
         id: row.id,
+        organisation: row.organisation,
         slug: row.slug,
         status: row.status,
         titleHe: row.translations.find((t) => t.locale === 'he')?.title ?? null,
@@ -96,13 +129,49 @@ export class NewsAdminService {
     };
   }
 
-  async get(id: string): Promise<AdminNewsDto> {
+  async get(principal: Principal, id: string): Promise<AdminNewsDto> {
     const row = await this.prisma.news.findUnique({ where: { id }, include: INCLUDE });
-    if (!row) throw new AppException('NOT_FOUND');
-    return { ...this.view(row), typeIds: await this.access.allowedTypes('news', id) };
+    if (!row || !covers(scopeOfAny(principal, NEWS_STAFF), row.organisationId)) {
+      throw new AppException('NOT_FOUND');
+    }
+    return this.describe(row);
   }
 
-  async history(id: string): Promise<NewsHistoryDto> {
+  private async describe(row: NewsRow): Promise<AdminNewsDto> {
+    return { ...this.view(row), typeIds: await this.access.allowedTypes('news', row.id) };
+  }
+
+  /** The item as it is now, for the answer to a change the caller was allowed to make. */
+  private async after(id: string): Promise<AdminNewsDto> {
+    return this.describe(
+      await this.prisma.news.findUniqueOrThrow({ where: { id }, include: INCLUDE }),
+    );
+  }
+
+  /**
+   * An item the caller may use that permission on, or "not found": an item of an owner they
+   * do not work for does not exist for them.
+   */
+  private async mine<I extends Prisma.NewsInclude>(
+    principal: Principal,
+    permission: PermissionKey | readonly PermissionKey[],
+    id: string,
+    include?: I,
+  ): Promise<Prisma.NewsGetPayload<{ include: I }>> {
+    const row = await this.prisma.news.findUnique({
+      where: { id },
+      ...(include ? { include } : {}),
+    });
+    const scope =
+      typeof permission === 'string'
+        ? scopeOf(principal, permission)
+        : scopeOfAny(principal, permission);
+    if (!row || !covers(scope, row.organisationId)) throw new AppException('NOT_FOUND');
+    return row as Prisma.NewsGetPayload<{ include: I }>;
+  }
+
+  async history(principal: Principal, id: string): Promise<NewsHistoryDto> {
+    await this.mine(principal, NEWS_STAFF, id);
     const rows = await this.prisma.newsHistory.findMany({
       where: { newsId: id },
       orderBy: { at: 'asc' },
@@ -121,8 +190,18 @@ export class NewsAdminService {
 
   // --- Writing --------------------------------------------------------------------------------
 
-  async create(input: NewsInputDto, actorUserId: string, meta: RequestMeta): Promise<AdminNewsDto> {
-    await this.validateReferences(input);
+  async create(
+    input: NewsInputDto,
+    principal: Principal,
+    meta: RequestMeta,
+  ): Promise<AdminNewsDto> {
+    const actorUserId = principal.userId;
+    const owner = ownerOfNew(scopeOf(principal, 'news.create'), input.organisationId);
+    if ('problem' in owner) {
+      throw invalid('organisationId', OWNER_PROBLEM_CODES[owner.problem]);
+    }
+    const { organisationId } = owner;
+    await this.validateReferences(input, organisationId);
     const base = input.slug ?? slugify((input.translations.he ?? input.translations.en)!.title);
     const slug = await uniqueSlug(base, async (candidate) =>
       Boolean(await this.prisma.news.findUnique({ where: { slug: candidate } })),
@@ -134,6 +213,7 @@ export class NewsAdminService {
           id,
           slug,
           status: 'DRAFT',
+          organisationId,
           authorUserId: actorUserId,
           ...this.fields(input),
         },
@@ -143,7 +223,7 @@ export class NewsAdminService {
     });
     await this.attachFiles(input);
     await this.record('news.create', id, actorUserId, meta);
-    return this.get(id);
+    return this.after(id);
   }
 
   /** Replaces a draft (If-Match must carry its current version). */
@@ -151,11 +231,14 @@ export class NewsAdminService {
     id: string,
     input: NewsInputDto,
     ifMatch: string | undefined,
-    actorUserId: string,
+    principal: Principal,
     meta: RequestMeta,
   ): Promise<AdminNewsDto> {
-    const row = await this.prisma.news.findUnique({ where: { id } });
-    if (!row) throw new AppException('NOT_FOUND');
+    const actorUserId = principal.userId;
+    const row = await this.mine(principal, 'news.create', id);
+    if (input.organisationId !== undefined && input.organisationId !== row.organisationId) {
+      throw invalid('organisationId', 'ownerCannotChange');
+    }
     const version = parseIfMatch(ifMatch);
     if (version !== row.version) {
       throw new AppException('PRECONDITION_FAILED', [{ code: 'newsChanged' }]);
@@ -163,7 +246,7 @@ export class NewsAdminService {
     if (row.status !== 'DRAFT') {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'newsNotEditable' }]);
     }
-    await this.validateReferences(input);
+    await this.validateReferences(input, row.organisationId);
     // The URL name can change until the item is first published.
     let slug = row.slug;
     if (row.revisionOfId === null && !row.publishedAt && input.slug && input.slug !== row.slug) {
@@ -182,14 +265,14 @@ export class NewsAdminService {
     });
     await this.attachFiles(input);
     await this.record('news.update', id, actorUserId, meta);
-    return this.get(id);
+    return this.after(id);
   }
 
   /** Starts (or returns) the revision of a published item. */
-  async createRevision(id: string, actorUserId: string, meta: RequestMeta): Promise<AdminNewsDto> {
-    const live = await this.prisma.news.findUnique({ where: { id }, include: INCLUDE });
-    if (!live) throw new AppException('NOT_FOUND');
-    if (live.revision) return this.get(live.revision.id);
+  async createRevision(id: string, principal: Principal, meta: RequestMeta): Promise<AdminNewsDto> {
+    const actorUserId = principal.userId;
+    const live = await this.mine(principal, 'news.create', id, INCLUDE);
+    if (live.revision) return this.after(live.revision.id);
     if (live.revisionOfId || live.status !== 'PUBLISHED') {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'newsNotRevisable' }]);
     }
@@ -201,6 +284,7 @@ export class NewsAdminService {
           slug: null,
           status: 'DRAFT',
           revisionOfId: id,
+          organisationId: live.organisationId,
           authorUserId: actorUserId,
           categoryId: live.categoryId,
           accessTier: live.accessTier,
@@ -213,13 +297,13 @@ export class NewsAdminService {
       await this.addHistory(tx, id, 'revision.create', 'PUBLISHED', 'PUBLISHED', actorUserId);
     });
     await this.record('news.revision.create', id, actorUserId, meta);
-    return this.get(revisionId);
+    return this.after(revisionId);
   }
 
   /** Deletes a draft that was never published (or a revision in progress). */
-  async remove(id: string, actorUserId: string, meta: RequestMeta): Promise<void> {
-    const row = await this.prisma.news.findUnique({ where: { id } });
-    if (!row) throw new AppException('NOT_FOUND');
+  async remove(id: string, principal: Principal, meta: RequestMeta): Promise<void> {
+    const actorUserId = principal.userId;
+    const row = await this.mine(principal, 'news.create', id);
     if (row.status !== 'DRAFT' || (row.revisionOfId === null && row.publishedAt)) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'newsNotDeletable' }]);
     }
@@ -235,8 +319,7 @@ export class NewsAdminService {
     principal: Principal,
     meta: RequestMeta,
   ): Promise<AdminNewsDto> {
-    const row = await this.prisma.news.findUnique({ where: { id }, include: INCLUDE });
-    if (!row) throw new AppException('NOT_FOUND');
+    const row = await this.mine(principal, NEWS_STAFF, id, INCLUDE);
     const action = input.action as NewsAction;
     const now = new Date();
     const plan = planTransition(action, {
@@ -244,7 +327,8 @@ export class NewsAdminService {
       isRevision: row.revisionOfId !== null,
       submittedBy: row.submittedBy,
       actorUserId: principal.userId,
-      permissions: principal.permissions,
+      // What the person may do for this item's owner, not what they may do somewhere else.
+      permissions: permissionsOn(principal, row.organisationId),
       ...(input.comment ? { comment: input.comment } : {}),
       ...(input.publishAt ? { publishAt: new Date(input.publishAt) } : {}),
       now,
@@ -308,7 +392,7 @@ export class NewsAdminService {
     if (action === 'SEND_BACK') await this.notifyAuthor(row, 'newsSentBack', input.comment ?? '');
     if (action === 'PUBLISH') await this.notifyAuthor(row, 'newsPublished');
     if (action === 'PUBLISH' && !row.revisionOfId) await this.announce(row);
-    return this.get(row.revisionOfId ?? id);
+    return this.after(row.revisionOfId ?? id);
   }
 
   /**
@@ -360,6 +444,7 @@ export class NewsAdminService {
       translations: row.translations,
       link: `/news/${row.slug}`,
       accessTier: row.accessTier,
+      organisationId: row.organisationId,
     });
   }
 
@@ -462,18 +547,24 @@ export class NewsAdminService {
     await tx.news.delete({ where: { id: revision.id } });
   }
 
-  private async validateReferences(input: NewsInputDto): Promise<void> {
+  private async validateReferences(
+    input: NewsInputDto,
+    organisationId: string | null,
+  ): Promise<void> {
+    if (!tierFitsOwner(input.accessTier, organisationId)) {
+      throw invalid('accessTier', 'tierNeedsOrganisation');
+    }
     if (input.categoryId) {
       const category = await this.prisma.newsCategory.findFirst({
         where: { id: input.categoryId, active: true },
       });
       if (!category) throw invalid('categoryId', 'unknownCategory');
     }
-    if (input.accessTier === 'TYPES') {
-      const count = await this.prisma.membershipType.count({
-        where: { id: { in: input.typeIds } },
-      });
-      if (count !== new Set(input.typeIds).size) throw invalid('typeIds', 'unknownMembershipType');
+    if (
+      input.accessTier === 'TYPES' &&
+      (await this.access.typesNotOf(organisationId, input.typeIds)).length
+    ) {
+      throw invalid('typeIds', 'unknownMembershipType');
     }
     const fileIds = [
       ...(input.featuredImageFileId ? [input.featuredImageFileId] : []),
@@ -593,6 +684,7 @@ export class NewsAdminService {
     }
     return {
       id: row.id,
+      organisation: row.organisation,
       slug: row.slug,
       status: row.status,
       categoryId: row.categoryId,

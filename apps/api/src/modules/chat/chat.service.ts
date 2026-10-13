@@ -154,7 +154,7 @@ export class ChatService {
     userId: string,
   ): Promise<{ conversation: ConversationDetailDto; created: boolean }> {
     const me = principal.userId;
-    await this.access.ensureActiveMember(principal);
+    this.access.ensureVerified(principal);
     if (userId === me) throw new AppException('NOT_FOUND');
     const pair = pairOf(me, userId);
     const existing = await this.prisma.conversation.findFirst({
@@ -262,7 +262,7 @@ export class ChatService {
 
   /** Whether the Chat link is shown: an active member, or someone who has conversations. */
   async enabled(principal: Principal): Promise<boolean> {
-    if (await this.access.isActiveMember(principal)) return true;
+    if (this.access.isVerified(principal)) return true;
     const any = await this.prisma.conversationMember.findFirst({
       where: { userId: principal.userId, conversation: { lastSeq: { gt: 0 } } },
       select: { userId: true },

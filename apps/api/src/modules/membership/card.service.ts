@@ -4,6 +4,7 @@ import { AppException } from '../../common/errors/app.exception';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { ORGANISATION_REF, type OrganisationRef } from '../organisations';
 import { effectiveStatus } from './memberships.service';
 import { todayInIsrael } from './period';
 
@@ -22,10 +23,12 @@ export interface CardToken {
 export interface CardVerification {
   valid: boolean;
   name: string | null;
+  /** Whose card it is. */
+  organisation: OrganisationRef | null;
   type: { key: string; nameHe: string; nameEn: string } | null;
 }
 
-const INVALID: CardVerification = { valid: false, name: null, type: null };
+const INVALID: CardVerification = { valid: false, name: null, organisation: null, type: null };
 
 /**
  * The digital membership card's QR code (PRODUCT_REQUIREMENTS §3.3): a short-lived signed token
@@ -46,9 +49,16 @@ export class CardService {
     ]).then(([privateKey, publicKey]) => ({ privateKey, publicKey }));
   }
 
-  /** A fresh token for the member's card. Only an active membership gets one. */
-  async issue(userId: string): Promise<CardToken> {
-    const membership = await this.prisma.membership.findUnique({ where: { userId } });
+  /**
+   * A fresh token for the member's card in one organisation. Only an active membership gets one.
+   */
+  async issue(userId: string, organisationId: string | null): Promise<CardToken> {
+    // No organisation: the person belongs to none, so there is no card to issue.
+    const membership = organisationId
+      ? await this.prisma.membership.findUnique({
+          where: { userId_organisationId: { userId, organisationId } },
+        })
+      : null;
     if (!membership || effectiveStatus(membership, todayInIsrael()) !== 'ACTIVE') {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'noActiveMembership' }]);
     }
@@ -88,10 +98,15 @@ export class CardService {
     }
     const membership = await this.prisma.membership.findUnique({
       where: { id: membershipId },
-      include: { type: true, user: { select: { status: true, profile: true } } },
+      include: {
+        type: true,
+        organisation: { select: { ...ORGANISATION_REF, active: true } },
+        user: { select: { status: true, profile: true } },
+      },
     });
     if (
       !membership ||
+      !membership.organisation.active ||
       membership.user.status !== 'ACTIVE' ||
       effectiveStatus(membership, todayInIsrael()) !== 'ACTIVE'
     ) {
@@ -99,9 +114,11 @@ export class CardService {
     }
     const profile = membership.user.profile;
     const name = [profile?.firstName, profile?.lastName].filter(Boolean).join(' ') || null;
+    const { active: _active, ...organisation } = membership.organisation;
     return {
       valid: true,
       name,
+      organisation,
       type: {
         key: membership.type.key,
         nameHe: membership.type.nameHe,

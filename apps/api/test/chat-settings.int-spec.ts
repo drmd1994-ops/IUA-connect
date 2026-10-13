@@ -23,7 +23,7 @@ describe('chat: blocking, settings and finding people (integration)', () => {
     member,
     listed,
     consent,
-    endMembership,
+    unverify,
     start,
     send,
     messages,
@@ -115,7 +115,7 @@ describe('chat: blocking, settings and finding people (integration)', () => {
       const reachable = await named(await listed());
       const notListed = await named(await member());
       const suspended = await named(await listed());
-      await endMembership(suspended, 'suspend');
+      await unverify(suspended);
       const closed = await named(await listed());
       await chatSettings(closed, { ...STARTING, audience: 'NOBODY' }).expect(200);
       const blockedByViewer = await named(await listed());

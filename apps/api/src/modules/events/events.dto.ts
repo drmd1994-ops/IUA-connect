@@ -2,8 +2,9 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
 import { MAX_BODY_LENGTH, SLUG_PATTERN } from '../news';
+import { organisationRefSchema } from '../organisations';
 
-const TIERS = ['PUBLIC', 'MEMBERS', 'TYPES'] as const;
+const TIERS = ['PUBLIC', 'VERIFIED', 'MEMBERS', 'TYPES'] as const;
 const STATUSES = ['DRAFT', 'PUBLISHED', 'CANCELLED'] as const;
 const MODES = ['INTERNAL', 'EXTERNAL', 'NONE'] as const;
 const locale = z.enum(['he', 'en']);
@@ -23,6 +24,11 @@ export class EventInputDto extends createZodDto(
   z
     .strictObject({
       slug: z.string().trim().max(120).regex(SLUG_PATTERN).optional(),
+      /**
+       * Whose event it is: an organisation, or null for the platform's own. Said when it is
+       * created and never changed. It may be left out when the writer can only mean one.
+       */
+      organisationId: z.uuid().nullable().optional(),
       categoryId: z.uuid().nullable().optional(),
       /** A draft may be saved without dates; publishing needs both. */
       startAt: instant.nullable().optional(),
@@ -88,6 +94,8 @@ const coordinates = {
 export class AdminEventDto extends createZodDto(
   z.strictObject({
     id: z.uuid(),
+    /** Whose event it is; null: the platform's own. */
+    organisation: organisationRefSchema.nullable(),
     slug: z.string(),
     status: z.enum(STATUSES),
     categoryId: z.uuid().nullable(),
@@ -123,6 +131,8 @@ export class AdminEventDto extends createZodDto(
 export class AdminEventListQueryDto extends createZodDto(
   z.strictObject({
     status: z.enum(STATUSES).optional(),
+    /** Only this organisation's events. Left out: all the reader works on. */
+    organisation: z.uuid().optional(),
     q: z.string().trim().max(100).optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),
     pageSize: z.coerce.number().int().min(1).max(100).default(25),
@@ -134,6 +144,7 @@ export class AdminEventListDto extends createZodDto(
     items: z.array(
       z.strictObject({
         id: z.uuid(),
+        organisation: organisationRefSchema.nullable(),
         slug: z.string(),
         status: z.enum(STATUSES),
         titleHe: nullableString(),
@@ -200,6 +211,8 @@ export class PublicEventQueryDto extends createZodDto(
     /** Upcoming events have not ended yet (soonest first); past ones have (latest first). */
     when: z.enum(['upcoming', 'past']).default('upcoming'),
     category: z.string().max(64).optional(),
+    /** Only the events of this organisation. */
+    organisation: z.uuid().optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),
     pageSize: z.coerce.number().int().min(1).max(50).default(12),
   }),
@@ -211,6 +224,8 @@ export class PublicEventItemQueryDto extends createZodDto(
 
 const publicSummary = z.strictObject({
   slug: z.string(),
+  /** Whose event it is: an organisation, or null for the platform itself. */
+  organisation: organisationRefSchema.nullable(),
   title: z.string(),
   summary: nullableString(),
   category: z.strictObject({ key: z.string(), nameHe: z.string(), nameEn: z.string() }).nullable(),

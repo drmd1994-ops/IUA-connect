@@ -4,7 +4,13 @@ import { nullableNumber, nullableString } from '../../common/dto/nullable-string
 import { MAX_BODY_LENGTH, SLUG_PATTERN } from '../news';
 import { EDUCATION_ACTIONS } from './education-workflow';
 
-export const TIERS = ['PUBLIC', 'MEMBERS', 'TYPES'] as const;
+/** Every setting an item can carry. */
+export const TIERS = ['PUBLIC', 'VERIFIED', 'MEMBERS', 'TYPES'] as const;
+/**
+ * The settings the platform's own content may be given: "members" belongs to an organisation's
+ * items, and the library, the questions and the guidelines are the platform's (M16).
+ */
+export const PLATFORM_TIERS = ['PUBLIC', 'VERIFIED', 'TYPES'] as const;
 export const STATUSES = ['DRAFT', 'IN_REVIEW', 'PUBLISHED', 'ARCHIVED'] as const;
 export const TYPES = [
   'VIDEO',
@@ -51,7 +57,7 @@ export class EducationInputDto extends createZodDto(
       externalUrl: httpUrl.nullable().optional(),
       /** A video that has no link yet. */
       videoPending: z.boolean().default(false),
-      accessTier: z.enum(TIERS).default('PUBLIC'),
+      accessTier: z.enum(PLATFORM_TIERS).default('PUBLIC'),
       /** The membership types allowed to read it, when accessTier is TYPES. */
       typeIds: z.array(z.uuid()).max(10).default([]),
       coverFileId: z.uuid().nullable().optional(),

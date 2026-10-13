@@ -32,7 +32,7 @@
     "joined": "You are in this room",
     "announcements": "Announcements: only moderators write",
     "back": "My rooms",
-    "membersOnly": "Rooms are for members with an active membership."
+    "membersOnly": "Rooms are for physicians whose account has been verified."
   },
   "join": {
     "title": "Join {name}?",

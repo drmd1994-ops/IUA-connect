@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-06 (M14 and M15, the mobile app: the members' and visitors' parts of the site are in the app; an .apk was built and installed on the owner's phone; the owner went through the phone checklist and read the new Hebrew texts, all good; M14 is merged, M15 is in pull request #22; the admin area stays on the site)_
+_Last updated: 2026-10-13 (M16, an independent platform with a section for an organisation: part 1, the server and the data, is built and in a pull request; part 2, the site, the app, the new name and the demo, is not started)_
 
 ## Summary
 
@@ -948,6 +948,48 @@ The dependency check in CI began to fail on 2026-10-06, for pull request #22 and
 3. **Pull request #22** (this milestone) waits for its checks and then for "merge PR 22".
 4. ~~Component tests~~ **Written on 2026-10-06 in the reduced form the owner chose;** in a pull request of their own.
 5. **Where the demo server lives:** the tunnel as now, or a hosted machine (a free one and paid ones were looked up for the owner on 2026-10-06; either needs its own plan).
+
+## M16 An independent platform, with a section for an organisation (in progress, started 2026-10-13)
+
+Plan: `docs/plans/M16-independent-platform.md`, approved by the owner on 2026-10-13 with seven answers (the plan is in pull request #25). The milestone has two parts. **Part 1, this one: the server and the data (plan steps 2 to 5).** Part 2 (steps 6 to 10: the organisation's section on the site and in the app, the new name, the fictional demo organisation, documents) is not started.
+
+### Built so far (part 1)
+
+- **Organisations.** An `organisations` table. Membership types, memberships, applications and import batches always belong to one; news, events, speakers, rooms, messages to members and staff roles belong to one or to the platform itself. Six migrations; every existing row moved to "the first organisation". The public can list the organisations (`GET /organisations`).
+- **Three things that were one:** an account, a verified account (`users.verified_at`), a membership. Whoever an organisation accepts or imports as a member becomes verified. The key that opens chat, groups, the directory and the library is now "verified", not "active member".
+- **Four viewing settings instead of three:** everyone, verified physicians, members of the organisation that owns the item, selected membership types. The library, exam questions and guidelines are the platform's and have no "members" setting; their existing "members" items became "verified".
+- **Staff in two places.** A role is held on the platform or inside one organisation. The association's administrator became two roles: "organisation administrator" and "platform administrator". Platform staff reach into an organisation's things only with a named permission (`organisations.access`, held by the super administrator), and reading a member's file that way is written to the audit log.
+- **Every staff route checks whose thing it is.** Another organisation's thing answers "not found", exactly as one that does not exist.
+- **The site's admin area:** a "whose is it" choice on new news items, events, speakers, rooms and messages (shown only to someone who works in more than one place); roles given on the platform or in an organisation; the dashboard for everything or one owner at a time. The site and the app say "verified physicians" where an item is for them.
+
+### Verified
+
+- Unit tests: all packages green (server 391 tests in 45 files, including a table of who sees what with two organisations and the rules of ownership).
+- Integration tests on PostgreSQL: the 46 existing suites, adjusted where the model changed, and two new ones with two organisations. One of them reads every route whose permission can be held inside an organisation from the running application and tries each as the other organisation's office and as the platform's administrator: all answer "not found" and nothing changes.
+- The migrations and all three seed layers from an empty database, twice (the second run changes nothing).
+- Lint, formatting and type checks for the server, the site and the app.
+
+### Not verified
+
+- The browser tests (Playwright) were not run locally; CI runs them.
+- Nothing was looked at by a person in a browser or on the phone after this change.
+- The migration was run on the development and test databases, not on a separate copy with before-and-after counts as the plan's test list asks.
+
+### Deviations and findings
+
+- **A membership that ends no longer closes chat, the directory and the library.** This is the approved model ("leaving an organisation does not close the account"), and it is a change a user can see: before, a suspended or expired member lost them.
+- **Categories are kept by the platform's staff.** News, event and room categories and the report reasons are shared lists; an organisation's staff read them and no longer change them. The plan put room categories with the organisation; that is deferred.
+- **Education items owned by an organisation** (in the plan's scope list) are not built: the library is the platform's alone, as the owner answered.
+- **Roles are given only by a super administrator,** also an organisation's own staff roles. Who appoints an organisation's staff was not in the plan.
+- **The member import tells an organisation's office whether an email address already has an account** (the report says "new account" or "new membership"). That sits uneasily with "a person who never applied to it does not exist for it".
+- **Suspending a person from all of chat is the platform's decision.** An organisation's chat staff ban from their own rooms.
+- Two bugs of this change were caught by the existing tests and one by seeding an empty database, and fixed: a role could be granted twice (a lost `NULLS NOT DISTINCT`); the dashboard showed an empty "members" tile on the platform's page; a sample guideline still used the "members" setting.
+
+### Open for the owner
+
+1. The five deviations above: confirm, or say what should be different.
+2. The product's new name (needed for part 2): Collega, Urolink, MedKesher, Tzevet, or another.
+3. Merge pull request #25 (the plans), so that the approved plan is on `main`.
 
 ## Next step
 

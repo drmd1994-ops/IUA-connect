@@ -11,8 +11,18 @@ export interface Principal {
   sessionId: string;
   /** MFA completed in this session. Permissions of MFA-requiring roles apply only when true. */
   mfa: boolean;
+  /** The roles held on the platform. Roles held inside an organisation are not among them. */
   roles: readonly string[];
+  /** What the person may do on the platform: from the roles they hold there. */
   permissions: ReadonlySet<PermissionKey>;
+  /**
+   * What the person may do inside each organisation they are staff of (M16). Kept apart from
+   * the platform's on purpose: a check that reads only `permissions` never opens anything to an
+   * organisation's staff. See `scope.ts` for the questions to ask.
+   */
+  organisationPermissions: ReadonlyMap<string, ReadonlySet<PermissionKey>>;
+  /** Known to the platform as a physician (M16). The key to the platform's members' parts. */
+  verified: boolean;
   /** Holds a role that requires MFA but has no confirmed factor yet: must enrol first. */
   mfaEnrollmentRequired: boolean;
 }

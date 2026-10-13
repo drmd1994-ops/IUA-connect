@@ -151,7 +151,9 @@ export function EventList() {
                     )}
                     {item.accessTier !== 'PUBLIC' && (
                       <span className={`${badge} bg-surface-muted text-text-muted`}>
-                        {t('content.common.tiers.MEMBERS')}
+                        {t(
+                          `content.common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`,
+                        )}
                       </span>
                     )}
                   </p>

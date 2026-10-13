@@ -62,7 +62,7 @@ export function NewsListPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-semibold text-brand-900">{t('content.adminNews.title')}</h1>
         <div className="flex flex-wrap items-center gap-4">
-          {me?.permissions.includes('news.review') && (
+          {me?.platformPermissions.includes('news.review') && (
             <Link href="/admin/news/categories" className={link}>
               {t('content.adminNews.categoriesLink')}
             </Link>

@@ -13,6 +13,7 @@ import { Pager } from '@/features/content/pager';
 import { useLocalName, useReference } from '@/features/membership/reference';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
+import { OwnerField, OwnerLine, PLATFORM, canOn, firstOwner, ownerInput } from './owners';
 
 type Schemas = components['schemas'];
 type List = Schemas['AdminBroadcastListDto'];
@@ -224,12 +225,17 @@ function BroadcastForm({ initial }: { initial: Broadcast | null }) {
   const [error, setError] = useState<unknown>(null);
   // One key per new message: a repeated click or a retried request creates nothing twice.
   const [idempotencyKey] = useState(() => crypto.randomUUID());
+  // Who sends it (M16): an organisation, to its members, or the platform itself.
+  const [owner, setOwner] = useState(() =>
+    initial ? (initial.organisation?.id ?? PLATFORM) : firstOwner(me, 'broadcasts.create'),
+  );
+  const ownerId = owner === PLATFORM ? null : owner;
   const tabsId = useId();
 
   const status = broadcast?.status ?? null;
   const mine = broadcast ? broadcast.mine : true;
   const editable = mine && (status === null || status === 'DRAFT' || status === 'REJECTED');
-  const canApprove = !!me?.permissions.includes('broadcasts.approve');
+  const canApprove = canOn(me, 'broadcasts.approve', broadcast?.organisation?.id ?? null);
   const broadcastId = broadcast?.id;
   const set = (patch: Partial<Draft>) => {
     setSaved(false);
@@ -283,7 +289,7 @@ function BroadcastForm({ initial }: { initial: Broadcast | null }) {
       return call(() =>
         api.POST('/api/v1/admin/broadcasts', {
           params: { header: { 'Idempotency-Key': idempotencyKey } },
-          body,
+          body: { ...body, ...ownerInput(me, 'broadcasts.create', owner) },
         }),
       );
     }
@@ -329,6 +335,18 @@ function BroadcastForm({ initial }: { initial: Broadcast | null }) {
         }}
       >
         <fieldset disabled={!editable || pending} className="flex flex-col gap-6">
+          {broadcast ? (
+            <OwnerLine permission="broadcasts.create" organisation={broadcast.organisation} />
+          ) : (
+            <OwnerField
+              permission="broadcasts.create"
+              value={owner}
+              onChange={(value) => {
+                setOwner(value);
+                set({ typeIds: [] });
+              }}
+            />
+          )}
           <div role="tablist" aria-label={e('language')} className="flex gap-1">
             {LANGS.map((code) => (
               <button
@@ -404,23 +422,26 @@ function BroadcastForm({ initial }: { initial: Broadcast | null }) {
             {!draft.all && (
               <fieldset className="ms-6 flex flex-col gap-2">
                 <legend className="sr-only">{e('types')}</legend>
-                {(reference?.types ?? []).map((type) => (
-                  <label key={type.id} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={draft.typeIds.includes(type.id)}
-                      onChange={() =>
-                        set({
-                          typeIds: draft.typeIds.includes(type.id)
-                            ? draft.typeIds.filter((id) => id !== type.id)
-                            : [...draft.typeIds, type.id],
-                        })
-                      }
-                    />
-                    {name(type)}
-                  </label>
-                ))}
+                {(reference?.types ?? [])
+                  // An organisation writes to its own membership types.
+                  .filter((type) => ownerId === null || type.organisation.id === ownerId)
+                  .map((type) => (
+                    <label key={type.id} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="size-4"
+                        checked={draft.typeIds.includes(type.id)}
+                        onChange={() =>
+                          set({
+                            typeIds: draft.typeIds.includes(type.id)
+                              ? draft.typeIds.filter((id) => id !== type.id)
+                              : [...draft.typeIds, type.id],
+                          })
+                        }
+                      />
+                      {name(type)}
+                    </label>
+                  ))}
               </fieldset>
             )}
           </fieldset>

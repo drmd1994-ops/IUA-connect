@@ -44,8 +44,12 @@ export class AccountsController {
   @Get(':id')
   @RequirePermission('users.read')
   @ApiOkResponse({ type: AccountDto })
-  get(@Param('id', new ParseUUIDPipe()) id: string): Promise<AccountDto> {
-    return this.accounts.get(id);
+  get(
+    @Req() req: RequestWithPrincipal,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Meta() meta: RequestMeta,
+  ): Promise<AccountDto> {
+    return this.accounts.get(id, principalOf(req), meta);
   }
 
   @Post(':id/disable')
@@ -111,7 +115,14 @@ export class AccountsController {
     @Body() body: RoleChangeDto,
     @Meta() meta: RequestMeta,
   ): Promise<AccountDto> {
-    return this.accounts.grantRole(id, body.role, body.reason, principalOf(req), meta);
+    return this.accounts.grantRole(
+      id,
+      body.role,
+      body.organisationId ?? null,
+      body.reason,
+      principalOf(req),
+      meta,
+    );
   }
 
   @Post(':id/roles/remove')
@@ -124,7 +135,14 @@ export class AccountsController {
     @Body() body: RoleChangeDto,
     @Meta() meta: RequestMeta,
   ): Promise<AccountDto> {
-    return this.accounts.removeRole(id, body.role, body.reason, principalOf(req), meta);
+    return this.accounts.removeRole(
+      id,
+      body.role,
+      body.organisationId ?? null,
+      body.reason,
+      principalOf(req),
+      meta,
+    );
   }
 }
 

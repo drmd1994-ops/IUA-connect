@@ -44,6 +44,13 @@ describe('member directory (integration)', () => {
     await h.close();
   });
 
+  /**
+   * The platform no longer knows the person as a physician. (A membership that ends does not
+   * do this: the person keeps the platform, and their place in its directory.)
+   */
+  const unverify = (p: Person) =>
+    h.db.query('UPDATE users SET verified_at = NULL WHERE id = $1', [p.id]);
+
   async function person(membershipType: string | null = null): Promise<Person> {
     const email = await createVerifiedUser(h, 'directory');
     let membershipId: string | null = null;
@@ -90,28 +97,41 @@ describe('member directory (integration)', () => {
     );
 
   describe('who may read it', () => {
-    it('needs a signed-in account with an active membership', async () => {
+    it('needs a signed-in account that is verified as a physician’s', async () => {
       const name = tag();
       const target = await listed(name);
       await h.http().get('/api/v1/members').expect(401);
       await h.http().get(`/api/v1/members/${target.id}`).expect(401);
 
-      const noMembership = await person();
-      const suspended = await member();
-      await endMembership(suspended, 'suspend');
-      const expired = await member();
-      await endMembership(expired, 'expire');
-      for (const reader of [noMembership, suspended, expired]) {
+      const neverVerified = await person();
+      const unverified = await member();
+      await unverify(unverified);
+      for (const reader of [neverVerified, unverified]) {
         const refused = await list(reader.token, `?q=${name}`).expect(403);
         expect(refused.body.error.details[0].code).toBe('membersOnly');
         // The same refusal for a listed member and for an address that never existed.
         await get(reader.token, target.id).expect(403);
         await get(reader.token, '0190a000-0000-7000-8000-00000000c0de').expect(403);
       }
-      // An administrator without a membership uses the admin members screen instead.
+      // An administrator who is not verified uses the admin screens instead.
       await list(admin.accessToken, `?q=${name}`).expect(403);
 
       expect(await ids(`?q=${name}`)).toEqual([target.id]);
+    });
+  });
+
+  describe('who keeps it', () => {
+    it('a membership that ends leaves the person the directory: they keep the platform', async () => {
+      const name = tag();
+      const target = await listed(name);
+      const suspended = await member();
+      await endMembership(suspended, 'suspend');
+      const expired = await member();
+      await endMembership(expired, 'expire');
+      for (const reader of [suspended, expired]) {
+        await list(reader.token, `?q=${name}`).expect(200);
+        await get(reader.token, target.id).expect(200);
+      }
     });
   });
 
@@ -187,38 +207,38 @@ describe('member directory (integration)', () => {
   });
 
   describe('who is listed', () => {
-    it('only members who opted in and whose membership is active', async () => {
+    it('only people who opted in and are verified as physicians', async () => {
       const name = tag();
       const optedIn = await listed(name);
       const notOptedIn = await member();
       await profile(notOptedIn, { firstName: 'Dana', lastName: `Fictional ${name}` });
+      const unverified = await listed(name);
+      await unverify(unverified);
+      // Opted in before ever being verified.
+      const neverVerified = await person();
+      await profile(neverVerified, { firstName: 'Dana', lastName: `Fictional ${name}` });
+      await consent(neverVerified, true).expect(200);
+
+      expect(await ids(`?q=${name}`)).toEqual([optedIn.id]);
+    });
+
+    it('a membership that ends does not take a person off the list', async () => {
+      const name = tag();
       const suspended = await listed(name);
       await endMembership(suspended, 'suspend');
       const expired = await listed(name);
       await endMembership(expired, 'expire');
-      // Opted in before ever having a membership.
-      const noMembership = await person();
-      await profile(noMembership, { firstName: 'Dana', lastName: `Fictional ${name}` });
-      await consent(noMembership, true).expect(200);
-
-      expect(await ids(`?q=${name}`)).toEqual([optedIn.id]);
+      expect((await ids(`?q=${name}`)).sort()).toEqual([suspended.id, expired.id].sort());
     });
 
     it('not listed, not active and never existed all look the same', async () => {
       const name = tag();
       const notOptedIn = await member();
       await profile(notOptedIn, { firstName: 'Dana', lastName: `Fictional ${name}` });
-      const suspended = await listed(name);
-      await endMembership(suspended, 'suspend');
-      const expired = await listed(name);
-      await endMembership(expired, 'expire');
+      const unverified = await listed(name);
+      await unverify(unverified);
       const answers = [];
-      for (const id of [
-        notOptedIn.id,
-        suspended.id,
-        expired.id,
-        '0190a000-0000-7000-8000-00000000c0de',
-      ]) {
+      for (const id of [notOptedIn.id, unverified.id, '0190a000-0000-7000-8000-00000000c0de']) {
         const res = await get(viewer.token, id).expect(404);
         const { correlationId: _correlationId, ...error } = res.body.error;
         answers.push(error);

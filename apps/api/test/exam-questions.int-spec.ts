@@ -8,6 +8,7 @@ import {
   signInAdmin,
   signInWithMfa,
   startHarness,
+  verifyPhysician,
 } from './auth-harness';
 
 /**
@@ -26,7 +27,7 @@ describe('exam questions (integration)', () => {
   beforeAll(async () => {
     h = await startHarness();
     editor = await signInWithMfa(h, 'exam-editor', (email) =>
-      grantRole(h, email, 'CONTENT_EDITOR'),
+      grantRole(h, email, 'CONTENT_EDITOR', 'platform'),
     );
     reviewer = await signInAdmin(h, 'exam-reviewer');
     const res = await h.http().get('/api/v1/membership-types').expect(200);
@@ -324,9 +325,9 @@ describe('exam questions (integration)', () => {
   });
 
   describe('access tiers', () => {
-    const ids: Record<'public' | 'members' | 'full', string> = {
+    const ids: Record<'public' | 'verified' | 'full', string> = {
       public: '',
-      members: '',
+      verified: '',
       full: '',
     };
     const readers: Record<string, string | null> = {};
@@ -359,25 +360,31 @@ describe('exam questions (integration)', () => {
     beforeAll(async () => {
       // Level STUDENT narrows "next" to this block's three questions (and earlier runs').
       ids.public = (await published(question({ level: 'STUDENT' }))).id;
-      ids.members = (await published(question({ level: 'STUDENT', accessTier: 'MEMBERS' }))).id;
+      ids.verified = (await published(question({ level: 'STUDENT', accessTier: 'VERIFIED' }))).id;
       ids.full = (
         await published(
           question({ level: 'STUDENT', accessTier: 'TYPES', typeIds: [types.FULL_MEMBER] }),
         )
       ).id;
       readers.anonymous = null;
+      // An account the platform does not know as a physician's.
       readers.noMembership = await person();
+      // A physician the platform knows, in no organisation.
+      const verifiedEmail = await createVerifiedUser(h, 'reader');
+      await verifyPhysician(h, verifiedEmail);
+      readers.verified = (await signIn(h, verifiedEmail)).accessToken;
       readers.full = await member('FULL_MEMBER');
       readers.student = await member('STUDENT');
       readers.suspended = await member('FULL_MEMBER', 'suspend');
     });
 
-    const expected: Record<string, ('public' | 'members' | 'full')[]> = {
+    const expected: Record<string, ('public' | 'verified' | 'full')[]> = {
       anonymous: ['public'],
       noMembership: ['public'],
-      full: ['public', 'members', 'full'],
-      student: ['public', 'members'],
-      suspended: ['public'],
+      verified: ['public', 'verified'],
+      full: ['public', 'verified', 'full'],
+      student: ['public', 'verified'],
+      suspended: ['public', 'verified'],
     };
 
     for (const [who, visible] of Object.entries(expected)) {
@@ -397,7 +404,7 @@ describe('exam questions (integration)', () => {
           if (!res.body.question) break;
           offered.push(res.body.question.id);
         }
-        for (const name of ['public', 'members', 'full'] as const) {
+        for (const name of ['public', 'verified', 'full'] as const) {
           const shown = visible.includes(name);
           expect(offered.includes(ids[name])).toBe(shown);
           const res = await answer(token, ids[name], 2);

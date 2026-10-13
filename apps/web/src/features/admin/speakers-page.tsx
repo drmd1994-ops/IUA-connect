@@ -12,6 +12,7 @@ import { StoredImage, useUpload } from '@/features/content/files';
 import { Pager } from '@/features/content/pager';
 import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
+import { OwnerField, OwnerLine, firstOwner, ownerInput } from './owners';
 import { speakerName } from './event-sessions';
 
 type Schemas = components['schemas'];
@@ -151,7 +152,9 @@ function SpeakerForm({
   const t = useTranslations();
   const s = (key: string) => t(`events.admin.speakers.${key}`);
   const upload = useUpload();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
+  // Whose list the speaker goes in (M16): an organisation's, or the platform's.
+  const [owner, setOwner] = useState(() => firstOwner(me, 'events.manage'));
   const photoId = useId();
   const text = (lang: 'he' | 'en') => speaker?.translations[lang];
   const [draft, setDraft] = useState({
@@ -205,7 +208,11 @@ function SpeakerForm({
         ? call(() =>
             api.PUT('/api/v1/admin/speakers/{id}', { params: { path: { id: speaker.id } }, body }),
           )
-        : call(() => api.POST('/api/v1/admin/speakers', { body })),
+        : call(() =>
+            api.POST('/api/v1/admin/speakers', {
+              body: { ...body, ...ownerInput(me, 'events.manage', owner) },
+            }),
+          ),
     );
   }
 
@@ -227,6 +234,11 @@ function SpeakerForm({
       noValidate
       className="mt-4 flex flex-col gap-4 rounded-md border border-border p-4"
     >
+      {speaker ? (
+        <OwnerLine permission="events.manage" organisation={speaker.organisation} />
+      ) : (
+        <OwnerField permission="events.manage" value={owner} onChange={setOwner} />
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           label={s('nameHe')}

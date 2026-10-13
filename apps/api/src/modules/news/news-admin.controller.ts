@@ -24,7 +24,10 @@ import {
 } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { RequirePermission } from '../../common/decorators/access.decorators';
+import {
+  RequireAnyScopedPermission,
+  RequirePermission,
+} from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import {
   AdminNewsDto,
@@ -38,18 +41,22 @@ import {
   NewsTransitionDto,
   UpdateNewsCategoryDto,
 } from './news.dto';
-import { NewsAdminService } from './news-admin.service';
+import { NEWS_STAFF, NewsAdminService } from './news-admin.service';
 import { NewsCategoriesService } from './news-categories.service';
 
 /**
  * News editing and review (API_DESIGN.md §4 "/admin/news"). Writing needs news.create; the
  * transition endpoint checks the permission each action needs (review, publish). Admin roles
  * apply only in a session that completed MFA. Audited by the service.
+ *
+ * An item is an organisation's or the platform's own, and so is the right to work on it (M16):
+ * the service checks the owner on every route, and another owner's item reads as "not found".
+ * The categories are the platform's.
  */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/news')
-@RequirePermission('news.create')
+@RequireAnyScopedPermission(...NEWS_STAFF)
 export class NewsAdminController {
   constructor(
     private readonly news: NewsAdminService,
@@ -58,8 +65,11 @@ export class NewsAdminController {
 
   @Get()
   @ApiOkResponse({ type: AdminNewsListDto })
-  list(@Query() query: AdminNewsListQueryDto): Promise<AdminNewsListDto> {
-    return this.news.list(query);
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: AdminNewsListQueryDto,
+  ): Promise<AdminNewsListDto> {
+    return this.news.list(principalOf(req), query);
   }
 
   // Category routes come before ':id' so "categories" is never read as an ID.
@@ -94,16 +104,17 @@ export class NewsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminNewsDto> {
-    return withEtag(res, await this.news.create(body, principalOf(req).userId, meta));
+    return withEtag(res, await this.news.create(body, principalOf(req), meta));
   }
 
   @Get(':id')
   @ApiOkResponse({ type: AdminNewsDto })
   async get(
+    @Req() req: RequestWithPrincipal,
     @Param('id', new ParseUUIDPipe()) id: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminNewsDto> {
-    return withEtag(res, await this.news.get(id));
+    return withEtag(res, await this.news.get(principalOf(req), id));
   }
 
   @Put(':id')
@@ -117,7 +128,7 @@ export class NewsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminNewsDto> {
-    return withEtag(res, await this.news.update(id, body, ifMatch, principalOf(req).userId, meta));
+    return withEtag(res, await this.news.update(id, body, ifMatch, principalOf(req), meta));
   }
 
   @Delete(':id')
@@ -128,7 +139,7 @@ export class NewsAdminController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Meta() meta: RequestMeta,
   ): Promise<void> {
-    return this.news.remove(id, principalOf(req).userId, meta);
+    return this.news.remove(id, principalOf(req), meta);
   }
 
   @Post(':id/revision')
@@ -140,7 +151,7 @@ export class NewsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminNewsDto> {
-    return withEtag(res, await this.news.createRevision(id, principalOf(req).userId, meta));
+    return withEtag(res, await this.news.createRevision(id, principalOf(req), meta));
   }
 
   @Post(':id/transitions')
@@ -158,8 +169,11 @@ export class NewsAdminController {
 
   @Get(':id/history')
   @ApiOkResponse({ type: NewsHistoryDto })
-  history(@Param('id', new ParseUUIDPipe()) id: string): Promise<NewsHistoryDto> {
-    return this.news.history(id);
+  history(
+    @Req() req: RequestWithPrincipal,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<NewsHistoryDto> {
+    return this.news.history(principalOf(req), id);
   }
 }
 

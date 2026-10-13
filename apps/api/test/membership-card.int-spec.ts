@@ -1,4 +1,5 @@
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   createVerifiedUser,
@@ -64,6 +65,13 @@ describe('membership card (integration)', () => {
     expect(check.body).toEqual({
       valid: true,
       name: 'Yael Fictional',
+      // Whose card it is.
+      organisation: {
+        id: DEFAULT_ORGANISATION,
+        slug: expect.any(String),
+        nameHe: expect.any(String),
+        nameEn: expect.any(String),
+      },
       type: { key: 'HONORARY_MEMBER', nameHe: 'חברות כבוד', nameEn: 'Honorary member' },
     });
 
@@ -79,7 +87,7 @@ describe('membership card (integration)', () => {
       .get('/api/v1/card/verify')
       .query({ t: res.body.token })
       .expect(200);
-    expect(after.body).toEqual({ valid: false, name: null, type: null });
+    expect(after.body).toEqual({ valid: false, name: null, organisation: null, type: null });
     await cardToken(accessToken).expect(422);
   });
 

@@ -1,5 +1,6 @@
 import { BroadcastsService } from '../src/modules/notifications/broadcasts.service';
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   createVerifiedUser,
@@ -47,6 +48,7 @@ describe('broadcasts (integration)', () => {
   const message = (extra: Record<string, unknown> = {}) => {
     const tag = `${run}-${++n}`;
     return {
+      organisationId: DEFAULT_ORGANISATION,
       audience: { all: false, typeIds: [types.STUDENT] },
       translations: {
         he: { title: `הודעה לסטודנטים ${tag}`, body: `פסקה ראשונה ${tag}.\n\nפסקה שנייה.` },

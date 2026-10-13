@@ -6,6 +6,11 @@ import { nullableString } from '../../common/dto/nullable-string';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
 import { Authenticated, Public } from '../../common/decorators/access.decorators';
 import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
+import {
+  OrganisationQueryDto,
+  OrganisationsService,
+  organisationRefSchema,
+} from '../organisations';
 import { CardService } from './card.service';
 
 export class CardTokenDto extends createZodDto(
@@ -16,11 +21,13 @@ export class CardVerifyQueryDto extends createZodDto(
   z.strictObject({ t: z.string().min(1).max(2048) }),
 ) {}
 
-/** Only valid/invalid, the name and the membership type (API_DESIGN.md §4). */
+/** Only valid/invalid, the name, the organisation and the membership type (API_DESIGN.md §4). */
 export class CardVerificationDto extends createZodDto(
   z.strictObject({
     valid: z.boolean(),
     name: nullableString(),
+    /** Whose card it is: the organisation the membership is in. */
+    organisation: organisationRefSchema.nullable(),
     type: z.strictObject({ key: z.string(), nameHe: z.string(), nameEn: z.string() }).nullable(),
   }),
 ) {}
@@ -31,13 +38,23 @@ export class CardVerificationDto extends createZodDto(
 @Controller('me/membership/card-token')
 @Authenticated()
 export class CardTokenController {
-  constructor(private readonly cards: CardService) {}
+  constructor(
+    private readonly cards: CardService,
+    private readonly organisations: OrganisationsService,
+  ) {}
 
   @Get()
   @Header('Cache-Control', 'no-store')
   @ApiOkResponse({ type: CardTokenDto })
-  issue(@Req() req: RequestWithPrincipal): Promise<CardTokenDto> {
-    return this.cards.issue(principalOf(req).userId);
+  async issue(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: OrganisationQueryDto,
+  ): Promise<CardTokenDto> {
+    const { userId } = principalOf(req);
+    return this.cards.issue(
+      userId,
+      await this.organisations.meantForMember(query.organisation, userId),
+    );
   }
 }
 

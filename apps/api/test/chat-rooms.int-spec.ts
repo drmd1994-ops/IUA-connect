@@ -1,7 +1,14 @@
 import { RealtimeBus } from '../src/infra/realtime/realtime-bus';
 import { type ChatEvent, ChatStream } from '../src/modules/chat';
 import { ChatNotifier } from '../src/modules/chat/chat-notifier';
-import { type Harness, bearer, expectAdminOnly, signInAdmin, startHarness } from './auth-harness';
+import {
+  DEFAULT_ORGANISATION,
+  type Harness,
+  bearer,
+  expectAdminOnly,
+  signInAdmin,
+  startHarness,
+} from './auth-harness';
 import { type ChatPerson as Person, NOBODY, chatActors } from './chat-harness';
 
 /**
@@ -43,8 +50,13 @@ describe('chat rooms (integration)', () => {
     h.http().post(`/api/v1/chat/${path}`).set(bearer(as.token)).send(body);
   const del = (as: Person, path: string) =>
     h.http().delete(`/api/v1/chat/${path}`).set(bearer(as.token));
+  /** Staff's own routes. A new room is the default organisation's unless the test says whose. */
   const adminPost = (path: string, body: object = {}) =>
-    h.http().post(`/api/v1/admin/chat/${path}`).set(bearer(admin.accessToken)).send(body);
+    h
+      .http()
+      .post(`/api/v1/admin/chat/${path}`)
+      .set(bearer(admin.accessToken))
+      .send(path === 'rooms' ? { organisationId: DEFAULT_ORGANISATION, ...body } : body);
   const notices = async (p: Person) =>
     (
       await h.db.query<{ type: string; params: Record<string, string>; link: string }>(
@@ -296,8 +308,14 @@ describe('chat rooms (integration)', () => {
       expect((await roomMessages(a, id).expect(200)).body.items).toHaveLength(1);
       expect((await room(a, id).expect(200)).body.sendState).toBe('membersOnly');
       expect(code(await roomSend(a, id, 'After').expect(403))).toBe('membersOnly');
-      // They can't see the list of rooms, or join another.
-      expect(code(await get(a, 'rooms').expect(403))).toBe('membersOnly');
+      // They keep the platform, so the list still opens; but the organisation's rooms are no
+      // longer for them: none is listed, and another one can't be joined.
+      const other = await createRoom();
+      const listed = (await get(a, 'rooms').expect(200)).body.items as { id: string }[];
+      expect(listed.map((item) => item.id)).not.toContain(other);
+      expect(listed.map((item) => item.id)).not.toContain(id);
+      await join(a, other).expect(404);
+      await room(a, other).expect(404);
     });
 
     it('staff with the chat permission read any room without joining, and don’t write', async () => {

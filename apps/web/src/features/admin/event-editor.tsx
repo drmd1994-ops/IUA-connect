@@ -17,6 +17,7 @@ import { fromIsraelLocal, toIsraelLocal } from '@/lib/israel-time';
 import { EventAttendance, EventRegistrations } from './event-people';
 import { EventSessions } from './event-sessions';
 import { MarkdownEditor } from './markdown-editor';
+import { OwnerField, OwnerLine, PLATFORM, firstOwner, ownerInput } from './owners';
 import { type Tier, TierFields } from './tier-fields';
 
 type Schemas = components['schemas'];
@@ -146,7 +147,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
   const name = useLocalName();
   const router = useRouter();
   const upload = useUpload();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
   const [item, setItem] = useState(initial);
   const [draft, setDraft] = useState(() => toDraft(initial));
   const [lang, setLang] = useState<Lang>('he');
@@ -165,6 +166,18 @@ function EditorForm({ initial }: { initial: Item | null }) {
   };
   const setText = (patch: Partial<Text>) =>
     set({ text: { ...draft.text, [lang]: { ...draft.text[lang], ...patch } } });
+  // Whose the item is (M16): chosen when it is created, and fixed from then on.
+  const [owner, setOwner] = useState(() =>
+    initial ? (initial.organisation?.id ?? PLATFORM) : firstOwner(me, 'events.manage'),
+  );
+  const chooseOwner = (value: string) => {
+    setOwner(value);
+    // The platform has no members, and each owner has its own membership types.
+    set({
+      tier: value === PLATFORM && draft.tier === 'MEMBERS' ? 'VERIFIED' : draft.tier,
+      typeIds: [],
+    });
+  };
 
   useEffect(() => {
     let active = true;
@@ -202,7 +215,13 @@ function EditorForm({ initial }: { initial: Item | null }) {
   /** Creates the event, or saves it with the version it was loaded with (If-Match). */
   const save = () => {
     const body = toBody(draft);
-    if (!item) return call(() => api.POST('/api/v1/admin/events', { body }));
+    if (!item) {
+      return call(() =>
+        api.POST('/api/v1/admin/events', {
+          body: { ...body, ...ownerInput(me, 'events.manage', owner) },
+        }),
+      );
+    }
     return call(() =>
       api.PUT('/api/v1/admin/events/{id}', {
         params: { path: { id: item.id }, header: { 'If-Match': `"${item.version}"` } },
@@ -396,11 +415,17 @@ function EditorForm({ initial }: { initial: Item | null }) {
                 inputMode="numeric"
               />
             )}
+            {item ? (
+              <OwnerLine permission="events.manage" organisation={item.organisation} />
+            ) : (
+              <OwnerField permission="events.manage" value={owner} onChange={chooseOwner} />
+            )}
             <TierFields
               label={e('tier')}
               typesLabel={e('types')}
               tier={draft.tier}
               typeIds={draft.typeIds}
+              owner={owner === PLATFORM ? null : owner}
               onChange={(tier, typeIds) => set({ tier, typeIds })}
             />
           </div>

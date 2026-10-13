@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 
 const locale = z.enum(['he', 'en']);
 const instant = z.iso.datetime({ offset: true });
@@ -18,6 +19,11 @@ const speakerText = z.strictObject({
 /** A speaker is a record, not an account. At least one language. */
 export class SpeakerInputDto extends createZodDto(
   z.strictObject({
+    /**
+     * Whose list the speaker goes in: an organisation's, or null for the platform's. Said when
+     * the record is created and never changed; may be left out when it can only be one.
+     */
+    organisationId: z.uuid().nullable().optional(),
     photoFileId: z.uuid().nullable().optional(),
     translations: z
       .strictObject({ he: speakerText.optional(), en: speakerText.optional() })
@@ -35,6 +41,8 @@ const speakerTextView = z.strictObject({
 export class AdminSpeakerDto extends createZodDto(
   z.strictObject({
     id: z.uuid(),
+    /** Whose list the speaker is in; null: the platform's. */
+    organisation: organisationRefSchema.nullable(),
     photoFileId: z.uuid().nullable(),
     translations: z.strictObject({
       he: speakerTextView.optional(),
@@ -48,6 +56,8 @@ export class AdminSpeakerDto extends createZodDto(
 export class AdminSpeakerListQueryDto extends createZodDto(
   z.strictObject({
     q: z.string().trim().max(100).optional(),
+    /** The speakers an event of this id may name: those of the event's owner. */
+    eventId: z.uuid().optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),
     pageSize: z.coerce.number().int().min(1).max(100).default(50),
   }),

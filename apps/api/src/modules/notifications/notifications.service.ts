@@ -13,7 +13,11 @@ import { type RequestMeta } from '../../common/request-meta';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
-import { NOTIFICATION_RETENTION_DAYS, activeMembershipType } from './content-announcer';
+import {
+  MEMBERSHIP_FACTS,
+  NOTIFICATION_RETENTION_DAYS,
+  activeMemberships,
+} from './content-announcer';
 import {
   type NotificationListDto,
   type NotificationListQueryDto,
@@ -28,8 +32,11 @@ interface Reader {
   since: Date;
   /** The kinds of new content the person has switched on in the app. */
   kinds: string[];
-  /** The membership type, when the membership is active. */
-  activeTypeId: string | null;
+  /** Known to the platform as a physician. */
+  verified: boolean;
+  /** The organisations the person is an active member of, and the types they hold there. */
+  organisationIds: string[];
+  typeIds: string[];
   /** "Mark all as read" was last used at this moment. */
   readUntil: Date | null;
 }
@@ -53,10 +60,9 @@ function visibleAnnouncements(reader: Reader): Prisma.Sql {
     AND a.kind::text = ANY(${reader.kinds})
     AND (
       a.access_tier = 'PUBLIC'
-      OR (
-        ${reader.activeTypeId !== null}
-        AND (a.access_tier = 'MEMBERS' OR ${reader.activeTypeId}::uuid = ANY(a.type_ids))
-      )
+      OR (a.access_tier = 'VERIFIED' AND ${reader.verified})
+      OR (a.access_tier = 'MEMBERS' AND a.organisation_id = ANY(${reader.organisationIds}::uuid[]))
+      OR (a.access_tier = 'TYPES' AND a.type_ids && ${reader.typeIds}::uuid[])
     )`;
 }
 
@@ -203,12 +209,14 @@ export class NotificationsService {
       where: { id: userId },
       select: {
         createdAt: true,
-        membership: { select: { status: true, endDate: true, typeId: true } },
+        verifiedAt: true,
+        memberships: { where: { organisation: { active: true } }, select: MEMBERSHIP_FACTS },
         notificationPrefs: { select: { kind: true, channel: true, enabled: true } },
         notificationState: { select: { announcementsReadUntil: true } },
       },
     });
     const oldest = new Date(Date.now() - NOTIFICATION_RETENTION_DAYS * 24 * 60 * 60 * 1000);
+    const active = activeMemberships(user.memberships);
     return {
       userId,
       // Nothing from before the account existed, and nothing past the retention period.
@@ -216,7 +224,9 @@ export class NotificationsService {
       kinds: CONTENT_NOTIFICATION_KINDS.filter((kind) =>
         notificationEnabled(kind, 'APP', user.notificationPrefs),
       ),
-      activeTypeId: activeMembershipType(user.membership),
+      verified: user.verifiedAt !== null,
+      organisationIds: active.map((held) => held.organisationId),
+      typeIds: active.map((held) => held.typeId),
       readUntil: user.notificationState?.announcementsReadUntil ?? null,
     };
   }

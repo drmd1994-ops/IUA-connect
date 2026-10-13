@@ -1,4 +1,5 @@
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { DEMO_PASSWORD } from './demo';
@@ -50,7 +51,7 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
     return;
   }
   const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
-  const adminRole = await prisma.role.findUniqueOrThrow({ where: { key: 'IUA_ADMIN' } });
+  const adminRole = await prisma.role.findUniqueOrThrow({ where: { key: 'ORG_ADMIN' } });
   const [news, event, lesson, guideline] = await Promise.all([
     prisma.news.findFirst({
       where: { status: 'PUBLISHED', accessTier: 'PUBLIC', revisionOfId: null, sourceUrl: null },
@@ -84,6 +85,7 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
           email: SECOND_ADMIN_EMAIL,
           passwordHash,
           emailVerifiedAt: new Date(now - 60 * DAY),
+          verifiedAt: new Date(now - 60 * DAY),
           locale: 'he',
         },
       });
@@ -99,7 +101,13 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
         },
       });
       await tx.userRole.create({
-        data: { id: uuidv7(), userId: secondAdmin, roleId: adminRole.id, grantedBy: admin },
+        data: {
+          id: uuidv7(),
+          userId: secondAdmin,
+          roleId: adminRole.id,
+          organisationId: FIRST_ORGANISATION.id,
+          grantedBy: admin,
+        },
       });
 
       // The directory: three members, each showing something different.
@@ -329,6 +337,7 @@ async function broadcast(
   await tx.broadcast.create({
     data: {
       id,
+      organisationId: FIRST_ORGANISATION.id,
       status: 'PENDING_APPROVAL',
       createdBy: author,
       audienceAll: true,

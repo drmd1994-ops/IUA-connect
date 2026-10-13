@@ -46,7 +46,7 @@ describe('video connection point (integration)', () => {
   beforeAll(async () => {
     h = await startHarness({ video });
     editor = await signInWithMfa(h, 'video-editor', (email) =>
-      grantRole(h, email, 'CONTENT_EDITOR'),
+      grantRole(h, email, 'CONTENT_EDITOR', 'platform'),
     );
     reviewer = await signInAdmin(h, 'video-reviewer');
   });

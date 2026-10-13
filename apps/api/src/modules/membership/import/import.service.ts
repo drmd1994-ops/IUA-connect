@@ -1,5 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
+import { type Principal } from '../../../common/auth/principal';
+import {
+  OWNER_PROBLEM_CODES,
+  covers,
+  organisationOfNew,
+  scopeOf,
+} from '../../../common/auth/scope';
 import { AppException } from '../../../common/errors/app.exception';
 import { type RequestMeta } from '../../../common/request-meta';
 import { APP_CONFIG } from '../../../config/config.module';
@@ -42,6 +49,11 @@ interface PlannedRow {
  * again, re-plans every row against the current data, and creates accounts (with a "set your
  * password" email), memberships and history. Applying a batch twice is refused, and re-importing
  * the same file finds every row unchanged.
+ *
+ * A file brings members into one organisation (M16): the membership types it names are that
+ * organisation's, a row is compared with the person's membership there, and a number is in
+ * use only within it. Whoever an organisation imports as a member is known to the platform as
+ * a physician.
  */
 @Injectable()
 export class ImportService {
@@ -61,15 +73,25 @@ export class ImportService {
   async dryRun(
     csv: string,
     fileName: string | undefined,
-    actorUserId: string,
+    principal: Principal,
+    organisation: string | undefined,
     meta: RequestMeta,
   ): Promise<ImportBatchDto> {
-    const { report } = await this.plan(csv);
+    const actorUserId = principal.userId;
+    const owner = organisationOfNew(scopeOf(principal, 'membership.manage'), organisation);
+    if ('problem' in owner) {
+      throw new AppException('VALIDATION_FAILED', [
+        { field: 'organisation', code: OWNER_PROBLEM_CODES[owner.problem] },
+      ]);
+    }
+    const { organisationId } = owner;
+    const { report } = await this.plan(csv, organisationId);
     if (report.fileErrors.length) return { ...report, batchId: null, status: null };
     const id = uuidv7();
     await this.prisma.importBatch.create({
       data: {
         id,
+        organisationId,
         createdBy: actorUserId,
         fileName: fileName ?? null,
         contentHash: this.contentHash(csv),
@@ -83,11 +105,15 @@ export class ImportService {
   async apply(
     batchId: string,
     csv: string,
-    actorUserId: string,
+    principal: Principal,
     meta: RequestMeta,
   ): Promise<ImportBatchDto> {
+    const actorUserId = principal.userId;
     const batch = await this.prisma.importBatch.findUnique({ where: { id: batchId } });
-    if (!batch) throw new AppException('NOT_FOUND');
+    if (!batch || !covers(scopeOf(principal, 'membership.manage'), batch.organisationId)) {
+      throw new AppException('NOT_FOUND');
+    }
+    const { organisationId } = batch;
     if (batch.status === 'APPLIED') throw rule('CONFLICT', 'batchApplied');
     if (Date.now() - batch.createdAt.getTime() > BATCH_TTL_MS) {
       throw rule('BUSINESS_RULE_VIOLATION', 'batchExpired');
@@ -102,7 +128,7 @@ export class ImportService {
     });
     if (count === 0) throw rule('CONFLICT', 'batchApplied');
 
-    const { report, planned } = await this.plan(csv);
+    const { report, planned } = await this.plan(csv, organisationId);
     // One hash of a random secret, thrown away: new accounts have no usable password until
     // their owners set one from the email.
     const unusablePassword = await this.passwords.hash(randomToken());
@@ -111,7 +137,7 @@ export class ImportService {
         continue;
       }
       try {
-        await this.applyRow(row, batchId, actorUserId, unusablePassword);
+        await this.applyRow(row, batchId, organisationId, actorUserId, unusablePassword);
       } catch (error) {
         this.logger.error({ err: error, batchId, line: row.line }, 'Import row failed');
         const reportRow = report.rows.find((r) => r.line === row.line)!;
@@ -131,9 +157,14 @@ export class ImportService {
 
   // --- planning -------------------------------------------------------------------------------
 
-  private async plan(csv: string): Promise<{ report: ImportReport; planned: PlannedRow[] }> {
+  private async plan(
+    csv: string,
+    organisationId: string,
+  ): Promise<{ report: ImportReport; planned: PlannedRow[] }> {
     const today = todayInIsrael();
-    const types = await this.prisma.membershipType.findMany({ where: { active: true } });
+    const types = await this.prisma.membershipType.findMany({
+      where: { active: true, organisationId },
+    });
     const kinds = new Map<string, IdentifierKind>(types.map((t) => [t.key, t.identifier]));
     const read = readImport(csv, kinds, today);
     if (read.fileErrors.length) {
@@ -146,7 +177,7 @@ export class ImportService {
     const emails = read.rows.flatMap((r) => (r.record ? [r.record.email] : []));
     const users = await this.prisma.user.findMany({
       where: { email: { in: emails } },
-      include: { membership: { include: { type: true } } },
+      include: { memberships: { where: { organisationId }, include: { type: true } } },
     });
     const byEmail = new Map(users.map((u) => [u.email, u]));
 
@@ -180,11 +211,11 @@ export class ImportService {
         planned.push(skip('accountNotActive'));
         continue;
       }
-      if (hash && (await this.identifierUsedByOther(hash, user?.id ?? null))) {
+      if (hash && (await this.identifierUsedByOther(hash, user?.id ?? null, organisationId))) {
         planned.push(skip('identifierInUse'));
         continue;
       }
-      const membership = user?.membership;
+      const membership = user?.memberships[0];
       let action: ImportAction;
       const changes: string[] = [];
       if (!user) action = 'CREATE_ACCOUNT';
@@ -206,12 +237,23 @@ export class ImportService {
   }
 
   /** The number belongs to another person's membership or open application. */
-  private async identifierUsedByOther(hash: string, userId: string | null): Promise<boolean> {
+  private async identifierUsedByOther(
+    hash: string,
+    userId: string | null,
+    organisationId: string,
+  ): Promise<boolean> {
     const notMine = userId ? { userId: { not: userId } } : {};
     const [membership, open] = await Promise.all([
-      this.prisma.membership.findFirst({ where: { identifierHash: hash, ...notMine } }),
+      this.prisma.membership.findFirst({
+        where: { identifierHash: hash, organisationId, ...notMine },
+      }),
       this.prisma.verificationRequest.findFirst({
-        where: { identifierHash: hash, state: { in: [...OPEN_STATES] }, ...notMine },
+        where: {
+          identifierHash: hash,
+          organisationId,
+          state: { in: [...OPEN_STATES] },
+          ...notMine,
+        },
       }),
     ]);
     return membership !== null || open !== null;
@@ -222,6 +264,7 @@ export class ImportService {
   private async applyRow(
     row: PlannedRow,
     batchId: string,
+    organisationId: string,
     actorUserId: string,
     unusablePassword: string,
   ): Promise<void> {
@@ -236,7 +279,9 @@ export class ImportService {
     let newUserId: string | null = null;
 
     await this.prisma.$transaction(async (tx) => {
-      const type = await tx.membershipType.findUniqueOrThrow({ where: { key: record.typeKey } });
+      const type = await tx.membershipType.findUniqueOrThrow({
+        where: { organisationId_key: { organisationId, key: record.typeKey } },
+      });
       let userId: string;
       if (row.action === 'CREATE_ACCOUNT') {
         userId = uuidv7();
@@ -246,7 +291,7 @@ export class ImportService {
             id: userId,
             email: record.email,
             passwordHash: unusablePassword,
-            // The association vouches for the address; the setup link proves it again.
+            // The organisation vouches for the address; the setup link proves it again.
             emailVerifiedAt: new Date(),
             locale: record.locale,
           },
@@ -271,14 +316,23 @@ export class ImportService {
         });
       }
 
+      // Whoever an organisation brings in as a member is known to the platform as a physician.
+      await tx.user.updateMany({
+        where: { id: userId, verifiedAt: null },
+        data: { verifiedAt: new Date() },
+      });
+
       const details = { batch: batchId, type: type.key, endDate: isoDate(record.endDate) };
-      const existing = await tx.membership.findUnique({ where: { userId } });
+      const existing = await tx.membership.findUnique({
+        where: { userId_organisationId: { userId, organisationId } },
+      });
       if (!existing) {
         const id = uuidv7();
         await tx.membership.create({
           data: {
             id,
             userId,
+            organisationId,
             typeId: type.id,
             status: 'ACTIVE',
             startDate: today,
@@ -319,15 +373,19 @@ export class ImportService {
       });
     });
 
-    if (newUserId) await this.sendSetupEmail(newUserId, record);
+    if (newUserId) await this.sendSetupEmail(newUserId, record, organisationId);
   }
 
-  private async sendSetupEmail(userId: string, record: ImportRecord): Promise<void> {
+  private async sendSetupEmail(
+    userId: string,
+    record: ImportRecord,
+    organisationId: string,
+  ): Promise<void> {
     const token = await this.tokens.issue(userId, 'ACCOUNT_SETUP');
     const link = new URL(`/${record.locale}/reset-password`, this.env.APP_BASE_URL);
     link.searchParams.set('token', token);
     const type = await this.prisma.membershipType.findUniqueOrThrow({
-      where: { key: record.typeKey },
+      where: { organisationId_key: { organisationId, key: record.typeKey } },
     });
     await this.mailer.send({
       to: record.email,

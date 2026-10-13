@@ -468,6 +468,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/organisations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganisationsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organisations/{slugOrId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganisationsController_find"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/hospitals": {
         parameters: {
             query?: never;
@@ -732,6 +764,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["MyMembershipController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/memberships": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyMembershipController_all"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3640,6 +3688,19 @@ export interface components {
             locale: "he" | "en";
             roles: string[];
             permissions: string[];
+            platformPermissions: string[];
+            organisations: {
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
+                roles: string[];
+                permissions: string[];
+            }[];
+            verified: boolean;
             mfaEnabled: boolean;
             mfaEnrollmentRequired: boolean;
             session: {
@@ -3715,6 +3776,26 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        OrganisationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+                descriptionHe: string | null;
+                descriptionEn: string | null;
+            }[];
+        };
+        OrganisationDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            nameHe: string;
+            nameEn: string;
+            descriptionHe: string | null;
+            descriptionEn: string | null;
+        };
         HospitalListDto: {
             items: {
                 /** Format: uuid */
@@ -3746,6 +3827,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 key: string;
                 nameHe: string;
                 nameEn: string;
@@ -3999,6 +4087,8 @@ export interface components {
         };
         ImportDryRunDto: {
             fileName?: string;
+            /** Format: uuid */
+            organisation?: string;
             csv: string;
         };
         ImportBatchDto: {
@@ -4028,6 +4118,13 @@ export interface components {
             membership: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 type: {
                     /** Format: uuid */
                     id: string;
@@ -4057,6 +4154,34 @@ export interface components {
                 at: string;
             }[];
         };
+        MyMembershipsDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
+                type: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                status: "ACTIVE" | "SUSPENDED" | "EXPIRED";
+                /** Format: date */
+                startDate: string;
+                /** Format: date */
+                endDate: string;
+                /** @enum {string} */
+                paymentStatus: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+            }[];
+        };
         ApplyDto: {
             /** Format: uuid */
             typeId: string;
@@ -4069,6 +4194,13 @@ export interface components {
         ApplicationDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            };
             /** @enum {string} */
             state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
             type: {
@@ -4108,6 +4240,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 /** @enum {string} */
                 state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
                 type: {
@@ -4148,6 +4287,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 /** @enum {string} */
                 state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
                 type: {
@@ -4202,6 +4348,13 @@ export interface components {
         ReviewApplicationDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            };
             /** @enum {string} */
             state: "PENDING_DIRECTOR" | "PENDING_ADMIN" | "APPROVED" | "REJECTED" | "WITHDRAWN";
             type: {
@@ -4251,6 +4404,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 type: {
                     /** Format: uuid */
                     id: string;
@@ -4287,6 +4447,13 @@ export interface components {
             membership: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 type: {
                     /** Format: uuid */
                     id: string;
@@ -4355,6 +4522,13 @@ export interface components {
         CardVerificationDto: {
             valid: boolean;
             name: string | null;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             type: {
                 key: string;
                 nameHe: string;
@@ -4398,6 +4572,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 slug: string | null;
                 /** @enum {string} */
                 status: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
@@ -4405,7 +4586,7 @@ export interface components {
                 titleEn: string | null;
                 categoryId: string | null;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 revisionOfId: string | null;
                 revisionId: string | null;
                 submittedBy: string | null;
@@ -4453,12 +4634,13 @@ export interface components {
         };
         NewsInputDto: {
             slug?: string;
+            organisationId?: string | null;
             categoryId?: string | null;
             /**
              * @default PUBLIC
              * @enum {string}
              */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             /** @default [] */
             typeIds: string[];
             featuredImageFileId?: string | null;
@@ -4492,12 +4674,19 @@ export interface components {
         AdminNewsDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             slug: string | null;
             /** @enum {string} */
             status: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
             categoryId: string | null;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             typeIds: string[];
             featuredImage: {
                 /** Format: uuid */
@@ -4594,7 +4783,14 @@ export interface components {
                 date: string;
                 featuredImageFileId: string | null;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 sourceUrl: string | null;
                 /** @enum {string} */
                 locale: "he" | "en";
@@ -4618,7 +4814,14 @@ export interface components {
             date: string;
             featuredImageFileId: string | null;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             sourceUrl: string | null;
             /** @enum {string} */
             locale: "he" | "en";
@@ -4648,7 +4851,7 @@ export interface components {
                 /** @enum {string} */
                 status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 version: string | null;
                 publishedOn: string | null;
                 yearOnly: boolean;
@@ -4674,7 +4877,7 @@ export interface components {
              * @default PUBLIC
              * @enum {string}
              */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "TYPES";
             /** @default [] */
             typeIds: string[];
             translations: {
@@ -4708,7 +4911,7 @@ export interface components {
             status: "CURRENT" | "SUPERSEDED" | "WITHDRAWN";
             subspecialtyId: string | null;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             typeIds: string[];
             translations: {
                 he?: {
@@ -4750,7 +4953,7 @@ export interface components {
              * @default PUBLIC
              * @enum {string}
              */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "TYPES";
             /** @default [] */
             typeIds: string[];
             translations: {
@@ -4794,7 +4997,7 @@ export interface components {
                 publishedOn: string | null;
                 yearOnly: boolean;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 /** @enum {string} */
                 locale: "he" | "en";
                 fallback: boolean;
@@ -4822,7 +5025,7 @@ export interface components {
             publishedOn: string | null;
             yearOnly: boolean;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             /** @enum {string} */
             locale: "he" | "en";
             fallback: boolean;
@@ -4841,6 +5044,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 slug: string;
                 /** @enum {string} */
                 status: "DRAFT" | "PUBLISHED" | "CANCELLED";
@@ -4849,7 +5059,7 @@ export interface components {
                 startAt: string | null;
                 endAt: string | null;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 /** @enum {string} */
                 registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
                 /** Format: date-time */
@@ -4894,6 +5104,7 @@ export interface components {
         };
         EventInputDto: {
             slug?: string;
+            organisationId?: string | null;
             categoryId?: string | null;
             startAt?: string | null;
             endAt?: string | null;
@@ -4916,7 +5127,7 @@ export interface components {
              * @default PUBLIC
              * @enum {string}
              */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             /** @default [] */
             typeIds: string[];
             translations: {
@@ -4937,6 +5148,13 @@ export interface components {
         AdminEventDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             slug: string;
             /** @enum {string} */
             status: "DRAFT" | "PUBLISHED" | "CANCELLED";
@@ -4962,7 +5180,7 @@ export interface components {
             capacity: number | null;
             cmeAvailable: boolean;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             typeIds: string[];
             translations: {
                 he?: {
@@ -5070,6 +5288,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 photoFileId: string | null;
                 translations: {
                     he?: {
@@ -5092,6 +5317,7 @@ export interface components {
             total: number;
         };
         SpeakerInputDto: {
+            organisationId?: string | null;
             photoFileId?: string | null;
             translations: {
                 he?: {
@@ -5111,6 +5337,13 @@ export interface components {
         AdminSpeakerDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             photoFileId: string | null;
             translations: {
                 he?: {
@@ -5247,6 +5480,13 @@ export interface components {
         PublicEventListDto: {
             items: {
                 slug: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 title: string;
                 summary: string | null;
                 category: {
@@ -5266,7 +5506,7 @@ export interface components {
                 registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
                 cmeAvailable: boolean;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 /** @enum {string} */
                 locale: "he" | "en";
                 fallback: boolean;
@@ -5277,6 +5517,13 @@ export interface components {
         };
         PublicEventDto: {
             slug: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             title: string;
             summary: string | null;
             category: {
@@ -5296,7 +5543,7 @@ export interface components {
             registrationMode: "INTERNAL" | "EXTERNAL" | "NONE";
             cmeAvailable: boolean;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             /** @enum {string} */
             locale: "he" | "en";
             fallback: boolean;
@@ -5355,7 +5602,7 @@ export interface components {
                 titleHe: string | null;
                 titleEn: string | null;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 submittedBy: string | null;
                 /** Format: date-time */
                 updatedAt: string;
@@ -5379,7 +5626,7 @@ export interface components {
              * @default PUBLIC
              * @enum {string}
              */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "TYPES";
             /** @default [] */
             typeIds: string[];
             coverFileId?: string | null;
@@ -5422,7 +5669,7 @@ export interface components {
             /** @enum {string} */
             videoStatus: "NONE" | "EXTERNAL" | "PENDING_PROVIDER";
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             typeIds: string[];
             cover: {
                 /** Format: uuid */
@@ -5505,7 +5752,7 @@ export interface components {
                 /** Format: date-time */
                 publishedAt: string;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 /** @enum {string} */
                 locale: "he" | "en";
                 fallback: boolean;
@@ -5532,7 +5779,7 @@ export interface components {
             /** Format: date-time */
             publishedAt: string;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             /** @enum {string} */
             locale: "he" | "en";
             fallback: boolean;
@@ -5570,7 +5817,7 @@ export interface components {
                 stemHe: string | null;
                 stemEn: string | null;
                 /** @enum {string} */
-                accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+                accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
                 submittedBy: string | null;
                 /** Format: date-time */
                 updatedAt: string;
@@ -5586,7 +5833,7 @@ export interface components {
              * @default PUBLIC
              * @enum {string}
              */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "TYPES";
             /** @default [] */
             typeIds: string[];
             translations: {
@@ -5626,7 +5873,7 @@ export interface components {
             level: ("STUDENT" | "RESIDENT" | "FELLOW" | "SPECIALIST" | "EXPERT") | null;
             subspecialtyId: string | null;
             /** @enum {string} */
-            accessTier: "PUBLIC" | "MEMBERS" | "TYPES";
+            accessTier: "PUBLIC" | "VERIFIED" | "MEMBERS" | "TYPES";
             typeIds: string[];
             translations: {
                 he?: {
@@ -5768,6 +6015,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 /** @enum {string} */
                 status: "DRAFT" | "PENDING_APPROVAL" | "SENT" | "REJECTED";
                 audience: {
@@ -5810,6 +6064,7 @@ export interface components {
             pageSize: number;
         };
         BroadcastInputDto: {
+            organisationId?: string | null;
             audience: {
                 all: boolean;
                 /** @default [] */
@@ -5831,6 +6086,13 @@ export interface components {
         AdminBroadcastDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             /** @enum {string} */
             status: "DRAFT" | "PENDING_APPROVAL" | "SENT" | "REJECTED";
             audience: {
@@ -6420,6 +6682,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 nameHe: string;
                 nameEn: string | null;
                 descriptionHe: string | null;
@@ -6463,6 +6732,13 @@ export interface components {
         RoomDetailDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             nameHe: string;
             nameEn: string | null;
             descriptionHe: string | null;
@@ -6647,6 +6923,13 @@ export interface components {
             items: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 nameHe: string;
                 nameEn: string | null;
                 descriptionHe: string | null;
@@ -6678,6 +6961,7 @@ export interface components {
             pageSize: number;
         };
         AdminRoomInputDto: {
+            organisationId?: string | null;
             nameHe: string;
             nameEn?: string | null;
             descriptionHe?: string | null;
@@ -6692,6 +6976,13 @@ export interface components {
         AdminRoomDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             nameHe: string;
             nameEn: string | null;
             descriptionHe: string | null;
@@ -6987,24 +7278,40 @@ export interface components {
             openSessions: number;
             roleGrants: {
                 role: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
                 scope: string;
                 /** Format: date-time */
                 grantedAt: string;
                 removable: boolean;
             }[];
-            membership: {
+            memberships: {
                 /** Format: uuid */
                 id: string;
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
                 status: string;
                 typeKey: string;
                 endDate: string;
-            } | null;
+            }[] | null;
+            verifiedAt: string | null;
         };
         AccountActionDto: {
             reason: string;
         };
         RoleChangeDto: {
             role: string;
+            organisationId?: string | null;
             reason: string;
         };
         RoleListDto: {
@@ -7012,7 +7319,9 @@ export interface components {
                 key: string;
                 requiresTwoStep: boolean;
                 scope: string;
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "audit.read" | "settings.manage")[];
+                /** @enum {string} */
+                level: "platform" | "organisation" | "either";
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -7753,6 +8062,46 @@ export interface operations {
             };
         };
     };
+    OrganisationsController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganisationListDto"];
+                };
+            };
+        };
+    };
+    OrganisationsController_find: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slugOrId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganisationDto"];
+                };
+            };
+        };
+    };
     ReferenceController_hospitals: {
         parameters: {
             query?: never;
@@ -7814,7 +8163,9 @@ export interface operations {
     };
     ReferenceController_membershipTypes: {
         parameters: {
-            query?: never;
+            query?: {
+                organisation?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -8189,7 +8540,9 @@ export interface operations {
     };
     MyMembershipController_mine: {
         parameters: {
-            query?: never;
+            query?: {
+                organisation?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -8206,10 +8559,30 @@ export interface operations {
             };
         };
     };
+    MyMembershipController_all: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyMembershipsDto"];
+                };
+            };
+        };
+    };
     ApplicationsController_queue: {
         parameters: {
             query: {
                 stage: "director" | "admin";
+                organisation?: string;
             };
             header?: never;
             path?: never;
@@ -8321,6 +8694,7 @@ export interface operations {
                 status?: "ACTIVE" | "SUSPENDED" | "EXPIRED";
                 type?: string;
                 paymentStatus?: "NOT_REQUIRED" | "UNPAID" | "PAID" | "WAIVED";
+                organisation?: string;
                 q?: string;
                 page?: number;
                 pageSize?: number;
@@ -8512,7 +8886,9 @@ export interface operations {
     };
     CardTokenController_issue: {
         parameters: {
-            query?: never;
+            query?: {
+                organisation?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -8670,6 +9046,7 @@ export interface operations {
         parameters: {
             query?: {
                 status?: "DRAFT" | "IN_REVIEW" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
+                organisation?: string;
                 q?: string;
                 page?: number;
                 pageSize?: number;
@@ -8920,6 +9297,7 @@ export interface operations {
             query?: {
                 locale?: "he" | "en";
                 category?: string;
+                organisation?: string;
                 tag?: string;
                 page?: number;
                 pageSize?: number;
@@ -9193,6 +9571,7 @@ export interface operations {
         parameters: {
             query?: {
                 status?: "DRAFT" | "PUBLISHED" | "CANCELLED";
+                organisation?: string;
                 q?: string;
                 page?: number;
                 pageSize?: number;
@@ -9513,6 +9892,7 @@ export interface operations {
         parameters: {
             query?: {
                 q?: string;
+                eventId?: string;
                 page?: number;
                 pageSize?: number;
             };
@@ -9906,6 +10286,7 @@ export interface operations {
                 locale?: "he" | "en";
                 when?: "upcoming" | "past";
                 category?: string;
+                organisation?: string;
                 page?: number;
                 pageSize?: number;
             };
@@ -10626,6 +11007,7 @@ export interface operations {
         parameters: {
             query?: {
                 status?: "DRAFT" | "PENDING_APPROVAL" | "SENT" | "REJECTED";
+                organisation?: string;
                 page?: number;
                 pageSize?: number;
             };
@@ -12059,6 +12441,7 @@ export interface operations {
         parameters: {
             query?: {
                 q?: string;
+                organisation?: string;
                 archived?: "true" | "false";
                 page?: number;
             };
@@ -12936,7 +13319,9 @@ export interface operations {
     };
     AdminDashboardController_get: {
         parameters: {
-            query?: never;
+            query?: {
+                owner?: "platform" | string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -12958,7 +13343,7 @@ export interface operations {
             query?: {
                 q?: string;
                 status?: "ACTIVE" | "LOCKED" | "DISABLED";
-                role?: "SUPER_ADMIN" | "IUA_ADMIN" | "CONTENT_EDITOR" | "EVENT_ADMIN" | "DEPARTMENT_DIRECTOR" | "RESEARCH_ADMIN" | "SUBSPECIALTY_ADMIN" | "CME_ADMIN";
+                role?: "SUPER_ADMIN" | "PLATFORM_ADMIN" | "ORG_ADMIN" | "CONTENT_EDITOR" | "EVENT_ADMIN" | "DEPARTMENT_DIRECTOR" | "RESEARCH_ADMIN" | "SUBSPECIALTY_ADMIN" | "CME_ADMIN";
                 page?: number;
                 pageSize?: number;
             };

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { type PermissionKey, uuidv7 } from '@iua/shared';
+import { type PermissionKey, countsInOrganisation, uuidv7 } from '@iua/shared';
 import { type Request } from 'express';
 import { type Principal, PrincipalResolver } from '../../common/auth/principal';
 import { type RequestMeta } from '../../common/request-meta';
@@ -46,14 +46,39 @@ export type RevokeReason =
   /** An administrator ended the person's sessions (M8). */
   | 'admin_revoked';
 
-/** Permissions a session actually holds: MFA-requiring roles count only after MFA. */
+/**
+ * Permissions a session actually holds on the platform: from the roles held there.
+ * MFA-requiring roles count only after MFA.
+ */
 export function effectivePermissions(profile: AccessProfile, mfa: boolean): Set<PermissionKey> {
   const permissions = new Set<PermissionKey>();
   for (const role of profile.roles) {
+    if (role.organisationId !== null) continue;
     if (role.requiresMfa && !mfa) continue;
     for (const permission of role.permissions) permissions.add(permission);
   }
   return permissions;
+}
+
+/**
+ * Permissions a session holds inside each organisation: from the roles held in it. A permission
+ * that is about the platform itself gives nothing there (M16 plan §3).
+ */
+export function organisationPermissions(
+  profile: AccessProfile,
+  mfa: boolean,
+): Map<string, Set<PermissionKey>> {
+  const byOrganisation = new Map<string, Set<PermissionKey>>();
+  for (const role of profile.roles) {
+    if (role.organisationId === null) continue;
+    if (role.requiresMfa && !mfa) continue;
+    const held = byOrganisation.get(role.organisationId) ?? new Set<PermissionKey>();
+    for (const permission of role.permissions) {
+      if (countsInOrganisation(permission)) held.add(permission);
+    }
+    byOrganisation.set(role.organisationId, held);
+  }
+  return byOrganisation;
 }
 
 /**
@@ -298,8 +323,10 @@ export class SessionsService extends PrincipalResolver {
       userId: user.id,
       sessionId: session.id,
       mfa,
-      roles: profile.roles.map((role) => role.key),
+      roles: profile.roles.filter((role) => role.organisationId === null).map((role) => role.key),
       permissions: effectivePermissions(profile, mfa),
+      organisationPermissions: organisationPermissions(profile, mfa),
+      verified: user.verifiedAt !== null,
       mfaEnrollmentRequired: profile.requiresMfa && !hasFactor,
     };
   }

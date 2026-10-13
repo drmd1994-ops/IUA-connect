@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   createVerifiedUser,
@@ -51,6 +52,7 @@ describe('search (integration)', () => {
       .post('/api/v1/admin/news')
       .set(as(editor))
       .send({
+        organisationId: DEFAULT_ORGANISATION,
         translations: {
           he: { title: text.title, summary: text.summary ?? 'תקציר', body: text.body ?? 'גוף' },
         },
@@ -104,7 +106,11 @@ describe('search (integration)', () => {
   beforeAll(async () => {
     h = await startHarness();
     editor = await signInWithMfa(h, 'search-editor', (email) =>
-      grantRole(h, email, 'CONTENT_EDITOR'),
+      // The organisation's news, and the platform's library.
+      Promise.all([
+        grantRole(h, email, 'CONTENT_EDITOR'),
+        grantRole(h, email, 'CONTENT_EDITOR', 'platform'),
+      ]).then(() => undefined),
     );
     admin = await signInAdmin(h, 'search-admin');
     const res = await h.http().get('/api/v1/membership-types').expect(200);
@@ -193,6 +199,7 @@ describe('search (integration)', () => {
         .post('/api/v1/admin/events')
         .set(as(admin))
         .send({
+          organisationId: DEFAULT_ORGANISATION,
           startAt: new Date(Date.UTC(2031, 5, 10, 7)).toISOString(),
           endAt: new Date(Date.UTC(2031, 5, 10, 16)).toISOString(),
           locationName: 'Example Hall',
@@ -294,7 +301,10 @@ describe('search (integration)', () => {
         .http()
         .post('/api/v1/admin/news')
         .set(as(editor))
-        .send({ translations: { he: { title: `טיוטה ${word}`, body: 'גוף', summary: 'תקציר' } } })
+        .send({
+          organisationId: DEFAULT_ORGANISATION,
+          translations: { he: { title: `טיוטה ${word}`, body: 'גוף', summary: 'תקציר' } },
+        })
         .expect(201);
       expect(await groups(word)).toEqual([]);
       expect(await groups(word, '', admin.accessToken)).toEqual([]);

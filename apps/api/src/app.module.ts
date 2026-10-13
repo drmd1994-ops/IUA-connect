@@ -30,6 +30,7 @@ import { InstitutionsModule } from './modules/institutions';
 import { MembershipModule } from './modules/membership';
 import { NewsModule } from './modules/news';
 import { NotificationsModule } from './modules/notifications';
+import { OrganisationsModule } from './modules/organisations';
 import { ProfilesModule } from './modules/profiles';
 import { SearchModule } from './modules/search';
 
@@ -65,6 +66,7 @@ export class AppModule {
         AuditModule,
         HealthModule,
         AuthModule,
+        OrganisationsModule,
         InstitutionsModule,
         ProfilesModule,
         MembershipModule,

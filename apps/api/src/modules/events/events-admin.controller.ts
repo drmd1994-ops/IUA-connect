@@ -24,7 +24,10 @@ import {
 } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { RequirePermission } from '../../common/decorators/access.decorators';
+import {
+  RequirePermission,
+  RequireScopedPermission,
+} from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import {
   AdminEventDto,
@@ -40,20 +43,27 @@ import {
 import { EventsAdminService } from './events-admin.service';
 
 /**
- * Event management (API_DESIGN.md §4 "/admin/events"). Needs events.manage (EVENT_ADMIN and
- * IUA_ADMIN), which applies only in a session that completed MFA. Audited by the service.
+ * Event management (API_DESIGN.md §4 "/admin/events"). Needs events.manage, which applies only
+ * in a session that completed MFA. Audited by the service.
+ *
+ * An event is an organisation's or the platform's own, and events.manage is used where it is
+ * held (M16): the service checks the owner on every route, and another owner's event reads as
+ * "not found". The categories are the platform's.
  */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/events')
-@RequirePermission('events.manage')
+@RequireScopedPermission('events.manage')
 export class EventsAdminController {
   constructor(private readonly events: EventsAdminService) {}
 
   @Get()
   @ApiOkResponse({ type: AdminEventListDto })
-  list(@Query() query: AdminEventListQueryDto): Promise<AdminEventListDto> {
-    return this.events.list(query);
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: AdminEventListQueryDto,
+  ): Promise<AdminEventListDto> {
+    return this.events.list(principalOf(req), query);
   }
 
   // Category routes come before ':id' so "categories" is never read as an ID.
@@ -64,12 +74,14 @@ export class EventsAdminController {
   }
 
   @Post('categories')
+  @RequirePermission('events.manage')
   @ApiCreatedResponse({ type: EventCategoryDto })
   createCategory(@Body() body: CreateEventCategoryDto): Promise<EventCategoryDto> {
     return this.events.createCategory(body);
   }
 
   @Patch('categories/:id')
+  @RequirePermission('events.manage')
   @ApiOkResponse({ type: EventCategoryDto })
   updateCategory(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -86,16 +98,17 @@ export class EventsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminEventDto> {
-    return withEtag(res, await this.events.create(body, actor(req, meta)));
+    return withEtag(res, await this.events.create(principalOf(req), body, actor(req, meta)));
   }
 
   @Get(':id')
   @ApiOkResponse({ type: AdminEventDto })
   async get(
+    @Req() req: RequestWithPrincipal,
     @Param('id', new ParseUUIDPipe()) id: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminEventDto> {
-    return withEtag(res, await this.events.get(id));
+    return withEtag(res, await this.events.get(principalOf(req), id));
   }
 
   @Put(':id')
@@ -109,7 +122,10 @@ export class EventsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminEventDto> {
-    return withEtag(res, await this.events.update(id, body, ifMatch, actor(req, meta)));
+    return withEtag(
+      res,
+      await this.events.update(principalOf(req), id, body, ifMatch, actor(req, meta)),
+    );
   }
 
   @Post(':id/publish')
@@ -121,7 +137,7 @@ export class EventsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminEventDto> {
-    return withEtag(res, await this.events.publish(id, actor(req, meta)));
+    return withEtag(res, await this.events.publish(principalOf(req), id, actor(req, meta)));
   }
 
   @Post(':id/cancel')
@@ -134,7 +150,10 @@ export class EventsAdminController {
     @Meta() meta: RequestMeta,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminEventDto> {
-    return withEtag(res, await this.events.cancel(id, body.reason, actor(req, meta)));
+    return withEtag(
+      res,
+      await this.events.cancel(principalOf(req), id, body.reason, actor(req, meta)),
+    );
   }
 
   @Delete(':id')
@@ -145,7 +164,7 @@ export class EventsAdminController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Meta() meta: RequestMeta,
   ): Promise<void> {
-    return this.events.remove(id, actor(req, meta));
+    return this.events.remove(principalOf(req), id, actor(req, meta));
   }
 }
 

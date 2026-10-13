@@ -4,6 +4,7 @@ import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
+import { ORGANISATION_REF } from '../organisations';
 import {
   type AdminHospitalDto,
   type CreateDepartmentDto,
@@ -61,11 +62,17 @@ export class InstitutionsService {
     });
   }
 
-  async membershipTypes(): Promise<MembershipTypeDto[]> {
+  /** The membership types of the active organisations, each organisation's together. */
+  async membershipTypes(organisationId?: string): Promise<MembershipTypeDto[]> {
     return this.prisma.membershipType.findMany({
-      where: { active: true },
+      where: {
+        active: true,
+        organisation: { active: true },
+        ...(organisationId ? { organisationId } : {}),
+      },
       select: {
         id: true,
+        organisation: { select: ORGANISATION_REF },
         key: true,
         nameHe: true,
         nameEn: true,
@@ -73,7 +80,7 @@ export class InstitutionsService {
         selfApply: true,
         directorApproval: true,
       },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ organisation: { nameEn: 'asc' } }, { sortOrder: 'asc' }, { id: 'asc' }],
     });
   }
 

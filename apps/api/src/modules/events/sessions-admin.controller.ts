@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { RequirePermission } from '../../common/decorators/access.decorators';
+import { RequireScopedPermission } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import {
   AdminSessionDto,
@@ -30,6 +31,7 @@ import {
   SessionInputDto,
   SpeakerInputDto,
 } from './sessions.dto';
+import { EventOwnerGuard } from './event-owner.guard';
 import { SessionsService } from './sessions.service';
 
 const actor = (req: RequestWithPrincipal, meta: RequestMeta) => ({
@@ -37,11 +39,15 @@ const actor = (req: RequestWithPrincipal, meta: RequestMeta) => ({
   meta,
 });
 
-/** Sessions of one event (API_DESIGN.md §4 "/admin/events/{id}/sessions"). Needs events.manage. */
+/**
+ * Sessions of one event (API_DESIGN.md §4 "/admin/events/{id}/sessions"). Needs events.manage,
+ * held where the event is owned: the guard answers "not found" for anyone else's event (M16).
+ */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/events/:eventId/sessions')
-@RequirePermission('events.manage')
+@RequireScopedPermission('events.manage')
+@UseGuards(EventOwnerGuard)
 export class SessionsAdminController {
   constructor(private readonly sessions: SessionsService) {}
 
@@ -87,18 +93,25 @@ export class SessionsAdminController {
   }
 }
 
-/** Speakers, shared between events (API_DESIGN.md §4 "/admin/speakers"). Needs events.manage. */
+/**
+ * Speakers, shared between the events of one owner (API_DESIGN.md §4 "/admin/speakers"). Needs
+ * events.manage. An organisation's staff keep its list and the platform's staff the platform's;
+ * the service checks whose a speaker is (M16).
+ */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/speakers')
-@RequirePermission('events.manage')
+@RequireScopedPermission('events.manage')
 export class SpeakersAdminController {
   constructor(private readonly sessions: SessionsService) {}
 
   @Get()
   @ApiOkResponse({ type: AdminSpeakerListDto })
-  list(@Query() query: AdminSpeakerListQueryDto): Promise<AdminSpeakerListDto> {
-    return this.sessions.listSpeakers(query);
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: AdminSpeakerListQueryDto,
+  ): Promise<AdminSpeakerListDto> {
+    return this.sessions.listSpeakers(principalOf(req), query);
   }
 
   @Post()
@@ -108,7 +121,7 @@ export class SpeakersAdminController {
     @Body() body: SpeakerInputDto,
     @Meta() meta: RequestMeta,
   ): Promise<AdminSpeakerDto> {
-    return this.sessions.createSpeaker(body, actor(req, meta));
+    return this.sessions.createSpeaker(principalOf(req), body, actor(req, meta));
   }
 
   @Put(':id')
@@ -119,7 +132,7 @@ export class SpeakersAdminController {
     @Body() body: SpeakerInputDto,
     @Meta() meta: RequestMeta,
   ): Promise<AdminSpeakerDto> {
-    return this.sessions.updateSpeaker(id, body, actor(req, meta));
+    return this.sessions.updateSpeaker(principalOf(req), id, body, actor(req, meta));
   }
 
   @Delete(':id')
@@ -130,6 +143,6 @@ export class SpeakersAdminController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Meta() meta: RequestMeta,
   ): Promise<void> {
-    return this.sessions.removeSpeaker(id, actor(req, meta));
+    return this.sessions.removeSpeaker(principalOf(req), id, actor(req, meta));
   }
 }

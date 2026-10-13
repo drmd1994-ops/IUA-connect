@@ -14,10 +14,12 @@ import { Pager } from '@/features/content/pager';
 import { useLocalName, useReference } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
+import { PLATFORM } from './owners';
 
 type Schemas = components['schemas'];
 type List = Schemas['AccountListDto'];
 type Account = Schemas['AccountDto'];
+type Organisation = Schemas['OrganisationListDto']['items'][number];
 type Roles = Schemas['RoleListDto']['items'];
 type Status = Account['status'];
 
@@ -223,6 +225,9 @@ export function AccountPage({ id }: { id: string }) {
   const [account, setAccount] = useState<Account | null>(null);
   const [reason, setReason] = useState('');
   const [newRole, setNewRole] = useState('');
+  // Where the new role is held (M16): on the platform, or inside one organisation.
+  const [place, setPlace] = useState(PLATFORM);
+  const [organisations, setOrganisations] = useState<Organisation[]>([]);
   const [pending, setPending] = useState(false);
   const [done, setDone] = useState(false);
   const [loadError, setLoadError] = useState<unknown>(null);
@@ -237,6 +242,16 @@ export function AccountPage({ id }: { id: string }) {
       active = false;
     };
   }, [api, call, id]);
+
+  useEffect(() => {
+    let active = true;
+    call(() => api.GET('/api/v1/organisations'))
+      .then((result) => active && setOrganisations(result.items))
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [api, call]);
 
   const dateTime = (value: string) =>
     format.dateTime(new Date(value), { dateStyle: 'medium', timeStyle: 'short' });
@@ -266,12 +281,16 @@ export function AccountPage({ id }: { id: string }) {
         }),
       ),
     );
-  const changeRole = (change: 'roles' | 'roles/remove', role: string) =>
+  const changeRole = (
+    change: 'roles' | 'roles/remove',
+    role: string,
+    organisationId: string | null,
+  ) =>
     attempt(() =>
       call(() =>
         api.POST(`/api/v1/admin/users/{id}/${change}`, {
           params: { path: { id } },
-          body: { role, reason: reason.trim() },
+          body: { role, organisationId, reason: reason.trim() },
         }),
       ),
     );
@@ -283,9 +302,18 @@ export function AccountPage({ id }: { id: string }) {
   const canManage = !!me?.permissions.includes('users.manage') && !self;
   const canRoles = !!me?.permissions.includes('roles.manage') && !self;
   const hasReason = reason.trim().length >= 3;
+  const placeId = place === PLATFORM ? null : place;
+  // The roles that can be held in the place chosen, and are not held there already.
   const grantable = (roles ?? []).filter(
-    (role) => role.scope === 'NONE' && !account.roles.includes(role.key),
+    (role) =>
+      role.scope === 'NONE' &&
+      (role.level === 'either' || role.level === (placeId ? 'organisation' : 'platform')) &&
+      !account.roleGrants.some(
+        (grant) => grant.role === role.key && (grant.organisation?.id ?? null) === placeId,
+      ),
   );
+  const placeOf = (organisation: Organisation | { nameHe: string; nameEn: string } | null) =>
+    organisation ? d('inOrganisation', { organisation: name(organisation) }) : d('onPlatform');
 
   return (
     <div className="flex flex-col gap-8">
@@ -320,20 +348,41 @@ export function AccountPage({ id }: { id: string }) {
         <dd>{date(account.createdAt)}</dd>
         <dt className="font-semibold">{d('sessions')}</dt>
         <dd data-testid="account-sessions">{account.openSessions}</dd>
+        <dt className="font-semibold">{d('physician')}</dt>
+        <dd>
+          {account.verifiedAt
+            ? d('physicianYes', { date: date(account.verifiedAt) })
+            : d('physicianNo')}
+        </dd>
         <dt className="font-semibold">{d('membership')}</dt>
         <dd>
-          {account.membership ? (
-            <Link href={`/admin/members/${account.membership.id}`} className={link}>
-              {d('membershipLink', {
-                type:
-                  name(reference?.types.find((type) => type.key === account.membership?.typeKey)) ||
-                  account.membership.typeKey,
-                status: t(`membership.membership.statuses.${account.membership.status}`),
-                date: date(account.membership.endDate),
-              })}
-            </Link>
-          ) : (
+          {account.memberships === null ? (
+            // A membership is its organisation's business.
+            <span className="text-text-muted">{d('membershipsHidden')}</span>
+          ) : account.memberships.length === 0 ? (
             d('noMembership')
+          ) : (
+            <ul className="flex flex-col gap-1">
+              {account.memberships.map((held) => (
+                <li key={held.id}>
+                  <Link href={`/admin/members/${held.id}`} className={link}>
+                    {d('membershipIn', {
+                      organisation: name(held.organisation),
+                      type:
+                        name(
+                          reference?.types.find(
+                            (type) =>
+                              type.key === held.typeKey &&
+                              type.organisation.id === held.organisation.id,
+                          ),
+                        ) || held.typeKey,
+                      status: t(`membership.membership.statuses.${held.status}`),
+                      date: date(held.endDate),
+                    })}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           )}
         </dd>
       </dl>
@@ -348,11 +397,16 @@ export function AccountPage({ id }: { id: string }) {
           <ul className="flex flex-col gap-2" data-testid="account-roles-list">
             {account.roleGrants.map((grant) => (
               <li
-                key={`${grant.role}-${grant.scope}-${grant.grantedAt}`}
+                key={`${grant.role}-${grant.scope}-${grant.organisation?.id ?? PLATFORM}-${grant.grantedAt}`}
                 className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-3"
               >
                 <span>
-                  <span className="font-semibold">{t(`portal.admin.roles.${grant.role}`)}</span>
+                  <span className="font-semibold">
+                    {d('rolePlace', {
+                      role: t(`portal.admin.roles.${grant.role}`),
+                      place: placeOf(grant.organisation),
+                    })}
+                  </span>
                   <span className="text-text-muted">
                     {' · '}
                     {d('since', { date: date(grant.grantedAt) })}
@@ -364,7 +418,9 @@ export function AccountPage({ id }: { id: string }) {
                     type="button"
                     variant="secondary"
                     disabled={pending || !hasReason}
-                    onClick={() => void changeRole('roles/remove', grant.role)}
+                    onClick={() =>
+                      void changeRole('roles/remove', grant.role, grant.organisation?.id ?? null)
+                    }
                   >
                     {d('removeRole', { role: t(`portal.admin.roles.${grant.role}`) })}
                   </Button>
@@ -440,8 +496,24 @@ export function AccountPage({ id }: { id: string }) {
               )}
             </>
           )}
-          {canRoles && grantable.length > 0 && (
+          {canRoles && (
             <div className="flex flex-wrap items-end gap-3">
+              <SelectField
+                label={d('where')}
+                className="min-w-56"
+                value={place}
+                onChange={(event) => {
+                  setPlace(event.target.value);
+                  setNewRole('');
+                }}
+                options={[
+                  { value: PLATFORM, label: placeOf(null) },
+                  ...organisations.map((organisation) => ({
+                    value: organisation.id,
+                    label: placeOf(organisation),
+                  })),
+                ]}
+              />
               <SelectField
                 label={d('addRole')}
                 placeholder={d('chooseRole')}
@@ -457,7 +529,7 @@ export function AccountPage({ id }: { id: string }) {
                 type="button"
                 variant="secondary"
                 disabled={pending || !hasReason || !newRole}
-                onClick={() => void changeRole('roles', newRole)}
+                onClick={() => void changeRole('roles', newRole, placeId)}
               >
                 {d('give')}
               </Button>

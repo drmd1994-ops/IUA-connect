@@ -35,7 +35,7 @@ import {
 import {
   Authenticated,
   Public,
-  RequirePermission,
+  RequireScopedPermission,
 } from '../../common/decorators/access.decorators';
 import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { type RequestMeta, Meta } from '../../common/request-meta';
@@ -79,10 +79,13 @@ export class FilesController {
     private readonly principals: PrincipalResolver,
   ) {}
 
-  /** Staff only in demo mode (the malware scanner is a no-op, D15). Audited by the service. */
+  /**
+   * Staff only in demo mode (the malware scanner is a no-op, D15). Audited by the service.
+   * Staff of an organisation upload too (M16): the file is its uploader's until an item uses it.
+   */
   @Post()
   @ApiBearerAuth()
-  @RequirePermission('files.upload')
+  @RequireScopedPermission('files.upload')
   @RateLimit(RATE_LIMITS.uploadPerIp)
   @UseInterceptors(FileInterceptor('file', uploadOptions(MAX_UPLOAD_BYTES)))
   @ApiConsumes('multipart/form-data')

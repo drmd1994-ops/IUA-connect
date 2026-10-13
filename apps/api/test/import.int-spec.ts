@@ -1,7 +1,13 @@
 import { type PrismaClient } from '../src/generated/prisma/client';
 import { PrismaService } from '../src/infra/prisma/prisma.service';
 import { type ImportFixtures, SOURCE_SITE, removeImport, seedImport } from '../prisma/seed/import';
-import { type Harness, bearer, signInAdmin, startHarness } from './auth-harness';
+import {
+  DEFAULT_ORGANISATION,
+  type Harness,
+  bearer,
+  signInAdmin,
+  startHarness,
+} from './auth-harness';
 
 /**
  * M4: the import seed layer, with fixtures written for this test (fictional titles on made-up
@@ -166,7 +172,10 @@ describe('content import (integration)', () => {
       .http()
       .post('/api/v1/admin/news')
       .set(bearer(admin.accessToken))
-      .send({ translations: { he: { title: `ידיעה רגילה ${run}`, body: 'x' } } })
+      .send({
+        organisationId: DEFAULT_ORGANISATION,
+        translations: { he: { title: `ידיעה רגילה ${run}`, body: 'x' } },
+      })
       .expect(201);
 
     const removed = await removeImport(prisma);

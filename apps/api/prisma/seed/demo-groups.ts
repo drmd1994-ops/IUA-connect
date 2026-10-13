@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import sharp from 'sharp';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { onePagePdf } from './demo-education';
@@ -202,6 +203,7 @@ export async function seedDemoGroups(prisma: PrismaClient): Promise<void> {
         data: {
           id: uuidv7(),
           kind: 'ROOM',
+          organisationId: FIRST_ORGANISATION.id,
           nameHe: 'ועדת הכנס',
           nameEn: 'Conference committee',
           descriptionHe: 'חדר בהזמנה לחברי ועדת הכנס. (חדר לדוגמה בגרסת ההדגמה.)',

@@ -2,6 +2,13 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { type Locale, DEFAULT_LOCALE, isLocale } from '@iua/i18n';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import {
+  covers,
+  holdsAnywhere,
+  organisationWhere,
+  reachedIn,
+  scopeOf,
+} from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { APP_CONFIG } from '../../config/config.module';
@@ -13,6 +20,7 @@ import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { type Notice, Notifier } from '../notifications';
 import { AuditService } from '../audit';
+import { ORGANISATION_REF } from '../organisations';
 import {
   type ApplicationDto,
   type ApplyDto,
@@ -27,6 +35,7 @@ const DIRECTOR_ROLE = 'DEPARTMENT_DIRECTOR';
 
 const INCLUDE = {
   type: true,
+  organisation: { select: ORGANISATION_REF },
   hospital: true,
   department: true,
   decisions: { orderBy: { at: 'asc' } },
@@ -37,8 +46,12 @@ type RequestRow = Prisma.VerificationRequestGetPayload<{ include: typeof INCLUDE
 
 /**
  * Membership applications (ARCHITECTURE.md §7, D3): the member applies, the department director
- * decides, then an IUA admin gives final approval. Certificate and licence numbers are stored
- * encrypted with a keyed hash, and never returned, logged or audited.
+ * decides, then the organisation's office gives final approval. Certificate and licence numbers
+ * are stored encrypted with a keyed hash, and never returned, logged or audited.
+ *
+ * An application is to one organisation: that of the membership type (M16). A person may have
+ * an open application to each of several organisations, and a number is in use only within
+ * the organisation. A director decides for their department, whichever organisation asked.
  */
 @Injectable()
 export class ApplicationsService {
@@ -58,7 +71,7 @@ export class ApplicationsService {
 
   async apply(userId: string, input: ApplyDto, meta: RequestMeta): Promise<ApplicationDto> {
     const type = await this.prisma.membershipType.findFirst({
-      where: { id: input.typeId, active: true, selfApply: true },
+      where: { id: input.typeId, active: true, selfApply: true, organisation: { active: true } },
     });
     if (!type) throw invalid('typeId', 'unknownMembershipType');
 
@@ -78,14 +91,16 @@ export class ApplicationsService {
       ]);
     }
     const open = await this.prisma.verificationRequest.findFirst({
-      where: { userId, state: { in: [...OPEN_STATES] } },
+      where: { userId, organisationId: type.organisationId, state: { in: [...OPEN_STATES] } },
     });
     if (open) throw APPLICATION_OPEN();
 
     const hash = identifier.value
       ? this.hasher.hash(identifierHashInput(type.identifier, identifier.value))
       : null;
-    if (hash && (await this.identifierTaken(hash, userId))) throw IDENTIFIER_IN_USE();
+    if (hash && (await this.identifierTaken(hash, userId, type.organisationId))) {
+      throw IDENTIFIER_IN_USE();
+    }
 
     const directors = input.departmentId
       ? await this.prisma.userRole.findMany({
@@ -109,6 +124,7 @@ export class ApplicationsService {
         data: {
           id,
           userId,
+          organisationId: type.organisationId,
           typeId: type.id,
           hospitalId: input.hospitalId ?? null,
           departmentId: input.departmentId ?? null,
@@ -172,9 +188,18 @@ export class ApplicationsService {
 
   // --- Directors and admins ---------------------------------------------------------------
 
-  /** Applications waiting for the caller: their departments (director) or final approval (admin). */
-  async queue(principal: Principal, stage: 'director' | 'admin'): Promise<ReviewApplicationDto[]> {
+  /**
+   * Applications waiting for the caller: their departments (director), or final approval in
+   * the organisations whose office they are in (admin).
+   */
+  async queue(
+    principal: Principal,
+    stage: 'director' | 'admin',
+    organisationId: string | undefined,
+    meta: RequestMeta,
+  ): Promise<ReviewApplicationDto[]> {
     let where: Prisma.VerificationRequestWhereInput;
+    const office = scopeOf(principal, 'membership.approve.final');
     if (stage === 'director') {
       if (!principal.permissions.has('membership.approve.department')) {
         throw new AppException('FORBIDDEN');
@@ -184,16 +209,40 @@ export class ApplicationsService {
         departmentId: { in: await this.directedDepartments(principal.userId) },
       };
     } else {
-      if (!principal.permissions.has('membership.approve.final')) {
+      if (!holdsAnywhere(principal, 'membership.approve.final')) {
         throw new AppException('FORBIDDEN');
       }
-      where = { state: 'PENDING_ADMIN' };
+      if (organisationId && !covers(office, organisationId)) throw new AppException('NOT_FOUND');
+      where = { state: 'PENDING_ADMIN', AND: [organisationWhere(office)] };
     }
     const rows = await this.prisma.verificationRequest.findMany({
-      where: { ...where, userId: { not: principal.userId } },
+      where: {
+        ...where,
+        ...(organisationId ? { organisationId } : {}),
+        userId: { not: principal.userId },
+      },
       include: INCLUDE,
       orderBy: { createdAt: 'asc' },
     });
+    // Platform staff looked at the applicants of organisations they are not the office of.
+    const reached = [
+      ...new Set(
+        rows
+          .filter((row) => stage === 'admin' && reachedIn(office, row.organisationId))
+          .map((row) => row.organisationId),
+      ),
+    ];
+    if (reached.length > 0) {
+      await this.audit.record({
+        action: 'membership.support.read',
+        correlationId: meta.correlationId,
+        actorUserId: principal.userId,
+        actorIp: meta.ip,
+        entityType: 'verification_request',
+        entityId: null,
+        changes: { organisations: reached, applications: rows.length },
+      });
+    }
     return rows.map(reviewView);
   }
 
@@ -204,11 +253,17 @@ export class ApplicationsService {
     meta: RequestMeta,
   ): Promise<ReviewApplicationDto> {
     const canDirect = principal.permissions.has('membership.approve.department');
-    const canApprove = principal.permissions.has('membership.approve.final');
-    if (!canDirect && !canApprove) throw new AppException('FORBIDDEN');
+    if (!canDirect && !holdsAnywhere(principal, 'membership.approve.final')) {
+      throw new AppException('FORBIDDEN');
+    }
 
     const request = await this.prisma.verificationRequest.findUnique({ where: { id } });
     if (!request) throw new AppException('NOT_FOUND');
+    // Final approval belongs to the office of the organisation applied to.
+    const canApprove = covers(
+      scopeOf(principal, 'membership.approve.final'),
+      request.organisationId,
+    );
     const stage = stageOf(request.state);
     // Applications the caller has no say in look the same as missing ones. A closed one is
     // visible to admins and to directors of its department.
@@ -289,13 +344,17 @@ export class ApplicationsService {
   }
 
   /** The number belongs to someone else's membership or open application. */
-  private async identifierTaken(hash: string, userId: string): Promise<boolean> {
+  private async identifierTaken(
+    hash: string,
+    userId: string,
+    organisationId: string,
+  ): Promise<boolean> {
     const [membership, open] = await Promise.all([
       this.prisma.membership.findFirst({
-        where: { identifierHash: hash, userId: { not: userId } },
+        where: { identifierHash: hash, organisationId, userId: { not: userId } },
       }),
       this.prisma.verificationRequest.findFirst({
-        where: { identifierHash: hash, state: { in: [...OPEN_STATES] } },
+        where: { identifierHash: hash, organisationId, state: { in: [...OPEN_STATES] } },
       }),
     ]);
     return membership !== null || open !== null;
@@ -377,6 +436,7 @@ const named = (row: { id: string; nameHe: string; nameEn: string } | null) =>
 function view(row: RequestRow): ApplicationDto {
   return {
     id: row.id,
+    organisation: row.organisation,
     state: row.state,
     type: { id: row.type.id, key: row.type.key, nameHe: row.type.nameHe, nameEn: row.type.nameEn },
     hospital: named(row.hospital),

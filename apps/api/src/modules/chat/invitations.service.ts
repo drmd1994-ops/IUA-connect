@@ -1,16 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import { mayActOn } from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import { DirectoryService } from '../profiles';
 import { ChatAccess } from './chat-access';
 import { personView } from './chat-messages';
-import { GROUP_MAX_MEMBERS, INVITATION_DAYS } from './chat-rules';
+import { GROUP_MAX_MEMBERS, INVITATION_DAYS, roomOpensTo } from './chat-rules';
 import { ChatStream } from './chat-stream';
 import {
   type AcceptedInvitationDto,
@@ -49,7 +49,6 @@ export class InvitationsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly access: ChatAccess,
-    private readonly memberships: AccessService,
     private readonly directory: DirectoryService,
     private readonly stream: ChatStream,
     private readonly groups: GroupsService,
@@ -80,7 +79,7 @@ export class InvitationsService {
     const me = principal.userId;
     const target = await this.authority(principal, conversationId);
     if (target.kind === 'GROUP') {
-      await this.access.ensureActiveMember(principal);
+      this.access.ensureVerified(principal);
       await this.access.ensureNotSuspended(me);
     }
     const ids = [...new Set(userIds)].filter((id) => id !== me);
@@ -145,7 +144,7 @@ export class InvitationsService {
   async people(principal: Principal, q: string, conversationId?: string): Promise<ChatPeopleDto> {
     const me = principal.userId;
     const target = conversationId ? await this.authority(principal, conversationId) : null;
-    if (!target) await this.access.ensureActiveMember(principal);
+    if (!target) this.access.ensureVerified(principal);
     const found = await this.directory.find(q, PEOPLE_LIMIT, 0);
     const ids = found.items.map((item) => item.id);
     const allowed = await this.invitable(me, target?.kind ?? 'GROUP', target?.id ?? null, ids);
@@ -269,7 +268,14 @@ export class InvitationsService {
     const me = principal.userId;
     const invitation = await this.own(me, id);
     const target = invitation.conversation;
-    await this.access.ensureActiveMember(principal);
+    this.access.ensureVerified(principal);
+    // An organisation's room is for its members, also by invitation.
+    if (
+      target.kind === 'ROOM' &&
+      !roomOpensTo(await this.access.roomKey(principal), target.organisationId)
+    ) {
+      throw new AppException('NOT_FOUND');
+    }
     // The people there will see who came in.
     await this.access.ensureNamed(me);
     if (target.kind === 'ROOM' && (await this.rooms.banned(target.id, me))) {
@@ -355,7 +361,7 @@ export class InvitationsService {
         expiresAt: { gt: new Date() },
         conversation: { archivedAt: null },
       },
-      select: { conversation: { select: { id: true, kind: true } } },
+      select: { conversation: { select: { id: true, kind: true, organisationId: true } } },
     });
     if (!invitation || invitation.conversation.kind === 'DIRECT') {
       throw new AppException('NOT_FOUND');
@@ -378,6 +384,7 @@ export class InvitationsService {
         nameEn: true,
         memberCount: true,
         inviteOnly: true,
+        organisationId: true,
         members: { where: { userId: me }, select: { role: true } },
       },
     });
@@ -394,8 +401,10 @@ export class InvitationsService {
       throw new AppException(mine ? 'FORBIDDEN' : 'NOT_FOUND');
     }
     if (row?.kind === 'ROOM') {
-      const staff = principal.permissions.has('chat.moderate');
-      const moderator = mine === 'MODERATOR' && (await this.access.isActiveMember(principal));
+      const staff = mayActOn(principal, 'chat.moderate', row.organisationId);
+      const moderator =
+        mine === 'MODERATOR' &&
+        roomOpensTo(await this.access.roomKey(principal), row.organisationId);
       if (staff || moderator) {
         if (row.inviteOnly) return target();
         // An open room needs no invitation: anyone may join it.
@@ -410,7 +419,8 @@ export class InvitationsService {
    * The people among these who may be invited by this person. Nobody is invited across a block
    * or against their own setting ("nobody", or "only people I talk with").
    * - To a group: only someone the inviter could write to privately, or already talks with.
-   * - To a room: any active member who is not banned from it.
+   * - To a room: anyone the room is for (a verified person for the platform's rooms, an active
+   *   member for an organisation's) who is not banned from it.
    */
   private async invitable(
     me: string,
@@ -441,6 +451,12 @@ export class InvitationsService {
     const blocked = new Set(
       blocks.map((row) => (row.blockerId === me ? row.blockedId : row.blockerId)),
     );
+    const room = roomId
+      ? await this.prisma.conversation.findUnique({
+          where: { id: roomId },
+          select: { organisationId: true },
+        })
+      : null;
     const existing = new Set(users.map((user) => user.id));
     const allowed = new Set<string>();
     for (const id of ids) {
@@ -452,8 +468,7 @@ export class InvitationsService {
         if (reachable.has(id) || contacts.has(id)) allowed.add(id);
         continue;
       }
-      const viewer = await this.memberships.viewerOf({ userId: id } as Principal);
-      if (!viewer.activeTypeId) continue;
+      if (!roomOpensTo(await this.access.roomKeyOf(id), room?.organisationId ?? null)) continue;
       if (roomId && (await this.rooms.banned(roomId, id))) continue;
       allowed.add(id);
     }

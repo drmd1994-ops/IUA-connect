@@ -21,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { Authenticated, RequirePermission } from '../../common/decorators/access.decorators';
+import { Authenticated, RequireScopedPermission } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import {
   AdminBroadcastDto,
@@ -39,11 +39,14 @@ import { BroadcastsService } from './broadcasts.service';
  * Broadcasts in the admin area. Writing needs broadcasts.create; approving and rejecting also
  * need broadcasts.approve and a different admin than the author (checked in the service).
  * Admin roles apply only in a session that completed MFA.
+ *
+ * A message is an organisation's, to its members, or the platform's own (M16); each permission
+ * is used where it is held, and another sender's message reads as "not found".
  */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/broadcasts')
-@RequirePermission('broadcasts.create')
+@RequireScopedPermission('broadcasts.create')
 export class BroadcastsAdminController {
   constructor(private readonly broadcasts: BroadcastsService) {}
 
@@ -106,8 +109,11 @@ export class BroadcastsAdminController {
   /** How many people the message would reach if it were sent now. */
   @Get(':id/audience')
   @ApiOkResponse({ type: BroadcastAudienceDto })
-  audience(@Param('id', new ParseUUIDPipe()) id: string): Promise<BroadcastAudienceDto> {
-    return this.broadcasts.audience(id);
+  audience(
+    @Req() req: RequestWithPrincipal,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<BroadcastAudienceDto> {
+    return this.broadcasts.audience(id, principalOf(req));
   }
 
   @Post(':id/submit')

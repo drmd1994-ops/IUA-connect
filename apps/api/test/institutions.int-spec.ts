@@ -1,5 +1,6 @@
 import { errorEnvelopeSchema } from '@iua/shared';
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   createVerifiedUser,
@@ -49,7 +50,10 @@ describe('institutions (integration)', () => {
 
   describe('public reference lists', () => {
     it('lists the five membership types with what each one requires', async () => {
-      const res = await h.http().get('/api/v1/membership-types').expect(200);
+      const res = await h
+        .http()
+        .get(`/api/v1/membership-types?organisation=${DEFAULT_ORGANISATION}`)
+        .expect(200);
       expect(res.headers['cache-control']).toBe('public, max-age=300');
       const byKey = Object.fromEntries(
         (res.body.items as { key: string }[]).map((item) => [item.key, item]),

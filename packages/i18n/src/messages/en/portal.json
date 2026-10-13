@@ -100,6 +100,10 @@
         "locked": "{count, plural, one {# locked} other {# locked}}",
         "disabled": "{count, plural, one {# disabled} other {# disabled}}",
         "link": "Open the accounts"
+      },
+      "view": {
+        "label": "Show the numbers of",
+        "all": "Everything I work on"
       }
     },
     "users": {
@@ -165,7 +169,16 @@
         "chooseRole": "Choose a role",
         "give": "Give",
         "rolesHint": "Roles are given and removed by super administrators. A role that needs two-step verification opens nothing until the person sets it up.",
-        "auditLink": "This account in the audit log"
+        "auditLink": "This account in the audit log",
+        "physician": "Verified as a physician",
+        "physicianYes": "Yes, since {date}",
+        "physicianNo": "Not yet",
+        "membershipIn": "{organisation}: {type}, {status}, until {date}",
+        "membershipsHidden": "Shown only to staff who may look into organisations.",
+        "where": "Where",
+        "rolePlace": "{role}, {place}",
+        "onPlatform": "on the platform",
+        "inOrganisation": "in {organisation}"
       },
       "rolesPage": {
         "title": "Roles",
@@ -185,7 +198,8 @@
     },
     "roles": {
       "SUPER_ADMIN": "Super administrator",
-      "IUA_ADMIN": "Association administrator",
+      "PLATFORM_ADMIN": "Platform administrator",
+      "ORG_ADMIN": "Organisation administrator",
       "CONTENT_EDITOR": "Content editor",
       "EVENT_ADMIN": "Event administrator",
       "DEPARTMENT_DIRECTOR": "Department director",
@@ -197,6 +211,8 @@
       "users_read": "See accounts",
       "users_manage": "Disable, enable and unlock accounts",
       "roles_manage": "Give and remove roles",
+      "organisations_manage": "Manage the organisations on the platform",
+      "organisations_access": "Work inside every organisation (for support; each look is recorded)",
       "membership_read": "See members",
       "membership_manage": "Manage memberships and import members",
       "membership_approve_department": "Approve applications of their department",

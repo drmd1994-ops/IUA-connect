@@ -22,7 +22,7 @@ import {
   ReviewPanel,
   useCanEdit,
 } from './education-review';
-import { type Tier, TierFields } from './tier-fields';
+import { type Tier, TierFields, platformTier } from './tier-fields';
 
 type Schemas = components['schemas'];
 type List = Schemas['AdminExamQuestionListDto'];
@@ -225,7 +225,7 @@ function toBody(draft: Draft) {
   return {
     level: draft.level || null,
     subspecialtyId: draft.subspecialtyId || null,
-    accessTier: draft.tier,
+    accessTier: platformTier(draft.tier),
     typeIds: draft.tier === 'TYPES' ? draft.typeIds : [],
     translations: { he: questionText('he'), en: questionText('en') },
     options: draft.options.map((option) => {
@@ -557,6 +557,7 @@ function QuestionForm({ initial }: { initial: Question | null }) {
               typesLabel={e('types')}
               tier={draft.tier}
               typeIds={draft.typeIds}
+              owner={null}
               onChange={(tier, typeIds) => set({ tier, typeIds })}
             />
           </div>

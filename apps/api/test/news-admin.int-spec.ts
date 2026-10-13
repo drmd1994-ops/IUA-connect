@@ -2,6 +2,7 @@ import { errorEnvelopeSchema } from '@iua/shared';
 import sharp from 'sharp';
 import { NewsAdminService } from '../src/modules/news';
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   bearer,
   expectAdminOnly,
@@ -36,6 +37,7 @@ describe('news administration (integration)', () => {
   const as = (who: { accessToken: string }) => bearer(who.accessToken);
   let counter = 0;
   const draft = (overrides: object = {}) => ({
+    organisationId: DEFAULT_ORGANISATION,
     translations: {
       he: { title: `ידיעה לבדיקה ${++counter}`, body: 'גוף **הידיעה**.', summary: 'תקציר' },
       en: { title: `Test item ${counter}`, body: 'The **body**.' },

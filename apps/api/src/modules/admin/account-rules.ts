@@ -1,4 +1,4 @@
-import { ROLES, type RoleKey } from '@iua/shared';
+import { ROLES, type RoleKey, roleFits } from '@iua/shared';
 
 /**
  * Rules for managing accounts and roles (M8 plan §2.2–2.3, §3). They exist so that no single
@@ -13,6 +13,8 @@ export type AccountProblem =
   | 'accountLastSuperAdmin'
   /** Roles tied to a department or subspecialty are assigned where that is chosen. */
   | 'roleScoped'
+  /** The role is not held there: a platform role in an organisation, or the other way (M16). */
+  | 'roleWrongPlace'
   | 'roleUnknown';
 
 export interface Actor {
@@ -52,19 +54,25 @@ export function isRoleKey(value: string): value is RoleKey {
   return Object.prototype.hasOwnProperty.call(ROLES, value);
 }
 
-/** Whether a role can be given or removed on the account page. */
+/**
+ * Whether a role can be given or removed on the account page, on the platform or (when
+ * `inOrganisation`) inside an organisation.
+ */
 export function roleChangeProblem(
   change: 'grant' | 'remove',
   role: string,
   actor: Actor,
   target: Target,
   activeSuperAdmins: number,
+  inOrganisation = false,
 ): AccountProblem | null {
   if (!isRoleKey(role)) return 'roleUnknown';
   if (ROLES[role].scope !== 'NONE') return 'roleScoped';
+  if (change === 'grant' && !roleFits(role, inOrganisation)) return 'roleWrongPlace';
   if (actor.userId === target.userId) return 'accountSelf';
   if (
     change === 'remove' &&
+    !inOrganisation &&
     role === 'SUPER_ADMIN' &&
     isSuperAdmin(target.roles) &&
     activeSuperAdmins <= 1

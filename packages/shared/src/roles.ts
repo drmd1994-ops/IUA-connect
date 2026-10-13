@@ -8,21 +8,48 @@ import { PERMISSIONS, type PermissionKey } from './permissions';
 export const ROLE_SCOPE_TYPES = ['NONE', 'DEPARTMENT', 'SUBSPECIALTY'] as const;
 export type RoleScopeType = (typeof ROLE_SCOPE_TYPES)[number];
 
+/**
+ * Where a role is held (M16 plan §3): on the platform, inside one organisation, or either. A
+ * person may hold the same role in several places.
+ */
+export type RoleLevel = 'platform' | 'organisation' | 'either';
+
 interface RoleDefinition {
   permissions: readonly PermissionKey[];
   requiresMfa: boolean;
   scope: RoleScopeType;
+  level: RoleLevel;
 }
 
+/** What an organisation's own staff may do in its section. */
+const ORGANISATION_PERMISSIONS = [
+  'membership.read',
+  'membership.manage',
+  'membership.approve.final',
+  'news.create',
+  'news.review',
+  'news.publish',
+  'events.manage',
+  'files.upload',
+  'broadcasts.create',
+  'broadcasts.approve',
+  'chat.moderate',
+  'chat.rooms.manage',
+] as const satisfies readonly PermissionKey[];
+
 export const ROLES = {
-  SUPER_ADMIN: { permissions: PERMISSIONS, requiresMfa: true, scope: 'NONE' },
-  IUA_ADMIN: {
+  /** Everything, everywhere, including inside every organisation. */
+  SUPER_ADMIN: { permissions: PERMISSIONS, requiresMfa: true, scope: 'NONE', level: 'platform' },
+  /**
+   * Runs the platform: accounts, institutions, the education library, guidelines, the
+   * platform's own news, events, rooms and messages. Does not reach into an organisation: it
+   * has no `organisations.access`.
+   */
+  PLATFORM_ADMIN: {
     permissions: [
       'users.read',
       'users.manage',
-      'membership.read',
-      'membership.manage',
-      'membership.approve.final',
+      'organisations.manage',
       'institutions.manage',
       'news.create',
       'news.review',
@@ -40,24 +67,51 @@ export const ROLES = {
     ],
     requiresMfa: true,
     scope: 'NONE',
+    level: 'platform',
   },
+  /** Runs one organisation's section: its members, news, events, rooms and messages. */
+  ORG_ADMIN: {
+    permissions: ORGANISATION_PERMISSIONS,
+    requiresMfa: true,
+    scope: 'NONE',
+    level: 'organisation',
+  },
+  /** Writes news, for the platform or for an organisation; on the platform, education too. */
   CONTENT_EDITOR: {
     permissions: ['news.create', 'education.manage', 'files.upload'],
     requiresMfa: true,
     scope: 'NONE',
+    level: 'either',
   },
-  EVENT_ADMIN: { permissions: ['events.manage', 'files.upload'], requiresMfa: true, scope: 'NONE' },
+  EVENT_ADMIN: {
+    permissions: ['events.manage', 'files.upload'],
+    requiresMfa: true,
+    scope: 'NONE',
+    level: 'either',
+  },
   DEPARTMENT_DIRECTOR: {
     permissions: ['membership.approve.department'],
     requiresMfa: true,
     scope: 'DEPARTMENT',
+    level: 'platform',
   },
   // Permissions for these roles arrive with their Phase 2 features.
-  RESEARCH_ADMIN: { permissions: [], requiresMfa: true, scope: 'NONE' },
-  SUBSPECIALTY_ADMIN: { permissions: [], requiresMfa: true, scope: 'SUBSPECIALTY' },
-  CME_ADMIN: { permissions: [], requiresMfa: true, scope: 'NONE' },
+  RESEARCH_ADMIN: { permissions: [], requiresMfa: true, scope: 'NONE', level: 'platform' },
+  SUBSPECIALTY_ADMIN: {
+    permissions: [],
+    requiresMfa: true,
+    scope: 'SUBSPECIALTY',
+    level: 'platform',
+  },
+  CME_ADMIN: { permissions: [], requiresMfa: true, scope: 'NONE', level: 'either' },
 } as const satisfies Record<string, RoleDefinition>;
 
 export type RoleKey = keyof typeof ROLES;
 
 export const ROLE_KEYS = Object.keys(ROLES) as RoleKey[];
+
+/** Whether a role may be held in that place: on the platform (no organisation) or in one. */
+export function roleFits(role: RoleKey, inOrganisation: boolean): boolean {
+  const level: RoleLevel = ROLES[role].level;
+  return level === 'either' || level === (inOrganisation ? 'organisation' : 'platform');
+}

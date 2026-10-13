@@ -11,7 +11,7 @@
     "allSubspecialties": "All subspecialties",
     "empty": "No listed members match.",
     "total": "{total, plural, one {# member} other {# members}}",
-    "membersOnly": "The directory is open to members with an active membership.",
+    "membersOnly": "The directory is open to physicians whose account has been verified.",
     "joinHint": "Not listed yourself? You can join the directory from your profile.",
     "profileLink": "Open my profile"
   },

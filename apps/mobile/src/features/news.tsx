@@ -142,7 +142,9 @@ function NewsCard({ item }: { item: Item }) {
         <Text style={styles.cardTitle}>{item.title}</Text>
         {item.summary ? <Text style={styles.summary}>{item.summary}</Text> : null}
         {item.sourceUrl ? <Text style={styles.meta}>{t('news.sourceLabel')}</Text> : null}
-        {item.accessTier !== 'PUBLIC' && <Tag>{t('common.tiers.MEMBERS')}</Tag>}
+        {item.accessTier !== 'PUBLIC' && (
+          <Tag>{t(`common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`)}</Tag>
+        )}
       </View>
     </Pressable>
   );
@@ -216,7 +218,9 @@ export function NewsArticle({ slug }: { slug: string }) {
       <Text style={styles.meta}>
         {format.dateTime(new Date(article.date), { dateStyle: 'long' })}
         {category ? ` · ${category}` : ''}
-        {article.accessTier !== 'PUBLIC' ? ` · ${t('common.tiers.MEMBERS')}` : ''}
+        {article.accessTier !== 'PUBLIC'
+          ? ` · ${t(`common.tiers.${article.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`)}`
+          : ''}
       </Text>
       <Title>{article.title}</Title>
       {article.author ? <Body muted>{t('news.by', { author: article.author })}</Body> : null}

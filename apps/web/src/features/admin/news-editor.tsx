@@ -16,6 +16,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { fromIsraelLocal, toIsraelLocal } from '@/lib/israel-time';
 import { MarkdownEditor } from './markdown-editor';
+import { OwnerField, OwnerLine, PLATFORM, canOn, firstOwner, ownerInput } from './owners';
 import { type Tier, TierFields } from './tier-fields';
 
 type Schemas = components['schemas'];
@@ -124,7 +125,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
   const name = useLocalName();
   const router = useRouter();
   const upload = useUpload();
-  const { api, call } = useAuth();
+  const { api, call, me } = useAuth();
   const [item, setItem] = useState(initial);
   const [draft, setDraft] = useState(() => toDraft(initial));
   const [lang, setLang] = useState<Lang>('he');
@@ -142,6 +143,18 @@ function EditorForm({ initial }: { initial: Item | null }) {
   };
   const setText = (patch: Partial<Text>) =>
     set({ text: { ...draft.text, [lang]: { ...draft.text[lang], ...patch } } });
+  // Whose the item is (M16): chosen when it is created, and fixed from then on.
+  const [owner, setOwner] = useState(() =>
+    initial ? (initial.organisation?.id ?? PLATFORM) : firstOwner(me, 'news.create'),
+  );
+  const chooseOwner = (value: string) => {
+    setOwner(value);
+    // The platform has no members, and each owner has its own membership types.
+    set({
+      tier: value === PLATFORM && draft.tier === 'MEMBERS' ? 'VERIFIED' : draft.tier,
+      typeIds: [],
+    });
+  };
 
   useEffect(() => {
     let active = true;
@@ -156,7 +169,13 @@ function EditorForm({ initial }: { initial: Item | null }) {
   /** Creates the item, or saves the draft with the version it was loaded with (If-Match). */
   async function save(): Promise<Item> {
     const body = toBody(draft);
-    if (!item) return call(() => api.POST('/api/v1/admin/news', { body }));
+    if (!item) {
+      return call(() =>
+        api.POST('/api/v1/admin/news', {
+          body: { ...body, ...ownerInput(me, 'news.create', owner) },
+        }),
+      );
+    }
     return call(() =>
       api.PUT('/api/v1/admin/news/{id}', {
         params: { path: { id: item.id }, header: { 'If-Match': `"${item.version}"` } },
@@ -360,11 +379,17 @@ function EditorForm({ initial }: { initial: Item | null }) {
               onChange={(event) => set({ slug: event.target.value })}
               maxLength={120}
             />
+            {item ? (
+              <OwnerLine permission="news.create" organisation={item.organisation} />
+            ) : (
+              <OwnerField permission="news.create" value={owner} onChange={chooseOwner} />
+            )}
             <TierFields
               label={e('tier')}
               typesLabel={e('types')}
               tier={draft.tier}
               typeIds={draft.typeIds}
+              owner={owner === PLATFORM ? null : owner}
               onChange={(tier, typeIds) => set({ tier, typeIds })}
             />
           </div>
@@ -580,7 +605,8 @@ function ReviewPanel({
   const [comment, setComment] = useState('');
   // Default: an hour from now, in Israel time.
   const [publishAt, setPublishAt] = useState(() => toIsraelLocal(new Date(Date.now() + 3_600_000)));
-  const can = (permission: string) => !!me?.permissions.some((p) => p === permission);
+  // What the person may do for this item's owner, not what they may do somewhere else.
+  const can = (permission: string) => canOn(me, permission, item.organisation?.id ?? null);
   const reviewer = can('news.review');
   const publisher = reviewer && can('news.publish');
   const isRevision = item.revisionOfId !== null;

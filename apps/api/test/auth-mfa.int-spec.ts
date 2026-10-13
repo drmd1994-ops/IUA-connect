@@ -240,7 +240,7 @@ describe('identity: MFA, re-authentication, passwords, sessions (M1)', () => {
   describe('admin roles', () => {
     it('grant their permissions only after MFA, and MFA can’t be turned off', async () => {
       const email = await createVerifiedUser(h, 'admin-mfa');
-      await grantRole(h, email, 'IUA_ADMIN');
+      await grantRole(h, email, 'PLATFORM_ADMIN');
       const { accessToken } = await signIn(h, email);
       const before = await h.http().get('/api/v1/me').set(bearer(accessToken)).expect(200);
       expect(before.body).toMatchObject({ permissions: [], mfaEnrollmentRequired: true });
@@ -260,7 +260,7 @@ describe('identity: MFA, re-authentication, passwords, sessions (M1)', () => {
       const after = await h.http().get('/api/v1/me').set(bearer(accessToken)).expect(200);
       expect(after.body.mfaEnrollmentRequired).toBe(false);
       expect(after.body.permissions).toEqual(
-        expect.arrayContaining(['audit.read', 'membership.approve.final']),
+        expect.arrayContaining(['audit.read', 'users.manage']),
       );
 
       const disable = await h

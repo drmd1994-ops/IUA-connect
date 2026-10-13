@@ -1,4 +1,5 @@
 import {
+  DEFAULT_ORGANISATION,
   type Harness,
   STRONG_PASSWORD,
   bearer,
@@ -105,10 +106,23 @@ describe('admin: accounts, roles and the audit log (integration)', () => {
       expect(text).not.toMatch(/password|secret|hash|recovery/i);
 
       const mine = await account(admin.userId);
-      expect(mine).toMatchObject({ roles: ['IUA_ADMIN'], twoStep: true, membership: null });
+      // The administrator holds one role in the default organisation and one on the platform.
+      // Memberships are an organisation's business: not shown to someone who may not look in.
+      expect(mine).toMatchObject({
+        roles: ['ORG_ADMIN', 'PLATFORM_ADMIN'],
+        twoStep: true,
+        memberships: null,
+        verifiedAt: null,
+      });
       expect(mine.openSessions).toBeGreaterThanOrEqual(1);
+      const grant = { scope: 'NONE', grantedAt: expect.any(String), removable: true };
       expect(mine.roleGrants).toEqual([
-        { role: 'IUA_ADMIN', scope: 'NONE', grantedAt: expect.any(String), removable: true },
+        {
+          ...grant,
+          role: 'ORG_ADMIN',
+          organisation: expect.objectContaining({ id: DEFAULT_ORGANISATION }),
+        },
+        { ...grant, role: 'PLATFORM_ADMIN', organisation: null },
       ]);
       expect(JSON.stringify(mine)).not.toMatch(/password|secret|hash|recovery/i);
       await h
@@ -224,7 +238,15 @@ describe('admin: accounts, roles and the audit log (integration)', () => {
       expect(roles.CONTENT_EDITOR!.permissions).toEqual(
         expect.arrayContaining(['news.create', 'education.manage']),
       );
-      expect(roles.IUA_ADMIN!.permissions).not.toContain('roles.manage');
+      expect(roles.PLATFORM_ADMIN!.permissions).not.toContain('roles.manage');
+      // The platform's administrator does not reach into organisations, nor run their offices.
+      expect(roles.PLATFORM_ADMIN!.permissions).not.toContain('organisations.access');
+      expect(roles.PLATFORM_ADMIN!.permissions).not.toContain('membership.read');
+      expect(roles.ORG_ADMIN!.permissions).toContain('membership.read');
+      expect(roles.ORG_ADMIN!.permissions).not.toContain('users.read');
+      expect(roles.ORG_ADMIN).toMatchObject({ level: 'organisation' });
+      expect(roles.PLATFORM_ADMIN).toMatchObject({ level: 'platform' });
+      expect(roles.CONTENT_EDITOR).toMatchObject({ level: 'either' });
       expect(roles.SUPER_ADMIN!.permissions).toContain('roles.manage');
       expect(roles.DEPARTMENT_DIRECTOR!.scope).toBe('DEPARTMENT');
       expect(roles.SUPER_ADMIN!.holders).toBeGreaterThanOrEqual(1);

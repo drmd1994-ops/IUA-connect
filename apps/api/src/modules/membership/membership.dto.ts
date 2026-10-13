@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { organisationRefSchema } from '../organisations';
 
 const named = z.strictObject({ id: z.uuid(), nameHe: z.string(), nameEn: z.string() });
 const typeRef = named.extend({ key: z.string() });
@@ -35,6 +36,8 @@ const decisionView = z.strictObject({
 
 const applicationShape = z.strictObject({
   id: z.uuid(),
+  /** The organisation the person applied to. */
+  organisation: organisationRefSchema,
   state: z.enum(STATES),
   type: typeRef,
   hospital: named.nullable(),
@@ -73,7 +76,11 @@ export class ReviewApplicationListDto extends createZodDto(
 ) {}
 
 export class ReviewQueryDto extends createZodDto(
-  z.strictObject({ stage: z.enum(['director', 'admin']) }),
+  z.strictObject({
+    stage: z.enum(['director', 'admin']),
+    /** Only the applications to this organisation. Left out: all the reviewer may see. */
+    organisation: z.uuid().optional(),
+  }),
 ) {}
 
 /** A reason is required to reject, so the applicant learns why. */
@@ -105,6 +112,8 @@ export const PAYMENT_STATUSES = ['NOT_REQUIRED', 'UNPAID', 'PAID', 'WAIVED'] as 
 
 export const membershipView = z.strictObject({
   id: z.uuid(),
+  /** The organisation the membership is in. */
+  organisation: organisationRefSchema,
   type: typeRef,
   /** EXPIRED is computed from the end date. */
   status: z.enum(['ACTIVE', 'SUSPENDED', 'EXPIRED']),
@@ -127,4 +136,9 @@ export class MyMembershipDto extends createZodDto(
     membership: membershipView.nullable(),
     history: z.array(historyView),
   }),
+) {}
+
+/** Every membership the person holds, one per organisation. */
+export class MyMembershipsDto extends createZodDto(
+  z.strictObject({ items: z.array(membershipView) }),
 ) {}

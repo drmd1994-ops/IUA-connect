@@ -7,6 +7,7 @@ import { JobQueue } from '../../infra/jobs/job-queue';
 import { type EmailListItem, Mailer } from '../../infra/mailer/mailer';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { type AccessTier, type ActiveMembership, canSee } from '../../common/access-policy';
 import { UnsubscribeTokens } from './unsubscribe-tokens';
 
 export const CONTENT_DIGEST_JOB = 'notifications.content-digest';
@@ -15,7 +16,7 @@ export const NOTIFICATIONS_CLEANUP_JOB = 'notifications.cleanup';
 export const NOTIFICATION_RETENTION_DAYS = 180;
 
 type ContentKind = (typeof CONTENT_NOTIFICATION_KINDS)[number];
-type Tier = 'PUBLIC' | 'MEMBERS' | 'TYPES';
+type Tier = AccessTier;
 
 /** A newly published item to tell people about. */
 export interface Announcement {
@@ -30,6 +31,8 @@ export interface Announcement {
   /** A path inside the site, without the language prefix. */
   link: string;
   accessTier: Tier;
+  /** Who published it: an organisation, or null (also when left out) for the platform. */
+  organisationId?: string | null;
   /** Whose tier rules apply, when they belong to another row (a version of a guideline). */
   rules?: { entity: string; id: string };
 }
@@ -41,6 +44,7 @@ interface AnnouncementRow {
   titleEn: string | null;
   link: string;
   accessTier: Tier;
+  organisationId: string | null;
   typeIds: string[];
 }
 
@@ -121,6 +125,7 @@ export class ContentAnnouncer implements OnModuleInit {
             titleEn,
             link: item.link,
             accessTier: item.accessTier,
+            organisationId: item.organisationId ?? null,
             typeIds,
           },
         });
@@ -150,7 +155,8 @@ export class ContentAnnouncer implements OnModuleInit {
       UPDATE content_announcements SET digested_at = ${now}
       WHERE digested_at IS NULL
       RETURNING id, kind, title_he AS "titleHe", title_en AS "titleEn", link,
-                access_tier AS "accessTier", type_ids AS "typeIds"`;
+                access_tier AS "accessTier", organisation_id AS "organisationId",
+                type_ids AS "typeIds"`;
     if (items.length === 0) return 0;
     items.sort((a, b) => (a.id < b.id ? -1 : 1));
 
@@ -169,7 +175,8 @@ export class ContentAnnouncer implements OnModuleInit {
             id: true,
             email: true,
             locale: true,
-            membership: { select: { status: true, endDate: true, typeId: true } },
+            verifiedAt: true,
+            memberships: { where: { organisation: { active: true } }, select: MEMBERSHIP_FACTS },
           },
         },
       },
@@ -186,17 +193,15 @@ export class ContentAnnouncer implements OnModuleInit {
 
     let sent = 0;
     for (const { user, kinds } of people.values()) {
-      const activeTypeId = activeMembershipType(user.membership, now);
+      const viewer = {
+        verified: user.verifiedAt !== null,
+        memberships: activeMemberships(user.memberships, now),
+      };
       const locale: Locale = isLocale(user.locale) ? user.locale : DEFAULT_LOCALE;
       const labels = getMessages(locale).emails.layout.digestLabels as Record<string, string>;
       const list: EmailListItem[] = items
         .filter((item) => kinds.has(item.kind))
-        .filter(
-          (item) =>
-            item.accessTier === 'PUBLIC' ||
-            (activeTypeId !== null &&
-              (item.accessTier === 'MEMBERS' || item.typeIds.includes(activeTypeId))),
-        )
+        .filter((item) => canSee(viewer, item, item.typeIds))
         .map((item) => ({
           label: labels[item.kind] ?? item.kind,
           title: (locale === 'he' ? item.titleHe : item.titleEn) ?? item.titleHe ?? item.titleEn!,
@@ -250,16 +255,26 @@ export function unsubscribeUrl(base: string, locale: Locale, token: string): str
   return url.toString();
 }
 
+/** What of a membership decides whether it counts today. */
+export const MEMBERSHIP_FACTS = {
+  status: true,
+  endDate: true,
+  typeId: true,
+  organisationId: true,
+} as const;
+
 /**
- * The membership type when the membership is active today (not suspended, not past its end
- * date in Israel), or null. The same rule as the access tiers use.
+ * The memberships that are active today (not suspended, not past their end date in Israel).
+ * The same rule as the access tiers use.
  */
-export function activeMembershipType(
-  membership: { status: string; endDate: Date; typeId: string } | null,
+export function activeMemberships(
+  memberships: readonly { status: string; endDate: Date; typeId: string; organisationId: string }[],
   now = new Date(),
-): string | null {
-  if (!membership || membership.status !== 'ACTIVE') return null;
-  return isoDate(membership.endDate) >= israelDate(now) ? membership.typeId : null;
+): ActiveMembership[] {
+  const today = israelDate(now);
+  return memberships
+    .filter((held) => held.status === 'ACTIVE' && isoDate(held.endDate) >= today)
+    .map(({ organisationId, typeId }) => ({ organisationId, typeId }));
 }
 
 const isoDate = (date: Date) => date.toISOString().slice(0, 10);

@@ -10,6 +10,7 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { Authenticated, RequirePermission } from '../../common/decorators/access.decorators';
+import { Authenticated, RequireScopedPermission } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import {
   AttendanceListDto,
@@ -34,6 +35,7 @@ import {
   VoidAttendanceDto,
 } from './attendance.dto';
 import { AttendanceService } from './attendance.service';
+import { EventOwnerGuard } from './event-owner.guard';
 
 /** The member's side: the page a scanned venue code opens sends the code here. */
 @ApiTags('events')
@@ -55,11 +57,14 @@ export class EventCheckInController {
   }
 }
 
-/** Attendance of one event (API_DESIGN.md §4 "/admin/events/{id}/attendance"). events.manage. */
+/** Attendance of one event (API_DESIGN.md §4 "/admin/events/{id}/attendance"). events.manage.
+ * Held where the event is owned: the guard answers "not found" for anyone else's event (M16).
+ */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/events/:eventId')
-@RequirePermission('events.manage')
+@RequireScopedPermission('events.manage')
+@UseGuards(EventOwnerGuard)
 export class AttendanceAdminController {
   constructor(private readonly attendance: AttendanceService) {}
 

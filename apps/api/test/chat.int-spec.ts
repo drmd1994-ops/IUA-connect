@@ -17,6 +17,7 @@ describe('chat: conversations and messages (integration)', () => {
     member,
     listed,
     endMembership,
+    unverify,
     start,
     send,
     messages,
@@ -63,14 +64,12 @@ describe('chat: conversations and messages (integration)', () => {
       await h.http().post(`/api/v1/chat/messages/${id}/hide`).expect(401);
     });
 
-    it('starting a conversation needs an active membership', async () => {
+    it('starting a conversation needs an account verified as a physician’s', async () => {
       const target = await listed();
-      const noMembership = await person();
-      const suspended = await member();
-      await endMembership(suspended, 'suspend');
-      const expired = await member();
-      await endMembership(expired, 'expire');
-      for (const writer of [noMembership, suspended, expired]) {
+      const neverVerified = await person();
+      const unverified = await member();
+      await unverify(unverified);
+      for (const writer of [neverVerified, unverified]) {
         const refused = await start(writer, target.id).expect(403);
         expect(refused.body.error.details[0].code).toBe('membersOnly');
         // The same refusal for an id that never existed.
@@ -78,19 +77,32 @@ describe('chat: conversations and messages (integration)', () => {
         // Their own list still opens, and is empty.
         expect((await list(writer).expect(200)).body).toEqual({ items: [], nextCursor: null });
       }
-      // An administrator without a membership has no chat.
+      // An administrator who is not verified has no chat.
       await start({ token: admin.accessToken } as Person, target.id).expect(403);
     });
 
-    it('a member whose membership ended can read what they have, and can’t send', async () => {
+    it('a membership that ends leaves the person their chat: they keep the platform', async () => {
+      const target = await listed();
+      const suspended = await member();
+      await endMembership(suspended, 'suspend');
+      const expired = await member();
+      await endMembership(expired, 'expire');
+      for (const writer of [suspended, expired]) {
+        const id = (await start(writer, target.id).expect(201)).body.id as string;
+        await send(writer, id, 'Still here').expect(201);
+        expect((await conversation(writer, id).expect(200)).body.sendState).toBe('none');
+      }
+    });
+
+    it('someone who is no longer verified can read what they have, and can’t send', async () => {
       const { a, b, id } = await pair();
       await send(a, id, 'Before it ended').expect(201);
-      await endMembership(a, 'suspend');
+      await unverify(a);
       expect(bodies(await messages(a, id).expect(200))).toEqual(['Before it ended']);
       expect((await conversation(a, id).expect(200)).body.sendState).toBe('membersOnly');
       const refused = await send(a, id, 'After').expect(403);
       expect(refused.body.error.details[0].code).toBe('membersOnly');
-      // The other person can still answer; it will be there when the membership is back.
+      // The other person can still answer; it will be there when they are verified again.
       await send(b, id, 'An answer').expect(201);
     });
   });
@@ -132,12 +144,10 @@ describe('chat: conversations and messages (integration)', () => {
     it('only with someone who is listed; everyone else looks like nobody', async () => {
       const a = await member();
       const notListed = await member();
-      const suspended = await listed();
-      await endMembership(suspended, 'suspend');
-      const expired = await listed();
-      await endMembership(expired, 'expire');
+      const unverified = await listed();
+      await unverify(unverified);
       const answers = [];
-      for (const id of [notListed.id, suspended.id, expired.id, NOBODY, a.id]) {
+      for (const id of [notListed.id, unverified.id, NOBODY, a.id]) {
         const res = await start(a, id).expect(404);
         const { correlationId: _correlationId, ...error } = res.body.error;
         answers.push(JSON.stringify(error));

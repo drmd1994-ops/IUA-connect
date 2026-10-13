@@ -12,13 +12,15 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { type RequestWithPrincipal, principalOf } from '../../common/auth/principal';
-import { Authenticated, RequirePermission } from '../../common/decorators/access.decorators';
+import { Authenticated, RequireScopedPermission } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import { CalendarService } from './calendar.service';
+import { EventOwnerGuard } from './event-owner.guard';
 import {
   AdminRegistrationListDto,
   AdminRegistrationListQueryDto,
@@ -116,11 +118,14 @@ export class MyScheduleController {
   }
 }
 
-/** Who registered for an event (API_DESIGN.md §4). Needs events.manage. */
+/** Who registered for an event (API_DESIGN.md §4). Needs events.manage.
+ * Held where the event is owned: the guard answers "not found" for anyone else's event (M16).
+ */
 @ApiTags('admin')
 @ApiBearerAuth()
 @Controller('admin/events/:eventId/registrations')
-@RequirePermission('events.manage')
+@RequireScopedPermission('events.manage')
+@UseGuards(EventOwnerGuard)
 export class RegistrationsAdminController {
   constructor(private readonly registrations: RegistrationsService) {}
 

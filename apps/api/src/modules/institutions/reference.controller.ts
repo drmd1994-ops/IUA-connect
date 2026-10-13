@@ -1,10 +1,11 @@
-import { Controller, Get, Header, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Header, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../common/decorators/access.decorators';
 import {
   DepartmentListDto,
   HospitalListDto,
   MembershipTypeListDto,
+  MembershipTypeQueryDto,
   SubspecialtyListDto,
 } from './institutions.dto';
 import { InstitutionsService } from './institutions.service';
@@ -43,7 +44,7 @@ export class ReferenceController {
   @Get('membership-types')
   @Header('Cache-Control', CACHE_PUBLIC)
   @ApiOkResponse({ type: MembershipTypeListDto })
-  async membershipTypes(): Promise<MembershipTypeListDto> {
-    return { items: await this.institutions.membershipTypes() };
+  async membershipTypes(@Query() query: MembershipTypeQueryDto): Promise<MembershipTypeListDto> {
+    return { items: await this.institutions.membershipTypes(query.organisation) };
   }
 }

@@ -46,7 +46,7 @@ interface ItemSeed {
   status: Status;
   level?: Level;
   subspecialty?: string;
-  tier?: 'PUBLIC' | 'MEMBERS';
+  tier?: 'PUBLIC' | 'VERIFIED';
   minutes?: number;
   cme?: number;
   /** Where the recording is hosted. Without it, a linked type waits for its recording. */
@@ -146,7 +146,7 @@ const ITEMS: ItemSeed[] = [
     status: 'PUBLISHED',
     level: 'RESIDENT',
     subspecialty: 'PEDIATRIC',
-    tier: 'MEMBERS',
+    tier: 'VERIFIED',
     publishedDaysAgo: 6,
     he: {
       title: 'תיאור מקרה לחברים בלבד (הדגמה)',

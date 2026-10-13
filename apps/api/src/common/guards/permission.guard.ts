@@ -11,10 +11,13 @@ import {
   IS_AUTHENTICATED_KEY,
   IS_PUBLIC_KEY,
   ANY_PERMISSIONS_KEY,
+  ANY_SCOPED_PERMISSIONS_KEY,
   PERMISSIONS_KEY,
+  SCOPED_PERMISSIONS_KEY,
 } from '../decorators/access.decorators';
 import { AppException } from '../errors/app.exception';
 import { PrincipalResolver, type RequestWithPrincipal } from '../auth/principal';
+import { holdsAnywhere } from '../auth/scope';
 
 /**
  * Deny by default (SECURITY_MODEL.md §3). Registered globally:
@@ -22,6 +25,8 @@ import { PrincipalResolver, type RequestWithPrincipal } from '../auth/principal'
  * - @Authenticated()         → 401 without a valid session;
  * - @RequirePermission(...)  → 401 without a valid session, 403 unless it holds every permission;
  * - @RequireAnyPermission(…) → 401 without a valid session, 403 unless it holds one of them;
+ * - @RequireScopedPermission / @RequireAnyScopedPermission → as the two above, but a permission
+ *   held inside an organisation counts too; the handler checks whose thing it is (M16);
  * - none of these            → 403. Such a route is also caught by the route-declaration test.
  */
 @Injectable()
@@ -51,7 +56,22 @@ export class PermissionGuard implements CanActivate {
       ANY_PERMISSIONS_KEY,
       targets,
     );
-    if (!authenticatedOnly && !required?.length && !anyOf?.length) {
+    const scoped = this.reflector.getAllAndOverride<PermissionKey[] | undefined>(
+      SCOPED_PERMISSIONS_KEY,
+      targets,
+    );
+    const anyScoped = this.reflector.getAllAndOverride<PermissionKey[] | undefined>(
+      ANY_SCOPED_PERMISSIONS_KEY,
+      targets,
+    );
+
+    if (
+      !authenticatedOnly &&
+      !required?.length &&
+      !anyOf?.length &&
+      !scoped?.length &&
+      !anyScoped?.length
+    ) {
       this.logger.error(
         { handler: `${context.getClass().name}.${context.getHandler().name}` },
         'Route has no access declaration (@Public, @Authenticated or @RequirePermission); denied',
@@ -71,6 +91,12 @@ export class PermissionGuard implements CanActivate {
       throw new AppException('FORBIDDEN');
     }
     if (anyOf?.length && !anyOf.some((key) => principal.permissions.has(key))) {
+      throw new AppException('FORBIDDEN');
+    }
+    if (scoped?.length && !scoped.every((key) => holdsAnywhere(principal, key))) {
+      throw new AppException('FORBIDDEN');
+    }
+    if (anyScoped?.length && !anyScoped.some((key) => holdsAnywhere(principal, key))) {
       throw new AppException('FORBIDDEN');
     }
     return true;

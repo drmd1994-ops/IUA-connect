@@ -122,7 +122,9 @@ export function NewsList() {
                   {item.accessTier !== 'PUBLIC' && (
                     <p className="mt-auto">
                       <span className="rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-semibold text-text-muted">
-                        {t('content.common.tiers.MEMBERS')}
+                        {t(
+                          `content.common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`,
+                        )}
                       </span>
                     </p>
                   )}

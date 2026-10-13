@@ -1,4 +1,5 @@
 import { uuidv7 } from '@iua/shared';
+import { FIRST_ORGANISATION } from './reference-data';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import { parseEnv } from '../../src/config/env.schema';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
@@ -160,7 +161,9 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
   const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
   const types = new Map(
-    (await prisma.membershipType.findMany()).map((type) => [type.key, type] as const),
+    (
+      await prisma.membershipType.findMany({ where: { organisationId: FIRST_ORGANISATION.id } })
+    ).map((type) => [type.key, type] as const),
   );
   const urology = async (code: string) =>
     prisma.department.findFirstOrThrow({
@@ -196,6 +199,8 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
             email: `${person.local}@${DOMAIN}`,
             passwordHash,
             emailVerifiedAt: daysAgo(60),
+            // The demo's people are physicians the platform knows (M16).
+            verifiedAt: daysAgo(60),
             locale: person.locale ?? 'he',
           },
         });
@@ -224,8 +229,23 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
       const id = (key: keyof typeof people) => ids.get(key)!;
       const admin = id('admin');
 
+      // The demo's administrator runs the organisation's office and the platform (M16).
       await tx.userRole.create({
-        data: { id: uuidv7(), userId: admin, roleId: await roleId('IUA_ADMIN'), grantedBy: null },
+        data: {
+          id: uuidv7(),
+          userId: admin,
+          roleId: await roleId('ORG_ADMIN'),
+          organisationId: FIRST_ORGANISATION.id,
+          grantedBy: null,
+        },
+      });
+      await tx.userRole.create({
+        data: {
+          id: uuidv7(),
+          userId: admin,
+          roleId: await roleId('PLATFORM_ADMIN'),
+          grantedBy: null,
+        },
       });
       const director = await roleId('DEPARTMENT_DIRECTOR');
       for (const [key, dept] of [
@@ -262,6 +282,7 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
           data: {
             id: membershipId,
             userId: id(key),
+            organisationId: FIRST_ORGANISATION.id,
             typeId: types.get(typeKey)!.id,
             status: options.status ?? 'ACTIVE',
             startDate: options.start ?? new Date(Date.UTC(today.getUTCFullYear(), 0, 1)),
@@ -342,6 +363,7 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
           data: {
             id: requestId,
             userId: id(key),
+            organisationId: FIRST_ORGANISATION.id,
             typeId: types.get(typeKey)!.id,
             hospitalId: options.place?.hospitalId ?? null,
             departmentId: options.place?.id ?? null,

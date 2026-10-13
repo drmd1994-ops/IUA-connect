@@ -1,16 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { uuidv7 } from '@iua/shared';
 import { type Principal } from '../../common/auth/principal';
+import {
+  OWNER_PROBLEM_CODES,
+  covers,
+  ownedWhere,
+  ownerOfNew,
+  scopeOf,
+} from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
 import { Prisma } from '../../generated/prisma/client';
 import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import { FilesService } from '../files';
+import { ORGANISATION_REF } from '../organisations';
 import { DirectoryService } from '../profiles';
-import { lockActive } from './chat-rules';
+import { ChatAccess } from './chat-access';
+import { lockActive, roomOpensTo } from './chat-rules';
 import { ChatStream } from './chat-stream';
 import {
   type AdminReportCategoriesDto,
@@ -31,6 +39,8 @@ import { RoomsService } from './rooms.service';
 
 const ROOM_SELECT = {
   id: true,
+  organisationId: true,
+  organisation: { select: ORGANISATION_REF },
   nameHe: true,
   nameEn: true,
   descriptionHe: true,
@@ -53,13 +63,16 @@ type RoomRow = Prisma.ConversationGetPayload<{ select: typeof ROOM_SELECT }>;
  * Rooms in the admin area (M12 plan §2.9, permission chat.rooms.manage): staff open, edit and
  * archive rooms, appoint their moderators, and keep the lists of room categories and report
  * reasons. Rooms are archived, never deleted. Every change is audited.
+ *
+ * A room belongs to an organisation or to the platform (M16), and chat.rooms.manage is used
+ * where it is held: a room of an owner the caller does not work for reads as "not found".
  */
 @Injectable()
 export class RoomsAdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly rooms: RoomsService,
-    private readonly access: AccessService,
+    private readonly access: ChatAccess,
     private readonly directory: DirectoryService,
     private readonly files: FilesService,
     private readonly stream: ChatStream,
@@ -68,9 +81,15 @@ export class RoomsAdminService {
 
   // --- Rooms ----------------------------------------------------------------------------------
 
-  async list(query: AdminRoomListQueryDto): Promise<AdminRoomListDto> {
+  async list(principal: Principal, query: AdminRoomListQueryDto): Promise<AdminRoomListDto> {
+    const scope = scopeOf(principal, 'chat.rooms.manage');
+    if (query.organisation && !covers(scope, query.organisation)) {
+      throw new AppException('NOT_FOUND');
+    }
     const where: Prisma.ConversationWhereInput = {
       kind: 'ROOM',
+      AND: [ownedWhere(scope)],
+      ...(query.organisation ? { organisationId: query.organisation } : {}),
       ...(query.archived === undefined
         ? {}
         : { archivedAt: query.archived === 'true' ? { not: null } : null }),
@@ -105,13 +124,20 @@ export class RoomsAdminService {
     };
   }
 
-  async get(id: string): Promise<AdminRoomDto> {
+  async get(principal: Principal, id: string): Promise<AdminRoomDto> {
+    return (await this.views([await this.mine(principal, id)]))[0]!;
+  }
+
+  /** A room the caller manages, or "not found": another owner's does not exist for them. */
+  private async mine(principal: Principal, id: string): Promise<RoomRow> {
     const row = await this.prisma.conversation.findFirst({
       where: { id, kind: 'ROOM' },
       select: ROOM_SELECT,
     });
-    if (!row) throw new AppException('NOT_FOUND');
-    return (await this.views([row]))[0]!;
+    if (!row || !covers(scopeOf(principal, 'chat.rooms.manage'), row.organisationId)) {
+      throw new AppException('NOT_FOUND');
+    }
+    return row;
   }
 
   async create(
@@ -119,18 +145,30 @@ export class RoomsAdminService {
     input: AdminRoomInputDto,
     meta: RequestMeta,
   ): Promise<AdminRoomDto> {
+    const owner = ownerOfNew(scopeOf(principal, 'chat.rooms.manage'), input.organisationId);
+    if ('problem' in owner) {
+      throw new AppException('VALIDATION_FAILED', [
+        { field: 'organisationId', code: OWNER_PROBLEM_CODES[owner.problem] },
+      ]);
+    }
     await this.checkLinks(input);
     const id = uuidv7();
     try {
       await this.prisma.conversation.create({
-        data: { id, kind: 'ROOM', createdBy: principal.userId, ...roomData(input) },
+        data: {
+          id,
+          kind: 'ROOM',
+          createdBy: principal.userId,
+          organisationId: owner.organisationId,
+          ...roomData(input),
+        },
       });
     } catch (error) {
       throw nameTaken(error);
     }
     if (input.pictureFileId) await this.files.markAttached(input.pictureFileId);
     await this.record('chat.room.create', principal, id, meta, { nameHe: input.nameHe });
-    return this.get(id);
+    return this.get(principal, id);
   }
 
   async update(
@@ -139,7 +177,12 @@ export class RoomsAdminService {
     input: AdminRoomInputDto,
     meta: RequestMeta,
   ): Promise<AdminRoomDto> {
-    const before = await this.get(id);
+    const before = await this.mine(principal, id);
+    if (input.organisationId !== undefined && input.organisationId !== before.organisationId) {
+      throw new AppException('VALIDATION_FAILED', [
+        { field: 'organisationId', code: 'ownerCannotChange' },
+      ]);
+    }
     await this.checkLinks(input);
     try {
       await this.prisma.conversation.update({ where: { id }, data: roomData(input) });
@@ -154,25 +197,26 @@ export class RoomsAdminService {
       inviteOnly: input.inviteOnly,
     });
     await this.stream.publishRoom(id, { type: 'room', conversationId: id });
-    return this.get(id);
+    return this.get(principal, id);
   }
 
   /** An archived room leaves the lists and becomes read-only for the people in it. */
   async archive(principal: Principal, id: string, meta: RequestMeta): Promise<AdminRoomDto> {
     await this.setArchived(principal, id, true, meta);
-    return this.get(id);
+    return this.get(principal, id);
   }
 
   async restore(principal: Principal, id: string, meta: RequestMeta): Promise<AdminRoomDto> {
     await this.setArchived(principal, id, false, meta);
-    return this.get(id);
+    return this.get(principal, id);
   }
 
   // --- Moderators -----------------------------------------------------------------------------
 
   /**
    * Makes a member a moderator of a room. Someone who is not in the room yet is added to it.
-   * Only an active member with a name can moderate.
+   * Only someone the room is for, with a name, can moderate: a verified person in the
+   * platform's rooms, an active member in an organisation's.
    */
   async addModerator(
     principal: Principal,
@@ -180,16 +224,10 @@ export class RoomsAdminService {
     userId: string,
     meta: RequestMeta,
   ): Promise<AdminRoomDto> {
-    await this.get(id);
-    const membership = await this.prisma.membership.findUnique({
-      where: { userId },
-      select: { userId: true },
-    });
-    const viewer = membership
-      ? await this.access.viewerOf({ userId } as Principal)
-      : { activeTypeId: null };
+    const room = await this.mine(principal, id);
+    const fits = roomOpensTo(await this.access.roomKeyOf(userId), room.organisationId);
     const card = (await this.directory.cards([userId])).get(userId);
-    if (!viewer.activeTypeId || !card?.firstName?.trim() || !card.lastName?.trim()) {
+    if (!fits || !card?.firstName?.trim() || !card.lastName?.trim()) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatModeratorNotMember' }]);
     }
     if (await this.rooms.banned(id, userId)) {
@@ -206,7 +244,7 @@ export class RoomsAdminService {
     }
     await this.record('chat.room.moderator.add', principal, id, meta, { userId });
     await this.stream.publishRoom(id, { type: 'room', conversationId: id });
-    return this.get(id);
+    return this.get(principal, id);
   }
 
   /** The person stays in the room as an ordinary member. */
@@ -216,7 +254,7 @@ export class RoomsAdminService {
     userId: string,
     meta: RequestMeta,
   ): Promise<AdminRoomDto> {
-    await this.get(id);
+    await this.mine(principal, id);
     const { count } = await this.prisma.conversationMember.updateMany({
       where: { conversationId: id, userId, role: 'MODERATOR' },
       data: { role: 'MEMBER' },
@@ -224,7 +262,7 @@ export class RoomsAdminService {
     if (count === 0) throw new AppException('NOT_FOUND');
     await this.record('chat.room.moderator.remove', principal, id, meta, { userId });
     await this.stream.publishRoom(id, { type: 'room', conversationId: id });
-    return this.get(id);
+    return this.get(principal, id);
   }
 
   // --- Room categories ------------------------------------------------------------------------
@@ -341,14 +379,12 @@ export class RoomsAdminService {
     archived: boolean,
     meta: RequestMeta,
   ): Promise<void> {
+    await this.mine(principal, id); // "not found" for a room that isn't there, or isn't theirs
     const { count } = await this.prisma.conversation.updateMany({
       where: { id, kind: 'ROOM', archivedAt: archived ? null : { not: null } },
       data: { archivedAt: archived ? new Date() : null },
     });
-    if (count === 0) {
-      await this.get(id); // "not found" for a room that isn't there; otherwise nothing to do
-      return;
-    }
+    if (count === 0) return; // already so: nothing to do
     await this.record(
       archived ? 'chat.room.archive' : 'chat.room.restore',
       principal,
@@ -391,6 +427,7 @@ export class RoomsAdminService {
     const now = new Date();
     return rows.map((row) => ({
       id: row.id,
+      organisation: row.organisation,
       nameHe: row.nameHe ?? '',
       nameEn: row.nameEn,
       descriptionHe: row.descriptionHe,

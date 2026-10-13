@@ -2,7 +2,9 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
 
-const TIERS = ['PUBLIC', 'MEMBERS', 'TYPES'] as const;
+const TIERS = ['PUBLIC', 'VERIFIED', 'MEMBERS', 'TYPES'] as const;
+/** Guidelines are the platform's: "members" is a setting for an organisation's items (M16). */
+const PLATFORM_TIERS = ['PUBLIC', 'VERIFIED', 'TYPES'] as const;
 const STATUSES = ['CURRENT', 'SUPERSEDED', 'WITHDRAWN'] as const;
 const locale = z.enum(['he', 'en']);
 const httpUrl = z.url({ protocol: /^https?$/ }).max(500);
@@ -30,7 +32,7 @@ const metadata = {
   evidenceLevel: z.string().trim().max(100).optional(),
   status: z.enum(STATUSES).default('CURRENT'),
   subspecialtyId: z.uuid().nullable().optional(),
-  accessTier: z.enum(TIERS).default('PUBLIC'),
+  accessTier: z.enum(PLATFORM_TIERS).default('PUBLIC'),
   /** The membership types allowed to read it, when accessTier is TYPES. */
   typeIds: z.array(z.uuid()).max(10).default([]),
   translations: z

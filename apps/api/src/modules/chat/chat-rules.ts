@@ -70,8 +70,24 @@ export function lockActive(
   return room.locked && (room.lockedUntil === null || room.lockedUntil > now);
 }
 
+/** What opens rooms to a person (M16). */
+export interface RoomKey {
+  /** Known to the platform as a physician. */
+  verified: boolean;
+  /** The organisations the person is an active member of. */
+  organisationIds: readonly string[];
+}
+
+/**
+ * Whether a room is for this person: the platform's rooms (no owner) are for every verified
+ * person, an organisation's rooms for its active members.
+ */
+export function roomOpensTo(key: RoomKey, organisationId: string | null): boolean {
+  return organisationId === null ? key.verified : key.organisationIds.includes(organisationId);
+}
+
 export interface RoomWriter {
-  /** Has an active membership of the association. */
+  /** The room is for them (`roomOpensTo`): they may take part in it. */
   activeMember: boolean;
   /** Suspended from chat by staff. */
   suspended: boolean;

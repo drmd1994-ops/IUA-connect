@@ -230,7 +230,11 @@ function Facts({ item }: { item: Item }) {
       {item.cmePoints !== null && (
         <Tag tone="success">{t('education.list.cme', { points: item.cmePoints })}</Tag>
       )}
-      {item.accessTier !== 'PUBLIC' && <Tag>{t('content.common.tiers.MEMBERS')}</Tag>}
+      {item.accessTier !== 'PUBLIC' && (
+        <Tag>
+          {t(`content.common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`)}
+        </Tag>
+      )}
     </View>
   );
 }

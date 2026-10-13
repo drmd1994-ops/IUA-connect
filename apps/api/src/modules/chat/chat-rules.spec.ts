@@ -2,6 +2,7 @@ import {
   EDIT_WINDOW_MS,
   canEdit,
   lockActive,
+  roomOpensTo,
   roomSendState,
   muteActive,
   muteFor,
@@ -9,6 +10,25 @@ import {
   preview,
   validIdempotencyKey,
 } from './chat-rules';
+
+describe('roomOpensTo', () => {
+  const verified = { verified: true, organisationIds: [] };
+  const member = { verified: true, organisationIds: ['society'] };
+  const unverified = { verified: false, organisationIds: [] };
+
+  it('opens the platform’s rooms to every verified person', () => {
+    expect(roomOpensTo(verified, null)).toBe(true);
+    expect(roomOpensTo(member, null)).toBe(true);
+    expect(roomOpensTo(unverified, null)).toBe(false);
+  });
+
+  it('opens an organisation’s rooms to its active members only', () => {
+    expect(roomOpensTo(member, 'society')).toBe(true);
+    expect(roomOpensTo(member, 'college')).toBe(false);
+    expect(roomOpensTo(verified, 'society')).toBe(false);
+    expect(roomOpensTo(unverified, 'society')).toBe(false);
+  });
+});
 
 describe('chat rules', () => {
   const now = new Date('2026-10-04T10:00:00Z');

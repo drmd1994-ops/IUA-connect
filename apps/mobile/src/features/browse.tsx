@@ -154,7 +154,13 @@ export function GuidelinesList() {
               {t(`statuses.${item.status}`)}
             </Tag>
             {item.subspecialty && <Tag>{name(item.subspecialty)}</Tag>}
-            {item.accessTier !== 'PUBLIC' && <Tag>{all('content.common.tiers.MEMBERS')}</Tag>}
+            {item.accessTier !== 'PUBLIC' && (
+              <Tag>
+                {all(
+                  `content.common.tiers.${item.accessTier === 'VERIFIED' ? 'VERIFIED' : 'MEMBERS'}`,
+                )}
+              </Tag>
+            )}
           </View>
         </Pressable>
       ))}

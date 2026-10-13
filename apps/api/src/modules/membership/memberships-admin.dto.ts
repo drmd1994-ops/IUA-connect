@@ -10,6 +10,8 @@ export class MembershipListQueryDto extends createZodDto(
     status: z.enum(['ACTIVE', 'SUSPENDED', 'EXPIRED']).optional(),
     type: z.string().max(64).optional(),
     paymentStatus: z.enum(PAYMENT_STATUSES).optional(),
+    /** Only this organisation's memberships. Left out: all the caller may see. */
+    organisation: z.uuid().optional(),
     /** Matches email and names (Hebrew or English), case-insensitive. */
     q: z.string().trim().max(100).optional(),
     page: z.coerce.number().int().min(1).max(10_000).default(1),

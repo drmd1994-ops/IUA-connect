@@ -100,6 +100,10 @@
         "locked": "{count, plural, one {אחד נעול} other {# נעולים}}",
         "disabled": "{count, plural, one {אחד מושבת} other {# מושבתים}}",
         "link": "פתיחת החשבונות"
+      },
+      "view": {
+        "label": "להציג את המספרים של",
+        "all": "כל מה שבאחריותי"
       }
     },
     "users": {
@@ -165,7 +169,16 @@
         "chooseRole": "בחירת תפקיד",
         "give": "מתן",
         "rolesHint": "תפקידים ניתנים ומוסרים על ידי מנהלי־על. תפקיד שדורש אימות דו־שלבי אינו פותח דבר עד שהאדם מגדיר אותו.",
-        "auditLink": "החשבון הזה ביומן הביקורת"
+        "auditLink": "החשבון הזה ביומן הביקורת",
+        "physician": "מאומת/ת כרופא/ה",
+        "physicianYes": "כן, מאז {date}",
+        "physicianNo": "עדיין לא",
+        "membershipIn": "{organisation}: {type}, {status}, עד {date}",
+        "membershipsHidden": "מוצג רק לצוות שרשאי לפעול בתוך ארגונים.",
+        "where": "היכן",
+        "rolePlace": "{role}, {place}",
+        "onPlatform": "בפלטפורמה",
+        "inOrganisation": "ב{organisation}"
       },
       "rolesPage": {
         "title": "תפקידים",
@@ -185,7 +198,8 @@
     },
     "roles": {
       "SUPER_ADMIN": "מנהל/ת־על",
-      "IUA_ADMIN": "מנהל/ת האיגוד",
+      "PLATFORM_ADMIN": "מנהל/ת הפלטפורמה",
+      "ORG_ADMIN": "מנהל/ת ארגון",
       "CONTENT_EDITOR": "עורך/ת תוכן",
       "EVENT_ADMIN": "מנהל/ת אירועים",
       "DEPARTMENT_DIRECTOR": "מנהל/ת מחלקה",
@@ -197,6 +211,8 @@
       "users_read": "לראות חשבונות",
       "users_manage": "להשבית, להפעיל ולבטל נעילה של חשבונות",
       "roles_manage": "לתת ולהסיר תפקידים",
+      "organisations_manage": "לנהל את הארגונים שבפלטפורמה",
+      "organisations_access": "לפעול בתוך כל ארגון (לצורכי תמיכה; כל צפייה נרשמת)",
       "membership_read": "לראות חברים",
       "membership_manage": "לנהל חברויות ולייבא חברים",
       "membership_approve_department": "לאשר בקשות של המחלקה שלו/ה",

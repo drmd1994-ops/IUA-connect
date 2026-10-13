@@ -1,6 +1,6 @@
 import { disableProblem, manageProblem, roleChangeProblem } from './account-rules';
 
-const admin = { userId: 'admin', roles: ['IUA_ADMIN'] };
+const admin = { userId: 'admin', roles: ['PLATFORM_ADMIN'] };
 const superAdmin = { userId: 'super', roles: ['SUPER_ADMIN'] };
 const otherSuper = { userId: 'super-2', roles: ['SUPER_ADMIN'] };
 const member = { userId: 'member', roles: [] };
@@ -56,6 +56,31 @@ describe('role rules', () => {
     expect(roleChangeProblem('grant', 'SUBSPECIALTY_ADMIN', superAdmin, member, 1)).toBe(
       'roleScoped',
     );
+  });
+
+  it('gives a role only where it is held', () => {
+    const inOrganisation = true;
+    // An organisation's administrator is of an organisation; the platform's is not.
+    expect(
+      roleChangeProblem('grant', 'ORG_ADMIN', superAdmin, member, 1, inOrganisation),
+    ).toBeNull();
+    expect(roleChangeProblem('grant', 'ORG_ADMIN', superAdmin, member, 1)).toBe('roleWrongPlace');
+    expect(roleChangeProblem('grant', 'PLATFORM_ADMIN', superAdmin, member, 1)).toBeNull();
+    for (const role of ['PLATFORM_ADMIN', 'SUPER_ADMIN']) {
+      expect(roleChangeProblem('grant', role, superAdmin, member, 1, inOrganisation)).toBe(
+        'roleWrongPlace',
+      );
+    }
+    // An editor writes for either.
+    expect(roleChangeProblem('grant', 'CONTENT_EDITOR', superAdmin, member, 1)).toBeNull();
+    expect(
+      roleChangeProblem('grant', 'CONTENT_EDITOR', superAdmin, member, 1, inOrganisation),
+    ).toBeNull();
+  });
+
+  it('removes a role from wherever it was put', () => {
+    // A grant in the wrong place (made by hand in the database) can still be taken away.
+    expect(roleChangeProblem('remove', 'SUPER_ADMIN', superAdmin, otherSuper, 1, true)).toBeNull();
   });
 
   it('refuses a role that does not exist', () => {
