@@ -41,12 +41,12 @@ const NEWS: NewsSeed[] = [
     tags: ['כנס שנתי'],
     he: {
       title: 'נפתחה ההרשמה לכנס השנתי (הדגמה)',
-      summary: 'ההרשמה לכנס השנתי של האיגוד נפתחה. ידיעה לדוגמה.',
+      summary: 'ההרשמה לכנס השנתי של האגודה נפתחה. ידיעה לדוגמה.',
       body: `${DEMO_NOTE_HE}\n\n## מה בתוכנית\n\n- מושבים מדעיים\n- סדנאות מעשיות\n- מפגש מתמחים\n\nפרטים נוספים יפורסמו בהמשך.`,
     },
     en: {
       title: 'Registration opens for the annual meeting (demo)',
-      summary: 'Registration for the association’s annual meeting is open. A sample item.',
+      summary: 'Registration for the society’s annual meeting is open. A sample item.',
       body: `${DEMO_NOTE_EN}\n\n## On the programme\n\n- Scientific sessions\n- Hands-on workshops\n- A residents’ meeting\n\nMore details will follow.`,
     },
   },
@@ -68,7 +68,7 @@ const NEWS: NewsSeed[] = [
     publishedDaysAgo: 5,
     tags: ['חברים'],
     he: {
-      title: 'עדכון לחברי האיגוד בלבד (הדגמה)',
+      title: 'עדכון לחברי האגודה בלבד (הדגמה)',
       summary: 'ידיעה שרק חברים פעילים יכולים לקרוא.',
       body: `${DEMO_NOTE_HE}\n\nהידיעה הזאת פתוחה לחברים פעילים בלבד. מבקרים ומי שחברותם אינה פעילה לא יראו אותה.`,
     },
@@ -112,9 +112,9 @@ const NEWS: NewsSeed[] = [
   {
     status: 'IN_REVIEW',
     category: 'association',
-    tags: ['ועד האיגוד'],
+    tags: ['ועד האגודה'],
     he: {
-      title: 'הודעה מוועד האיגוד: ממתינה לבדיקה (הדגמה)',
+      title: 'הודעה מוועד האגודה: ממתינה לבדיקה (הדגמה)',
       summary: 'הוגשה על ידי העורכת וממתינה לאישור.',
       body: `${DEMO_NOTE_HE}\n\nהידיעה הזאת הוגשה לבדיקה. מנהל/ת יכול/ה לפרסם אותה, לתזמן אותה או להחזיר אותה עם הערה.`,
     },
@@ -265,7 +265,7 @@ export async function seedDemoContent(prisma: PrismaClient): Promise<void> {
       }
 
       const categories = {
-        association: await category(tx, 'association', 'הודעות האיגוד', 'Association updates', 1),
+        association: await category(tx, 'association', 'הודעות הארגון', 'Organisation updates', 1),
         education: await category(tx, 'education', 'הוראה והשתלמות', 'Education', 2),
       };
 

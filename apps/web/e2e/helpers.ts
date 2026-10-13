@@ -37,6 +37,12 @@ export async function linkFromOutbox(to: string, template: string): Promise<stri
   throw new Error(`No ${template} email to ${to} in ${OUTBOX}`);
 }
 
+/** The demo's fictional organisation (the seed's demo layer names it). */
+export const DEMO_ORGANISATION = {
+  slug: 'demo-urological-society',
+  name: 'The Sample Urological Society (fictional)',
+};
+
 /**
  * Creates a fictional staff account with the development CLI (a super admin unless another
  * unscoped role is named); returns its password. The role is held on the platform, or inside the

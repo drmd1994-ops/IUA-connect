@@ -359,8 +359,8 @@ test('the rooms fit a phone, in Hebrew', async ({ browser }) => {
   expect(await noSidewaysScroll(page)).toBe(true);
   await expectAccessible(page);
 
-  await list.getByRole('link', { name: 'הודעות האיגוד' }).click();
-  await expect(page.getByTestId('room-name')).toHaveText('הודעות האיגוד');
+  await list.getByRole('link', { name: 'הודעות האגודה' }).click();
+  await expect(page.getByTestId('room-name')).toHaveText('הודעות האגודה');
   await expect(list).toBeHidden();
   await expect(page.getByTestId('pins-summary')).toBeVisible();
   expect(await noSidewaysScroll(page)).toBe(true);

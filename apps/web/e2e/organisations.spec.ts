@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { type Page, expect, test } from '@playwright/test';
-import { expectSignedIn, signIn } from './helpers';
+import { DEMO_ORGANISATION, expectSignedIn, signIn } from './helpers';
 
 /**
  * M16 (docs/plans/M16-independent-platform.md §4.3): an organisation has a section of its own on
@@ -10,8 +10,8 @@ import { expectSignedIn, signIn } from './helpers';
  */
 const DEMO_PASSWORD = 'ilikeIUAconnect11';
 const MEMBER = 'member.full@demo.test';
-const SECTION = '/organisations/first-organisation';
-const NAME = 'The first organisation';
+const SECTION = `/organisations/${DEMO_ORGANISATION.slug}`;
+const NAME = DEMO_ORGANISATION.name;
 
 async function expectAccessible(page: Page) {
   await page.waitForLoadState('networkidle');

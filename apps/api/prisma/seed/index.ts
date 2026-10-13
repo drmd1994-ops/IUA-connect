@@ -10,7 +10,9 @@
  *                 conversations, a blocked pair and a chat report waiting for review (M11);
  *                 room categories and chat rooms with a moderator, a ban and a report (M12);
  *                 groups, invitations, a room by invitation and files in messages (M13)
- *   3. import:    the hand-picked IUA website sample from fixtures/iua-import/ (M4)
+ * The sample imported from a real organisation's website (M4) is no longer a layer: nothing of a
+ * real organisation is in the demo (M16). `seedImport` and the importer stay in the repository,
+ * unused, and `pnpm import:remove` takes an earlier sample out of a database.
  * Connects as the application role (DATABASE_URL). Seeds refuse to run in production.
  * SEED_LAYERS (comma-separated, e.g. "reference") limits which layers run; integration tests seed
  * only the reference layer.
@@ -28,7 +30,6 @@ import { seedDemoGroups } from './demo-groups';
 import { seedDemoNotifications } from './demo-notifications';
 import { seedDemoPortal } from './demo-portal';
 import { seedDemoRooms } from './demo-rooms';
-import { seedImport } from './import';
 import { seedReference } from './reference';
 
 interface SeedLayer {
@@ -52,18 +53,6 @@ const LAYERS: SeedLayer[] = [
       await seedDemoChat(prisma);
       await seedDemoRooms(prisma);
       await seedDemoGroups(prisma);
-    },
-  },
-  {
-    name: 'import',
-    milestone: 'M4',
-    run: async (prisma) => {
-      const created = await seedImport(prisma);
-      console.log(
-        created.news + created.guidelines + created.events > 0
-          ? `seed: import layer — ${created.news} news items, ${created.guidelines} guideline entries, ${created.events} draft events`
-          : 'seed: import layer already present, skipped',
-      );
     },
   },
 ];

@@ -96,7 +96,7 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
           lastName: 'Tzur',
           nameHe: 'יעל צור',
           nameEn: 'Yael Tzur',
-          position: 'Association secretary',
+          position: 'Society secretary',
           languages: ['he', 'en'],
         },
       });
@@ -266,11 +266,11 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
       const sent = await broadcast(tx, admin, sentAt, {
         he: {
           title: 'תזכורת: חידוש החברות לשנה הבאה (הדגמה)',
-          body: `${NOTE_HE}\n\nהחברות לשנה הבאה מתחדשת בינואר. את מצב החברות אפשר לראות ב״החברות שלי״.\n\nבברכה,\nמזכירות האיגוד`,
+          body: `${NOTE_HE}\n\nהחברות לשנה הבאה מתחדשת בינואר. את מצב החברות אפשר לראות ב״החברות שלי״.\n\nבברכה,\nמזכירות האגודה`,
         },
         en: {
           title: 'Reminder: renewing your membership for next year (demo)',
-          body: `${NOTE_EN}\n\nMemberships for next year are renewed in January. You can see the state of yours under “My membership”.\n\nRegards,\nThe association office`,
+          body: `${NOTE_EN}\n\nMemberships for next year are renewed in January. You can see the state of yours under “My membership”.\n\nRegards,\nThe society’s office`,
         },
       });
       if (recipients.length > 0) {
@@ -311,7 +311,7 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
       await broadcast(tx, secondAdmin, new Date(now - 2 * HOUR), {
         he: {
           title: 'הזמנה למפגש החברים השנתי (הדגמה)',
-          body: `${NOTE_HE}\n\nהמפגש השנתי של חברי האיגוד יתקיים בחודש הבא. פרטים והרשמה בעמוד האירועים.`,
+          body: `${NOTE_HE}\n\nהמפגש השנתי של חברי האגודה יתקיים בחודש הבא. פרטים והרשמה בעמוד האירועים.`,
         },
         en: {
           title: 'Invitation to the annual members’ meeting (demo)',

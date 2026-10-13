@@ -1,6 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
 import { type Browser, type Page, expect, test } from '@playwright/test';
-import { addVirtualAuthenticator, createAdmin, signIn, uniqueEmail } from './helpers';
+import {
+  DEMO_ORGANISATION,
+  addVirtualAuthenticator,
+  createAdmin,
+  signIn,
+  uniqueEmail,
+} from './helpers';
 
 /**
  * M3 exit test (docs/plans/M3-content-core.md §1, §8): an editor writes an article with an image
@@ -93,7 +99,7 @@ test('editor writes → reviewer schedules → the article appears; members-only
   await signInAndAddPasskey(
     editor,
     editorEmail,
-    createAdmin(editorEmail, 'CONTENT_EDITOR', 'first-organisation'),
+    createAdmin(editorEmail, 'CONTENT_EDITOR', DEMO_ORGANISATION.slug),
   );
   const reviewerEmail = uniqueEmail('m3-reviewer');
   await signInAndAddPasskey(reviewer, reviewerEmail, createAdmin(reviewerEmail));
@@ -204,39 +210,4 @@ test('an admin adds a guideline with a version; visitors see it with its officia
   );
   await expect(visitor.getByText('A short summary written for the demo.')).toBeVisible();
   await expectAccessible(visitor);
-});
-
-test('imported items show their source, and documents show the year only (M4)', async ({
-  page,
-}) => {
-  // Loaded by the seed's import layer from the committed fixtures.
-  const title = 'דף מידע לציבור: מחלת פירוני';
-  await page.goto('/he/news');
-  const card = page.getByRole('listitem').filter({ hasText: title });
-  await expect(card).toContainText('מקור: אתר האיגוד');
-  await card.getByRole('link', { name: title }).click();
-
-  const article = page.getByTestId('news-article');
-  await expect(article.getByRole('heading', { name: title })).toBeVisible();
-  await expect(article).toContainText('31 בינואר 2026');
-  const source = page.getByTestId('news-source');
-  await expect(source).toContainText('מקור: אתר האיגוד');
-  await expect(source.getByRole('link')).toHaveAttribute(
-    'href',
-    'https://urology.ima.org.il/ViewArticle.aspx?aId=8399',
-  );
-  await expectAccessible(page);
-
-  await page.goto('/he/guidelines');
-  const paper = page
-    .getByRole('listitem')
-    .filter({ hasText: 'נייר עמדה בנושא סרטן הערמונית - 2022' });
-  await expect(paper).toContainText('גרסה 2022 · 2022');
-  await expect(paper).not.toContainText('בינואר');
-  await paper.getByRole('link').click();
-  await expect(page.getByRole('link', { name: 'פתיחת ההנחיה הרשמית' })).toHaveAttribute(
-    'href',
-    'https://ima-contentfiles.s3.amazonaws.com/ProstateCancerGuidelines112022.pdf',
-  );
-  await expectAccessible(page);
 });

@@ -51,10 +51,10 @@ const PAGES = [
   '/accessibility',
   // M16 (the signed-in views are checked in organisations.spec.ts)
   '/organisations',
-  '/organisations/first-organisation',
-  '/organisations/first-organisation/news',
-  '/organisations/first-organisation/events',
-  '/organisations/first-organisation/membership',
+  '/organisations/demo-urological-society',
+  '/organisations/demo-urological-society/news',
+  '/organisations/demo-urological-society/events',
+  '/organisations/demo-urological-society/membership',
 ];
 
 for (const locale of ['he', 'en'] as const) {
