@@ -1,4 +1,4 @@
-# Contributing to IUA Connect
+# Contributing to Med Connect
 
 ## Workflow
 

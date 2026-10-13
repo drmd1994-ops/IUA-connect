@@ -1,6 +1,6 @@
 # Security policy
 
-IUA Connect is a private pitch application running with **fictional demo data only**. The full threat model and controls are in [`SECURITY_MODEL.md`](SECURITY_MODEL.md).
+Med Connect is a private pitch application running with **fictional demo data only**. The full threat model and controls are in [`SECURITY_MODEL.md`](SECURITY_MODEL.md).
 
 ## Reporting a vulnerability
 

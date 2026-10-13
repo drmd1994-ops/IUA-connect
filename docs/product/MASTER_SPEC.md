@@ -1,3 +1,5 @@
+> **History.** This is the specification the project started from, kept exactly as it was written. It describes a product for one association under an earlier name. Since M16 (2026-10-13) the product is Med Connect, an independent platform with a section for each organisation: see `docs/adr/0010-a-platform-with-organisations.md` and `PRODUCT_REQUIREMENTS.md`.
+
 # MASTER CLAUDE CODE PROMPT
 # PROJECT: IUA CONNECT
 # Israeli Urological Association Digital Platform

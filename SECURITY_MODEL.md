@@ -1,4 +1,6 @@
-# IUA Connect — Security Model
+# Med Connect — Security Model
+
+> **Since M16 (2026-10-13)** the product is **Med Connect**, an independent platform with a section for each organisation ([decision 0010](docs/adr/0010-a-platform-with-organisations.md)). Where this document still says "the association" or "IUA admin", read "an organisation" and "its administrator"; the section "M16" below is what holds now.
 
 > Technical controls are not compliance (spec §59). A professional legal and privacy review is **required before any real personal data** is loaded. Until then the system runs in **demo mode with fictional people**.
 
@@ -9,7 +11,7 @@
 | Member identities and professional data | Personal data under Israeli privacy law. A list of all urologists is valuable to spammers and marketers. |
 | Specialist certificate numbers          | Identifying professional credential                                                                      |
 | Admin and director accounts             | Can approve members, publish content, and message every member                                           |
-| Content integrity                       | Members rely on IUA content being authentic                                                              |
+| Content integrity                       | Readers rely on content being authentic                                                                  |
 | Audit trail                             | Evidence of who did what                                                                                 |
 | Private messages between members (M11)  | Correspondence between doctors. Sensitive in itself, and the place where a patient's details could be typed against the rules. |
 | (Later) patient-adjacent content        | Cases, logbook. The highest sensitivity; out of the MVP. Chat between doctors and patients is not planned. |
@@ -69,7 +71,7 @@
 - **Who may write to whom:** an active member, to a member listed in the directory who has not chosen "nobody". Not listed, not active, "nobody" and blocked all look like nobody.
 - **Text is plain text.** No HTML and no Markdown; the page shows it as text, so nothing typed can run in another person's browser. Web addresses become links with `rel="noopener noreferrer nofollow"`.
 - **Blocking** stops messages in both directions; the blocked person gets a neutral refusal and is not told.
-- **Reports and staff:** `chat.moderate` (IUA admins, in a session with two-step verification). A report keeps the reported message and the five before and after it; staff see nothing else of the conversation. Nobody decides on a report they are part of. Every look and every decision is in the audit log, without message text. The kept copy is erased 90 days after the report is closed.
+- **Reports and staff:** `chat.moderate` (staff, in a session with two-step verification). A report keeps the reported message and the five before and after it; staff see nothing else of the conversation. Nobody decides on a report they are part of. Every look and every decision is in the audit log, without message text. The kept copy is erased 90 days after the report is closed.
 - **The event stream** is authenticated like every route, carries ids only, ends after ten minutes (the life of an access token) and is limited to three per person.
 - **Email and push** about messages never carry the text or the sender.
 - **Not protected:** messages are **not end-to-end encrypted**; whoever can read the database can read them. Nothing technical stops a person from typing a patient's details: there is a standing note, a report reason, and staff can delete. This needs the legal review before real use.
@@ -81,7 +83,7 @@
 - **Joining shows your name.** The people in a room see the first and last name of everyone in it, also of members not listed in the directory. The member is told before the first join, and can't join without a name.
 - **Who may write:** a person in the room with an active membership, not suspended from chat; in an announcements room or a locked room, moderators only. Someone whose membership ended keeps reading the rooms they are in and can't write.
 - **Who may moderate:** the room's own moderators while their membership is active, and staff with `chat.moderate`. A moderator has no power in another room, and can't remove, ban or delete the message of another moderator; staff can. Every moderation action is in the audit log with its reason, without message text.
-- **Who opens rooms:** staff with `chat.rooms.manage` (IUA admins, in a session with two-step verification). They open, change, archive and restore rooms, appoint moderators (active members only), and keep the categories and the report reasons.
+- **Who opens rooms:** staff with `chat.rooms.manage` (the room owner's staff, in a session with two-step verification). They open, change, archive and restore rooms, appoint moderators (active members only), and keep the categories and the report reasons.
 - **Staff in rooms, not in private chat.** Staff with `chat.moderate` can read any room. Private conversations stay closed to them, as in M11.
 - **Mentions** are checked on the server: only people in the room, ten a message. A mention is a notice under the bell; no email unless the person switched room emails on, and then without the text or the sender.
 - **Blocking in a room:** a blocked person's messages are folded for the person who blocked them, and cause no notice. They are not hidden from the room.
@@ -118,6 +120,17 @@
 - Analytics (later) are privacy-first, with no third-party trackers.
 - Export and delete own data: planned (right-of-access requests).
 - Imported IUA website content contains **no personal data beyond author bylines**, and the physician directory is excluded (D11).
+
+### Organisations (M16)
+
+- **An organisation sees only its own.** Its staff see its members and its applicants and nobody else on the platform. Every staff route checks the owner of the row on the server; another owner's row answers "not found", the same as one that does not exist, so its existence is not revealed.
+- **How it is kept:** a test reads every organisation-scoped route from the running application and tries each as another organisation's office and as the platform's administrator; a second organisation exists in the test data for this. A new route with a scoped permission is in the sweep without being added to a list.
+- **Platform staff and an organisation's data.** Reaching into an organisation needs `organisations.access` (the super administrator). Reading a member's file that way writes an audit entry naming the reader, the member and the organisation.
+- **Licence and certificate numbers** stay encrypted and are never shown, to an organisation's staff or the platform's.
+- **Verified is not member.** The platform opens to a verified physician; an organisation's section opens to its members. Ending a membership does not close the account, and the card stops verifying at once.
+- **Narrowing never opens.** A list narrowed to one organisation (`?organisation=`) is still filtered by what the reader may see.
+- **Known and accepted by the owner:** the member import tells an organisation's office whether an email address already has an account; only a super administrator gives roles.
+- **No real organisation's name, logo or content** is in the product without its written agreement. The demo's organisation is fictional.
 
 ## 4. Regulatory notes (for legal review, not conclusions)
 

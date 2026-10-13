@@ -1,4 +1,4 @@
-# CLAUDE.md — IUA Connect
+# CLAUDE.md — Med Connect (formerly IUA Connect)
 
 At the start of every session, read `HANDOFF.md` and `PROJECT_STATUS.md` first. They hold the project context, the owner's decisions and the current milestone.
 

@@ -13,3 +13,4 @@ One file per decision that had a real alternative: `NNNN-short-title.md`, with S
 | 0007 | [Web-first delivery](0007-web-first-delivery.md)                                          |
 | 0008 | [Videos are links to where they are hosted](0008-videos-are-links.md)                     |
 | 0009 | [Live updates by an event stream](0009-live-updates-by-event-stream.md)                   |
+| 0010 | [A platform with organisations](0010-a-platform-with-organisations.md)                    |

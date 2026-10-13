@@ -1,4 +1,6 @@
-# IUA Connect — Architecture
+# Med Connect — Architecture
+
+> **Since M16 (2026-10-13)** the product is **Med Connect**, an independent platform with a section for each organisation ([decision 0010](docs/adr/0010-a-platform-with-organisations.md)). Where this document still says "the association" or "IUA admin", read "an organisation" and "its administrator"; the section "M16" below is what holds now.
 
 ## 1. Style
 
@@ -97,22 +99,31 @@ Adapters are selected with environment variables and validated at startup. The a
 Membership category and administrative role are **separate axes**:
 
 - **Membership type** (FULL_MEMBER, NON_FULL_MEMBER, RESIDENT, STUDENT, HONORARY_MEMBER) describes what the person _is_. It is stored on `memberships`.
-- **Roles** (SUPER_ADMIN, IUA_ADMIN, CONTENT_EDITOR, EVENT_ADMIN, RESEARCH_ADMIN, SUBSPECIALTY_ADMIN, CME_ADMIN, **DEPARTMENT_DIRECTOR**) describe what the person may _do_. They are stored on `user_roles`, optionally scoped, e.g. DEPARTMENT_DIRECTOR scoped to one department.
+- **Roles** (SUPER_ADMIN, PLATFORM_ADMIN, ORG_ADMIN, CONTENT_EDITOR, EVENT_ADMIN, RESEARCH_ADMIN, SUBSPECIALTY_ADMIN, CME_ADMIN, **DEPARTMENT_DIRECTOR**) describe what the person may _do_. They are stored on `user_roles`, optionally scoped, e.g. DEPARTMENT_DIRECTOR scoped to one department.
 - **GUEST** means unauthenticated. It is not stored.
 - **Permissions** are granular strings (`news.create`, `membership.approve.department`, `membership.approve.final`, ...), mapped to roles in the database and seeded from code.
 - Access tiers on content are evaluated against membership type and status.
 
+### Since M16: two places, and whose a thing is
+
+- **A role is held on the platform or inside one organisation** (`user_roles.organisation_id`, null for the platform). SUPER_ADMIN and PLATFORM_ADMIN are the platform's; ORG_ADMIN is an organisation's; the editor, event and CME roles can be either. A person may hold several.
+- **The principal** carries the permissions held on the platform and, apart from them, the permissions held in each organisation. `common/auth/scope.ts` answers the questions every service asks: where does this person hold the permission, does that cover this row's owner, and whose is a new row.
+- **Decorators:** `@RequirePermission` means "held on the platform"; `@RequireScopedPermission` means "held somewhere", and the service then checks the row's owner. Another owner's row answers 404.
+- **Reaching in:** platform staff act on an organisation's things only with `organisations.access`, and reading a member's file that way is audited.
+- **Access tiers** are PUBLIC, VERIFIED, MEMBERS (of the owning organisation) and TYPES. The rule is one pure function, `common/access-policy.ts`, over a viewer `{ verified, memberships }`.
+- **An unnamed organisation** in a member's own request (`/me/membership`) means the one they belong to, while that can only mean one.
+
 ## 7. Verification workflow (D3)
 
 ```
-REGISTERED ──(email verified)──▶ PENDING_DIRECTOR ──(director approves)──▶ PENDING_ADMIN ──(IUA admin approves)──▶ ACTIVE
+REGISTERED ──(email verified)──▶ PENDING_DIRECTOR ──(director approves)──▶ PENDING_ADMIN ──(the organisation approves)──▶ ACTIVE
                                         │                                         │
                                         └──(rejects, with reason)──▶ REJECTED ◀───┘
 ```
 
 - The registrant selects a hospital and department. The request goes to every user holding DEPARTMENT_DIRECTOR scoped to that department.
 - Specialists enter a specialist certificate number (format-validated only; there's no live registry check). Residents: see open item O3.
-- If a department has no director, the request goes straight to the IUA admin queue, flagged.
+- If a department has no director, the request goes straight to the organisation's office, flagged.
 - Every transition is audited. Notifications go out by email and in-app.
 
 ## 8. Internationalization
@@ -121,6 +132,10 @@ REGISTERED ──(email verified)──▶ PENDING_DIRECTOR ──(director appr
 - UI strings come from `packages/i18n/<locale>/*.json`. Lint rules block hard-coded JSX text.
 - Content translations live in a **per-entity translations table** (`news_translations(news_id, locale, title, summary, body)`), so adding a locale needs no schema change.
 - Layout uses CSS logical properties (`ms-`, `me-`, `ps-`, `pe-` in Tailwind), and `dir` is set per locale. Dates and numbers use `Intl`.
+
+### Since M16: the web application's sections
+
+`/organisations` lists the organisations; `/organisations/<slug>` is an organisation's section, with its membership, card, news and events under it. The platform's own lists (`/news`, `/events`) show what the reader may see from the platform and from every organisation, each item saying whose it is. The app has the same division on one screen, reached from "Me".
 
 ## 9. Web application
 

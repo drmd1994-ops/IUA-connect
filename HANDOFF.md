@@ -1,4 +1,4 @@
-# HANDOFF — IUA Connect
+# HANDOFF — Med Connect (formerly IUA Connect)
 
 _Written 4 October 2026 after milestone M10, updated 5 October 2026 after M11 (private chat), M12 (chat rooms) and M13 (groups, invitations and files). For whoever picks the project up next, person or AI._
 
@@ -8,12 +8,12 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 ## 1. Goal
 
-**IUA Connect, "the digital home of Israeli urology":** a web platform for the Israeli Urological Association. Members join and are verified, read news and guidelines, register for events, learn, get notifications and find each other; the association's staff run all of it from an admin area.
+**Med Connect ("מד קונקט"), until M16 called IUA Connect:** an independent professional platform for physicians, starting with urologists in Israel, on the web and as a phone app. A verified physician has a profile, the directory, chat, education and guidelines; an organisation has a section of its own with its membership, card, news, events and rooms, run by its own staff. The decision and its reasons: `docs/adr/0010-a-platform-with-organisations.md`.
 
-- **What it is today:** a private **demo**, built to be pitched to the association. It is not endorsed by or affiliated with the IUA or the Israeli Medical Association.
+- **What it is today:** a private **demo**. It is not endorsed by or affiliated with any association; the organisation in the demo is fictional, and a real one appears only with its written agreement.
 - **Owner:** a urology surgeon, the only developer for now.
 - **The goal of the work so far:** a complete, honest MVP that can be shown start to finish. That goal is met (milestones M0 to M9), plus four additions the owner asked for: connection points (M10), private chat (M11), chat rooms (M12), and groups, invitations and files in chat (M13).
-- **The longer goal:** real use by the association, which needs the readiness checklist in `DEPLOYMENT.md` first, starting with a legal review.
+- **The longer goal:** real use by physicians and by organisations that choose to have a section, which needs the readiness checklist in `DEPLOYMENT.md` first, starting with a legal review. The milestones after M16 are planned in `docs/plans/ROADMAP-M16-onward.md`.
 - Full original specification: `docs/product/MASTER_SPEC.md`. What the MVP covers: `PRODUCT_REQUIREMENTS.md`. What comes later: `DEVELOPMENT_ROADMAP.md`.
 
 **Rules that never change** (from `CLAUDE.md` and the owner):

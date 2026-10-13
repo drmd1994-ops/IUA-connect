@@ -1,4 +1,6 @@
-# IUA Connect — API Design
+# Med Connect — API Design
+
+> **Since M16 (2026-10-13)** the product is **Med Connect**, an independent platform with a section for each organisation ([decision 0010](docs/adr/0010-a-platform-with-organisations.md)). Where this document still says "the association" or "IUA admin", read "an organisation" and "its administrator"; the section "M16" below is what holds now.
 
 REST over HTTPS, JSON, base path **`/api/v1`**. OpenAPI 3.1 is generated from the NestJS decorators and Zod schemas. Swagger UI is at `/api/docs` in development and staging only.
 
@@ -214,6 +216,24 @@ Also since M13: sending a message takes `attachmentIds` (three at most, one vide
 ### Health
 
 `GET /health/live`, `GET /health/ready` (not versioned)
+
+### Organisations (M16)
+
+| Method | Path                               | Notes                                                                       |
+| ------ | ---------------------------------- | --------------------------------------------------------------------------- |
+| GET    | /organisations                     | Public. Who has a section: name, address name, description. Never members.  |
+| GET    | /organisations/{slugOrId}          | Public.                                                                     |
+| GET    | /me/memberships                    | The person's memberships, one per organisation.                             |
+| GET    | /me/membership?organisation=       | One of them. The organisation may be left out while it can only mean one.   |
+| GET    | /membership-types?organisation=    | Each type says whose it is.                                                 |
+| GET    | /news, /events ?organisation=      | Narrowed to one organisation. Every item carries `organisation` (or null). |
+| GET    | /chat/rooms?organisation=          | Narrowed to one organisation's rooms. Narrowing never opens a room.         |
+| GET    | /broadcasts/{id}                   | The message says who sent it: `organisation`, or null for the platform.     |
+
+- **Staff routes** take `organisationId` when a new item is made by someone who works in more than one place (`organisationRequired` when it is left out, `unknownOrganisation` when it is not theirs), and `?organisation=` to narrow a list. An item's owner does not change (`ownerCannotChange`).
+- **Roles** are granted with `organisationId` (or null for the platform); `roleWrongPlace` when the role cannot be held there.
+- **`/me`** answers `verified`, `platformPermissions`, and `organisations[]` with the permissions held in each.
+- **Another owner's thing answers 404**, never 403, on every staff route.
 
 ## 5. Rate limits (initial)
 
