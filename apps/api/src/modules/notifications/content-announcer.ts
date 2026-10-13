@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import { DEFAULT_LOCALE, type Locale, getMessages, isLocale } from '@iua/i18n';
-import { CONTENT_NOTIFICATION_KINDS, type NotificationKind, uuidv7 } from '@iua/shared';
+import { DEFAULT_LOCALE, type Locale, getMessages, isLocale } from '@medconnect/i18n';
+import { CONTENT_NOTIFICATION_KINDS, type NotificationKind, uuidv7 } from '@medconnect/shared';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { JobQueue } from '../../infra/jobs/job-queue';

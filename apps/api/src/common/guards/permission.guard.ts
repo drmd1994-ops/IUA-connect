@@ -6,7 +6,7 @@ import {
   Optional,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 import {
   IS_AUTHENTICATED_KEY,
   IS_PUBLIC_KEY,

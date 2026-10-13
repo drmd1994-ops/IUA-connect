@@ -1,4 +1,4 @@
-import { LOCALES } from '@iua/i18n';
+import { LOCALES } from '@medconnect/i18n';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';

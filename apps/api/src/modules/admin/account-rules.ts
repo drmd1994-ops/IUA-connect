@@ -1,4 +1,4 @@
-import { ROLES, type RoleKey, roleFits } from '@iua/shared';
+import { ROLES, type RoleKey, roleFits } from '@medconnect/shared';
 
 /**
  * Rules for managing accounts and roles (M8 plan §2.2–2.3, §3). They exist so that no single

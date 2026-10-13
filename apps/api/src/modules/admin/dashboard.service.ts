@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import {
   type StaffScope,

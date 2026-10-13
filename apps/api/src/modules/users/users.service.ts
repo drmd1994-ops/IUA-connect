@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { type PermissionKey, isPermissionKey, uuidv7 } from '@iua/shared';
-import { type Locale } from '@iua/i18n';
+import { type PermissionKey, isPermissionKey, uuidv7 } from '@medconnect/shared';
+import { type Locale } from '@medconnect/i18n';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { type User } from '../../generated/prisma/client';
 

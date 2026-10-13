@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { type Locale, DEFAULT_LOCALE, isLocale } from '@iua/i18n';
-import { uuidv7 } from '@iua/shared';
+import { type Locale, DEFAULT_LOCALE, isLocale } from '@medconnect/i18n';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import {
   covers,

@@ -4,7 +4,7 @@ import {
   NOTIFICATION_DEFAULTS,
   NOTIFICATION_KINDS,
   type NotificationKind,
-} from '@iua/shared';
+} from '@medconnect/shared';
 import { type CryptoKey, SignJWT, importPKCS8, importSPKI, jwtVerify } from 'jose';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';

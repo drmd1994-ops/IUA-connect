@@ -1,4 +1,4 @@
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 
 /**
  * News workflow (M3 plan §3; owner answers §11): editors write and submit; admins review,

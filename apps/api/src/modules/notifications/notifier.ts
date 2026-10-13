@@ -1,12 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { type Locale } from '@iua/i18n';
+import { type Locale } from '@medconnect/i18n';
 import {
   NOTIFICATION_DEFAULTS,
   type NotificationChannel,
   type NotificationKind,
   notificationEnabled,
   uuidv7,
-} from '@iua/shared';
+} from '@medconnect/shared';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type EmailTemplate, type EmailTemplates, Mailer } from '../../infra/mailer/mailer';

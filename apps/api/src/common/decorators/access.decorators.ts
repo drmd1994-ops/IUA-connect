@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 
 export const IS_PUBLIC_KEY = 'iua:isPublic';
 export const IS_AUTHENTICATED_KEY = 'iua:isAuthenticated';

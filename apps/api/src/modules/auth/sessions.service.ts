@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { type PermissionKey, countsInOrganisation, uuidv7 } from '@iua/shared';
+import { type PermissionKey, countsInOrganisation, uuidv7 } from '@medconnect/shared';
 import { type Request } from 'express';
 import { type Principal, PrincipalResolver } from '../../common/auth/principal';
 import { type RequestMeta } from '../../common/request-meta';

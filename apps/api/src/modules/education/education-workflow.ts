@@ -1,4 +1,4 @@
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 
 /**
  * The review workflow of education items and exam questions (M6 plan §3; owner answer §11.2):

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { type Locale } from '@iua/i18n';
+import { type Locale } from '@medconnect/i18n';
 
 /**
  * One notice for one person's devices. It carries the notice's type and values, as the notice

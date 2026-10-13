@@ -3,7 +3,7 @@ import { createReadStream } from 'node:fs';
 import { open, readFile } from 'node:fs/promises';
 import { type Readable } from 'node:stream';
 import { Injectable, Logger } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';

@@ -1,6 +1,6 @@
 import { randomInt } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { Secret, TOTP } from 'otpauth';
 import QRCode from 'qrcode';
 import { AppException } from '../../common/errors/app.exception';

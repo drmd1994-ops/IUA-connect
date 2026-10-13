@@ -1,5 +1,5 @@
-import { DEFAULT_LOCALE, LOCALES, getMessages } from '@iua/i18n';
-import { ERROR_CODES, ERROR_DEFINITIONS } from '@iua/shared';
+import { DEFAULT_LOCALE, LOCALES, getMessages } from '@medconnect/i18n';
+import { ERROR_CODES, ERROR_DEFINITIONS } from '@medconnect/shared';
 
 function lookup(messages: unknown, key: string): unknown {
   return key.split('.').reduce<unknown>((node, part) => {

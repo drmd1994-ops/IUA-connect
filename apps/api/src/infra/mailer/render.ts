@@ -1,4 +1,4 @@
-import { directionOf, getMessages } from '@iua/i18n';
+import { directionOf, getMessages } from '@medconnect/i18n';
 import { type EmailMessage, type EmailTemplate } from './mailer';
 
 export interface RenderedEmail {

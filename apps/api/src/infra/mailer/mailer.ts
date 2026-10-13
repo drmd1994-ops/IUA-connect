@@ -1,4 +1,4 @@
-import { type Locale } from '@iua/i18n';
+import { type Locale } from '@medconnect/i18n';
 
 /** Emails the system sends, with the parameters each template needs. */
 export interface EmailTemplates {
