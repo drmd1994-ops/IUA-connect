@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { errorEnvelopeSchema } from '@iua/shared';
+import { errorEnvelopeSchema } from '@medconnect/shared';
 import sharp from 'sharp';
 import {
   type Harness,

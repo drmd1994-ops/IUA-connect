@@ -1,4 +1,4 @@
-import { errorEnvelopeSchema } from '@iua/shared';
+import { errorEnvelopeSchema } from '@medconnect/shared';
 import {
   CookieJar,
   type Harness,

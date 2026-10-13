@@ -1,5 +1,5 @@
 {
-  "extends": "@iua/tsconfig/nest.json",
+  "extends": "@medconnect/tsconfig/nest.json",
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist"

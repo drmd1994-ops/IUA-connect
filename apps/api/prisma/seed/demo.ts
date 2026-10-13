@@ -1,4 +1,4 @@
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { DEMO_ORGANISATION, FIRST_ORGANISATION } from './reference-data';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import { parseEnv } from '../../src/config/env.schema';

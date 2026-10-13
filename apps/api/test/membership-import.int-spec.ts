@@ -1,4 +1,4 @@
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import {
   type Harness,
   STRONG_PASSWORD,

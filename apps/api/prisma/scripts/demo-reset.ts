@@ -21,7 +21,7 @@ import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { parseArgs } from 'node:util';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { config as loadDotenv } from 'dotenv';
 import { Secret, TOTP } from 'otpauth';
 import { Client } from 'pg';

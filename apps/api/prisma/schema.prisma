@@ -1,5 +1,5 @@
 // Med Connect database schema. Design and conventions: DATABASE_DESIGN.md.
-// - Primary keys are UUID v7, generated in the application (@iua/shared uuidv7).
+// - Primary keys are UUID v7, generated in the application (@medconnect/shared uuidv7).
 // - snake_case in the database via @map / @@map.
 // - Extensions, SQL functions, triggers, grants, CHECK constraints, partial indexes and composite
 //   foreign keys live in raw SQL inside the migrations. Prisma does not model some of them, so a
