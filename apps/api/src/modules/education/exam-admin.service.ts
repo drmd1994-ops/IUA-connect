@@ -33,7 +33,7 @@ const LANGS: Lang[] = ['he', 'en'];
 
 /**
  * Exam questions in the admin area (M6 plan §2.10): written by editors, reviewed and published
- * by an IUA admin, with the same workflow and four-eyes rule as education items. A reviewer may
+ * by an admin, with the same workflow and four-eyes rule as education items. A reviewer may
  * correct a question in review before approving it.
  */
 @Injectable()

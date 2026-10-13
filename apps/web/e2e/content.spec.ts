@@ -190,7 +190,9 @@ test('an admin adds a guideline with a version; visitors see it with its officia
   await admin.getByLabel('Source organisation').fill('Example Urology Society');
   await admin.getByLabel('Official link').fill('https://guidelines.example.test/demo');
   await admin.getByLabel('Title in English').fill(title);
-  await admin.getByLabel('IUA summary in English').fill('A short summary written for the demo.');
+  await admin
+    .getByLabel('Editors’ summary in English')
+    .fill('A short summary written for the demo.');
   await admin.getByLabel('Evidence level').fill('Strong');
   await admin.getByLabel('Version', { exact: true }).fill('2026');
   await admin.getByLabel('Publication date').fill('2026-03-01');

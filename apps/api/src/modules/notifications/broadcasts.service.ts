@@ -397,6 +397,7 @@ export class BroadcastsService implements OnModuleInit {
     }
     return {
       id,
+      organisation: broadcast.organisation,
       title: text.title,
       paragraphs: paragraphsOf(text.body),
       locale: text.locale as Locale,

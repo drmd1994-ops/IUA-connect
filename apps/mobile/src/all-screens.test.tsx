@@ -73,7 +73,7 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['my membership', <MembershipScreen key="s" />],
   ['account security', <SecurityScreen key="s" />],
   ['the accessibility statement', <AccessibilityStatement key="s" />],
-  ['a message from the association', <BroadcastMessage key="s" id="b-1" />],
+  ['a message from an organisation', <BroadcastMessage key="s" id="b-1" />],
   ['scanning a code', <ScanScreen key="s" />],
   ['my application', <Applications key="s" />],
 ];

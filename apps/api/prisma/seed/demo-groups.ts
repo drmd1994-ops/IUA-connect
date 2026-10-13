@@ -60,7 +60,7 @@ export async function seedDemoGroups(prisma: PrismaClient): Promise<void> {
   const thumbnail = await sharp(picture).resize(480, 480, { fit: 'inside' }).png().toBuffer();
   const document = onePagePdf([
     'Reading group: timetable (sample)',
-    'IUA Connect demo. This document is fictional.',
+    'Med Connect demo. This document is fictional.',
   ]);
 
   await prisma.$transaction(

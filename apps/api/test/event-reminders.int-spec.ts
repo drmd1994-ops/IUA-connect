@@ -173,13 +173,13 @@ describe('event reminders and change emails (integration)', () => {
         .send({ ...e.body, ...change })
         .expect(200);
     };
-    await save({ organizer: 'IUA' });
+    await save({ organizer: 'The society' });
     expect(h.mailer.count(p.email, 'eventChanged')).toBe(0);
-    await save({ organizer: 'IUA', locationName: 'Another Hall' });
+    await save({ organizer: 'The society', locationName: 'Another Hall' });
     expect(h.mailer.count(p.email, 'eventChanged')).toBe(1);
     expect(h.mailer.last(p.email, 'eventChanged')?.params).toMatchObject({ place: 'Another Hall' });
     const later = new Date(e.startAt.getTime() + HOUR).toISOString();
-    await save({ organizer: 'IUA', locationName: 'Another Hall', startAt: later });
+    await save({ organizer: 'The society', locationName: 'Another Hall', startAt: later });
     expect(h.mailer.count(p.email, 'eventChanged')).toBe(2);
   });
 

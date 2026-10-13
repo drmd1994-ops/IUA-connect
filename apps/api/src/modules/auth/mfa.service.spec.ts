@@ -28,7 +28,7 @@ describe('TOTP compatibility (RFC 6238 test vectors, SHA-1)', () => {
 
   it('uses the settings authenticator apps expect', () => {
     expect(TOTP_SETTINGS).toEqual({
-      issuer: 'IUA Connect',
+      issuer: 'Med Connect',
       algorithm: 'SHA1',
       digits: 6,
       period: 30,

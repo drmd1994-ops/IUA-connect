@@ -19,7 +19,7 @@ import { type MfaFactor } from '../../generated/prisma/client';
 import { UsersService } from '../users';
 import { AuthTokensService } from './auth-tokens.service';
 
-const RP_NAME = 'IUA Connect';
+const RP_NAME = 'Med Connect';
 
 export interface PasskeySummary {
   id: string;

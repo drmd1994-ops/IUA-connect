@@ -262,7 +262,7 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
             endAt,
             locationName: seed.place,
             address: seed.address || null,
-            organizer: 'IUA Connect (demo)',
+            organizer: 'Med Connect (demo)',
             registrationMode: seed.mode,
             registrationUrl: seed.mode === 'EXTERNAL' ? 'https://tickets.example.test/demo' : null,
             capacity: seed.capacity ?? null,

@@ -19,7 +19,7 @@ export interface ApiClientOptions {
 
 export type ApiClient = Client<paths>;
 
-/** Typed client for the IUA Connect API. Paths and payloads come from the generated schema. */
+/** Typed client for the Med Connect API. Paths and payloads come from the generated schema. */
 export function createApiClient(options: ApiClientOptions): ApiClient {
   const client = createClient<paths>({
     baseUrl: options.baseUrl,

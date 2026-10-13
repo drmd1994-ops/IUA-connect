@@ -6139,6 +6139,13 @@ export interface components {
         BroadcastMessageDto: {
             /** Format: uuid */
             id: string;
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
             title: string;
             paragraphs: string[];
             /** @enum {string} */

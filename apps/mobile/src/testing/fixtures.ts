@@ -442,6 +442,7 @@ const families: Record<string, Answer> = {
   'GET /api/v1/hospitals/*': { items: [{ id: 'd-1', nameHe: 'אורולוגיה', nameEn: 'Urology' }] },
   'GET /api/v1/broadcasts/*': {
     id: 'b-1',
+    organisation,
     title: 'A message to all members',
     paragraphs: ['First paragraph.', 'Second paragraph.'],
     locale: 'en',

@@ -1,4 +1,4 @@
-// Creates (or updates) the database roles and databases for IUA Connect. Idempotent.
+// Creates (or updates) the database roles and databases for Med Connect. Idempotent.
 //
 //   owner role (DB_OWNER_USER): owns the databases and schema; runs migrations; may create
 //                               databases (Prisma's shadow database during `migrate dev`).

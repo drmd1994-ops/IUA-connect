@@ -1,7 +1,7 @@
 {
   "layout": {
-    "signature": "The IUA Connect team",
-    "demoNotice": "This message was sent by a demo version of IUA Connect. All people and data in it are fictional.",
+    "signature": "The Med Connect team",
+    "demoNotice": "This message was sent by a demo version of Med Connect. All people and data in it are fictional.",
     "ignore": "If you didn’t request this, you can ignore this message.",
     "unsubscribe": "Stop emails of this kind",
     "preferences": "Choose what you receive",
@@ -13,8 +13,8 @@
     }
   },
   "verifyEmail": {
-    "subject": "Verify your email address for IUA Connect",
-    "heading": "Welcome to IUA Connect",
+    "subject": "Verify your email address for Med Connect",
+    "heading": "Welcome to Med Connect",
     "body": "To finish signing up, please verify your email address.",
     "action": "Verify email address",
     "expiry": "This link is valid for 24 hours."
@@ -22,12 +22,12 @@
   "accountExists": {
     "subject": "Sign-up attempt with your email address",
     "heading": "You already have an account",
-    "body": "Someone tried to sign up for IUA Connect with this email address, but an account already exists for it.",
+    "body": "Someone tried to sign up for Med Connect with this email address, but an account already exists for it.",
     "action": "Sign in",
     "resetHint": "Forgot your password? You can reset it from the sign-in page."
   },
   "passwordReset": {
-    "subject": "Reset your IUA Connect password",
+    "subject": "Reset your Med Connect password",
     "heading": "Password reset",
     "body": "We received a request to reset the password for your account.",
     "action": "Choose a new password",
@@ -36,8 +36,8 @@
   "passwordChanged": {
     "subject": "Your password was changed",
     "heading": "Password changed",
-    "body": "The password for your IUA Connect account was changed, and all other sessions were signed out.",
-    "notYou": "If you didn’t make this change, reset your password immediately and contact the association administrators."
+    "body": "The password for your Med Connect account was changed, and all other sessions were signed out.",
+    "notYou": "If you didn’t make this change, reset your password immediately and contact the Med Connect team."
   },
   "accountLocked": {
     "subject": "Your account is temporarily locked",
@@ -60,12 +60,12 @@
   "membershipDirectorApproved": {
     "subject": "Your department director approved your application",
     "heading": "Approved by your department director",
-    "body": "Your department director approved your membership application ({typeName}). It now goes to the association for final approval.",
+    "body": "Your department director approved your membership application ({typeName}). It now goes to the organisation for final approval.",
     "action": "View your membership"
   },
   "membershipApproved": {
-    "subject": "Your IUA membership is approved",
-    "heading": "Welcome to the association",
+    "subject": "Your membership is approved",
+    "heading": "Your membership is approved",
     "body": "Your membership application ({typeName}) was approved. Your membership is valid until {endDate}, and your digital membership card is ready.",
     "action": "View your membership"
   },
@@ -77,9 +77,9 @@
     "action": "View your membership"
   },
   "membershipImportWelcome": {
-    "subject": "Your IUA Connect account is ready",
-    "heading": "Welcome to IUA Connect",
-    "body": "The association created an IUA Connect account for you, with your membership ({typeName}). Set a password to sign in.",
+    "subject": "Your Med Connect account is ready",
+    "heading": "Welcome to Med Connect",
+    "body": "An organisation you are a member of created a Med Connect account for you, with your membership ({typeName}). Set a password to sign in.",
     "action": "Set your password",
     "expiry": "This link is valid for 7 days. After that, use “Forgot password” on the sign-in page."
   },
@@ -93,7 +93,7 @@
   "newsPublished": {
     "subject": "Your news item is published",
     "heading": "Published",
-    "body": "“{title}” is now published on IUA Connect.",
+    "body": "“{title}” is now published on Med Connect.",
     "action": "View it"
   },
   "eventRegistered": {
@@ -143,25 +143,25 @@
   "educationPublished": {
     "subject": "Your education item is published",
     "heading": "Published",
-    "body": "“{title}” is now published on IUA Connect.",
+    "body": "“{title}” is now published on Med Connect.",
     "action": "View it"
   },
   "contentDigest": {
-    "subject": "New on IUA Connect",
-    "heading": "New on IUA Connect",
+    "subject": "New on Med Connect",
+    "heading": "New on Med Connect",
     "body": "Published since your last summary:",
     "action": "Choose what you receive"
   },
   "broadcast": {
     "subject": "{title}",
     "heading": "{title}",
-    "body": "A message from the association to its members:",
-    "action": "Read it on IUA Connect"
+    "body": "An announcement for you:",
+    "action": "Read it on Med Connect"
   },
   "chatUnread": {
     "subject": "Chat messages are waiting for you",
     "heading": "Unread chat messages",
-    "body": "You have messages in the chat on IUA Connect that you haven’t read. To keep them private, this email doesn’t show them or who sent them.",
+    "body": "You have messages in the chat on Med Connect that you haven’t read. To keep them private, this email doesn’t show them or who sent them.",
     "action": "Open chat"
   }
 }

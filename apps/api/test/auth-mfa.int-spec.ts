@@ -97,7 +97,7 @@ describe('identity: MFA, re-authentication, passwords, sessions (M1)', () => {
         .set(bearer(accessToken))
         .expect(200);
       expect(setup.body.otpauthUri).toMatch(
-        /^otpauth:\/\/totp\/IUA%20Connect:.+issuer=IUA%20Connect/,
+        /^otpauth:\/\/totp\/Med%20Connect:.+issuer=Med%20Connect/,
       );
       expect(setup.body.qrCode).toMatch(/^data:image\/svg\+xml;base64,/);
       expect(setup.body.secret).toMatch(/^[A-Z2-7]{32}$/);

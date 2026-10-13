@@ -1,9 +1,9 @@
 {
   "app": {
-    "name": "IUA Connect",
-    "shortName": "IUA",
-    "tagline": "The digital home of Israeli urology",
-    "description": "A professional platform for members of the Israeli Urological Association: news, events, education and membership."
+    "name": "Med Connect",
+    "shortName": "MC",
+    "tagline": "A professional home for urologists in Israel",
+    "description": "A professional platform for physicians, starting with urologists in Israel: news, events, education, chat, and a section for each organisation they belong to."
   },
   "a11y": {
     "skipToContent": "Skip to main content",
@@ -16,15 +16,15 @@
   },
   "demo": {
     "banner": "Demo version: all people and data shown are fictional.",
-    "disclaimer": "IUA Connect is an independent application presented as a proposal. It is not affiliated with or endorsed by the Israeli Urological Association or the Israeli Medical Association."
+    "disclaimer": "Med Connect is an independent platform presented as a proposal. It is not affiliated with or endorsed by any professional association or medical organisation."
   },
   "home": {
-    "heroTitle": "The digital home of Israeli urology",
-    "heroBody": "One place for association news, conferences and events, educational content and membership, in Hebrew and English.",
+    "heroTitle": "A professional home for urologists in Israel",
+    "heroBody": "One place for news, conferences and events, educational content and your organisations, in Hebrew and English.",
     "sections": {
       "news": {
         "title": "News",
-        "body": "Association updates and announcements."
+        "body": "Updates and announcements."
       },
       "events": {
         "title": "Events & conferences",
@@ -39,7 +39,7 @@
         "body": "Links to the current official guidelines."
       },
       "membership": {
-        "title": "Membership",
+        "title": "Organisations",
         "body": "Registration, verification by your department director, and a digital membership card."
       }
     },

@@ -44,8 +44,8 @@ export function configureApp(app: INestApplication, env: Env): void {
 
 export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
   const config = new DocumentBuilder()
-    .setTitle('IUA Connect API')
-    .setDescription('REST API for IUA Connect. Conventions: API_DESIGN.md.')
+    .setTitle('Med Connect API')
+    .setDescription('REST API for Med Connect. Conventions: API_DESIGN.md.')
     .setVersion('v1')
     .setOpenAPIVersion('3.1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })

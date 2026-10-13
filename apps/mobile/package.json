@@ -2,7 +2,7 @@
   "name": "@iua/mobile",
   "version": "0.0.0",
   "private": true,
-  "description": "IUA Connect for phones (Expo). Part 1: the member's app (docs/plans/M14-mobile-app.md).",
+  "description": "Med Connect for phones (Expo). Part 1: the member's app (docs/plans/M14-mobile-app.md).",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",

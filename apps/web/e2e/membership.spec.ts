@@ -11,7 +11,7 @@ import {
 
 /**
  * M2 exit test (docs/plans/M2-people-membership.md §1): register → the department director
- * approves → an IUA admin approves → the membership card verifies. Three people, each in their own
+ * approves → the organisation’s admin approves → the membership card verifies. Three people, each in their own
  * browser; the admin and the director set up a passkey (their roles require two-step verification).
  */
 const HOSPITAL = 'Barzilai Medical Center';

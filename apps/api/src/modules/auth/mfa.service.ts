@@ -10,7 +10,7 @@ import { type MfaFactor } from '../../generated/prisma/client';
 
 /** RFC 6238 parameters every authenticator app supports. */
 export const TOTP_SETTINGS = {
-  issuer: 'IUA Connect',
+  issuer: 'Med Connect',
   algorithm: 'SHA1',
   digits: 6,
   period: 30,

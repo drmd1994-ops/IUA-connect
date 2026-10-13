@@ -20,7 +20,7 @@ type Outcome =
   | { kind: 'unknown' };
 
 /**
- * Scanning a code of IUA Connect with the phone's camera: the code shown at an event's venue
+ * Scanning a code of Med Connect with the phone's camera: the code shown at an event's venue
  * records the member's attendance; the code on a membership card is checked.
  */
 export function ScanScreen() {

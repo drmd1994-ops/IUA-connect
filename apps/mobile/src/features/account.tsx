@@ -851,7 +851,15 @@ export function BroadcastMessage({ id }: { id: string }) {
       {!message && error === null && <Body muted>{m('loading')}</Body>}
       {message && (
         <>
-          <Text style={styles.meta}>{t('from')}</Text>
+          <Text style={styles.meta}>
+            {all('organisations.owner.from', {
+              name: message.organisation
+                ? locale === 'he'
+                  ? message.organisation.nameHe
+                  : message.organisation.nameEn
+                : all('common.app.name'),
+            })}
+          </Text>
           <Title>{message.title}</Title>
           <Text style={styles.meta}>
             {t('sentAt', {

@@ -22,7 +22,7 @@
   "visibility": {
     "label": "Who can see this",
     "PRIVATE": "Only me",
-    "MEMBERS": "Members",
+    "MEMBERS": "Verified physicians",
     "PUBLIC": "Everyone"
   },
   "profile": {
@@ -79,7 +79,7 @@
   },
   "membership": {
     "title": "My membership",
-    "none": "You don’t have a membership yet.",
+    "none": "You don’t have a membership here yet.",
     "type": "Membership type",
     "status": "Status",
     "statuses": {
@@ -106,13 +106,13 @@
       "EXPIRED": "Ended",
       "TYPE_CHANGED": "Membership type changed",
       "PAYMENT_STATUS_CHANGED": "Payment status changed",
-      "IMPORTED": "Updated from the association’s records"
+      "IMPORTED": "Updated from the organisation’s records"
     },
     "reason": "Reason: {reason}"
   },
   "apply": {
     "title": "Apply for membership",
-    "intro": "Your department director reviews the application first, then the association gives final approval. Students are reviewed by the association directly.",
+    "intro": "Your department director reviews the application first, then the organisation gives final approval. Students are reviewed by the organisation directly.",
     "type": "Membership type",
     "chooseType": "Choose a membership type",
     "hospital": "Hospital",
@@ -132,14 +132,14 @@
     "submittedOn": "Submitted on {date}",
     "states": {
       "PENDING_DIRECTOR": "Waiting for the department director",
-      "PENDING_ADMIN": "Waiting for the association",
+      "PENDING_ADMIN": "Waiting for the organisation",
       "APPROVED": "Approved",
       "REJECTED": "Not approved",
       "WITHDRAWN": "Withdrawn"
     },
     "stages": {
       "DIRECTOR": "Department director",
-      "ADMIN": "Association"
+      "ADMIN": "The organisation"
     },
     "decisions": {
       "APPROVE": "approved",
@@ -176,7 +176,7 @@
   "review": {
     "title": "Applications to review",
     "adminTitle": "Applications for final approval",
-    "intro": "Applications from your department. After you approve, the association gives final approval.",
+    "intro": "Applications from your department. After you approve, the organisation gives final approval.",
     "adminIntro": "Applications approved by a department director, from students, and from departments without a director.",
     "empty": "There are no applications waiting.",
     "applicant": "Applicant",
@@ -190,6 +190,6 @@
     "confirmReject": "Confirm",
     "approved": "The application was approved.",
     "rejected": "The application was not approved. The applicant was told why.",
-    "notAllowed": "This page is for department directors and association administrators, in a session with two-step verification."
+    "notAllowed": "This page is for department directors and an organisation’s administrators, in a session with two-step verification."
   }
 }

@@ -1,4 +1,4 @@
-// IUA Connect database schema. Design and conventions: DATABASE_DESIGN.md.
+// Med Connect database schema. Design and conventions: DATABASE_DESIGN.md.
 // - Primary keys are UUID v7, generated in the application (@iua/shared uuidv7).
 // - snake_case in the database via @map / @@map.
 // - Extensions, SQL functions, triggers, grants, CHECK constraints, partial indexes and composite
@@ -454,7 +454,7 @@ model MembershipType {
   identifier       MembershipIdentifier @default(NONE)
   /// Members can apply for it themselves (HONORARY_MEMBER is granted by admins only).
   selfApply        Boolean              @default(true) @map("self_apply")
-  /// Applications go to the department director before the IUA admin (students skip it).
+  /// Applications go to the department director before the organisation’s admin (students skip it).
   directorApproval Boolean              @default(true) @map("director_approval")
   /// Informational until payments exist (D4).
   annualFee        Decimal?             @map("annual_fee") @db.Decimal(12, 2)
@@ -950,7 +950,7 @@ model NewsTranslation {
   summary      String?                  @db.VarChar(1000)
   /// Sanitised Markdown (M3 plan §11).
   body         String                   @default("")
-  /// The byline as shown (e.g. "Prof. …" or "The IUA board"); empty means the account's name.
+  /// The byline as shown (e.g. "Prof. …" or "The board"); empty means the account's name.
   author       String?                  @db.VarChar(200)
   /// Maintained by a trigger from title, summary and body (Hebrew-normalised). Search is M7.
   searchVector Unsupported("tsvector")? @map("search_vector")
@@ -1056,7 +1056,7 @@ model GuidelineTranslation {
   guidelineId  String                   @map("guideline_id") @db.Uuid
   locale       String                   @db.VarChar(8)
   title        String                   @db.VarChar(300)
-  /// An optional summary written by the IUA (plain text), never the source's own text.
+  /// An optional summary written by the editors (plain text), never the source's own text.
   summary      String?                  @db.VarChar(4000)
   /// Maintained by a trigger from title and summary (Hebrew-normalised). Search is M7.
   searchVector Unsupported("tsvector")? @map("search_vector")

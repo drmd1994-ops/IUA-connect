@@ -67,7 +67,7 @@ export function buildCalendar(name: string, entries: readonly CalendarEntry[]): 
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//IUA Connect//Events//EN',
+    'PRODID:-//Med Connect//Events//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     `X-WR-CALNAME:${icsText(name)}`,

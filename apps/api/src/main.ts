@@ -16,6 +16,6 @@ async function bootstrap(): Promise<void> {
 bootstrap().catch((error: unknown) => {
   // The logger may not exist yet (e.g. invalid environment), so write to stderr directly.
   const message = error instanceof InvalidEnvironmentError ? error.message : String(error);
-  process.stderr.write(`IUA Connect API failed to start: ${message}\n`);
+  process.stderr.write(`Med Connect API failed to start: ${message}\n`);
   process.exit(1);
 });

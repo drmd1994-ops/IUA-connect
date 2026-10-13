@@ -1,6 +1,6 @@
 # gitleaks configuration: all default rules, plus narrowly scoped exceptions.
 # Every exception must name one file and say why it holds no secrets.
-title = "IUA Connect"
+title = "Med Connect"
 
 [extend]
 useDefault = true

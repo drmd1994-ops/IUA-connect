@@ -430,7 +430,7 @@ async function sampleDocument(
   heading: string,
   ownerUserId: string,
 ): Promise<string> {
-  const body = onePagePdf([heading, 'IUA Connect demo. This document is fictional.']);
+  const body = onePagePdf([heading, 'Med Connect demo. This document is fictional.']);
   const today = new Date();
   const folder = `${today.getUTCFullYear()}/${String(today.getUTCMonth() + 1).padStart(2, '0')}`;
   const storageKey = `${folder}/${randomUUID()}`;

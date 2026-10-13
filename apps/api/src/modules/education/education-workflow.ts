@@ -2,7 +2,7 @@ import { type PermissionKey } from '@iua/shared';
 
 /**
  * The review workflow of education items and exam questions (M6 plan §3; owner answer §11.2):
- * editors write and submit; IUA admins review and publish; nobody approves their own submission.
+ * editors write and submit; admins review and publish; nobody approves their own submission.
  *
  *   DRAFT ─SUBMIT─▶ IN_REVIEW ─PUBLISH─▶ PUBLISHED ─ARCHIVE─▶ ARCHIVED
  *     ▲                │                    │

@@ -1,7 +1,7 @@
 import { type PermissionKey } from '@iua/shared';
 
 /**
- * News workflow (M3 plan §3; owner answers §11): editors write and submit; IUA admins review,
+ * News workflow (M3 plan §3; owner answers §11): editors write and submit; admins review,
  * publish or schedule; nobody approves their own submission (four eyes).
  *
  *   DRAFT ─SUBMIT─▶ IN_REVIEW ─PUBLISH──▶ PUBLISHED ─ARCHIVE─▶ ARCHIVED

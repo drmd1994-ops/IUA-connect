@@ -13,7 +13,7 @@ describe('renderEmail', () => {
       template: 'verifyEmail',
       params: { link: 'http://localhost:3001/he/verify-email?token=abc' },
     });
-    expect(email.subject).toContain('IUA Connect');
+    expect(email.subject).toContain('מד קונקט');
     expect(email.html).toContain('dir="rtl"');
     expect(email.html).toContain('lang="he"');
     expect(email.html).toContain('http://localhost:3001/he/verify-email?token=abc');

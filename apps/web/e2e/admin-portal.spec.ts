@@ -193,7 +193,7 @@ test('a member lands on their dashboard; later features are shown but can’t be
   // A visitor gets the public home page.
   await visitor.goto('/en');
   await expect(
-    visitor.getByRole('heading', { name: 'The digital home of Israeli urology' }),
+    visitor.getByRole('heading', { name: 'A professional home for urologists in Israel' }),
   ).toBeVisible();
   await expect(visitor.getByTestId('member-dashboard')).toHaveCount(0);
 

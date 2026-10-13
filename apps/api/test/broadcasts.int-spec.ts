@@ -302,6 +302,8 @@ describe('broadcasts (integration)', () => {
 
     const text = await read(student.token, item.id).expect(200);
     expect(text.body).toMatchObject({
+      // The reader is told who sent it.
+      organisation: { id: DEFAULT_ORGANISATION },
       title: body.translations.he.title,
       paragraphs: [expect.stringContaining('פסקה ראשונה'), 'פסקה שנייה.'],
       locale: 'he',

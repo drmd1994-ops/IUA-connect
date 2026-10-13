@@ -16,7 +16,7 @@
   "kinds": {
     "ACCOUNT": "חשבון וחברות",
     "MY_EVENTS": "האירועים שלי",
-    "ASSOCIATION": "הודעות מהאיגוד",
+    "ASSOCIATION": "הודעות",
     "NEWS": "חדשות",
     "NEW_EVENTS": "אירועים חדשים",
     "EDUCATION": "הדרכה",
@@ -28,7 +28,7 @@
   "kindHints": {
     "ACCOUNT": "החלטות על בקשת החברות שלך ושינויים בחברות.",
     "MY_EVENTS": "אירועים שנרשמת אליהם: אישור, מקום שהתפנה מרשימת ההמתנה, תזכורות, שינויים.",
-    "ASSOCIATION": "הודעות שהאיגוד שולח לחבריו.",
+    "ASSOCIATION": "הודעות מאת מד קונקט, או מאת ארגון לחבריו.",
     "NEWS": "פורסמה ידיעה חדשה.",
     "NEW_EVENTS": "פורסם אירוע חדש.",
     "EDUCATION": "פורסם פריט הדרכה חדש.",
@@ -44,7 +44,7 @@
     "eventChanged": "המועד או המקום של ״{title}״ השתנו.",
     "eventReminder": "תזכורת: ״{title}״ יתקיים {when}.",
     "membershipApplicationReceived": "בקשת החברות שלך התקבלה ({typeName}).",
-    "membershipDirectorApproved": "מנהל/ת המחלקה אישר/ה את בקשת החברות שלך ({typeName}). היא ממתינה כעת לאישור האיגוד.",
+    "membershipDirectorApproved": "מנהל/ת המחלקה אישר/ה את בקשת החברות שלך ({typeName}). היא ממתינה כעת לאישור הארגון.",
     "membershipApproved": "החברות שלך אושרה ({typeName}).",
     "membershipRejected": "בקשת החברות שלך ({typeName}) לא אושרה.",
     "newsSentBack": "״{title}״ הוחזר אליך לתיקונים.",
@@ -56,7 +56,7 @@
     "contentEducation": "חדש בהדרכה: {title}",
     "contentGuideline": "הנחיה חדשה: {title}",
     "contentGuidelineVersion": "גרסה חדשה של הנחיה: {title}",
-    "broadcast": "הודעה מהאיגוד: {title}",
+    "broadcast": "הודעה: {title}",
     "chatMessage": "קיבלת הודעה פרטית חדשה.",
     "chatGroupInvitation": "{name} הזמין/ה אותך לקבוצה ״{title}״.",
     "chatRoomInvitation": "{name} הזמין/ה אותך לחדר ״{title}״.",
@@ -82,7 +82,6 @@
   },
   "message": {
     "back": "חזרה להתראות",
-    "from": "הודעה מהאיגוד",
     "sentAt": "נשלחה {when}"
   },
   "unsubscribe": {

@@ -32,7 +32,7 @@
     "admin": "Runs the group",
     "cannot": {
       "membersOnly": "Your account isn’t verified as a physician’s yet, so you can read this group but not write in it.",
-      "suspended": "The association’s staff suspended you from sending messages. You can still read."
+      "suspended": "The staff suspended you from sending messages. You can still read."
     }
   },
   "details": {
@@ -67,7 +67,7 @@
     "unarchive": "Take out of the archive",
     "markUnread": "Mark as unread",
     "muteLabel": "Notices about this group",
-    "staffNote": "The association’s staff can’t read a group. They see only a message that someone reports, with the five before and after it.",
+    "staffNote": "The staff can’t read a group. They see only a message that someone reports, with the five before and after it.",
     "close": "Close"
   },
   "invitations": {

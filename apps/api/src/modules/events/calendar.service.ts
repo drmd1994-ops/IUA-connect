@@ -87,7 +87,7 @@ export class CalendarService {
         });
       }
     }
-    return buildCalendar('IUA Connect', entries);
+    return buildCalendar('Med Connect', entries);
   }
 
   private eventEntry(event: EventLike, locale: Locale): CalendarEntry {
