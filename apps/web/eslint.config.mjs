@@ -1,3 +1,3 @@
-import next from '@iua/eslint-config/next';
+import next from '@medconnect/eslint-config/next';
 
 export default next;

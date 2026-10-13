@@ -1,6 +1,6 @@
 'use client';
 
-import { LOCALES, directionOf } from '@iua/i18n';
+import { LOCALES, directionOf } from '@medconnect/i18n';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 

@@ -1,4 +1,4 @@
-import type { ApiClient, components } from '@iua/api-client';
+import type { ApiClient, components } from '@medconnect/api-client';
 import {
   type PublicKeyCredentialCreationOptionsJSON,
   type PublicKeyCredentialRequestOptionsJSON,

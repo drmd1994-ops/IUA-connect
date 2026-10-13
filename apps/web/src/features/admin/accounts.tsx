@@ -1,7 +1,7 @@
 'use client';
 
-import type { components } from '@iua/api-client';
-import type { RoleKey } from '@iua/shared';
+import type { components } from '@medconnect/api-client';
+import type { RoleKey } from '@medconnect/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
