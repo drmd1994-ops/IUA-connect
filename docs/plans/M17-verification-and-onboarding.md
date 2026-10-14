@@ -1,6 +1,6 @@
 # M17: verifying physicians, and a new person's first steps
 
-**Status: proposed on 2026-10-13; checked against the code on 2026-10-14 (§0). Not approved. Nothing of it is built.** It waits for the owner's answers in §9 and approval.
+**Status: approved by the owner on 2026-10-14, with the answers in §10.** Proposed on 2026-10-13; checked against the code on 2026-10-14 (§0).
 
 ## 0. What I checked on 2026-10-14, after M16
 
@@ -36,8 +36,9 @@ A physician who has never heard of the product can find it, sign up, be confirme
 
 **Not in**
 
-- Verifying anyone who is not a physician (nurses, students) unless question 3 asks for it.
-- Identity documents (a passport, an identity card): a licence number checked against a register is the proposal; identity documents are far more sensitive to hold.
+- Verifying anyone who is neither a physician nor a medical student (nurses, other professions).
+- Physicians licensed outside Israel.
+- Identity documents (a passport, an identity card). The one document held is a student's school confirmation (§10), and only until it is decided on.
 - Growth campaigns, advertising.
 
 ## 3. Rules
@@ -100,4 +101,14 @@ My recommendation, for the first version: **(1)** the platform's staff, by hand,
 
 ## 10. Owner answers
 
-None yet.
+Given on 2026-10-14 ("approve 1. yes 2. israel only 3. no, include students 4. me", and three follow-up questions answered the same day):
+
+1. **Who checks:** the platform's staff, by hand, against the Ministry of Health's public register. An automatic look-up only if step 2 finds it allowed, and brought to the owner before it is built.
+2. **Israel only.**
+3. **Residents and medical students are both in.**
+   - **Residents** are licensed physicians: checked by licence number like any other, and marked as residents if their profile says so.
+   - **Students** have no licence, so a student uploads a current confirmation from their medical school; the reviewer reads it and decides; **the file is deleted after the decision** and only the decision is kept. A student's verification ends at the expected graduation date given in the request and can be renewed.
+   - **A verified student may do everything a verified physician may, and is marked "medical student"** wherever they appear (profile, directory, chat), so nobody takes them for a physician. Being verified says "this is a physician" or "this is a medical student", and the texts say which.
+4. **The first reviewer is the owner.** In the demo, a fictional reviewer.
+
+What this adds to §4: a verification has a kind (`PHYSICIAN` or `STUDENT`); a student's request carries the school, the expected graduation date and the uploaded file; the person's kind is kept with `users.verified_at` so the mark can be shown. What it adds to §6: the school file is gone after a decision, and nobody but the reviewer could open it before.
