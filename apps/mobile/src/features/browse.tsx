@@ -13,6 +13,7 @@ import { Choices, Tag } from '@/ui/parts';
 import { useFileUrl } from './files';
 import { appRoute } from './notifications-model';
 import { useHospitals, useLocalName, useSubspecialties } from './reference';
+import { PersonMark } from './verification';
 
 type Schemas = components['schemas'];
 type Guideline = Schemas['PublicGuidelineListDto']['items'][number];
@@ -411,6 +412,7 @@ export function Directory() {
           <Photo fileId={member.photoFileId} size={52} />
           <View style={styles.fill}>
             <Text style={styles.cardTitle}>{memberName(member)}</Text>
+            <PersonMark mark={member.mark} />
             {member.position ? <Text style={styles.meta}>{member.position}</Text> : null}
             {member.hospital && <Text style={styles.meta}>{name(member.hospital)}</Text>}
           </View>
@@ -493,6 +495,7 @@ export function MemberPage({ id }: { id: string }) {
         <Photo fileId={member.photoFileId} size={84} label={t('photoAlt', { name: shown })} />
         <View style={styles.fill}>
           <Title>{shown}</Title>
+          <PersonMark mark={member.mark} />
         </View>
       </View>
       {!more && <Body muted>{t('nameOnly')}</Body>}

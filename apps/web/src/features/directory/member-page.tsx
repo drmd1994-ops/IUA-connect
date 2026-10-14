@@ -12,6 +12,7 @@ import { useLocalName } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
 import { useMemberName } from './directory-page';
+import { PersonMark } from '@/features/verification/person-mark';
 
 type Member = components['schemas']['DirectoryMemberDto'];
 
@@ -121,6 +122,7 @@ function MemberView({ id }: { id: string }) {
           )}
           <div>
             <h1 className="text-3xl font-semibold text-brand-900">{shown}</h1>
+            <PersonMark mark={member.mark} />
             {member.title && <p className="mt-1 text-text-muted">{member.title}</p>}
           </div>
         </div>

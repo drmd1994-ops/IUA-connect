@@ -49,7 +49,7 @@ describe('member directory (integration)', () => {
    * do this: the person keeps the platform, and their place in its directory.)
    */
   const unverify = (p: Person) =>
-    h.db.query('UPDATE users SET verified_at = NULL WHERE id = $1', [p.id]);
+    h.db.query('UPDATE users SET verified_at = NULL, verified_as = NULL WHERE id = $1', [p.id]);
 
   async function person(membershipType: string | null = null): Promise<Person> {
     const email = await createVerifiedUser(h, 'directory');
@@ -297,6 +297,8 @@ describe('member directory (integration)', () => {
         department: null,
         subspecialties: [],
         photoFileId: null,
+        // Shown whatever the person hides: nobody is taken for what they are not (M17).
+        mark: null,
         bio: null,
         researchInterests: null,
         orcid: null,

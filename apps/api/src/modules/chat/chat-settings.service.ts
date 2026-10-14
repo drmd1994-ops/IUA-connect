@@ -101,6 +101,7 @@ export class ChatSettingsService {
             lastName: card?.lastName ?? null,
             photoFileId: card?.photoFileId ?? null,
             listed: card?.listed ?? false,
+            mark: card?.mark ?? null,
           },
           createdAt: row.createdAt.toISOString(),
         };

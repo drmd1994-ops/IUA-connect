@@ -12,6 +12,7 @@ export const PERMISSIONS = [
   'membership.manage',
   'membership.approve.department',
   'membership.approve.final',
+  'physicians.verify',
   'institutions.manage',
   'news.create',
   'news.review',
@@ -64,6 +65,8 @@ export const PERMISSION_LEVELS = {
   // A director answers for a hospital department, whichever organisation the applicant chose.
   'membership.approve.department': 'platform',
   'membership.approve.final': 'organisation',
+  // The platform's own check that a person is a physician or a medical student (M17).
+  'physicians.verify': 'platform',
   'institutions.manage': 'platform',
   'news.create': 'both',
   'news.review': 'both',

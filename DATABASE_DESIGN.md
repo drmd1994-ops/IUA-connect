@@ -250,3 +250,13 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`access_tier`** gained `VERIFIED`. Check constraints: `MEMBERS` needs an owning organisation; the platform's library has no `MEMBERS`.
 - **`user_roles`**: unique on (user, role, scope, organisation) with nulls counted as equal, so a role is granted once in each place.
 - Six migrations (`20261013090000` to `20261013090500`), additions and backfills only.
+
+## 10. Verification by the platform (M17)
+
+- **`users.verified_as`** (`SPECIALIST`, `RESIDENT`, `PHYSICIAN`, `STUDENT`) and **`users.verified_until`** beside `verified_at`. A check constraint keeps `verified_at` and `verified_as` together. Empty `verified_until`: no end (an organisation vouches for the person). The migration filled `verified_as` from each person's strongest membership type.
+- **`physician_verifications`**: one request to be verified: the kind, the state (`PENDING`, `APPROVED`, `REJECTED`, `WITHDRAWN`, `REVOKED`, `EXPIRED`), the licence and certificate numbers encrypted with keyed hashes, a student's school, expected graduation and confirmation file, the person's note, and when the person was told it ends. One waiting request per person; a licence number in one waiting and one approved request at most (partial unique indexes); a check constraint says what each kind gives.
+- **`physician_verification_decisions`**: who decided what and why, and what the register showed (its status, whether the numbers matched). Kept when the confirmation file is deleted.
+- **`medical_schools`**: Israel's six medical schools (reference data).
+- **`platform_invitations`**: who invited, a keyed hash of the address, when, and when an account was made with it.
+- **`file_purpose`** gained `VERIFICATION`.
+- Three migrations (`20261014090000` to `20261014090200`), additions and one backfill.

@@ -1,0 +1,147 @@
+{
+  "as": {
+    "SPECIALIST": "a specialist",
+    "RESIDENT": "a resident",
+    "PHYSICIAN": "a physician",
+    "STUDENT": "a medical student"
+  },
+  "nav": "Verification",
+  "kinds": {
+    "SPECIALIST": "Specialist",
+    "RESIDENT": "Resident",
+    "PHYSICIAN": "Physician",
+    "STUDENT": "Medical student"
+  },
+  "marks": {
+    "STUDENT": "Medical student",
+    "RESIDENT": "Resident"
+  },
+  "page": {
+    "title": "Verification",
+    "intro": "Verification tells colleagues that you are a physician licensed in Israel, or a medical student in Israel. It does not say anything else about you, and it is not a recommendation.",
+    "loading": "Loading…",
+    "statuses": {
+      "NOT_ASKED": "You are not verified yet.",
+      "WAITING": "Your request is waiting for a reviewer.",
+      "VERIFIED": "You are verified as {as}.",
+      "REFUSED": "Your last request was not approved.",
+      "REVOKED": "Your verification was withdrawn.",
+      "EXPIRED": "Your verification has ended."
+    },
+    "until": "Valid until {date}.",
+    "byOrganisation": "An organisation you belong to vouches for you. There is nothing for you to send.",
+    "renewNow": "Your verification ends soon. You can ask to renew it now.",
+    "whatOpens": "Until you are verified you can read what is open to everyone and fill in your profile. The directory, chat, rooms and what is for verified physicians open once you are verified.",
+    "latestTitle": "Your latest request",
+    "sentOn": "Sent on {date}",
+    "states": {
+      "PENDING": "Waiting",
+      "APPROVED": "Approved",
+      "REJECTED": "Not approved",
+      "WITHDRAWN": "Withdrawn",
+      "REVOKED": "Withdrawn by a reviewer",
+      "EXPIRED": "Ended"
+    },
+    "decisions": {
+      "APPROVE": "Approved",
+      "REJECT": "Not approved",
+      "REVOKE": "Withdrawn"
+    },
+    "decisionLine": "{decision} on {date}",
+    "reason": "Reason given: {reason}",
+    "withdraw": "Withdraw the request",
+    "documentHeld": "Your school’s confirmation is held until the request is decided, then deleted.",
+    "profileFirst": "Please fill in your first and last name in your profile first. The reviewer looks you up by name.",
+    "goToProfile": "Go to your profile"
+  },
+  "form": {
+    "title": "Ask to be verified",
+    "renewTitle": "Ask to renew",
+    "answerTitle": "Answer and ask again",
+    "answerHint": "Say what changed, or what the reviewer should know.",
+    "kind": "I am",
+    "chooseKind": "Choose…",
+    "licence": "Medical licence number",
+    "licenceHint": "As on your licence from the Ministry of Health. It is kept encrypted and never shown to anyone, the reviewer included.",
+    "certificate": "Specialist certificate number",
+    "school": "Medical school",
+    "chooseSchool": "Choose your school…",
+    "graduation": "Expected graduation",
+    "graduationHint": "Your verification lasts until this date, and can be renewed.",
+    "document": "Confirmation from your school",
+    "documentHint": "A current letter or certificate saying that you study there: a PDF or a picture, up to 10 MB. Only the reviewer sees it, and it is deleted once your request is decided.",
+    "uploaded": "Uploaded: {name}",
+    "note": "Anything the reviewer should know (optional)",
+    "submit": "Send the request",
+    "submitted": "Thank you. Your request was sent; we will write to you with the answer."
+  },
+  "review": {
+    "title": "Verifying physicians",
+    "intro": "Check each physician in the Ministry of Health’s public register, and each student’s confirmation from their school. Search the register by name, then type the number the register shows: it is compared with the one the person gave, which you never see.",
+    "registerLink": "Open the Ministry of Health’s register",
+    "notAllowed": "Verifying physicians is for the platform’s reviewers.",
+    "tabs": {
+      "PENDING": "Waiting",
+      "APPROVED": "Verified",
+      "REJECTED": "Not approved"
+    },
+    "empty": "Nothing here.",
+    "loading": "Loading…",
+    "kind": "Asks to be verified as",
+    "email": "Email address",
+    "sent": "Sent",
+    "waiting": "{days, plural, =0 {Waiting since today} one {Waiting for # day} other {Waiting for # days}}",
+    "school": "School",
+    "graduation": "Expected graduation",
+    "note": "The person wrote",
+    "earlier": "Earlier requests",
+    "earlierLine": "{kind}, {state}, {date}",
+    "certificateGiven": "A specialist certificate number was given.",
+    "openDocument": "Open the school’s confirmation",
+    "documentGone": "The confirmation is no longer held.",
+    "registerStatus": "What the register shows",
+    "chooseStatus": "Choose…",
+    "registerStatuses": {
+      "ACTIVE_PERMANENT": "An active, permanent licence",
+      "ACTIVE_TEMPORARY": "An active, temporary licence",
+      "SUSPENDED": "A suspended or revoked licence",
+      "NOT_FOUND": "Not found in the register"
+    },
+    "registerLicence": "Licence number, as the register shows it",
+    "registerCertificate": "Specialist certificate number, as the register shows it",
+    "studentCheck": "Read the confirmation: the school, the student’s name, and that it is current.",
+    "approve": "Verify",
+    "reject": "Do not approve",
+    "reason": "Reason (sent to the person)",
+    "confirmReject": "Send the refusal",
+    "cancel": "Cancel",
+    "approved": "Verified.",
+    "rejected": "The refusal was sent.",
+    "findingsLine": "{decision}: {status}",
+    "matches": "The number matched.",
+    "revoke": "Withdraw the verification",
+    "revokeReason": "Reason (sent to the person)",
+    "confirmRevoke": "Withdraw it",
+    "revoked": "The verification was withdrawn."
+  },
+  "start": {
+    "askTitle": "Ask to be verified",
+    "ask": "The directory, chat, rooms and what is for verified physicians open once you are verified. It takes a few minutes to ask.",
+    "waiting": "Your request to be verified is waiting for a reviewer. We will write to you with the answer.",
+    "askLink": "Ask to be verified",
+    "follow": "Follow your request",
+    "stepsTitle": "First steps",
+    "steps": {
+      "profile": "Complete your profile: your title and a photo",
+      "directory": "Choose whether colleagues find you in the directory",
+      "colleagues": "Find colleagues",
+      "organisation": "Open your organisation’s section"
+    },
+    "done": "done",
+    "inviteTitle": "Invite a colleague",
+    "inviteIntro": "We send them an email on how to join. It doesn’t verify them; they ask like everyone else.",
+    "inviteEmail": "Their email address",
+    "inviteSubmit": "Send the invitation",
+    "inviteSent": "Thank you. If the address can receive an invitation, it is on its way."
+  }
+}

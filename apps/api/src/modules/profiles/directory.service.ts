@@ -3,6 +3,7 @@ import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
+import { markOf } from '../../common/verified-as';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
@@ -19,6 +20,7 @@ import {
 import { type ProfileFieldKey } from './profiles.dto';
 
 const INCLUDE = {
+  user: { select: { verifiedAs: true } },
   hospital: { select: { id: true, nameHe: true, nameEn: true } },
   department: { select: { id: true, nameHe: true, nameEn: true } },
   subspecialties: {
@@ -39,6 +41,8 @@ export interface PersonCard {
   lastName: string | null;
   photoFileId: string | null;
   listed: boolean;
+  /** A medical student or a resident (M17); null for anyone else. */
+  mark: 'STUDENT' | 'RESIDENT' | null;
 }
 
 /** What members see of each other: the fields set to "members" or "everyone". */
@@ -180,6 +184,7 @@ export class DirectoryService implements OnModuleInit {
           firstName: true,
           lastName: true,
           photoFileId: true,
+          user: { select: { verifiedAs: true } },
           visibility: { where: { field: 'PHOTO' }, select: { visibility: true } },
         },
       }),
@@ -203,6 +208,7 @@ export class DirectoryService implements OnModuleInit {
             lastName: row.lastName,
             photoFileId: isListed && showsPhoto ? row.photoFileId : null,
             listed: isListed,
+            mark: markOf(row.user.verifiedAs),
           },
         ];
       }),
@@ -301,6 +307,7 @@ export class DirectoryService implements OnModuleInit {
         status: 'ACTIVE',
         emailVerifiedAt: { not: null },
         verifiedAt: { not: null },
+        OR: [{ verifiedUntil: null }, { verifiedUntil: { gt: new Date() } }],
       },
     };
   }
@@ -386,5 +393,6 @@ function summary(row: Row) {
           }))
       : [],
     photoFileId: shown.has('PHOTO') ? row.photoFileId : null,
+    mark: markOf(row.user.verifiedAs),
   };
 }

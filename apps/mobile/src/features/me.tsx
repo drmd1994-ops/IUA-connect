@@ -36,7 +36,12 @@ export function MeScreen() {
     <Screen>
       <Title>{t('me.title')}</Title>
       <Card>
-        <Button label={t('me.organisation')} onPress={() => router.push('/organisation')} />
+        <Button label={all('verification.nav')} onPress={() => router.push('/verification')} />
+        <Button
+          variant="secondary"
+          label={t('me.organisation')}
+          onPress={() => router.push('/organisation')}
+        />
         <Button
           label={all('membership.profile.title')}
           variant="secondary"

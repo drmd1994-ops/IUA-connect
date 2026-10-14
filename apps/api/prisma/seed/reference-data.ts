@@ -107,6 +107,24 @@ export interface HospitalSeed {
   cityEn: string;
 }
 
+/** Israel's medical schools, which a student names when asking to be verified (M17). */
+export const MEDICAL_SCHOOLS: { code: string; nameHe: string; nameEn: string }[] = [
+  { code: 'tau', nameHe: 'אוניברסיטת תל אביב', nameEn: 'Tel Aviv University' },
+  {
+    code: 'huji',
+    nameHe: 'האוניברסיטה העברית בירושלים',
+    nameEn: 'The Hebrew University of Jerusalem',
+  },
+  { code: 'technion', nameHe: 'הטכניון', nameEn: 'Technion' },
+  {
+    code: 'bgu',
+    nameHe: 'אוניברסיטת בן־גוריון בנגב',
+    nameEn: 'Ben-Gurion University of the Negev',
+  },
+  { code: 'biu', nameHe: 'אוניברסיטת בר־אילן', nameEn: 'Bar-Ilan University' },
+  { code: 'ariel', nameHe: 'אוניברסיטת אריאל', nameEn: 'Ariel University' },
+];
+
 /** Israeli hospitals with a urology department. Each gets one "urology" department. */
 export const HOSPITALS: HospitalSeed[] = [
   {

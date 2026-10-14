@@ -14,6 +14,7 @@ import { Pager } from '@/features/content/pager';
 import { useLocalName, useReference } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
+import { PersonMark } from '@/features/verification/person-mark';
 
 type List = components['schemas']['DirectoryListDto'];
 export type DirectoryMember = List['items'][number];
@@ -171,6 +172,7 @@ function Directory() {
                         <Link href={`/members/${member.id}`} className={link}>
                           {shown}
                         </Link>
+                        <PersonMark mark={member.mark} />
                       </h2>
                       {details.length > 0 && (
                         <p className="text-sm text-text-muted">{details.join(' · ')}</p>

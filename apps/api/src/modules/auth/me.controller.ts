@@ -74,6 +74,7 @@ export class MeController {
       platformPermissions,
       organisations,
       verified: principal.verified,
+      verifiedAs: principal.verified ? user.verifiedAs : null,
       mfaEnabled: mfaFactors > 0,
       mfaEnrollmentRequired: principal.mfaEnrollmentRequired,
       session: { id: principal.sessionId, mfa: principal.mfa },

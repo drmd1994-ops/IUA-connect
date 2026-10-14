@@ -29,6 +29,7 @@ import {
   useActivity,
 } from './message-parts';
 import { Modal } from './modal';
+import { PersonMark } from '@/features/verification/person-mark';
 
 type Dialog =
   | { kind: 'deleteAll' | 'deleteMine' | 'report' | 'forward'; message: Message }
@@ -425,6 +426,7 @@ export function ConversationView({
           <h2 className="truncate text-lg font-semibold" data-testid="chat-with">
             {name}
           </h2>
+          <PersonMark mark={other.mark} />
           {other.id && <ActivityMark activity={activity.get(other.id)} />}
         </div>
         <Button

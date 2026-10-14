@@ -202,6 +202,7 @@
       "ORG_ADMIN": "Organisation administrator",
       "CONTENT_EDITOR": "Content editor",
       "EVENT_ADMIN": "Event administrator",
+      "VERIFIER": "Physician verifier",
       "DEPARTMENT_DIRECTOR": "Department director",
       "RESEARCH_ADMIN": "Research administrator",
       "SUBSPECIALTY_ADMIN": "Subspecialty administrator",
@@ -217,6 +218,7 @@
       "membership_manage": "Manage memberships and import members",
       "membership_approve_department": "Approve applications of their department",
       "membership_approve_final": "Give the organisation’s approval to applications",
+      "physicians_verify": "Verify physicians and medical students",
       "institutions_manage": "Manage hospitals, departments and directors",
       "news_create": "Write news",
       "news_review": "Review news",
@@ -302,5 +304,35 @@
     "demo": "This is a demo version with fictional data.",
     "footerLink": "Accessibility statement",
     "notices": "Site notices"
+  },
+  "about": {
+    "title": "About Med Connect",
+    "footerLink": "About Med Connect and how to join",
+    "intro": "Med Connect is a professional platform for physicians, starting with urologists in Israel: a profile and a directory of colleagues, chat, education and guidelines, news and events, and a section for each organisation a physician belongs to.",
+    "demo": "Today it is a private demonstration with fictional people and a fictional organisation. It holds no patient information and is not used for patient care.",
+    "whoTitle": "Who runs it",
+    "who": "Med Connect is an independent project. It is not run by, affiliated with or endorsed by any association, hospital, health fund or company. An organisation appears in it only with its written agreement.",
+    "joinTitle": "How a physician joins",
+    "join": [
+      "Create an account with your email address, and confirm the address.",
+      "Fill in your first and last name in your profile: the reviewer looks you up by name.",
+      "Ask to be verified. A physician gives their medical licence number, a specialist their specialist certificate number too, and a medical student a current confirmation from their school.",
+      "A reviewer checks a physician in the Ministry of Health’s public register, or reads the student’s confirmation, and decides. You get an email either way, and a refusal says why.",
+      "Once you are verified, the directory, chat, rooms and what is for verified physicians open to you. Students and residents are marked as such wherever they appear."
+    ],
+    "openTitle": "Before you are verified",
+    "open": "You can read what is open to everyone, such as the platform’s news and guidelines, and fill in your profile.",
+    "dataTitle": "How your details are treated",
+    "data": [
+      "Your licence and certificate numbers are kept encrypted and are never shown to anyone, the reviewer included: the reviewer types the number the register shows, and is told only whether it matches.",
+      "A student’s confirmation is seen only by the reviewer, and is deleted once the request is decided. Only the decision is kept.",
+      "Every decision on a verification is recorded with who made it and when.",
+      "Being verified says that you are a physician licensed in Israel, or a medical student in Israel. It says nothing else about you, and it is not a recommendation.",
+      "A physician’s verification is looked at again after two years; a student’s ends at the expected graduation. You are told a month before.",
+      "You decide whether you are listed in the directory, and who sees each field of your profile.",
+      "You can see what is held about your verification on your verification page, and ask us about it using the contact details below. When an account is deleted, what is held about its verification is deleted with it."
+    ],
+    "signUp": "Create an account",
+    "verification": "Your verification"
   }
 }

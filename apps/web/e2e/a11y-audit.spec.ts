@@ -41,6 +41,7 @@ test.setTimeout(420_000);
 const MEMBER_PAGES = [
   '',
   '/account/profile',
+  '/account/verification',
   '/organisations/demo-urological-society',
   '/organisations/demo-urological-society/membership',
   '/organisations/demo-urological-society/membership/card',

@@ -13,6 +13,7 @@ import enMembership from './messages/en/membership.json';
 import enMobile from './messages/en/mobile.json';
 import enNotifications from './messages/en/notifications.json';
 import enOrganisations from './messages/en/organisations.json';
+import enVerification from './messages/en/verification.json';
 import enPortal from './messages/en/portal.json';
 import enRooms from './messages/en/rooms.json';
 import enSearch from './messages/en/search.json';
@@ -31,6 +32,7 @@ import heMembership from './messages/he/membership.json';
 import heMobile from './messages/he/mobile.json';
 import heNotifications from './messages/he/notifications.json';
 import heOrganisations from './messages/he/organisations.json';
+import heVerification from './messages/he/verification.json';
 import hePortal from './messages/he/portal.json';
 import heRooms from './messages/he/rooms.json';
 import heSearch from './messages/he/search.json';
@@ -75,6 +77,7 @@ export type Messages = {
   mobile: typeof heMobile;
   portal: typeof hePortal;
   organisations: typeof heOrganisations;
+  verification: typeof heVerification;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -97,6 +100,7 @@ const MESSAGES: Record<Locale, Messages> = {
     mobile: heMobile,
     portal: hePortal,
     organisations: heOrganisations,
+    verification: heVerification,
   },
   en: {
     common: enCommon,
@@ -117,6 +121,7 @@ const MESSAGES: Record<Locale, Messages> = {
     mobile: enMobile,
     portal: enPortal,
     organisations: enOrganisations,
+    verification: enVerification,
   },
 };
 

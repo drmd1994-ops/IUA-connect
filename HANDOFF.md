@@ -8,7 +8,7 @@ The handoff written at the start of the project (27 September 2026) is kept as i
 
 ## 1. Goal
 
-**Med Connect ("מד קונקט"), until M16 called IUA Connect:** an independent professional platform for physicians, starting with urologists in Israel, on the web and as a phone app. A verified physician has a profile, the directory, chat, education and guidelines; an organisation has a section of its own with its membership, card, news, events and rooms, run by its own staff. The decision and its reasons: `docs/adr/0010-a-platform-with-organisations.md`.
+**Med Connect ("מד קונקט"), until M16 called IUA Connect:** an independent professional platform for physicians, starting with urologists in Israel, on the web and as a phone app. A verified physician has a profile, the directory, chat, education and guidelines; an organisation has a section of its own with its membership, card, news, events and rooms, run by its own staff. The decision and its reasons: `docs/adr/0010-a-platform-with-organisations.md`. Since M17 the platform verifies physicians and medical students by itself (a reviewer against the Ministry of Health's public register), so a physician in no organisation can join.
 
 - **What it is today:** a private **demo**. It is not endorsed by or affiliated with any association; the organisation in the demo is fictional, and a real one appears only with its written agreement.
 - **Owner:** a urology surgeon, the only developer for now.

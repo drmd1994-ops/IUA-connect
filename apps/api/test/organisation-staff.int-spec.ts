@@ -782,7 +782,8 @@ describe('an organisation sees only its own (integration)', () => {
     expect(platformMessage.body.organisation).toBeNull();
     expect(await audience(platformAdmin, platformMessage.body.id)).toBe(
       await count(
-        `SELECT count(*)::int AS n FROM users u WHERE ${active} AND u.verified_at IS NOT NULL`,
+        `SELECT count(*)::int AS n FROM users u WHERE ${active} AND u.verified_at IS NOT NULL
+           AND (u.verified_until IS NULL OR u.verified_until > now())`,
       ),
     );
     // An organisation writes to its own membership types.

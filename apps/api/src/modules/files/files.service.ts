@@ -260,7 +260,20 @@ export class FilesService {
     return { ...opened, range: part, file };
   }
 
+  /**
+   * A short-lived link without the access check, for a module that made its own: the platform's
+   * reviewers reading a student's confirmation (M17), which the verification module audits.
+   */
+  signedUrlFor(id: string): { url: string; expiresAt: string } {
+    return this.signer.sign(id, 'full');
+  }
+
   async canRead(principal: Principal | null, file: StoredFile): Promise<boolean> {
+    // A school's confirmation (M17) is its uploader's. Reviewers reach it through the
+    // verification module, never through here, and staff who upload do not see it.
+    if (file.purpose === 'VERIFICATION') {
+      return principal !== null && file.ownerUserId === principal.userId;
+    }
     if (file.purpose === 'CHAT') {
       // A file of a message is for the people who can read that message, and nobody else:
       // not staff who may upload, and not its sender after they left. Before it is sent, it

@@ -300,7 +300,7 @@ export function NewGroupDialog({ onClose }: { onClose: () => void }) {
                 const label = personName(person) ?? '';
                 return (
                   <li key={person.id} className="flex items-center gap-3">
-                    <Avatar person={{ ...person, listed: true }} size="size-8" />
+                    <Avatar person={{ ...person, listed: true, mark: null }} size="size-8" />
                     <span className="min-w-0 flex-1 truncate">{label}</span>
                     <Button
                       type="button"

@@ -83,6 +83,44 @@
     "action": "Set your password",
     "expiry": "This link is valid for 7 days. After that, use “Forgot password” on the sign-in page."
   },
+  "physicianVerificationReceived": {
+    "subject": "We received your request to be verified",
+    "heading": "Request received",
+    "body": "Thank you. A reviewer will check your details, usually within a few working days, and we will write to you with the answer.",
+    "action": "Follow your request"
+  },
+  "physicianVerificationApproved": {
+    "subject": "You are verified",
+    "heading": "You are verified",
+    "body": "You are verified as {as}, until {until}. Everything open to verified physicians on the platform is open to you now.",
+    "action": "Get started"
+  },
+  "physicianVerificationRejected": {
+    "subject": "Your request to be verified was not approved",
+    "heading": "Request not approved",
+    "body": "Your request to be verified was not approved. You may answer and ask again.",
+    "reason": "Reason given: {reason}",
+    "action": "View your request"
+  },
+  "physicianVerificationRevoked": {
+    "subject": "Your verification was withdrawn",
+    "heading": "Verification ended",
+    "body": "Your verification was withdrawn. Your account stays; what is open to verified physicians is closed to you until you are verified again.",
+    "reason": "Reason given: {reason}",
+    "action": "View your verification"
+  },
+  "physicianVerificationExpiring": {
+    "subject": "Your verification ends on {until}",
+    "heading": "Time to renew",
+    "body": "Your verification ends on {until}. Ask to renew it now, so nothing closes in between.",
+    "action": "Renew"
+  },
+  "physicianVerificationExpired": {
+    "subject": "Your verification has ended",
+    "heading": "Verification ended",
+    "body": "Your verification reached its date and has ended. Your account stays; ask again to be verified.",
+    "action": "Ask again"
+  },
   "newsSentBack": {
     "subject": "Your news item needs changes",
     "heading": "Sent back for changes",
@@ -163,5 +201,12 @@
     "heading": "Unread chat messages",
     "body": "You have messages in the chat on Med Connect that you haven’t read. To keep them private, this email doesn’t show them or who sent them.",
     "action": "Open chat"
+  },
+  "platformInvitation": {
+    "subject": "{inviter} invites you to Med Connect",
+    "heading": "An invitation from a colleague",
+    "body": "{inviter} invites you to Med Connect, a professional platform for physicians in Israel. The invitation does not verify you: once you join, you ask to be verified like everyone else.",
+    "notYou": "If you don’t know who sent this, you can ignore it. We don’t keep your address itself, only a code that stops you being invited twice.",
+    "action": "How to join"
   }
 }

@@ -4,6 +4,7 @@ import {
   CHAT_REPORT_CATEGORIES,
   FIRST_ORGANISATION,
   HOSPITALS,
+  MEDICAL_SCHOOLS,
   MEMBERSHIP_TYPES,
   SUBSPECIALTIES,
   UROLOGY_DEPARTMENT,
@@ -86,6 +87,13 @@ async function seedInstitutions(prisma: PrismaClient): Promise<void> {
       where: { key: subspecialty.key },
       update: {},
       create: { id: uuidv7(), ...subspecialty, sortOrder: index + 1 },
+    });
+  }
+  for (const school of MEDICAL_SCHOOLS) {
+    await prisma.medicalSchool.upsert({
+      where: { code: school.code },
+      update: {},
+      create: { id: uuidv7(), ...school },
     });
   }
   for (const hospital of HOSPITALS) {

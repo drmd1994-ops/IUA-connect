@@ -14,6 +14,7 @@ const person = (id: string, firstName: string, lastName: string) => ({
   lastName,
   photoFileId: null,
   listed: true,
+  mark: null,
 });
 export const ME = 'me-1';
 export const dana = person('u-dana', 'Dana', 'Levi');
@@ -49,6 +50,7 @@ export const me: S['MeDto'] = {
   platformPermissions: [],
   organisations: [],
   verified: true,
+  verifiedAs: 'PHYSICIAN',
   mfaEnabled: false,
   mfaEnrollmentRequired: false,
   session: { id: 's-1', mfa: false },
@@ -394,6 +396,7 @@ const directoryMember = {
   department: { id: 'd-1', nameHe: 'אורולוגיה', nameEn: 'Urology' },
   subspecialties: [subspecialty],
   photoFileId: null,
+  mark: 'RESIDENT' as const,
 };
 
 const page = <T>(items: T[]) => ({ items, page: 1, pageSize: 10, total: items.length });
@@ -490,6 +493,30 @@ export const everything: Record<string, Answer> = {
   ...families,
   'GET /api/v1/me': me,
   'GET /api/v1/me/membership': membership,
+  'GET /api/v1/me/verification': {
+    status: 'VERIFIED',
+    verifiedAs: 'PHYSICIAN',
+    verifiedUntil: '2028-10-14T10:00:00.000Z',
+    byOrganisation: false,
+    canAsk: false,
+    latest: {
+      id: 'v-1',
+      kind: 'PHYSICIAN',
+      state: 'APPROVED',
+      licenceProvided: true,
+      certificateProvided: false,
+      school: null,
+      expectedGraduation: null,
+      documentHeld: false,
+      note: null,
+      createdAt: '2026-10-01T08:00:00.000Z',
+      closedAt: '2026-10-02T08:00:00.000Z',
+      decisions: [{ decision: 'APPROVE', reason: null, at: '2026-10-02T08:00:00.000Z' }],
+    },
+  } satisfies S['MyVerificationDto'],
+  'GET /api/v1/medical-schools': {
+    items: [{ id: 'sch-1', nameHe: 'אוניברסיטת תל אביב', nameEn: 'Tel Aviv University' }],
+  } satisfies S['MedicalSchoolListDto'],
   'GET /api/v1/me/memberships': { items: [membership.membership!] } satisfies S['MyMembershipsDto'],
   'GET /api/v1/organisations': {
     items: [{ ...organisation, descriptionHe: 'אגודה בדויה, לצורך הדגמה.', descriptionEn: null }],
@@ -697,7 +724,14 @@ export const everything: Record<string, Answer> = {
       {
         id: 'g-1',
         kind: 'GROUP',
-        other: { id: null, firstName: null, lastName: null, photoFileId: null, listed: false },
+        other: {
+          id: null,
+          firstName: null,
+          lastName: null,
+          photoFileId: null,
+          listed: false,
+          mark: null,
+        },
         group: { name: 'Journal club', memberCount: 3 },
         ...listed,
         unreadCount: 0,

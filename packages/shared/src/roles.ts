@@ -89,6 +89,16 @@ export const ROLES = {
     scope: 'NONE',
     level: 'either',
   },
+  /**
+   * Checks that a person is a physician (against the Ministry of Health's public register) or a
+   * medical student (from their school's confirmation), on the platform (M17). Nothing else.
+   */
+  VERIFIER: {
+    permissions: ['physicians.verify'],
+    requiresMfa: true,
+    scope: 'NONE',
+    level: 'platform',
+  },
   DEPARTMENT_DIRECTOR: {
     permissions: ['membership.approve.department'],
     requiresMfa: true,

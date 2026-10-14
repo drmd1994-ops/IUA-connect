@@ -118,6 +118,8 @@ export class MeDto extends createZodDto(
     ),
     /** Known to the platform as a physician: the key to chat, the directory and the library. */
     verified: z.boolean(),
+    /** While verified: what the platform knows them as (M17). */
+    verifiedAs: z.enum(['SPECIALIST', 'RESIDENT', 'PHYSICIAN', 'STUDENT']).nullable(),
     mfaEnabled: z.boolean(),
     /** Holds a role that requires MFA but hasn't enrolled: the UI must send them to setup. */
     mfaEnrollmentRequired: z.boolean(),

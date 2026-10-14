@@ -26,6 +26,17 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
             {t('heroTitle')}
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-text-muted">{t('heroBody')}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <Link
+              href="/register"
+              className="rounded-md bg-primary px-5 py-2.5 font-semibold text-on-primary hover:bg-primary-hover"
+            >
+              {t('signUp')}
+            </Link>
+            <Link href="/about" className="font-semibold text-primary underline underline-offset-4">
+              {t('join')}
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -3524,6 +3524,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyVerificationController_mine"];
+        put?: never;
+        post: operations["MyVerificationController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/verification/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MyVerificationController_withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/verification/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MyVerificationController_document"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/medical-schools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MedicalSchoolsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/physician-verifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PhysicianVerificationsController_queue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/physician-verifications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PhysicianVerificationsController_one"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/physician-verifications/{id}/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PhysicianVerificationsController_document"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/physician-verifications/{id}/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PhysicianVerificationsController_decide"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/physician-verifications/people/{userId}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PhysicianVerificationsController_revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MyInvitationsController_mine"];
+        put?: never;
+        post: operations["MyInvitationsController_invite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3701,6 +3861,7 @@ export interface components {
                 permissions: string[];
             }[];
             verified: boolean;
+            verifiedAs: ("SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT") | null;
             mfaEnabled: boolean;
             mfaEnrollmentRequired: boolean;
             session: {
@@ -4032,6 +4193,7 @@ export interface components {
                     key: string;
                 }[];
                 photoFileId: string | null;
+                mark: ("STUDENT" | "RESIDENT") | null;
             }[];
             total: number;
             page: number;
@@ -4066,6 +4228,7 @@ export interface components {
                 key: string;
             }[];
             photoFileId: string | null;
+            mark: ("STUDENT" | "RESIDENT") | null;
             bio: string | null;
             researchInterests: string | null;
             orcid: string | null;
@@ -6182,6 +6345,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 };
                 group: {
                     name: string;
@@ -6227,6 +6391,7 @@ export interface components {
                 lastName: string | null;
                 photoFileId: string | null;
                 listed: boolean;
+                mark: ("STUDENT" | "RESIDENT") | null;
             };
             group: {
                 name: string;
@@ -6277,6 +6442,7 @@ export interface components {
                         lastName: string | null;
                         photoFileId: string | null;
                         listed: boolean;
+                        mark: ("STUDENT" | "RESIDENT") | null;
                     };
                     mine: boolean;
                     body: string;
@@ -6327,6 +6493,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 };
                 room: {
                     /** Format: uuid */
@@ -6366,6 +6533,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 };
                 mine: boolean;
                 body: string;
@@ -6432,6 +6600,7 @@ export interface components {
                 lastName: string | null;
                 photoFileId: string | null;
                 listed: boolean;
+                mark: ("STUDENT" | "RESIDENT") | null;
             };
             mine: boolean;
             body: string;
@@ -6497,6 +6666,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 };
                 /** Format: date-time */
                 createdAt: string;
@@ -6786,6 +6956,7 @@ export interface components {
                 lastName: string | null;
                 photoFileId: string | null;
                 listed: boolean;
+                mark: ("STUDENT" | "RESIDENT") | null;
             }[];
         };
         RoomSettingsDto: {
@@ -6802,6 +6973,7 @@ export interface components {
                 lastName: string | null;
                 photoFileId: string | null;
                 listed: boolean;
+                mark: ("STUDENT" | "RESIDENT") | null;
                 /** @enum {string} */
                 role: "MEMBER" | "MODERATOR";
             }[];
@@ -6834,6 +7006,7 @@ export interface components {
                         lastName: string | null;
                         photoFileId: string | null;
                         listed: boolean;
+                        mark: ("STUDENT" | "RESIDENT") | null;
                     };
                     mine: boolean;
                     body: string;
@@ -7126,6 +7299,7 @@ export interface components {
                 lastName: string | null;
                 photoFileId: string | null;
                 listed: boolean;
+                mark: ("STUDENT" | "RESIDENT") | null;
                 /** @enum {string} */
                 role: "MEMBER" | "ADMIN";
             }[];
@@ -7151,6 +7325,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 };
                 members: {
                     id: string | null;
@@ -7158,6 +7333,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 }[];
                 /** Format: date-time */
                 createdAt: string;
@@ -7184,6 +7360,7 @@ export interface components {
                     lastName: string | null;
                     photoFileId: string | null;
                     listed: boolean;
+                    mark: ("STUDENT" | "RESIDENT") | null;
                 };
                 /** Format: date-time */
                 createdAt: string;
@@ -7328,7 +7505,7 @@ export interface components {
                 scope: string;
                 /** @enum {string} */
                 level: "platform" | "organisation" | "either";
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "audit.read" | "settings.manage")[];
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -7380,6 +7557,239 @@ export interface components {
                 textHe: string;
                 textEn: string;
             } | null;
+        };
+        MyVerificationDto: {
+            /** @enum {string} */
+            status: "NOT_ASKED" | "WAITING" | "VERIFIED" | "REFUSED" | "REVOKED" | "EXPIRED";
+            verifiedAs: ("SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT") | null;
+            verifiedUntil: string | null;
+            byOrganisation: boolean;
+            canAsk: boolean;
+            latest: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+                /** @enum {string} */
+                state: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+                licenceProvided: boolean;
+                certificateProvided: boolean;
+                school: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                expectedGraduation: string | null;
+                documentHeld: boolean;
+                note: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                closedAt: string | null;
+                decisions: {
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT" | "REVOKE";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                }[];
+            } | null;
+        };
+        SubmitVerificationDto: {
+            /** @enum {string} */
+            kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+            licence?: string;
+            certificate?: string;
+            /** Format: uuid */
+            schoolId?: string;
+            /** Format: date */
+            expectedGraduation?: string;
+            /** Format: uuid */
+            documentFileId?: string;
+            note?: string;
+        };
+        VerificationRequestDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+            /** @enum {string} */
+            state: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+            licenceProvided: boolean;
+            certificateProvided: boolean;
+            school: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            expectedGraduation: string | null;
+            documentHeld: boolean;
+            note: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            closedAt: string | null;
+            decisions: {
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT" | "REVOKE";
+                reason: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        MedicalSchoolListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+        };
+        ReviewVerificationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+                /** @enum {string} */
+                state: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+                licenceProvided: boolean;
+                certificateProvided: boolean;
+                school: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                expectedGraduation: string | null;
+                documentHeld: boolean;
+                note: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                closedAt: string | null;
+                decisions: {
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT" | "REVOKE";
+                    reason: string | null;
+                    /** Format: date-time */
+                    at: string;
+                }[];
+                person: {
+                    /** Format: uuid */
+                    userId: string;
+                    email: string;
+                    firstName: string | null;
+                    lastName: string | null;
+                    nameHe: string | null;
+                    nameEn: string | null;
+                };
+                waitingDays: number;
+                findings: {
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT" | "REVOKE";
+                    registerStatus: ("ACTIVE_PERMANENT" | "ACTIVE_TEMPORARY" | "SUSPENDED" | "NOT_FOUND") | null;
+                    licenceMatches: boolean | null;
+                    certificateMatches: boolean | null;
+                    /** Format: date-time */
+                    at: string;
+                }[];
+                earlier: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+                    /** @enum {string} */
+                    state: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+                    /** Format: date-time */
+                    createdAt: string;
+                }[];
+            }[];
+        };
+        ReviewVerificationDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+            /** @enum {string} */
+            state: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+            licenceProvided: boolean;
+            certificateProvided: boolean;
+            school: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            expectedGraduation: string | null;
+            documentHeld: boolean;
+            note: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            closedAt: string | null;
+            decisions: {
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT" | "REVOKE";
+                reason: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+            person: {
+                /** Format: uuid */
+                userId: string;
+                email: string;
+                firstName: string | null;
+                lastName: string | null;
+                nameHe: string | null;
+                nameEn: string | null;
+            };
+            waitingDays: number;
+            findings: {
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT" | "REVOKE";
+                registerStatus: ("ACTIVE_PERMANENT" | "ACTIVE_TEMPORARY" | "SUSPENDED" | "NOT_FOUND") | null;
+                licenceMatches: boolean | null;
+                certificateMatches: boolean | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+            earlier: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "SPECIALIST" | "RESIDENT" | "PHYSICIAN" | "STUDENT";
+                /** @enum {string} */
+                state: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        DocumentLinkDto: {
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        VerificationDecisionDto: {
+            /** @enum {string} */
+            decision: "APPROVE" | "REJECT";
+            reason?: string;
+            /** @enum {string} */
+            registerStatus?: "ACTIVE_PERMANENT" | "ACTIVE_TEMPORARY" | "SUSPENDED" | "NOT_FOUND";
+            registerLicence?: string;
+            registerCertificate?: string;
+        };
+        RevokeVerificationDto: {
+            reason: string;
+        };
+        PlatformInvitationsDto: {
+            sent: number;
+            joined: number;
+            leftToday: number;
+        };
+        PlatformInviteDto: {
+            /** Format: email */
+            email: string;
+            /** @enum {string} */
+            locale?: "he" | "en";
         };
     };
     responses: never;
@@ -13352,7 +13762,7 @@ export interface operations {
             query?: {
                 q?: string;
                 status?: "ACTIVE" | "LOCKED" | "DISABLED";
-                role?: "SUPER_ADMIN" | "PLATFORM_ADMIN" | "ORG_ADMIN" | "CONTENT_EDITOR" | "EVENT_ADMIN" | "DEPARTMENT_DIRECTOR" | "RESEARCH_ADMIN" | "SUBSPECIALTY_ADMIN" | "CME_ADMIN";
+                role?: "SUPER_ADMIN" | "PLATFORM_ADMIN" | "ORG_ADMIN" | "CONTENT_EDITOR" | "EVENT_ADMIN" | "VERIFIER" | "DEPARTMENT_DIRECTOR" | "RESEARCH_ADMIN" | "SUBSPECIALTY_ADMIN" | "CME_ADMIN";
                 page?: number;
                 pageSize?: number;
             };
@@ -13648,6 +14058,263 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PublicSettingsDto"];
                 };
+            };
+        };
+    };
+    MyVerificationController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyVerificationDto"];
+                };
+            };
+        };
+    };
+    MyVerificationController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitVerificationDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerificationRequestDto"];
+                };
+            };
+        };
+    };
+    MyVerificationController_withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerificationRequestDto"];
+                };
+            };
+        };
+    };
+    MyVerificationController_document: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDto"];
+                };
+            };
+        };
+    };
+    MedicalSchoolsController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MedicalSchoolListDto"];
+                };
+            };
+        };
+    };
+    PhysicianVerificationsController_queue: {
+        parameters: {
+            query?: {
+                state?: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN" | "REVOKED" | "EXPIRED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewVerificationListDto"];
+                };
+            };
+        };
+    };
+    PhysicianVerificationsController_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewVerificationDto"];
+                };
+            };
+        };
+    };
+    PhysicianVerificationsController_document: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentLinkDto"];
+                };
+            };
+        };
+    };
+    PhysicianVerificationsController_decide: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationDecisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewVerificationDto"];
+                };
+            };
+        };
+    };
+    PhysicianVerificationsController_revoke: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevokeVerificationDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MyInvitationsController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformInvitationsDto"];
+                };
+            };
+        };
+    };
+    MyInvitationsController_invite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformInviteDto"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

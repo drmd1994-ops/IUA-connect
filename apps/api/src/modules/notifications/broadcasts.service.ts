@@ -509,7 +509,8 @@ function audienceSql(row: {
       FROM users u
       WHERE u.status = 'ACTIVE'
         AND u.email_verified_at IS NOT NULL
-        AND u.verified_at IS NOT NULL`;
+        AND u.verified_at IS NOT NULL
+        AND (u.verified_until IS NULL OR u.verified_until > now())`;
   }
   return Prisma.sql`
     FROM users u

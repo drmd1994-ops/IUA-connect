@@ -11,6 +11,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 const ADMIN_PERMISSIONS = [
   'membership.read',
   'membership.approve.final',
+  'physicians.verify',
   'institutions.manage',
   'news.create',
   'guidelines.manage',
@@ -35,6 +36,7 @@ export function isAdmin(me: Me | null): boolean {
 export const ADMIN_SECTIONS = [
   { href: '/admin', key: 'dashboard', permission: null },
   { href: '/admin/applications', key: 'applications', permission: 'membership.approve.final' },
+  { href: '/admin/verifications', key: 'verifications', permission: 'physicians.verify' },
   { href: '/admin/members', key: 'members', permission: 'membership.read' },
   { href: '/admin/institutions', key: 'institutions', permission: 'institutions.manage' },
   { href: '/admin/import', key: 'import', permission: 'membership.manage' },

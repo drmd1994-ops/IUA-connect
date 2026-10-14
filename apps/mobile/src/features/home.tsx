@@ -59,6 +59,17 @@ function MemberHome() {
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
       {me && me.roles.length > 0 && <Notice>{t('staffNote')}</Notice>}
 
+      {me && !me.verified && (
+        <Card>
+          <Heading>{all('verification.start.askTitle')}</Heading>
+          <Body>{all('verification.start.ask')}</Body>
+          <Button
+            label={all('verification.start.askLink')}
+            onPress={() => router.push('/verification')}
+          />
+        </Card>
+      )}
+
       {mine && (
         <Card>
           <Heading>{t('membership')}</Heading>
