@@ -31,3 +31,28 @@ export const PERSON_MARKS = ['STUDENT', 'RESIDENT'] as const;
 export function markOf(verifiedAs: VerifiedAs | null | undefined): PersonMark | null {
   return verifiedAs === 'STUDENT' || verifiedAs === 'RESIDENT' ? verifiedAs : null;
 }
+
+/**
+ * Whether an organisation's acceptance may make the person verified (M17): not while their
+ * latest request to the platform is one a reviewer withdrew. Until the platform verifies them
+ * again, no other door opens.
+ */
+export async function organisationMayVerify(
+  tx: {
+    physicianVerification: {
+      findFirst(args: {
+        where: { userId: string };
+        orderBy: { createdAt: 'desc' };
+        select: { state: true };
+      }): Promise<{ state: string } | null>;
+    };
+  },
+  userId: string,
+): Promise<boolean> {
+  const latest = await tx.physicianVerification.findFirst({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    select: { state: true },
+  });
+  return latest?.state !== 'REVOKED';
+}

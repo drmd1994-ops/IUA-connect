@@ -29,6 +29,7 @@ import { seedDemoEvents } from './demo-events';
 import { seedDemoGroups } from './demo-groups';
 import { seedDemoNotifications } from './demo-notifications';
 import { seedDemoPortal } from './demo-portal';
+import { seedDemoVerification } from './demo-verification';
 import { seedDemoRooms } from './demo-rooms';
 import { seedReference } from './reference';
 
@@ -53,6 +54,7 @@ const LAYERS: SeedLayer[] = [
       await seedDemoChat(prisma);
       await seedDemoRooms(prisma);
       await seedDemoGroups(prisma);
+      await seedDemoVerification(prisma);
     },
   },
 ];

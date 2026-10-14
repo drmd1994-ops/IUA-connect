@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { uuidv7 } from '@medconnect/shared';
-import { verifiedAsFor } from '../../common/verified-as';
+import { organisationMayVerify, verifiedAsFor } from '../../common/verified-as';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { ORGANISATION_REF } from '../organisations';
@@ -75,10 +75,12 @@ export class MembershipsService {
     // Whoever an organisation accepts as a member is known to the platform as a physician (or
     // the student, resident or specialist the type says). A person already verified stays as
     // the platform knows them.
-    await tx.user.updateMany({
-      where: { id: input.userId, verifiedAt: null },
-      data: { verifiedAt: new Date(), verifiedAs: verifiedAsFor(type) },
-    });
+    if (await organisationMayVerify(tx, input.userId)) {
+      await tx.user.updateMany({
+        where: { id: input.userId, verifiedAt: null },
+        data: { verifiedAt: new Date(), verifiedAs: verifiedAsFor(type) },
+      });
+    }
 
     if (!existing) {
       const endDate = endOfYear(today);

@@ -10,6 +10,7 @@ import {
   bearer,
   createVerifiedUser,
   grantRole,
+  signInAdmin,
   signIn,
   signInWithMfa,
   startHarness,
@@ -424,6 +425,41 @@ describe('verification by the platform (integration)', () => {
     // The number stays with this person: nobody else can use it.
     const other = await person('copycat');
     await other.post('/api/v1/me/verification', { kind: 'PHYSICIAN', licence }).expect(409);
+  });
+
+  it('withdrawn by a reviewer: an organisation accepting them opens no other door', async () => {
+    const p = await person('withdrawn-then-member');
+    const licence = newNumber();
+    const sent = await p
+      .post('/api/v1/me/verification', { kind: 'PHYSICIAN', licence })
+      .expect(201);
+    await review
+      .decide(sent.body.id, {
+        decision: 'APPROVE',
+        registerStatus: 'ACTIVE_PERMANENT',
+        registerLicence: licence,
+      })
+      .expect(200);
+    await h
+      .http()
+      .post(`/api/v1/physician-verifications/people/${p.userId}/revoke`)
+      .set(bearer(reviewer.accessToken))
+      .send({ reason: 'Licence suspended' })
+      .expect(204);
+
+    const office = await signInAdmin(h, 'office');
+    const types = await h.http().get('/api/v1/membership-types').expect(200);
+    const student = (types.body.items as { key: string; id: string }[]).find(
+      (t) => t.key === 'STUDENT',
+    )!;
+    await h
+      .http()
+      .post('/api/v1/admin/memberships')
+      .set(bearer(office.accessToken))
+      .send({ email: p.email, typeId: student.id })
+      .expect(201);
+    const me = await p.get('/api/v1/me').expect(200);
+    expect(me.body.verified).toBe(false);
   });
 
   it('a verification past its date is closed at once, before any job runs', async () => {
