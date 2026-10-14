@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-14 (M16: part 1 is merged; part 2, the site, the app, the name "Med Connect" and the fictional demo organisation, is built and in a pull request)_
+_Last updated: 2026-10-14 (M16 closed: both parts merged, pull requests #26 and #27; M17's plan checked against the code and waiting for the owner)_
 
 ## Summary
 
@@ -949,7 +949,7 @@ The dependency check in CI began to fail on 2026-10-06, for pull request #22 and
 4. ~~Component tests~~ **Written on 2026-10-06 in the reduced form the owner chose;** in a pull request of their own.
 5. **Where the demo server lives:** the tunnel as now, or a hosted machine (a free one and paid ones were looked up for the owner on 2026-10-06; either needs its own plan).
 
-## M16 An independent platform, with a section for an organisation (built; started 2026-10-13, part 2 in a pull request)
+## M16 An independent platform, with a section for an organisation (closed 2026-10-14; started 2026-10-13)
 
 Plan: `docs/plans/M16-independent-platform.md`, approved by the owner on 2026-10-13 with seven answers (the plan is in pull request #25). The milestone has two parts. **Part 1, this one: the server and the data (plan steps 2 to 5).** Part 2 (steps 6 to 10: the organisation's section on the site and in the app, the new name, the fictional demo organisation, documents) is not started.
 
@@ -1032,6 +1032,8 @@ Part 1 was merged on 2026-10-13 (pull request #26), after the owner confirmed th
 - **The rename was committed in five parts.** Windows refused the pre-commit check's command for 247 files at once ("the command line is too long"); the check was not skipped.
 - **The texts in the app that lead to the card, the membership and the application still use one unnamed organisation** (the person's own). With one organisation that is the same thing; with several, those three screens need the organisation named, as the site's already do.
 - **"Med Connect" was not checked for a trademark or a free web address.** It is a common name. That is done before it is used in public.
+
+**Closed by the owner on 2026-10-14.** Part 2 was merged the same day (pull request #27). The owner decided: no rebuild of the demo database; **for this milestone, no demo and no green GitHub checks** (the project rule's end-of-milestone demo and green CI are waived for M16 only); the demo password stays; the name check comes later. What stays not verified is listed above. The items below are what remains, for later.
 
 **Open for the owner**
 
