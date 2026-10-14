@@ -1035,10 +1035,11 @@ Part 1 was merged on 2026-10-13 (pull request #26), after the owner confirmed th
 
 **Open for the owner**
 
-1. **Rebuild the demo database** (`pnpm demo:reset`): the demo's older rows on this computer still say "the association" in a few places (a room's name, some sample texts), because the seed does not rewrite what it already loaded. The rebuild deletes the development data, including any account you made yourself, so it is yours to decide. Two browser tests depend on it.
+1. **Rebuild the demo database** (`pnpm demo:reset`): the owner said yes on 2026-10-14, but this computer's permission check stopped Claude from running it, so the owner runs it. The demo's older rows on this computer still say "the association" in a few places (a room's name, some sample texts) until then. It deletes the development data, including any account made by hand. The browser test "the rooms fit a phone, in Hebrew" depends on it.
 2. Look at the result in a browser and on the phone; read the Hebrew texts (89 changed).
-3. The demo password still contains the old name. Change it?
-4. GitHub's checks are still blocked by the account's billing; the project rule asks for green checks before a milestone ends.
+3. The demo password still contains the old name; the owner chose to keep it (2026-10-14).
+4. GitHub's checks are still blocked by the account's billing; the project rule asks for green checks before a milestone ends. The owner asked for part 2 to be merged on the checks run on this computer (2026-10-14).
+5. A trademark and web-address check of "Med Connect": the owner put it off until later (2026-10-14). It comes before any public use.
 
 ## Next step
 
