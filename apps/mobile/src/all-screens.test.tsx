@@ -15,6 +15,7 @@ import { EducationItem, EducationList, ExamPractice, ExamResults } from '@/featu
 import { EventList, EventPage, MySchedule } from '@/features/events';
 import { Home } from '@/features/home';
 import { MeScreen } from '@/features/me';
+import { OrganisationScreen } from '@/features/organisation';
 import { NewsArticle, NewsList } from '@/features/news';
 import { NotificationSettings, Notifications } from '@/features/notifications';
 import { ScanScreen } from '@/features/scan';
@@ -39,6 +40,8 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['home, for a visitor', <Home key="s" />, true],
   ['the membership card', <MembershipCard key="s" />],
   ['me', <MeScreen key="s" />],
+  ['an organisation’s section', <OrganisationScreen key="s" />],
+  ['an organisation’s section, for a visitor', <OrganisationScreen key="s" />, true],
   ['news', <NewsList key="s" />],
   ['a news item', <NewsArticle key="s" slug="annual-meeting" />],
   ['events', <EventList key="s" />],
@@ -70,7 +73,7 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['my membership', <MembershipScreen key="s" />],
   ['account security', <SecurityScreen key="s" />],
   ['the accessibility statement', <AccessibilityStatement key="s" />],
-  ['a message from the association', <BroadcastMessage key="s" id="b-1" />],
+  ['a message from an organisation', <BroadcastMessage key="s" id="b-1" />],
   ['scanning a code', <ScanScreen key="s" />],
   ['my application', <Applications key="s" />],
 ];

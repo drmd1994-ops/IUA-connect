@@ -1,5 +1,5 @@
-import { uuidv7 } from '@iua/shared';
-import { FIRST_ORGANISATION } from './reference-data';
+import { uuidv7 } from '@medconnect/shared';
+import { DEMO_ORGANISATION, FIRST_ORGANISATION } from './reference-data';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import { parseEnv } from '../../src/config/env.schema';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
@@ -148,6 +148,11 @@ const people = {
 } satisfies Record<string, Person>;
 
 export async function seedDemo(prisma: PrismaClient): Promise<void> {
+  // On every run, also over a demo seeded before M16: the organisation is the fictional one.
+  await prisma.organisation.update({
+    where: { id: FIRST_ORGANISATION.id },
+    data: { ...DEMO_ORGANISATION },
+  });
   const adminEmail = `${people.admin.local}@${DOMAIN}`;
   if (await prisma.user.findUnique({ where: { email: adminEmail } })) {
     console.log('seed: demo layer already present, skipped');

@@ -6,7 +6,7 @@ import {
   type components,
   createApiClient,
   toApiError,
-} from '@iua/api-client';
+} from '@medconnect/api-client';
 import { useLocale } from 'next-intl';
 import {
   type ReactNode,

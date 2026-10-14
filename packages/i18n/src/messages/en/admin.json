@@ -18,7 +18,7 @@
     "audit": "Audit log",
     "settings": "Settings"
   },
-  "notAllowed": "This area is for association administrators, in a session with two-step verification.",
+  "notAllowed": "This area is for staff, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",
   "members": {
     "title": "Members",
@@ -57,7 +57,7 @@
     "sources": {
       "MANUAL": "Entered in the system",
       "IMPORT": "Imported",
-      "IMA": "Israeli Medical Association"
+      "IMA": "An outside register"
     },
     "numberOnFile": "Certificate or licence number on file",
     "actions": "Actions",
@@ -85,7 +85,7 @@
     "addDepartment": "Add a department",
     "departmentName": "Department",
     "directors": "Directors",
-    "noDirectors": "No director yet: applications go straight to the association, flagged.",
+    "noDirectors": "No director yet: applications go straight to the organisation’s office, flagged.",
     "directorEmail": "Director’s account email",
     "assign": "Assign director",
     "remove": "Remove",
@@ -96,7 +96,7 @@
   },
   "import": {
     "title": "Import members",
-    "intro": "Upload a CSV file exported from the association’s records. First a dry run shows what would happen, without changing anything. Then apply it.",
+    "intro": "Upload a CSV file exported from the organisation’s records. First a dry run shows what would happen, without changing anything. Then apply it.",
     "columnsTitle": "Columns",
     "columns": "Required: email, first_name, last_name, membership_type. Optional: identifier, end_date (YYYY-MM-DD), payment_status, locale (he or en). The first row names the columns.",
     "newAccounts": "People without an account get one, and an email to set their password (valid for 7 days).",

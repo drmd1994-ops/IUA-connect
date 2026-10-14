@@ -1,4 +1,4 @@
-import { ApiError, toApiError } from '@iua/api-client';
+import { ApiError, toApiError } from '@medconnect/api-client';
 
 /**
  * The app's session (docs/plans/M14-mobile-app.md §4). The server has a sign-in path for apps:

@@ -16,7 +16,7 @@
   "kinds": {
     "ACCOUNT": "Account and membership",
     "MY_EVENTS": "My events",
-    "ASSOCIATION": "Messages from the association",
+    "ASSOCIATION": "Announcements",
     "NEWS": "News",
     "NEW_EVENTS": "New events",
     "EDUCATION": "Education",
@@ -28,7 +28,7 @@
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
     "MY_EVENTS": "Events you registered for: confirmation, a place from the waiting list, reminders, changes.",
-    "ASSOCIATION": "Messages the association sends to its members.",
+    "ASSOCIATION": "Announcements sent by Med Connect, or by an organisation to its members.",
     "NEWS": "A news item was published.",
     "NEW_EVENTS": "An event was published.",
     "EDUCATION": "An education item was published.",
@@ -44,7 +44,7 @@
     "eventChanged": "The time or place of “{title}” changed.",
     "eventReminder": "Reminder: “{title}” takes place {when}.",
     "membershipApplicationReceived": "We received your membership application ({typeName}).",
-    "membershipDirectorApproved": "Your department director approved your application ({typeName}). It now waits for the association.",
+    "membershipDirectorApproved": "Your department director approved your application ({typeName}). It now waits for the organisation.",
     "membershipApproved": "Your membership was approved ({typeName}).",
     "membershipRejected": "Your membership application ({typeName}) wasn’t approved.",
     "newsSentBack": "“{title}” was sent back to you for changes.",
@@ -56,7 +56,7 @@
     "contentEducation": "New in education: {title}",
     "contentGuideline": "New guideline: {title}",
     "contentGuidelineVersion": "A guideline has a new version: {title}",
-    "broadcast": "A message from the association: {title}",
+    "broadcast": "Announcement: {title}",
     "chatMessage": "You have a new private message.",
     "chatGroupInvitation": "{name} invited you to the group “{title}”.",
     "chatRoomInvitation": "{name} invited you to the room “{title}”.",
@@ -82,7 +82,6 @@
   },
   "message": {
     "back": "Back to notifications",
-    "from": "A message from the association",
     "sentAt": "Sent {when}"
   },
   "unsubscribe": {

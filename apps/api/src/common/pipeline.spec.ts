@@ -12,7 +12,7 @@ import { Test } from '@nestjs/testing';
 import { createZodDto } from 'nestjs-zod';
 import request from 'supertest';
 import { z } from 'zod';
-import { type PermissionKey, errorEnvelopeSchema } from '@iua/shared';
+import { type PermissionKey, errorEnvelopeSchema } from '@medconnect/shared';
 import { PIPELINE_PROVIDERS } from '../app.module';
 import { configureApp } from '../app.setup';
 import { ConfigModule } from '../config/config.module';

@@ -1,4 +1,4 @@
-import { colors, semantic } from '@iua/ui-tokens';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

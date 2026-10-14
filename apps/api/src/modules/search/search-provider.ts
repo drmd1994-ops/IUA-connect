@@ -1,4 +1,4 @@
-import { type Locale } from '@iua/i18n';
+import { type Locale } from '@medconnect/i18n';
 
 /** The kinds of content the search covers. Members are found through the directory. */
 export const CONTENT_SEARCH_TYPES = ['news', 'events', 'education', 'guidelines'] as const;

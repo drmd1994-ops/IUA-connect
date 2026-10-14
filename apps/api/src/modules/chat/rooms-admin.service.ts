@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import {
   OWNER_PROBLEM_CODES,

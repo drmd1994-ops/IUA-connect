@@ -1,4 +1,4 @@
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 import { type TransitionInput, planTransition } from './news-workflow';
 
 const EDITOR = new Set<PermissionKey>(['news.create']);

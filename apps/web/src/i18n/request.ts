@@ -1,4 +1,4 @@
-import { getMessages, isLocale } from '@iua/i18n';
+import { getMessages, isLocale } from '@medconnect/i18n';
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './routing';
 

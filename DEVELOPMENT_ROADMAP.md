@@ -1,4 +1,6 @@
-# IUA Connect — Development Roadmap
+# Med Connect — Development Roadmap
+
+> **Since M16 (2026-10-13)** the product is **Med Connect**, an independent platform with a section for each organisation ([decision 0010](docs/adr/0010-a-platform-with-organisations.md)). Where this document still says "the association" or "IUA admin", read "an organisation" and "its administrator"; the section "M16" below is what holds now.
 
 Incremental delivery (spec §49). Every milestone ends with **green CI, updated docs, and a short demo**. Nothing is marked done unless it meets spec §62.
 

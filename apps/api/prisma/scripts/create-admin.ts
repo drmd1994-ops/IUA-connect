@@ -11,8 +11,8 @@
 import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { LOCALES } from '@iua/i18n';
-import { ROLES, ROLE_KEYS, type RoleKey, roleFits, uuidv7 } from '@iua/shared';
+import { LOCALES } from '@medconnect/i18n';
+import { ROLES, ROLE_KEYS, type RoleKey, roleFits, uuidv7 } from '@medconnect/shared';
 import { config as loadEnv } from 'dotenv';
 import { PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';

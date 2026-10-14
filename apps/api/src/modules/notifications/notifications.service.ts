@@ -6,7 +6,7 @@ import {
   NOTIFICATION_PREFERENCE_KINDS,
   type NotificationKind,
   notificationEnabled,
-} from '@iua/shared';
+} from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';

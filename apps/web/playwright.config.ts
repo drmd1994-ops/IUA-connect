@@ -37,7 +37,7 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: isCI ? 'pnpm --filter @iua/api start' : 'pnpm --filter @iua/api dev',
+      command: isCI ? 'pnpm --filter @medconnect/api start' : 'pnpm --filter @medconnect/api dev',
       url: 'http://localhost:4000/health/ready',
       reuseExistingServer: !isCI,
       timeout: 180_000,
@@ -47,7 +47,7 @@ export default defineConfig({
       env: { RATE_LIMIT_SCALE: '10' },
     },
     {
-      command: isCI ? 'pnpm --filter @iua/web start' : 'pnpm --filter @iua/web dev',
+      command: isCI ? 'pnpm --filter @medconnect/web start' : 'pnpm --filter @medconnect/web dev',
       url: `${WEB}/he`,
       reuseExistingServer: !isCI,
       timeout: 180_000,

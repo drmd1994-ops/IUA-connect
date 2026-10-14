@@ -4,7 +4,7 @@ import '@fontsource/ibm-plex-sans-hebrew/400.css';
 import '@fontsource/ibm-plex-sans-hebrew/600.css';
 import '../globals.css';
 
-import { directionOf, getMessages, isLocale } from '@iua/i18n';
+import { directionOf, getMessages, isLocale } from '@medconnect/i18n';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -62,6 +62,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     rooms,
     groups,
     portal,
+    organisations,
   } = getMessages(locale);
 
   return (
@@ -90,6 +91,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             rooms,
             groups,
             portal,
+            organisations,
           }}
         >
           <AuthProvider>

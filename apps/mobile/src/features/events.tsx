@@ -1,5 +1,5 @@
-import { ApiError, type components } from '@iua/api-client';
-import { colors, semantic } from '@iua/ui-tokens';
+import { ApiError, type components } from '@medconnect/api-client';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
@@ -187,6 +187,15 @@ function EventCard({ item }: { item: Item }) {
         <Text style={styles.cardTitle}>{item.title}</Text>
         {item.locationName ? <Text style={styles.small}>{item.locationName}</Text> : null}
         {item.summary ? <Text style={styles.summary}>{item.summary}</Text> : null}
+        <Text style={styles.meta}>
+          {t('organisations.owner.from', {
+            name: item.organisation
+              ? locale === 'he'
+                ? item.organisation.nameHe
+                : item.organisation.nameEn
+              : t('common.app.name'),
+          })}
+        </Text>
         <View style={styles.tags}>
           {item.cancelled && <Tag tone="danger">{t('events.list.cancelled')}</Tag>}
           {item.category && (

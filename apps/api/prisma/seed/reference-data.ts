@@ -17,6 +17,20 @@ export const FIRST_ORGANISATION = {
   nameEn: 'The first organisation',
 } as const;
 
+/**
+ * The demo gives the first organisation a face: a fictional society, marked as such in its name
+ * and in what it says about itself. No real organisation appears in the demo (M16 plan §5).
+ */
+export const DEMO_ORGANISATION = {
+  slug: 'demo-urological-society',
+  nameHe: 'האגודה האורולוגית לדוגמה (בדויה)',
+  nameEn: 'The Sample Urological Society (fictional)',
+  descriptionHe:
+    'אגודה בדויה, שנוצרה כדי להדגים איך נראה מדור של ארגון. היא אינה קיימת, וכל האנשים, הידיעות, האירועים והחדרים שבה בדויים.',
+  descriptionEn:
+    'A fictional society, made to show what an organisation’s section looks like. It does not exist, and every person, news item, event and room in it is made up.',
+} as const;
+
 export interface MembershipTypeSeed {
   key: string;
   nameHe: string;

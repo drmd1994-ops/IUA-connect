@@ -36,21 +36,11 @@ export function MeScreen() {
     <Screen>
       <Title>{t('me.title')}</Title>
       <Card>
-        <Button label={t('me.card')} onPress={() => router.push('/card')} />
+        <Button label={t('me.organisation')} onPress={() => router.push('/organisation')} />
         <Button
           label={all('membership.profile.title')}
           variant="secondary"
           onPress={() => router.push('/profile')}
-        />
-        <Button
-          label={all('membership.membership.title')}
-          variant="secondary"
-          onPress={() => router.push('/membership')}
-        />
-        <Button
-          label={all('membership.application.title')}
-          variant="secondary"
-          onPress={() => router.push('/applications')}
         />
         <Button
           label={all('auth.security.title')}

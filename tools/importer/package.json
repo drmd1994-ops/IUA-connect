@@ -1,5 +1,5 @@
 {
-  "name": "@iua/importer",
+  "name": "@medconnect/importer",
   "version": "0.0.0",
   "private": true,
   "description": "Development tool: fetches a hand-picked list of IUA website pages into JSON fixtures (M4)",
@@ -10,8 +10,8 @@
     "pages": "tsx src/cli.ts"
   },
   "devDependencies": {
-    "@iua/eslint-config": "workspace:*",
-    "@iua/tsconfig": "workspace:*",
+    "@medconnect/eslint-config": "workspace:*",
+    "@medconnect/tsconfig": "workspace:*",
     "@types/node": "24.13.6",
     "cheerio": "1.2.0",
     "eslint": "9.39.5",

@@ -1,4 +1,4 @@
-import { NOTIFICATION_KINDS, NOTIFICATION_PREFERENCE_KINDS } from '@iua/shared';
+import { NOTIFICATION_KINDS, NOTIFICATION_PREFERENCE_KINDS } from '@medconnect/shared';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';

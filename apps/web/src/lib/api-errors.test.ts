@@ -1,4 +1,4 @@
-import { ApiError } from '@iua/api-client';
+import { ApiError } from '@medconnect/api-client';
 import { describe, expect, it } from 'vitest';
 import { errorMessage, isApiError, passwordProblems } from './api-errors';
 

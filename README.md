@@ -1,8 +1,8 @@
-# IUA Connect
+# Med Connect
 
-**The digital home of Israeli urology.** A web platform for the Israeli Urological Association: membership, news, events, education, notifications, search and an admin portal.
+**A professional home for physicians, starting with urologists in Israel.** An independent platform (site and phone app): a profile and directory, chat, education, news and events, and a section for each organisation a physician belongs to, with its membership, card, news, events and rooms. Until M16 the project was called IUA Connect and was built for one association.
 
-> **Status:** private pitch application, **demo data only**. Not affiliated with or endorsed by the Israeli Urological Association (IUA) or the Israeli Medical Association (IMA). No real personal data may be loaded before a professional legal review (see `SECURITY_MODEL.md`).
+> **Status:** private pitch application, **demo data only**. Not affiliated with or endorsed by any professional association or medical organisation; the organisation in the demo is fictional. No real personal data may be loaded before a professional legal review (see `SECURITY_MODEL.md`).
 
 ## Showing the demo
 
@@ -129,7 +129,7 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 
 | Account                                                    | What it shows                                                       |
 | ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| `admin@demo.test`                                          | IUA admin: approval queue, members, hospitals and directors, import |
+| `admin@demo.test`                                          | Organisation and platform admin: approvals, members, import         |
 | `director.rambam@demo.test`, `director.sheba@demo.test`    | Department directors (Rambam, Sheba urology)                        |
 | `member.full@demo.test`                                    | Active full member with a digital card                              |
 | `member.resident@demo.test`, `member.honorary@demo.test`   | Active resident and honorary member                                 |
@@ -140,7 +140,7 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `applicant.rejected@demo.test`                             | Application the director didn't approve, with the reason            |
 | `editor@demo.test`                                         | Content editor: writes news, education items and exam questions     |
 | `events@demo.test`                                         | Event admin: creates events, sees registrations and attendance (M5) |
-| `admin2@demo.test`                                         | A second IUA admin, so a message to members can be approved (M7)    |
+| `admin2@demo.test`                                         | A second admin, so a message to members can be approved (M7)        |
 | `super@demo.test`                                          | Super admin: gives and removes roles, changes the settings (M8)     |
 
 The admins, the directors, the editor and the event admin must have two-step verification, because their roles require it. After `pnpm db:seed` alone, each sets it up at first sign-in (a passkey or an authenticator app). After **`pnpm demo:reset`** it is already set up, with one shared authenticator entry for all of them, so a pitch isn't interrupted: the reset writes `outbox/demo-authenticator.svg`; open it and scan it once with an authenticator app. The entry's secret is `DEMO_TOTP_SECRET` in `.env` (not in the repository), and it applies to `@demo.test` accounts only.
@@ -148,12 +148,13 @@ The admins, the directors, the editor and the event admin must have two-step ver
 - **Membership (M2):** the account menu has **My profile** (each field has its own "who can see this"), **My membership** (apply, status, history) and **Membership card** (a QR code that changes every 4 minutes; scanning it opens `/card/verify`). Directors also see **Applications to review**, and admins see **Administration** (`/admin`).
 - **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
 - **Events (M5):** `/events` is public. The seed adds five fictional events: an annual meeting with a programme, a one-place workshop with a waiting list, a members-only meeting, a cancelled one and a past one with attendance. `member.full@demo.test` is registered for the annual meeting with two overlapping sessions (see **My schedule** in the account menu). The event admin works at `/admin/events`: the event page there has the programme, the registrations and the attendance, including the QR code to show at the venue. On a database seeded before M5, run `pnpm db:seed` again.
-- **Imported sample (M4):** `pnpm db:seed` also loads a small sample of the IUA website from committed fixtures: 8 news items (title, date and a link to the source) and 9 guideline entries (details and the publisher's link). No network is needed. `pnpm import:remove` takes the sample out again. To change the sample, edit `tools/importer/sources.json`, run `pnpm import:fetch` and review the fixtures before committing them. The owner has confirmed permission to show this content (O4 in `PROJECT_STATUS.md`).
+- **Imported sample (M4), no longer in the demo:** until M16 the seed loaded a small sample from a real association’s website. It is out of the seed; `pnpm import:remove` takes it out of a database seeded earlier. The importer and its fixtures stay in the repository, unused.
+- **Organisations (M16):** the header’s **Organisations** opens the section of the demo’s fictional society (`/organisations/demo-urological-society`): who it is, your membership and card, its news, events and rooms. News and events lists say whose each item is.
 - **Education (M6):** `/education` is public. The seed adds ten fictional library items of every type (one members-only, one waiting for review, one draft, one archived) and a course of four lessons. Videos, webinars and podcasts are links to where they are hosted (ADR 0008). The editor writes at `/admin/education`; the admin reviews there. On a database seeded before M6, run `pnpm db:seed` again.
 - **Exam questions (M6):** `/education/exam` asks one multiple-choice question at a time; after the answer it shows the right option, why each option is right or wrong, and a short summary of the topic. Signed-in people find their score under **My exam results** in the account menu. The seed loads ten sample urology questions **published**: the owner, a urologist, read them and found them fine on 2 October 2026. A question written in the app still goes through review at `/admin/education/questions` before anyone is asked it.
 - **Notifications (M7):** the bell in the header opens **Notifications**; **Choose what you receive** there has a switch per kind of content for the app and for email. Email about new content is one summary a day, sent in the morning; to see it at once run `pnpm job:run notifications.content-digest` and look in `outbox/`.
 - **Messages to members (M7):** `/admin/broadcasts`. A message is sent only after a different admin approves it: the seed leaves one written by `admin2@demo.test` waiting, which `admin@demo.test` can approve. The emails go out within a minute.
-- **Member directory (M7):** `/members`, for members with an active membership. A member joins from **My profile**; the seed lists three demo members showing different fields.
+- **Member directory (M7):** `/members`, for verified physicians. A member joins from **My profile**; the seed lists three demo members showing different fields.
 - **Chat (M11):** **Chat** in the top menu, for members. Private one-to-one conversations with the members listed in the directory; messages arrive live. The seed gives `member.full@demo.test` two conversations (one with unread messages, one muted), and leaves one report waiting at `/admin/chat/reports`. To see a message arrive, sign in as `member.honorary@demo.test` in a private window. On a database seeded before M11, run `pnpm db:seed` again.
 - **Chat rooms (M12):** **Chat** → **Rooms**. The seed opens six fictional rooms; `member.full@demo.test` is in four of them and moderates three (pin, announce, remove a message, lock, remove or ban a person from a message's menu or from **Details**). "Browse rooms" lists them all; joining "Residents" shows the notice about your name. Staff open rooms, appoint moderators and keep the categories and report reasons at `/admin/chat/rooms`; one report about a room message waits at `/admin/chat/reports`. On a database seeded before M12, run `pnpm db:seed` again.
 - **Groups, invitations and files (M13):** in **Chat**, `member.full@demo.test` has a pinned group ("Reading group") with a sample picture and PDF, and two invitations waiting (a group, and a room by invitation). **New group** makes one; files are attached under the message box; **Forward** is in a message's menu. Who is active, and who can invite you, are set in **Chat settings**. Staff make a room "by invitation" in its editor at `/admin/chat/rooms`. On a database seeded before M13, run `pnpm db:seed` again.
@@ -167,14 +168,14 @@ The admins, the directors, the editor and the event admin must have two-step ver
 
 ### Troubleshooting
 
-| Symptom                                                 | Fix                                                                                                                                                                                   |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `running scripts is disabled on this system` (pnpm.ps1) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or run `pnpm.cmd` instead of `pnpm`                                                                                            |
-| `EADDRINUSE :::3001`                                    | Another app uses port 3001. Stop it, or run the web app on another port: `pnpm --filter @iua/web exec next dev --port 3002` and add `http://localhost:3002` to `WEB_ORIGIN` in `.env` |
-| `setup:dev` can't connect to PostgreSQL                 | Server not running (see step 2), or wrong password in `PG_SUPERUSER_URL`                                                                                                              |
-| `Node.js 24 LTS is required`                            | See step 1; open a new terminal after installing                                                                                                                                      |
-| Files show as modified with only line-ending changes    | The repo uses LF (`.gitattributes`). Recommended: `git config --global core.autocrlf input`                                                                                           |
-| Hebrew looks wrong in the PowerShell console            | Console output only; run `chcp 65001` for UTF-8. The app itself is unaffected                                                                                                         |
+| Symptom                                                 | Fix                                                                                                                                                                                          |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `running scripts is disabled on this system` (pnpm.ps1) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or run `pnpm.cmd` instead of `pnpm`                                                                                                   |
+| `EADDRINUSE :::3001`                                    | Another app uses port 3001. Stop it, or run the web app on another port: `pnpm --filter @medconnect/web exec next dev --port 3002` and add `http://localhost:3002` to `WEB_ORIGIN` in `.env` |
+| `setup:dev` can't connect to PostgreSQL                 | Server not running (see step 2), or wrong password in `PG_SUPERUSER_URL`                                                                                                                     |
+| `Node.js 24 LTS is required`                            | See step 1; open a new terminal after installing                                                                                                                                             |
+| Files show as modified with only line-ending changes    | The repo uses LF (`.gitattributes`). Recommended: `git config --global core.autocrlf input`                                                                                                  |
+| Hebrew looks wrong in the PowerShell console            | Console output only; run `chcp 65001` for UTF-8. The app itself is unaffected                                                                                                                |
 
 ## Everyday commands
 
@@ -183,7 +184,7 @@ The admins, the directors, the editor and the event admin must have two-step ver
 | `pnpm dev`                                     | API + web in watch mode                                                   |
 | `pnpm test`                                    | Unit tests (all packages), including the deny-by-default route gate       |
 | `pnpm test:integration`                        | API integration tests against `iua_connect_test`                          |
-| `pnpm --filter @iua/web e2e`                   | Playwright end-to-end + accessibility tests (see TESTING.md)              |
+| `pnpm --filter @medconnect/web e2e`            | Playwright end-to-end + accessibility tests (see TESTING.md)              |
 | `pnpm demo:reset`                              | Development only: rebuild the demo from nothing (**deletes dev data**)    |
 | `pnpm job:run <job>`                           | Run one background job now, e.g. `notifications.content-digest`           |
 | `pnpm admin:create --email <address>`          | Development only: create a fictional administrator                        |

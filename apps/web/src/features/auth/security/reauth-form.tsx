@@ -1,6 +1,6 @@
 'use client';
 
-import { ApiError } from '@iua/api-client';
+import { ApiError } from '@medconnect/api-client';
 import { useTranslations } from 'next-intl';
 import { type FormEvent, useState } from 'react';
 import { Alert } from '@/components/ui/alert';

@@ -1,5 +1,5 @@
-import { ApiError, type components } from '@iua/api-client';
-import { colors, semantic } from '@iua/ui-tokens';
+import { ApiError, type components } from '@medconnect/api-client';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -851,7 +851,15 @@ export function BroadcastMessage({ id }: { id: string }) {
       {!message && error === null && <Body muted>{m('loading')}</Body>}
       {message && (
         <>
-          <Text style={styles.meta}>{t('from')}</Text>
+          <Text style={styles.meta}>
+            {all('organisations.owner.from', {
+              name: message.organisation
+                ? locale === 'he'
+                  ? message.organisation.nameHe
+                  : message.organisation.nameEn
+                : all('common.app.name'),
+            })}
+          </Text>
           <Title>{message.title}</Title>
           <Text style={styles.meta}>
             {t('sentAt', {

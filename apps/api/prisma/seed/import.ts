@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { FIRST_ORGANISATION } from './reference-data';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import { slugify, uniqueSlug } from '../../src/modules/news/slug';

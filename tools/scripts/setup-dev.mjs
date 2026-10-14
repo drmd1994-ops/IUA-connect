@@ -168,24 +168,24 @@ async function main() {
 
   await provision();
 
-  // The seed and the dev tools import compiled workspace packages (@iua/shared, @iua/i18n); on a
+  // The seed and the dev tools import compiled workspace packages (@medconnect/shared, @medconnect/i18n); on a
   // fresh clone nothing is built yet.
   step('Building the shared workspace packages');
-  pnpm(['exec', 'turbo', 'run', 'build', '--filter=@iua/api^...']);
+  pnpm(['exec', 'turbo', 'run', 'build', '--filter=@medconnect/api^...']);
 
   step('Generating the Prisma client');
-  pnpm(['--filter', '@iua/api', 'db:generate']);
+  pnpm(['--filter', '@medconnect/api', 'db:generate']);
 
   step('Migrating the development database');
-  pnpm(['--filter', '@iua/api', 'db:deploy']);
+  pnpm(['--filter', '@medconnect/api', 'db:deploy']);
 
   step('Migrating the test database');
-  pnpm(['--filter', '@iua/api', 'db:deploy'], {
+  pnpm(['--filter', '@medconnect/api', 'db:deploy'], {
     env: { MIGRATION_DATABASE_URL: requireEnv('TEST_MIGRATION_DATABASE_URL') },
   });
 
   step('Seeding the development database');
-  pnpm(['--filter', '@iua/api', 'db:seed']);
+  pnpm(['--filter', '@medconnect/api', 'db:seed']);
 
   console.log(
     '\n✔ Development environment ready.\n  Next: `pnpm dev`, then open http://localhost:3001\n',

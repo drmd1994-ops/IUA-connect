@@ -82,7 +82,7 @@ describe('events (integration)', () => {
       grantRole(h, email, 'CONTENT_EDITOR'),
     );
     await h.http().get('/api/v1/admin/events').set(as(editor)).expect(403);
-    // An IUA admin holds events.manage too.
+    // An organisation admin holds events.manage too.
     const iuaAdmin = await signInAdmin(h, 'iua-admin');
     await h.http().get('/api/v1/admin/events').set(as(iuaAdmin)).expect(200);
   });
@@ -149,12 +149,14 @@ describe('events (integration)', () => {
     const event = await create();
     const put = (version: string | null) => {
       const req = h.http().put(`/api/v1/admin/events/${event.id}`).set(as(admin));
-      return (version ? req.set('If-Match', version) : req).send(input({ organizer: 'IUA' }));
+      return (version ? req.set('If-Match', version) : req).send(
+        input({ organizer: 'The society' }),
+      );
     };
     await put(null).expect(412);
     await put('"7"').expect(412);
     const saved = await put('"1"').expect(200);
-    expect(saved.body).toMatchObject({ organizer: 'IUA', version: 2 });
+    expect(saved.body).toMatchObject({ organizer: 'The society', version: 2 });
     await put('"1"').expect(412);
   });
 

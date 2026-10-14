@@ -1,5 +1,5 @@
 {
-  "extends": "@iua/tsconfig/nextjs.json",
+  "extends": "@medconnect/tsconfig/nextjs.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]

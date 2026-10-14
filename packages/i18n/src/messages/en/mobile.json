@@ -4,12 +4,12 @@
   "back": "Back",
   "unreachable": {
     "title": "The server can’t be reached",
-    "text": "The app could not reach IUA Connect at {address}. In the demo, the phone must be on the same Wi-Fi as the computer that runs it.",
+    "text": "The app could not reach Med Connect at {address}. In the demo, the phone must be on the same Wi-Fi as the computer that runs it.",
     "retry": "Try again"
   },
   "signIn": {
     "title": "Sign in",
-    "intro": "Use the same email and password as on the IUA Connect site.",
+    "intro": "Use the same email and password as on the Med Connect site.",
     "email": "Email",
     "password": "Password",
     "submit": "Sign in",
@@ -24,9 +24,9 @@
     "guest": "Continue without signing in"
   },
   "home": {
-    "title": "IUA Connect",
+    "title": "Med Connect",
     "signedInAs": "Signed in as {email}",
-    "staffNote": "You have a staff role. The admin area is on the website; the app is for members’ everyday use.",
+    "staffNote": "You have a staff role. The admin area is on the website; the app is for everyday use.",
     "membership": "Your membership",
     "active": "Active until {date}",
     "suspended": "Your membership is suspended.",
@@ -50,8 +50,8 @@
     "version": "Version {version}"
   },
   "lock": {
-    "title": "Unlock IUA Connect",
-    "prompt": "Unlock IUA Connect",
+    "title": "Unlock Med Connect",
+    "prompt": "Unlock Med Connect",
     "unlock": "Unlock",
     "failed": "The phone did not recognise you. Try again, or sign out.",
     "setting": "Ask for my fingerprint or face when the app opens",
@@ -102,7 +102,7 @@
   },
   "me": {
     "title": "Me",
-    "card": "My membership card",
+    "organisation": "My organisation",
     "notices": "Notification settings"
   },
   "languages": {
@@ -129,7 +129,7 @@
     "permission": "The app needs the camera to read a code. Nothing is photographed or kept.",
     "allow": "Allow the camera",
     "camera": "The camera, looking for a code",
-    "unknown": "This is not a code of IUA Connect.",
+    "unknown": "This is not a code of Med Connect.",
     "again": "Scan another code"
   },
   "guest": {

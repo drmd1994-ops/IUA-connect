@@ -6,7 +6,7 @@ import { GuidelinesAdminController } from './guidelines-admin.controller';
 import { GuidelinesPublicController } from './guidelines-public.controller';
 import { GuidelinesService } from './guidelines.service';
 
-/** Guidelines: metadata, official links, versions and IUA summaries under access tiers (M3). */
+/** Guidelines: metadata, official links, versions and editors’ summaries under access tiers (M3). */
 @Module({
   imports: [AccessModule, AuthModule, NotificationsModule],
   controllers: [GuidelinesAdminController, GuidelinesPublicController],

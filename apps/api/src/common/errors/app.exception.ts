@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common';
-import { ERROR_DEFINITIONS, type ErrorCode, type ErrorDetail } from '@iua/shared';
+import { ERROR_DEFINITIONS, type ErrorCode, type ErrorDetail } from '@medconnect/shared';
 
 /**
  * The one exception type services throw. It carries a stable code; the HTTP status and the

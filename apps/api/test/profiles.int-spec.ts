@@ -1,4 +1,4 @@
-import { errorEnvelopeSchema } from '@iua/shared';
+import { errorEnvelopeSchema } from '@medconnect/shared';
 import { type Harness, bearer, createVerifiedUser, signIn, startHarness } from './auth-harness';
 
 /** M2 checkpoint 2: a member's own profile with per-field visibility. */

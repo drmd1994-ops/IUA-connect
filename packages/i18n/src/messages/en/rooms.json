@@ -19,7 +19,7 @@
   },
   "browse": {
     "title": "Browse rooms",
-    "intro": "Rooms the association opened for its members. When you join a room, the people in it see your name.",
+    "intro": "Rooms opened by Med Connect for verified physicians, and by organisations for their members. When you join a room, the people in it see your name.",
     "search": "Search by name",
     "searchButton": "Search",
     "category": "Category",
@@ -59,7 +59,7 @@
     "replyTo": "In reply to {name}",
     "blocked": "A message from someone you blocked.",
     "showBlocked": "Show it",
-    "unknownPerson": "Member",
+    "unknownPerson": "A physician",
     "deletedAccount": "Deleted account",
     "left": "You are no longer in this room.",
     "pinned": "Pinned messages",
@@ -67,7 +67,7 @@
     "cannot": {
       "notJoined": "Join this room to write in it.",
       "membersOnly": "Your membership isn’t active, so you can read this room but not write in it.",
-      "suspended": "The association’s staff suspended you from sending messages. You can still read.",
+      "suspended": "The staff suspended you from sending messages. You can still read.",
       "archived": "This room is archived. It can be read, and nothing more can be written.",
       "locked": "A moderator locked this room. Only moderators can write now.",
       "lockedUntil": "A moderator locked this room until {when}. Only moderators can write now.",
@@ -126,7 +126,7 @@
   },
   "report": {
     "title": "Report the room {name}",
-    "intro": "The association’s staff will see what you write here, and can open the room."
+    "intro": "The staff will see what you write here, and can open the room."
   },
   "moderate": {
     "title": "Moderation",
@@ -158,7 +158,7 @@
   },
   "admin": {
     "title": "Chat rooms",
-    "intro": "Rooms the association opens for its members. A room is archived, never deleted.",
+    "intro": "Rooms are opened by Med Connect or by an organisation for its members. A room is archived, never deleted.",
     "new": "Open a room",
     "settings": "Categories and report reasons",
     "show": "Show",

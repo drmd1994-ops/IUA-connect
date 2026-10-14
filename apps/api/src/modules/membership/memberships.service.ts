@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { ORGANISATION_REF } from '../organisations';

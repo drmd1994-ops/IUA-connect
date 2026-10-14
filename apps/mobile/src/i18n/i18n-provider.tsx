@@ -1,4 +1,4 @@
-import { type Locale, directionOf, getMessages, isLocale } from '@iua/i18n';
+import { type Locale, directionOf, getMessages, isLocale } from '@medconnect/i18n';
 import * as Localization from 'expo-localization';
 import { type ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { I18nManager } from 'react-native';

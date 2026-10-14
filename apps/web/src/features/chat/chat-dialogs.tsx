@@ -1,6 +1,6 @@
 'use client';
 
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';

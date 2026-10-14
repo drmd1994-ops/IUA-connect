@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
-import { type PermissionKey, uuidv7 } from '@iua/shared';
+import { DEFAULT_LOCALE, type Locale, isLocale } from '@medconnect/i18n';
+import { type PermissionKey, uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import {
   OWNER_PROBLEM_CODES,

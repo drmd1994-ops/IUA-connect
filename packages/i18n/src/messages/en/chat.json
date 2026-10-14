@@ -19,7 +19,7 @@
     "muted": "Muted",
     "you": "You: {text}",
     "deleted": "This message was deleted",
-    "unknownPerson": "Member",
+    "unknownPerson": "A physician",
     "deletedAccount": "Deleted account",
     "settings": "Chat settings",
     "searchMessages": "Search messages",
@@ -55,7 +55,7 @@
     },
     "cannot": {
       "membersOnly": "Your account isn’t verified as a physician’s yet, so you can read your conversations but not send messages.",
-      "suspended": "The association’s staff suspended you from sending messages. You can still read your conversations.",
+      "suspended": "The staff suspended you from sending messages. You can still read your conversations.",
       "blocked": "You blocked this person. Unblock them to send messages.",
       "unavailable": "This person’s account is no longer available."
     }
@@ -125,13 +125,13 @@
   "report": {
     "titleMessage": "Report this message",
     "titlePerson": "Report {name}",
-    "introMessage": "The association’s staff will see this message with the five messages before and after it, and nothing else of the conversation.",
-    "introPerson": "The association’s staff will see what you write here. They will not see the conversation.",
+    "introMessage": "The staff will see this message with the five messages before and after it, and nothing else of the conversation.",
+    "introPerson": "The staff will see what you write here. They will not see the conversation.",
     "category": "Reason",
     "choose": "Choose a reason",
     "description": "What happened (optional)",
     "send": "Send the report",
-    "sent": "Thank you. Your report was sent to the association’s staff.",
+    "sent": "Thank you. Your report was sent to the staff.",
     "cancel": "Cancel",
     "close": "Close"
   },
@@ -139,7 +139,7 @@
     "title": "Chat settings",
     "back": "Back to chat",
     "audience": "Who can start a conversation with me",
-    "audienceListed": "Members, while I am listed in the member directory",
+    "audienceListed": "Verified physicians, while I am listed in the directory",
     "audienceNobody": "Nobody",
     "audienceNote": "Conversations that already exist are not affected. To stop one, block the person.",
     "notListed": "You are not listed in the member directory, so nobody can start a conversation with you. You can still write to others.",

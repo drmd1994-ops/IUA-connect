@@ -68,7 +68,7 @@ describe('ICS writer', () => {
   });
 
   it('builds a calendar that reads back with the same values', () => {
-    const ics = buildCalendar('IUA Connect', [entry]);
+    const ics = buildCalendar('Med Connect', [entry]);
     expect(ics.startsWith('BEGIN:VCALENDAR\r\nVERSION:2.0\r\n')).toBe(true);
     expect(ics.endsWith('END:VCALENDAR\r\n')).toBe(true);
     // Only CRLF line endings.

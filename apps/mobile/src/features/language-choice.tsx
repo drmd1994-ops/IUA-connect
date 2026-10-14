@@ -1,4 +1,4 @@
-import { LOCALES } from '@iua/i18n';
+import { LOCALES } from '@medconnect/i18n';
 import { StyleSheet, View } from 'react-native';
 import { useTranslations } from 'use-intl';
 import { useLocaleSettings } from '@/i18n/i18n-provider';

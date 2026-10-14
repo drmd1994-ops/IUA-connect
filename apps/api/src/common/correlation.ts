@@ -1,5 +1,5 @@
 import { type IncomingMessage, type ServerResponse } from 'node:http';
-import { CORRELATION_ID_HEADER, isValidCorrelationId, uuidv7 } from '@iua/shared';
+import { CORRELATION_ID_HEADER, isValidCorrelationId, uuidv7 } from '@medconnect/shared';
 
 /**
  * Accepts a well-formed incoming correlation ID or creates a new one, and echoes it in the

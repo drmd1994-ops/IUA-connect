@@ -1,4 +1,4 @@
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { type Answer } from './world';
 
 /**
@@ -442,6 +442,7 @@ const families: Record<string, Answer> = {
   'GET /api/v1/hospitals/*': { items: [{ id: 'd-1', nameHe: 'אורולוגיה', nameEn: 'Urology' }] },
   'GET /api/v1/broadcasts/*': {
     id: 'b-1',
+    organisation,
     title: 'A message to all members',
     paragraphs: ['First paragraph.', 'Second paragraph.'],
     locale: 'en',
@@ -489,6 +490,10 @@ export const everything: Record<string, Answer> = {
   ...families,
   'GET /api/v1/me': me,
   'GET /api/v1/me/membership': membership,
+  'GET /api/v1/me/memberships': { items: [membership.membership!] } satisfies S['MyMembershipsDto'],
+  'GET /api/v1/organisations': {
+    items: [{ ...organisation, descriptionHe: 'אגודה בדויה, לצורך הדגמה.', descriptionEn: null }],
+  } satisfies S['OrganisationListDto'],
   'GET /api/v1/me/membership/card-token': { token: 'card-token' },
   'GET /api/v1/me/profile': profile,
   'GET /api/v1/me/consents': {

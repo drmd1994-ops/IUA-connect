@@ -1,4 +1,4 @@
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';

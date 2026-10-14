@@ -1,4 +1,6 @@
-# IUA Connect — Database Design
+# Med Connect — Database Design
+
+> **Since M16 (2026-10-13)** the product is **Med Connect**, an independent platform with a section for each organisation ([decision 0010](docs/adr/0010-a-platform-with-organisations.md)). Where this document still says "the association" or "IUA admin", read "an organisation" and "its administrator"; the section "M16" below is what holds now.
 
 PostgreSQL 16+, accessed through Prisma. This document covers the **MVP schema** plus the tables reserved for later phases. The Prisma schema in `apps/api/prisma/schema.prisma` is the implementation of record.
 
@@ -143,7 +145,7 @@ jobs (pg-boss's own schema: pgboss.*)
 - Seed layers:
   1. **Reference:** roles, permissions, membership types, subspecialties, locales.
   2. **Demo:** fictional users, hospitals and departments (real hospital names are acceptable; people are fictional), directors, memberships at every workflow state.
-  3. **Imported sample:** the curated IUA website content (D11), kept as JSON fixtures in `apps/api/prisma/fixtures/iua-import/`.
+  3. **Imported sample (no longer a layer since M16):** content once imported from a real association’s website (D11). The fixtures and `seedImport` remain, unused; `pnpm import:remove` takes an earlier sample out.
 - `pnpm db:reset` rebuilds everything locally. Seeds refuse to run when `NODE_ENV=production`.
 
 ## 7. Retention (initial proposal, pending legal review)
@@ -237,3 +239,14 @@ Three migrations, additions only, except that two check constraints are replaced
 
 - `conversations_room_fields` now knows three kinds: a room, a group (a name, no pair, none of a room's settings), and a direct conversation.
 - `messages_text` said that a message that is not deleted has text. A message may now be files without a text, so the database keeps only the other half (a deleted message has no text); the API checks that a message has a text or a file.
+
+## 9. Organisations (M16)
+
+- **`organisations`**: `id`, `slug` (unique, in addresses), `name_he`, `name_en`, `description_he`, `description_en`, `active`. The first one has a fixed id, so the migration could move every existing row to it.
+- **`organisation_id` NOT NULL:** `membership_types`, `memberships`, `verification_requests`, `import_batches`. A membership type's key is unique within its organisation; a person has one open application per organisation.
+- **`organisation_id` nullable (null: the platform's own):** `news`, `events`, `speakers`, `conversations` (rooms), `broadcasts`, `user_roles`, `content_announcements`.
+- **No organisation:** education items, exam questions, guidelines, the category lists, report reasons, users, hospitals and departments, the audit log, settings.
+- **`users.verified_at`**: when the account became a verified physician. Set when an organisation accepts or imports the person.
+- **`access_tier`** gained `VERIFIED`. Check constraints: `MEMBERS` needs an owning organisation; the platform's library has no `MEMBERS`.
+- **`user_roles`**: unique on (user, role, scope, organisation) with nulls counted as equal, so a role is granted once in each place.
+- Six migrations (`20261013090000` to `20261013090500`), additions and backfills only.

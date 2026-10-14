@@ -11,7 +11,7 @@ import {
 
 /**
  * M2 exit test (docs/plans/M2-people-membership.md §1): register → the department director
- * approves → an IUA admin approves → the membership card verifies. Three people, each in their own
+ * approves → the organisation’s admin approves → the membership card verifies. Three people, each in their own
  * browser; the admin and the director set up a passkey (their roles require two-step verification).
  */
 const HOSPITAL = 'Barzilai Medical Center';
@@ -124,7 +124,7 @@ test('register → director approves → admin approves → the card verifies', 
   // The member now has an active membership and a card.
   await member.goto('/en/account/membership');
   await expect(member.getByTestId('membership-summary')).toContainText('Active');
-  const tokenResponse = member.waitForResponse('**/api/v1/me/membership/card-token');
+  const tokenResponse = member.waitForResponse('**/api/v1/me/membership/card-token*');
   await member.getByRole('link', { name: 'Show my membership card' }).click();
   const { token } = (await (await tokenResponse).json()) as { token: string };
   await expect(

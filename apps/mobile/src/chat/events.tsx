@@ -1,4 +1,4 @@
-import { type ChatEvent, parseEvent } from '@iua/api-client/chat';
+import { type ChatEvent, parseEvent } from '@medconnect/api-client/chat';
 import { fetch as streamingFetch } from 'expo/fetch';
 import {
   type ReactNode,

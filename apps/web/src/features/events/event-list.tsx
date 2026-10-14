@@ -1,6 +1,6 @@
 'use client';
 
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
@@ -10,6 +10,8 @@ import { PageFrame } from '@/features/auth/require-sign-in';
 import { StoredImage } from '@/features/content/files';
 import { Pager } from '@/features/content/pager';
 import { useLocalName } from '@/features/membership/reference';
+import { BackToSection } from '@/features/organisations/organisation-page';
+import type { Organisation } from '@/features/organisations/organisations';
 import { Link } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { useEventTime } from './shared';
@@ -21,8 +23,11 @@ type When = 'upcoming' | 'past';
 const PAGE_SIZE = 12;
 const badge = 'rounded-full px-2.5 py-0.5 text-xs font-semibold';
 
-/** Public event list. Signed-in members also see what their membership opens (the API decides). */
-export function EventList() {
+/**
+ * Public event list: the platform's and every organisation's, or one organisation's when named.
+ * Signed-in people also see what their account and memberships open (the API decides).
+ */
+export function EventList({ organisation }: { organisation?: Organisation }) {
   const t = useTranslations();
   const locale = useLocale() as 'he' | 'en';
   const name = useLocalName();
@@ -52,7 +57,14 @@ export function EventList() {
     call(() =>
       api.GET('/api/v1/events', {
         params: {
-          query: { locale, when, page, pageSize: PAGE_SIZE, ...(category ? { category } : {}) },
+          query: {
+            locale,
+            when,
+            page,
+            pageSize: PAGE_SIZE,
+            ...(category ? { category } : {}),
+            ...(organisation ? { organisation: organisation.id } : {}),
+          },
         },
       }),
     )
@@ -61,13 +73,18 @@ export function EventList() {
     return () => {
       active = false;
     };
-  }, [api, call, status, locale, when, page, category]);
+  }, [api, call, status, locale, when, page, category, organisation]);
 
   return (
     <PageFrame wide>
+      {organisation && <BackToSection organisation={organisation} />}
       <div>
-        <h1 className="text-3xl font-semibold text-brand-900">{t('events.list.title')}</h1>
-        <p className="mt-2 text-text-muted">{t('events.list.intro')}</p>
+        <h1 className="text-3xl font-semibold text-brand-900">
+          {organisation
+            ? t('organisations.lists.eventsTitle', { name: name(organisation) })
+            : t('events.list.title')}
+        </h1>
+        {!organisation && <p className="mt-2 text-text-muted">{t('events.list.intro')}</p>}
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <SelectField
@@ -131,6 +148,13 @@ export function EventList() {
                   {item.summary && (
                     <p className="text-text-muted" lang={item.locale}>
                       {item.summary}
+                    </p>
+                  )}
+                  {!organisation && (
+                    <p className="text-sm text-text-muted" data-testid="item-owner">
+                      {t('organisations.owner.from', {
+                        name: item.organisation ? name(item.organisation) : t('common.app.name'),
+                      })}
                     </p>
                   )}
                   <p className="mt-auto flex flex-wrap gap-2">

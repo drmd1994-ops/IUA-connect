@@ -1,0 +1,51 @@
+{
+  "nav": "Organisations",
+  "list": {
+    "title": "Organisations",
+    "intro": "Organisations that have a section here. Each one runs its own membership, news, events and rooms.",
+    "empty": "No organisation has a section yet.",
+    "open": "Open the section of {name}"
+  },
+  "section": {
+    "notFound": "This organisation was not found.",
+    "all": "All organisations",
+    "back": "Back to {name}",
+    "aboutTitle": "About",
+    "noDescription": "The organisation has not written about itself yet.",
+    "membership": {
+      "title": "Your membership",
+      "signedOut": "Sign in to see your membership here, or to apply.",
+      "none": "You are not a member of this organisation.",
+      "apply": "Apply for membership",
+      "state": "{type}: {status}",
+      "open": "Membership details",
+      "card": "Membership card"
+    },
+    "news": {
+      "title": "News",
+      "empty": "No news yet.",
+      "all": "All news of {name}"
+    },
+    "events": {
+      "title": "Upcoming events",
+      "empty": "No upcoming events.",
+      "all": "All events of {name}"
+    },
+    "rooms": {
+      "title": "Rooms",
+      "empty": "No rooms yet.",
+      "membersOnly": "The rooms are open to the organisation’s members.",
+      "members": "{count, plural, one {# member} other {# members}}"
+    }
+  },
+  "lists": {
+    "newsTitle": "News of {name}",
+    "eventsTitle": "Events of {name}"
+  },
+  "owner": {
+    "from": "From {name}"
+  },
+  "mine": {
+    "looking": "Looking for your organisation…"
+  }
+}

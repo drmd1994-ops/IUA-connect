@@ -1,4 +1,4 @@
-import base from '@iua/eslint-config/base';
+import base from '@medconnect/eslint-config/base';
 
 export default [
   ...base,

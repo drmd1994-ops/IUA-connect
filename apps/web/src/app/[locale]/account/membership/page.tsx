@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { MembershipPage } from '@/features/membership/membership-page';
+import { MyOrganisation } from '@/features/organisations/my-organisation';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const resolved = await params;
-  setRequestLocale(resolved.locale);
-  return <MembershipPage />;
+  const { locale } = await params;
+  setRequestLocale(locale);
+  return <MyOrganisation inside="membership" />;
 }

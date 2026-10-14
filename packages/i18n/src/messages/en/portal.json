@@ -48,7 +48,7 @@
     }
   },
   "footer": {
-    "contact": "Contact the association",
+    "contact": "Contact",
     "email": "Email",
     "phone": "Phone",
     "address": "Address"
@@ -60,7 +60,7 @@
       "nothing": "Nothing here needs you right now. Use the tabs above.",
       "applications": {
         "title": "Membership applications",
-        "waitingAssociation": "{count, plural, one {# waiting for the association} other {# waiting for the association}}",
+        "waitingAssociation": "{count, plural, one {# waiting for the organisation} other {# waiting for the organisation}}",
         "waitingDirector": "{count, plural, one {# waiting for a department director} other {# waiting for a department director}}",
         "link": "Open the applications"
       },
@@ -216,7 +216,7 @@
       "membership_read": "See members",
       "membership_manage": "Manage memberships and import members",
       "membership_approve_department": "Approve applications of their department",
-      "membership_approve_final": "Give the association’s approval to applications",
+      "membership_approve_final": "Give the organisation’s approval to applications",
       "institutions_manage": "Manage hospitals, departments and directors",
       "news_create": "Write news",
       "news_review": "Review news",
@@ -259,7 +259,7 @@
     "settings": {
       "title": "Settings",
       "intro": "What visitors see on every page.",
-      "contact": "The association’s contact details",
+      "contact": "Contact details",
       "contactHint": "Shown at the bottom of every page. Leave a field empty to hide it.",
       "email": "Email",
       "phone": "Phone",
@@ -278,7 +278,7 @@
     "title": "Accessibility statement",
     "updated": "Last updated: 3 October 2026.",
     "aimTitle": "What we aim for",
-    "aim": "IUA Connect is built to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, which the Israeli standard IS 5568 follows. It works in Hebrew, right to left, and in English.",
+    "aim": "Med Connect is built to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, which the Israeli standard IS 5568 follows. It works in Hebrew, right to left, and in English.",
     "doneTitle": "What was checked",
     "done": [
       "Every page, in both languages, with an automated checker (axe) for WCAG 2.2 AA. The checks run again on every change.",
@@ -298,7 +298,7 @@
     ],
     "contactTitle": "Tell us about a problem",
     "contact": "If something on the site doesn’t work for you, please tell us what you were trying to do and which page you were on.",
-    "noContact": "The association’s contact details are not set in this demo.",
+    "noContact": "Contact details are not set in this demo.",
     "demo": "This is a demo version with fictional data.",
     "footerLink": "Accessibility statement",
     "notices": "Site notices"

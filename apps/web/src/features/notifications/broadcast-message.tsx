@@ -1,6 +1,6 @@
 'use client';
 
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
@@ -13,7 +13,7 @@ type Message = components['schemas']['BroadcastMessageDto'];
 
 const link = 'font-semibold text-primary underline underline-offset-4';
 
-/** A message from the association, as one of its recipients reads it. */
+/** A message from an organisation or from the platform, as one of its recipients reads it. */
 export function BroadcastMessage({ id }: { id: string }) {
   return <RequireSignIn>{() => <MessageView id={id} />}</RequireSignIn>;
 }
@@ -46,7 +46,13 @@ function MessageView({ id }: { id: string }) {
       {message && (
         <article data-testid="broadcast-message">
           <p className="text-sm text-text-muted">
-            {t('notifications.message.from')}
+            {t('organisations.owner.from', {
+              name: message.organisation
+                ? locale === 'he'
+                  ? message.organisation.nameHe
+                  : message.organisation.nameEn
+                : t('common.app.name'),
+            })}
             {' · '}
             {t('notifications.message.sentAt', {
               when: format.dateTime(new Date(message.sentAt), {

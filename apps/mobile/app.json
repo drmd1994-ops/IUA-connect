@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "IUA Connect",
-    "slug": "iua-connect",
-    "scheme": "iuaconnect",
+    "name": "Med Connect",
+    "slug": "med-connect",
+    "scheme": "medconnect",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "platforms": ["android", "ios"],
     "android": {
-      "package": "test.demo.iuaconnect"
+      "package": "test.demo.medconnect"
     },
     "ios": {
-      "bundleIdentifier": "test.demo.iuaconnect"
+      "bundleIdentifier": "test.demo.medconnect"
     },
     "extra": {
       "supportsRTL": true
@@ -23,21 +23,21 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Allow IUA Connect to use Face ID to unlock the app."
+          "faceIDPermission": "Allow Med Connect to use Face ID to unlock the app."
         }
       ],
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow IUA Connect to use the camera to read a code, and to take a picture you send in chat.",
+          "cameraPermission": "Allow Med Connect to use the camera to read a code, and to take a picture you send in chat.",
           "recordAudioAndroid": false
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow IUA Connect to open the pictures and videos you choose to send.",
-          "cameraPermission": "Allow IUA Connect to use the camera to take a picture you send in chat.",
+          "photosPermission": "Allow Med Connect to open the pictures and videos you choose to send.",
+          "cameraPermission": "Allow Med Connect to use the camera to take a picture you send in chat.",
           "microphonePermission": false
         }
       ]

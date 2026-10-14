@@ -1,4 +1,4 @@
-import { PERMISSIONS, ROLES, ROLE_KEYS, uuidv7 } from '@iua/shared';
+import { PERMISSIONS, ROLES, ROLE_KEYS, uuidv7 } from '@medconnect/shared';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import {
   CHAT_REPORT_CATEGORIES,
@@ -11,7 +11,7 @@ import {
 
 /**
  * Reference layer: permissions, roles and the role → permission mapping, from the catalogue in
- * @iua/shared (the code is the source of truth, so mappings removed from the code are removed from
+ * @medconnect/shared (the code is the source of truth, so mappings removed from the code are removed from
  * the database); then the first organisation and its membership types (M16), subspecialties,
  * hospitals and departments (M2), which are inserted when missing and otherwise left as admins
  * edited them. Idempotent.

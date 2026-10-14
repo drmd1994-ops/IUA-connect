@@ -1,4 +1,4 @@
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../src/common/auth/principal';
 import { PrismaService } from '../src/infra/prisma/prisma.service';
 import { AccessService } from '../src/modules/access';

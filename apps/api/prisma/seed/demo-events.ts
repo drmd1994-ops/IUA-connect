@@ -1,4 +1,4 @@
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
@@ -262,7 +262,7 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
             endAt,
             locationName: seed.place,
             address: seed.address || null,
-            organizer: 'IUA Connect (demo)',
+            organizer: 'Med Connect (demo)',
             registrationMode: seed.mode,
             registrationUrl: seed.mode === 'EXTERNAL' ? 'https://tickets.example.test/demo' : null,
             capacity: seed.capacity ?? null,

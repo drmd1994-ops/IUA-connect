@@ -74,7 +74,7 @@ export class ChatReportsController {
 }
 
 /**
- * Chat reports in the admin area (chat.moderate, IUA admins, only in a session that completed
+ * Chat reports in the admin area (chat.moderate, held by staff, only in a session that completed
  * two-step verification). There is no route for reading conversations: a report carries the
  * reported message and the five before and after it, and each look is audited.
  */

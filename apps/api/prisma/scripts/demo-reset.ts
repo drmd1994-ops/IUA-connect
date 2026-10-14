@@ -21,7 +21,7 @@ import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { parseArgs } from 'node:util';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { config as loadDotenv } from 'dotenv';
 import { Secret, TOTP } from 'otpauth';
 import { Client } from 'pg';
@@ -185,7 +185,7 @@ async function applyDemoTwoStep(target: ResetTarget): Promise<void> {
 
     // The picture to scan is written next to the outbox mail, which is never committed.
     const uri = new TOTP({
-      issuer: 'IUA Connect (demo)',
+      issuer: 'Med Connect (demo)',
       label: 'demo staff',
       algorithm: 'SHA1',
       digits: 6,

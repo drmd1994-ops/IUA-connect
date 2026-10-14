@@ -1,4 +1,4 @@
-import { errorEnvelopeSchema } from '@iua/shared';
+import { errorEnvelopeSchema } from '@medconnect/shared';
 import {
   type Harness,
   bearer,
@@ -10,7 +10,7 @@ import {
   startHarness,
 } from './auth-harness';
 
-/** M2 checkpoint 3: apply → department director → IUA admin → membership. */
+/** M2 checkpoint 3: apply → department director → the organisation’s admin → membership. */
 describe('membership workflow (integration)', () => {
   let h: Harness;
   let admin: { accessToken: string; userId: string };

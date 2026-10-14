@@ -1,5 +1,5 @@
-import type { components } from '@iua/api-client';
-import { semantic } from '@iua/ui-tokens';
+import type { components } from '@medconnect/api-client';
+import { semantic } from '@medconnect/ui-tokens';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { File, Paths } from 'expo-file-system';
 import { type Href, useRouter } from 'expo-router';
@@ -20,7 +20,7 @@ type Outcome =
   | { kind: 'unknown' };
 
 /**
- * Scanning a code of IUA Connect with the phone's camera: the code shown at an event's venue
+ * Scanning a code of Med Connect with the phone's camera: the code shown at an event's venue
  * records the member's attendance; the code on a membership card is checked.
  */
 export function ScanScreen() {

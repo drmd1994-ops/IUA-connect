@@ -1,4 +1,4 @@
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 
@@ -45,7 +45,7 @@ interface RoomSeed {
 
 const CATEGORIES = [
   { key: 'GENERAL', nameHe: 'כללי', nameEn: 'General' },
-  { key: 'ASSOCIATION', nameHe: 'האיגוד', nameEn: 'The association' },
+  { key: 'ASSOCIATION', nameHe: 'הארגון', nameEn: 'The organisation' },
   { key: 'PROFESSIONAL', nameHe: 'מקצועי', nameEn: 'Professional' },
   { key: 'CONFERENCES', nameHe: 'כנסים ואירועים', nameEn: 'Conferences and events' },
   { key: 'RESIDENTS', nameHe: 'מתמחים', nameEn: 'Residents' },
@@ -55,7 +55,7 @@ const ROOMS: RoomSeed[] = [
   {
     nameHe: 'כללי',
     nameEn: 'General',
-    descriptionHe: 'שיחה חופשית בין חברי האיגוד. (חדר לדוגמה בגרסת ההדגמה.)',
+    descriptionHe: 'שיחה חופשית בין חברי האגודה. (חדר לדוגמה בגרסת ההדגמה.)',
     descriptionEn: 'Open conversation between the members. (A sample room in the demo version.)',
     category: 'GENERAL',
     people: { full: { read: 3, moderator: true }, honorary: {}, resident: {} },
@@ -87,17 +87,17 @@ const ROOMS: RoomSeed[] = [
     ],
   },
   {
-    nameHe: 'הודעות האיגוד',
+    nameHe: 'הודעות האגודה',
     nameEn: 'Announcements',
-    descriptionHe: 'הודעות מטעם האיגוד. רק מנהלי החדר כותבים כאן. (חדר לדוגמה.)',
-    descriptionEn: 'Notices from the association. Only moderators write here. (A sample room.)',
+    descriptionHe: 'הודעות מטעם האגודה. רק מנהלי החדר כותבים כאן. (חדר לדוגמה.)',
+    descriptionEn: 'Notices from the society. Only moderators write here. (A sample room.)',
     category: 'ASSOCIATION',
     moderatorsOnly: true,
     people: { full: { moderator: true }, honorary: {}, resident: { read: 1 } },
     lines: [
       {
         from: 'full',
-        body: 'ברוכים הבאים לחדר ההודעות של האיגוד. (הודעה לדוגמה בגרסת ההדגמה. כל הפרטים בה בדויים.)',
+        body: 'ברוכים הבאים לחדר ההודעות של האגודה. (הודעה לדוגמה בגרסת ההדגמה. כל הפרטים בה בדויים.)',
         ago: 6 * DAY,
         pinned: true,
       },
@@ -118,9 +118,9 @@ const ROOMS: RoomSeed[] = [
     nameHe: 'שאלות ותשובות',
     nameEn: 'Questions and answers',
     descriptionHe:
-      'שאלות על האתר, על החברות ועל פעילות האיגוד. לא לשאלות על מטופלים. (חדר לדוגמה.)',
+      'שאלות על האתר, על החברות ועל פעילות האגודה. לא לשאלות על מטופלים. (חדר לדוגמה.)',
     descriptionEn:
-      'Questions about the site, membership and the association’s activity. Not for questions about patients. (A sample room.)',
+      'Questions about the site, membership and the society’s activity. Not for questions about patients. (A sample room.)',
     category: 'GENERAL',
     people: { full: { moderator: true }, resident: {} },
     lines: [

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import {
   type AuthenticationResponseJSON,
   type WebAuthnCredential,
@@ -19,7 +19,7 @@ import { type MfaFactor } from '../../generated/prisma/client';
 import { UsersService } from '../users';
 import { AuthTokensService } from './auth-tokens.service';
 
-const RP_NAME = 'IUA Connect';
+const RP_NAME = 'Med Connect';
 
 export interface PasskeySummary {
   id: string;

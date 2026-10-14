@@ -1,4 +1,6 @@
-# IUA Connect — Product Requirements (MVP)
+# Med Connect — Product Requirements (MVP)
+
+> **Since M16 (2026-10-13)** the product is **Med Connect**, an independent platform with a section for each organisation ([decision 0010](docs/adr/0010-a-platform-with-organisations.md)). Where this document still says "the association" or "IUA admin", read "an organisation" and "its administrator"; the section "M16" below is what holds now.
 
 The source specification is the master prompt: 62 sections, kept in `docs/product/MASTER_SPEC.md`. This document narrows it to the **MVP** and records the owner's decisions (see PROJECT_STATUS.md, D1–D15).
 
@@ -12,6 +14,19 @@ A convincing, working, secure **web** platform to pitch to the IUA. It shows:
 - a foundation clearly built to grow: mobile, CME, community, AI
 
 Demo data only. No real personal data is loaded until legal review is complete (spec §59).
+
+## 1a. M16: who the product is for now
+
+The MVP below was written to be pitched to one association. Since M16 the product stands by itself:
+
+- **For whom:** physicians, starting with urologists in Israel. A specialty is data, so others can be added.
+- **A verified physician** uses the platform whether or not they belong to any organisation: profile, the directory, private chat and groups, the platform's rooms, the education library, exam practice, guidelines, search.
+- **An organisation** has a section: who it is, membership (types, applications, approval, the card), and its own news, events, rooms and messages to its members, run by its own staff.
+- **Who may see an item:** everyone, verified physicians, members of the organisation that owns it, or selected membership types.
+- **A real organisation appears only with its written agreement.** The demo's organisation is fictional.
+- **Not yet:** how a person is verified as a physician without an organisation (M17), a second real organisation, organisations signing themselves up, fees.
+
+In the table below, "active member" now means a verified physician for everything that is the platform's, and a member of the organisation for what is in its section; "IUA admin" is an organisation's administrator, with a platform administrator beside it.
 
 ## 2. Users in the MVP
 

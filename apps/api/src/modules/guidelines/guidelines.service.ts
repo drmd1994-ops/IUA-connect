@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import { AppException } from '../../common/errors/app.exception';
 import { type RequestMeta } from '../../common/request-meta';
@@ -36,7 +36,7 @@ export interface GuidelineActor {
 
 /**
  * Guidelines (M3 plan §2.6): metadata, the official link, a version history and an optional
- * IUA-written summary. Third-party documents are never copied (spec §14). Public reads follow
+ * summary written by the editors. Third-party documents are never copied (spec §14). Public reads follow
  * the access tiers: hidden guidelines are left out of lists and answer 404 by link.
  */
 @Injectable()

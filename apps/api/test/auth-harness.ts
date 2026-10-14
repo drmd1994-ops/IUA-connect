@@ -1,6 +1,6 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { ROLES, type RoleKey, roleFits, uuidv7 } from '@iua/shared';
+import { ROLES, type RoleKey, roleFits, uuidv7 } from '@medconnect/shared';
 import { Secret, TOTP } from 'otpauth';
 import { Client } from 'pg';
 import request from 'supertest';

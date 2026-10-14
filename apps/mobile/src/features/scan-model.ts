@@ -1,5 +1,5 @@
 /**
- * What a scanned code means. Two codes of IUA Connect are read: the one shown at an event's
+ * What a scanned code means. Two codes of Med Connect are read: the one shown at an event's
  * venue, which records attendance, and the one on a membership card, which is checked. Both are
  * addresses of the site; only the event and the code are taken from them, and they are sent to
  * the app's own server. A code that leads anywhere else is not followed.

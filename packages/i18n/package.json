@@ -1,5 +1,5 @@
 {
-  "name": "@iua/i18n",
+  "name": "@medconnect/i18n",
   "version": "0.0.0",
   "private": true,
   "description": "UI translations (he, en; ar and ru later) and locale metadata",
@@ -21,8 +21,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@iua/eslint-config": "workspace:*",
-    "@iua/tsconfig": "workspace:*",
+    "@medconnect/eslint-config": "workspace:*",
+    "@medconnect/tsconfig": "workspace:*",
     "@types/node": "24.13.6",
     "eslint": "9.39.5",
     "typescript": "6.0.3",

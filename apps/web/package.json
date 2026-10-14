@@ -1,8 +1,8 @@
 {
-  "name": "@iua/web",
+  "name": "@medconnect/web",
   "version": "0.0.0",
   "private": true,
-  "description": "IUA Connect web app: public site, member area and /admin route group (Next.js)",
+  "description": "Med Connect web app: public site, member area and /admin route group (Next.js)",
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
@@ -15,10 +15,10 @@
   "dependencies": {
     "@fontsource/ibm-plex-sans": "5.3.0",
     "@fontsource/ibm-plex-sans-hebrew": "5.3.0",
-    "@iua/api-client": "workspace:*",
-    "@iua/i18n": "workspace:*",
-    "@iua/shared": "workspace:*",
-    "@iua/ui-tokens": "workspace:*",
+    "@medconnect/api-client": "workspace:*",
+    "@medconnect/i18n": "workspace:*",
+    "@medconnect/shared": "workspace:*",
+    "@medconnect/ui-tokens": "workspace:*",
     "@simplewebauthn/browser": "14.0.0",
     "@tiptap/core": "3.31.3",
     "@tiptap/markdown": "3.31.3",
@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
-    "@iua/eslint-config": "workspace:*",
-    "@iua/tsconfig": "workspace:*",
+    "@medconnect/eslint-config": "workspace:*",
+    "@medconnect/tsconfig": "workspace:*",
     "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "24.13.6",

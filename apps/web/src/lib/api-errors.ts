@@ -1,4 +1,4 @@
-import { ApiError } from '@iua/api-client';
+import { ApiError } from '@medconnect/api-client';
 
 type Translate = ((key: string) => string) & { has?: (key: string) => boolean };
 

@@ -1,4 +1,4 @@
-import nest from '@iua/eslint-config/nest';
+import nest from '@medconnect/eslint-config/nest';
 
 export default [
   ...nest,

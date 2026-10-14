@@ -11,7 +11,7 @@ const httpUrl = z.url({ protocol: /^https?$/ }).max(500);
 
 const translationInput = z.strictObject({
   title: z.string().trim().min(1).max(300),
-  /** Written by the IUA (plain text). Never the source organisation's own text. */
+  /** Written by the editors (plain text). Never the source organisation's own text. */
   summary: z.string().trim().max(4000).optional(),
 });
 

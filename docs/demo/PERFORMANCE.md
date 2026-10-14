@@ -86,7 +86,7 @@ What this does not show is how the system behaves under many simultaneous users.
 
 ```powershell
 pnpm build
-pnpm --filter @iua/api start     # one window
-pnpm --filter @iua/web start     # another window
+pnpm --filter @medconnect/api start     # one window
+pnpm --filter @medconnect/web start     # another window
 npx --yes lighthouse@13.5.0 http://localhost:3001/he --only-categories=performance --view
 ```

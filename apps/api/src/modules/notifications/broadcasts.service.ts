@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
-import { uuidv7 } from '@iua/shared';
+import { DEFAULT_LOCALE, type Locale, isLocale } from '@medconnect/i18n';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import {
   OWNER_PROBLEM_CODES,
@@ -397,6 +397,7 @@ export class BroadcastsService implements OnModuleInit {
     }
     return {
       id,
+      organisation: broadcast.organisation,
       title: text.title,
       paragraphs: paragraphsOf(text.body),
       locale: text.locale as Locale,

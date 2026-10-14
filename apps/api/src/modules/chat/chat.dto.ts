@@ -523,6 +523,8 @@ export class RoomListQueryDto extends createZodDto(
     /** Part of the room's name, at least 2 characters. */
     q: z.string().trim().min(2).max(100).optional(),
     categoryId: z.uuid().optional(),
+    /** When browsing: only the rooms of this organisation. */
+    organisation: z.uuid().optional(),
     cursor: z.string().max(100).optional(),
     limit: z.coerce.number().int().min(1).max(50).default(ROOMS_PAGE_SIZE),
   }),

@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { FIRST_ORGANISATION } from './reference-data';
 import sharp from 'sharp';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
@@ -60,7 +60,7 @@ export async function seedDemoGroups(prisma: PrismaClient): Promise<void> {
   const thumbnail = await sharp(picture).resize(480, 480, { fit: 'inside' }).png().toBuffer();
   const document = onePagePdf([
     'Reading group: timetable (sample)',
-    'IUA Connect demo. This document is fictional.',
+    'Med Connect demo. This document is fictional.',
   ]);
 
   await prisma.$transaction(

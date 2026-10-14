@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DEFAULT_LOCALE, type Locale, isLocale } from '@iua/i18n';
+import { DEFAULT_LOCALE, type Locale, isLocale } from '@medconnect/i18n';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { type EmailTemplates } from '../../infra/mailer/mailer';

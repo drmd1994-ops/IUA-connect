@@ -157,10 +157,10 @@ jobs:
           cp .env.example .env
           sed -i 's#^PG_SUPERUSER_URL=.*#PG_SUPERUSER_URL=postgresql://postgres:postgres@localhost:5432/postgres#' .env
           pnpm setup:dev
-      - run: pnpm --filter @iua/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @medconnect/web exec playwright install --with-deps chromium
       - run: pnpm build
       # Sign-up/sign-in journeys and WCAG 2.2 AA checks (Chromium) against the production builds.
-      - run: pnpm --filter @iua/web e2e
+      - run: pnpm --filter @medconnect/web e2e
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
@@ -201,8 +201,8 @@ jobs:
       - run: pnpm build
       - name: Start the API and the web app (production builds)
         run: |
-          pnpm --filter @iua/api start > api.log 2>&1 &
-          pnpm --filter @iua/web start > web.log 2>&1 &
+          pnpm --filter @medconnect/api start > api.log 2>&1 &
+          pnpm --filter @medconnect/web start > web.log 2>&1 &
           for i in $(seq 1 60); do
             if curl -sf http://localhost:4000/health/ready > /dev/null && curl -sf http://localhost:3001/he > /dev/null; then exit 0; fi
             sleep 2

@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 
 /**
@@ -430,7 +430,7 @@ async function sampleDocument(
   heading: string,
   ownerUserId: string,
 ): Promise<string> {
-  const body = onePagePdf([heading, 'IUA Connect demo. This document is fictional.']);
+  const body = onePagePdf([heading, 'Med Connect demo. This document is fictional.']);
   const today = new Date();
   const folder = `${today.getUTCFullYear()}/${String(today.getUTCMonth() + 1).padStart(2, '0')}`;
   const storageKey = `${folder}/${randomUUID()}`;

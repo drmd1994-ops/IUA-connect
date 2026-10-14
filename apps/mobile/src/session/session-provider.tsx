@@ -1,4 +1,4 @@
-import { type ApiError, toApiError } from '@iua/api-client';
+import { type ApiError, toApiError } from '@medconnect/api-client';
 import {
   type ReactNode,
   createContext,

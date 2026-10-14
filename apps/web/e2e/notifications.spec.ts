@@ -179,7 +179,7 @@ test('a message to members is sent only after a second admin approves it', async
   await member.reload();
   const notice = member
     .getByTestId('notice-list')
-    .getByRole('link', { name: `A message from the association: ${title.en}` });
+    .getByRole('link', { name: `Announcement: ${title.en}` });
   await notice.click();
   const message = member.getByTestId('broadcast-message');
   await expect(message.getByRole('heading', { name: title.en })).toBeVisible();

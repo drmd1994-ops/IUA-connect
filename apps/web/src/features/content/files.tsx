@@ -1,6 +1,6 @@
 'use client';
 
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/auth-context';
 

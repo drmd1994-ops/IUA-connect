@@ -1,5 +1,5 @@
 {
-  "name": "@iua/api-client",
+  "name": "@medconnect/api-client",
   "version": "0.0.0",
   "private": true,
   "description": "Typed API client generated from the API's OpenAPI document, and the chat rules the site and the app share. Do not hand-write request types.",
@@ -26,12 +26,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@iua/shared": "workspace:*",
+    "@medconnect/shared": "workspace:*",
     "openapi-fetch": "0.17.0"
   },
   "devDependencies": {
-    "@iua/eslint-config": "workspace:*",
-    "@iua/tsconfig": "workspace:*",
+    "@medconnect/eslint-config": "workspace:*",
+    "@medconnect/tsconfig": "workspace:*",
     "@types/node": "24.13.6",
     "eslint": "9.39.5",
     "openapi-typescript": "7.13.0",

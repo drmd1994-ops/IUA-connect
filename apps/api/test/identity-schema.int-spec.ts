@@ -1,4 +1,4 @@
-import { PERMISSIONS, ROLES, ROLE_KEYS, uuidv7 } from '@iua/shared';
+import { PERMISSIONS, ROLES, ROLE_KEYS, uuidv7 } from '@medconnect/shared';
 import { Client } from 'pg';
 import { testAppUrl } from './test-db';
 

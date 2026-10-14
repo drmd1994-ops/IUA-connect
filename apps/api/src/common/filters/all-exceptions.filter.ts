@@ -13,7 +13,7 @@ import {
   type ErrorDetail,
   type ErrorEnvelope,
   errorCodeForStatus,
-} from '@iua/shared';
+} from '@medconnect/shared';
 import { type Request, type Response } from 'express';
 import { AppException } from '../errors/app.exception';
 import { correlationIdOf } from '../correlation';

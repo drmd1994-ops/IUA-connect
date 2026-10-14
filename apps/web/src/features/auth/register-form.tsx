@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { type FormEvent, useState } from 'react';
-import { isLocale } from '@iua/i18n';
+import { isLocale } from '@medconnect/i18n';
 import { Alert } from '@/components/ui/alert';
 import { AuthCard } from '@/components/ui/auth-card';
 import { Button } from '@/components/ui/button';

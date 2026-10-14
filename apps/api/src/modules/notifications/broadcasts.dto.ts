@@ -104,6 +104,8 @@ export class BroadcastQueryDto extends createZodDto(
 export class BroadcastMessageDto extends createZodDto(
   z.strictObject({
     id: z.uuid(),
+    /** Who sent it: an organisation, or null for the platform itself. */
+    organisation: organisationRefSchema.nullable(),
     title: z.string(),
     paragraphs: z.array(z.string()),
     /** The language of the text returned (Hebrew when there is no text in the one asked for). */

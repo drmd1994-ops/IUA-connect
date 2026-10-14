@@ -9,7 +9,7 @@ import { ManualQueue } from './infra/jobs/manual-queue';
 /**
  * Runs one scheduled job now, without waiting for its time: for the demo and for the browser
  * tests (for example the daily summary email, which otherwise goes out in the morning).
- * Usage: node dist/job-run.js <job name>      (pnpm --filter @iua/api job:run <job name>)
+ * Usage: node dist/job-run.js <job name>      (pnpm --filter @medconnect/api job:run <job name>)
  * A development tool: it starts the app without its schedule, which production refuses.
  */
 async function runJob(): Promise<void> {

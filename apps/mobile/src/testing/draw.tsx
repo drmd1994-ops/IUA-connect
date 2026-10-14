@@ -1,4 +1,4 @@
-import { getMessages } from '@iua/i18n';
+import { getMessages } from '@medconnect/i18n';
 import { act, render } from '@testing-library/react-native';
 import { type ReactElement } from 'react';
 import { IntlProvider } from 'use-intl';

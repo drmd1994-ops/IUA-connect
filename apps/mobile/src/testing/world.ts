@@ -1,4 +1,4 @@
-import { toApiError } from '@iua/api-client';
+import { toApiError } from '@medconnect/api-client';
 
 /**
  * The pretend world a screen is drawn in: a pretend server that answers from a table, a pretend

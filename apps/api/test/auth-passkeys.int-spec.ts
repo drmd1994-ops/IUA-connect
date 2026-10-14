@@ -1,4 +1,4 @@
-import { errorEnvelopeSchema } from '@iua/shared';
+import { errorEnvelopeSchema } from '@medconnect/shared';
 import { Secret, TOTP } from 'otpauth';
 import {
   type Harness,
@@ -66,7 +66,7 @@ describe('identity: passkeys (M1b)', () => {
         .post('/api/v1/auth/passkeys/registration/options')
         .set(bearer(accessToken))
         .expect(200);
-      expect(options.body.rp).toEqual({ name: 'IUA Connect', id: 'localhost' });
+      expect(options.body.rp).toEqual({ name: 'Med Connect', id: 'localhost' });
       expect(options.body.authenticatorSelection).toMatchObject({
         residentKey: 'required',
         userVerification: 'required',

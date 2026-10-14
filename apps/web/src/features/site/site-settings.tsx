@@ -1,6 +1,6 @@
 'use client';
 
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useLocale, useTranslations } from 'next-intl';
 import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { unwrap, useAuth } from '@/features/auth/auth-context';

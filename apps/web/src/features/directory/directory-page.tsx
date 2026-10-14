@@ -1,6 +1,6 @@
 'use client';
 
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
@@ -80,8 +80,8 @@ function Directory() {
       <PageFrame>
         <h1 className="text-3xl font-semibold text-brand-900">{d('title')}</h1>
         <Alert>{d('membersOnly')}</Alert>
-        <Link href="/account/membership" className={link}>
-          {t('membership.nav.membership')}
+        <Link href="/organisations" className={link}>
+          {t('organisations.nav')}
         </Link>
       </PageFrame>
     );

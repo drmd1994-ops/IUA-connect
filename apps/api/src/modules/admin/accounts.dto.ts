@@ -1,4 +1,4 @@
-import { PERMISSIONS, ROLE_KEYS } from '@iua/shared';
+import { PERMISSIONS, ROLE_KEYS } from '@medconnect/shared';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';

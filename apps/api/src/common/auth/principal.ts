@@ -1,4 +1,4 @@
-import { type PermissionKey } from '@iua/shared';
+import { type PermissionKey } from '@medconnect/shared';
 import { AppException } from '../errors/app.exception';
 
 /**

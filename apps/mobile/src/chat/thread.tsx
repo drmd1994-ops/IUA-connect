@@ -5,8 +5,8 @@ import {
   dayKey,
   mergeMessages,
   messageStatus,
-} from '@iua/api-client/chat';
-import { colors, semantic } from '@iua/ui-tokens';
+} from '@medconnect/api-client/chat';
+import { colors, semantic } from '@medconnect/ui-tokens';
 import * as Clipboard from 'expo-clipboard';
 import { type Href, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';

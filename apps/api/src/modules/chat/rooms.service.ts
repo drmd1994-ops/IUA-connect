@@ -1,5 +1,5 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { type Principal } from '../../common/auth/principal';
 import { holdsAnywhere, mayActOn, scopeOf } from '../../common/auth/scope';
 import { AppException } from '../../common/errors/app.exception';
@@ -157,7 +157,8 @@ export class RoomsService implements OnModuleInit {
       principal.userId,
       Prisma.sql`c.archived_at IS NULL AND NOT c.invite_only
         AND ${await this.openTo(principal)}
-        ${query.categoryId ? Prisma.sql`AND c.category_id = ${query.categoryId}::uuid` : Prisma.empty}`,
+        ${query.categoryId ? Prisma.sql`AND c.category_id = ${query.categoryId}::uuid` : Prisma.empty}
+        ${query.organisation ? Prisma.sql`AND c.organisation_id = ${query.organisation}::uuid` : Prisma.empty}`,
       query,
     );
   }

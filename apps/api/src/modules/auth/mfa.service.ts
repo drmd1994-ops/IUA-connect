@@ -1,6 +1,6 @@
 import { randomInt } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { uuidv7 } from '@iua/shared';
+import { uuidv7 } from '@medconnect/shared';
 import { Secret, TOTP } from 'otpauth';
 import QRCode from 'qrcode';
 import { AppException } from '../../common/errors/app.exception';
@@ -10,7 +10,7 @@ import { type MfaFactor } from '../../generated/prisma/client';
 
 /** RFC 6238 parameters every authenticator app supports. */
 export const TOTP_SETTINGS = {
-  issuer: 'IUA Connect',
+  issuer: 'Med Connect',
   algorithm: 'SHA1',
   digits: 6,
   period: 30,

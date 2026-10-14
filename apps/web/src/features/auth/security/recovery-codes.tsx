@@ -19,7 +19,7 @@ export function RecoveryCodes({ codes, onDone }: { codes: string[]; onDone: () =
     const url = URL.createObjectURL(new Blob([`${text}\n`], { type: 'text/plain' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'iua-connect-recovery-codes.txt';
+    link.download = 'med-connect-recovery-codes.txt';
     link.click();
     URL.revokeObjectURL(url);
   }

@@ -24,7 +24,7 @@ importers:
       '@commitlint/config-conventional':
         specifier: 21.2.3
         version: 21.2.3
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
       '@types/node':
@@ -57,10 +57,10 @@ importers:
 
   apps/api:
     dependencies:
-      '@iua/i18n':
+      '@medconnect/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@iua/shared':
+      '@medconnect/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@nestjs/common':
@@ -151,10 +151,10 @@ importers:
         specifier: 4.6.5
         version: 4.6.5
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@nestjs/cli':
@@ -211,16 +211,16 @@ importers:
 
   apps/mobile:
     dependencies:
-      '@iua/api-client':
+      '@medconnect/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
-      '@iua/i18n':
+      '@medconnect/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@iua/shared':
+      '@medconnect/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@iua/ui-tokens':
+      '@medconnect/ui-tokens':
         specifier: workspace:*
         version: link:../../packages/ui-tokens
       expo:
@@ -296,10 +296,10 @@ importers:
         specifier: ^4.14.7
         version: 4.14.7(@types/react@19.2.18)(react@19.2.3)
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@testing-library/react-native':
@@ -341,16 +341,16 @@ importers:
       '@fontsource/ibm-plex-sans-hebrew':
         specifier: 5.3.0
         version: 5.3.0
-      '@iua/api-client':
+      '@medconnect/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
-      '@iua/i18n':
+      '@medconnect/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@iua/shared':
+      '@medconnect/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@iua/ui-tokens':
+      '@medconnect/ui-tokens':
         specifier: workspace:*
         version: link:../../packages/ui-tokens
       '@simplewebauthn/browser':
@@ -393,10 +393,10 @@ importers:
       '@axe-core/playwright':
         specifier: 4.13.0
         version: 4.13.0(playwright-core@1.63.0)
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@playwright/test':
@@ -435,17 +435,17 @@ importers:
 
   packages/api-client:
     dependencies:
-      '@iua/shared':
+      '@medconnect/shared':
         specifier: workspace:*
         version: link:../shared
       openapi-fetch:
         specifier: 0.17.0
         version: 0.17.0
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -499,10 +499,10 @@ importers:
 
   packages/i18n:
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -527,10 +527,10 @@ importers:
         specifier: 4.6.5
         version: 4.6.5
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -553,10 +553,10 @@ importers:
 
   packages/ui-tokens:
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -577,10 +577,10 @@ importers:
 
   tools/importer:
     devDependencies:
-      '@iua/eslint-config':
+      '@medconnect/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@iua/tsconfig':
+      '@medconnect/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@types/node':

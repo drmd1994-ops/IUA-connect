@@ -1,4 +1,4 @@
-import type { components } from '@iua/api-client';
+import type { components } from '@medconnect/api-client';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useFormatter, useTranslations } from 'use-intl';
@@ -67,7 +67,7 @@ function MemberHome() {
               <Body>{t('none')}</Body>
               <Button
                 label={all('membership.apply.title')}
-                onPress={() => router.push('/applications')}
+                onPress={() => router.push('/organisation')}
               />
             </>
           )}
@@ -75,6 +75,11 @@ function MemberHome() {
             <>
               <Body>{t('active', { date: date(membership.endDate) })}</Body>
               <Button label={t('openCard')} onPress={() => router.push('/card')} />
+              <Button
+                label={m('me.organisation')}
+                variant="secondary"
+                onPress={() => router.push('/organisation')}
+              />
             </>
           )}
           {membership?.status === 'SUSPENDED' && <Body>{t('suspended')}</Body>}

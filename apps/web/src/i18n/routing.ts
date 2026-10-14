@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES } from '@iua/i18n';
+import { DEFAULT_LOCALE, LOCALES } from '@medconnect/i18n';
 import { defineRouting } from 'next-intl/routing';
 
 /** Locale-prefixed routes: /he/... (default, RTL) and /en/... (ARCHITECTURE.md §9). */
