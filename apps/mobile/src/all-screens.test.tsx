@@ -16,6 +16,7 @@ import { EventList, EventPage, MySchedule } from '@/features/events';
 import { Home } from '@/features/home';
 import { MeScreen } from '@/features/me';
 import { OrganisationScreen } from '@/features/organisation';
+import { VerificationScreen } from '@/features/verification';
 import { NewsArticle, NewsList } from '@/features/news';
 import { NotificationSettings, Notifications } from '@/features/notifications';
 import { ScanScreen } from '@/features/scan';
@@ -40,6 +41,7 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['home, for a visitor', <Home key="s" />, true],
   ['the membership card', <MembershipCard key="s" />],
   ['me', <MeScreen key="s" />],
+  ['verification', <VerificationScreen key="s" />],
   ['an organisation’s section', <OrganisationScreen key="s" />],
   ['an organisation’s section, for a visitor', <OrganisationScreen key="s" />, true],
   ['news', <NewsList key="s" />],

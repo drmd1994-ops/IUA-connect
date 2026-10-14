@@ -46,6 +46,7 @@ import {
   threadRoute,
 } from './model';
 import { Confirm, type Person, Row, Sheet, usePersonLabel, useSend } from './ui';
+import { PersonMark } from '@/features/verification';
 
 type Dialog =
   | {
@@ -447,6 +448,7 @@ export function ThreadScreen({
           <Text style={styles.title} accessibilityRole="header" numberOfLines={2}>
             {title}
           </Text>
+          {thread.kind === 'direct' && <PersonMark mark={thread.detail.other.mark} />}
           {activity && <Text style={styles.activity}>{g(`activity.${activity}`)}</Text>}
         </View>
         <Button
