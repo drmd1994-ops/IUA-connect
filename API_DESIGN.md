@@ -217,6 +217,25 @@ Also since M13: sending a message takes `attachmentIds` (three at most, one vide
 
 `GET /health/live`, `GET /health/ready` (not versioned)
 
+### Verification and invitations (M17)
+
+| Method | Path                                           | Notes                                                                                   |
+| ------ | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| GET    | /me/verification                               | Where the person stands, what they are verified as and until when, their latest request |
+| POST   | /me/verification                               | Ask (or renew, or answer a refusal). Numbers are accepted and never returned            |
+| POST   | /me/verification/withdraw                      | Take the waiting request back                                                           |
+| POST   | /me/verification/document                      | A student's confirmation (PDF, JPEG, PNG; 10 MB), named in the request                  |
+| GET    | /medical-schools                               | Public                                                                                  |
+| GET    | /physician-verifications?state=                | Reviewers (`physicians.verify`). Never the reviewer's own                               |
+| GET    | /physician-verifications/{id}                  | With the person's earlier requests                                                      |
+| GET    | /physician-verifications/{id}/document         | A five-minute link to the confirmation; audited                                         |
+| POST   | /physician-verifications/{id}/decisions        | Approve with what the register shows (and the typed number), or refuse with a reason    |
+| POST   | /physician-verifications/people/{userId}/revoke | End a verification, with a reason                                                      |
+| GET    | /me/invitations                                | Counts only: sent, joined, left today                                                   |
+| POST   | /me/invitations                                | Invite an address. Always 202                                                           |
+
+- **`/me`** answers `verifiedAs`; a person in the directory and in chat carries `mark` (`STUDENT`, `RESIDENT` or null).
+
 ### Organisations (M16)
 
 | Method | Path                               | Notes                                                                       |

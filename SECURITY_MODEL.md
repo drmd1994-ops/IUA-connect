@@ -132,6 +132,17 @@
 - **Known and accepted by the owner:** the member import tells an organisation's office whether an email address already has an account; only a super administrator gives roles.
 - **No real organisation's name, logo or content** is in the product without its written agreement. The demo's organisation is fictional.
 
+### Verifying physicians and students (M17)
+
+- **Who checks:** a reviewer with `physicians.verify` (the VERIFIER role, two-step verification required), on the platform. Nobody decides on their own request; their own looks missing.
+- **Against what:** the Ministry of Health's public register, read by the reviewer in a browser as any member of the public may. The product fetches nothing from it (decision recorded in the M17 plan §11).
+- **Numbers are never shown, to the reviewer either.** A licence or certificate number is stored encrypted with a keyed hash. To approve, the reviewer types the number the register shows; the server compares hashes and says only "matches" or "does not match". A failed comparison is audited, so numbers are not guessed through this door. Approval needs an active licence and a match.
+- **A number belongs to one person.** It cannot be used by another account while a request with it is waiting, approved, refused or withdrawn by a reviewer.
+- **A student's confirmation** is a file of its own purpose: its uploader and the reviewers only (staff who upload files do not see it), each look audited, and deleted once the request is decided. Only the decision is kept.
+- **It ends.** A physician's verification is looked at again after 24 months; a student's ends at the expected graduation. Every check of "verified" honours the date at once; an hourly job then closes it and tells the person. A reviewer can withdraw a verification, with a reason the person is told.
+- **Students and residents are marked** wherever a person appears to others (the directory, chat), whatever the person hides, so nobody is taken for what they are not.
+- **An invitation carries no rights.** A verified person invites an address; the answer is the same whether or not it has an account, someone already here gets no email and never counts as "joined", and only a keyed hash of the address is kept. Twenty a day; the same address once a month per inviter.
+
 ## 4. Regulatory notes (for legal review, not conclusions)
 
 - Israeli Privacy Protection Law, including **Amendment 13** (in force August 2025), and the **Privacy Protection (Data Security) Regulations 2017**. The member database probably requires a defined security level, a database definition document, access control, periodic risk assessment, incident-handling procedures, and possibly a DPO.

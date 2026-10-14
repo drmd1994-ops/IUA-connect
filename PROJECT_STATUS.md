@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-14 (M16 closed: both parts merged, pull requests #26 and #27; M17's plan checked against the code and waiting for the owner)_
+_Last updated: 2026-10-14 (M17 built: the platform verifies physicians and medical students by itself; in a pull request)_
 
 ## Summary
 
@@ -1042,6 +1042,53 @@ Part 1 was merged on 2026-10-13 (pull request #26), after the owner confirmed th
 3. The demo password still contains the old name; the owner chose to keep it (2026-10-14).
 4. GitHub's checks are still blocked by the account's billing; the project rule asks for green checks before a milestone ends. The owner asked for part 2 to be merged on the checks run on this computer (2026-10-14).
 5. A trademark and web-address check of "Med Connect": the owner put it off until later (2026-10-14). It comes before any public use.
+
+## M17 Verifying physicians, and a new person's first steps (built 2026-10-14; in a pull request)
+
+Plan: `docs/plans/M17-verification-and-onboarding.md`, approved by the owner on 2026-10-14 with the answers in its §10: the platform's staff check by hand against the Ministry of Health's public register; Israel only; residents and medical students both in (a student by a confirmation from their school, deleted once decided; marked "medical student" wherever they appear); the first reviewer is the owner.
+
+**Built**
+
+- **Step 2, the register:** the Ministry's public search is for people; it names no programming interface or permission for automatic queries, and refused an automatic request. So nothing is fetched by the product and no automatic look-up is built (plan §11).
+- **Step 3, asking and deciding:** a person asks to be verified as a specialist, resident, physician or medical student. A reviewer (a new role, VERIFIER, with the permission `physicians.verify` and two-step verification) works through a queue oldest first. To approve a physician, the reviewer records what the register showed (an active licence) and types the number it shows; the product compares it with the one the person gave and says only whether it matches. The person's number is never shown, to the reviewer either. A refusal carries a reason, and the person can answer and ask again. A student's confirmation is a file only its uploader and the reviewers can open, each look recorded, deleted once decided.
+- **Step 4, before verification:** an account that is not verified (never asked, waiting, refused, withdrawn, or past its date) reads what is open to everyone, fills in the profile and asks; the directory, chat and rooms stay closed. A test tries each door for each of the five.
+- **Step 5, the public face:** `/about` says what the product is, who runs it, how a physician joins and how their details are treated, in both languages; home and the footer lead there.
+- **Step 6, first steps and invitations:** home shows a newcomer how to ask, and a verified person a short start (profile, the directory, colleagues, their organisation's section) and a way to invite a colleague. An invitation gives no rights; the answer is the same whether or not the address already has an account, so nobody learns who is here.
+- **Step 7, looking again:** a physician's verification is looked at again after 24 months, a student's at the expected graduation. The person is told a month before, and can renew in the last 60 days. Every check of "verified" honours the date at once; an hourly job then closes it. A reviewer can withdraw a verification, with a reason the person is told.
+- **Step 8, the app:** a verification screen from "Me", with the school's confirmation picked from the phone; home tells someone not verified how to ask; the marks in the directory and in a conversation.
+- **Step 9, the demo:** a fictional reviewer (`verifier@demo.test`) and four fictional people in no organisation: two waiting (a resident, a specialist), one refused with a reason, one verified. Their numbers are made up and encrypted like real ones.
+- **Documents:** README (demo accounts, how to try it), SECURITY_MODEL, DATABASE_DESIGN, API_DESIGN and HANDOFF.
+
+**Verified**
+
+- Unit tests: server 407 (16 of them on the verification rules), shared packages, texts; the app 139 screen tests.
+- Integration tests on PostgreSQL: all 50 suites, 579 tests, in one run; then the verification, membership and organisation suites again after the last change (the organisation guard).
+- Browser tests (Playwright, Chromium, production builds, on the owner's computer): the whole flow (sign up, ask, the reviewer's wrong and right number, verified, the directory opens), the about page in both languages, 97 of 97 in one run; then the accessibility checks with the three new pages added (`/about`, `/account/verification`, `/admin/verifications`, in both languages): 95 of 95.
+- The migrations on this computer's development database (three, additions and one backfill), and the demo layer seeded twice (the second run changes nothing).
+- Lint, formatting and type checks for the server, the site and the app.
+
+**Not verified**
+
+- GitHub's checks (billing; the owner said not to run tests on GitHub for now).
+- Nobody has looked at it in a browser or on the phone, and the Hebrew texts have not been read by a Hebrew reader.
+- The app was not run on a phone; the document picker was exercised only by the screen tests.
+- Real email delivery: the demo writes emails to `outbox/`.
+
+**Deviations and findings**
+
+- **The reviewer types the number from the register; the person's number is never shown.** The plan said the reviewer looks the licence up; doing that by the person's number would have meant showing it, against the plan's own rule. Searching the register by name and comparing keeps the rule.
+- **Decisions I took that the plan left open, each easy to change:** a physician is looked at again after 24 months; renewing opens 60 days before the end, with a notice 30 days before; a student's expected graduation is at most eight years ahead; invitations are 20 a day, and the same address once a month from the same colleague.
+- **Someone a reviewer withdrew is not verified again by an organisation** accepting or renewing them, until the platform verifies them again. Without this an organisation's office would have been another door.
+- **"Verified as" for people verified by an organisation** comes from the membership type: a specialist certificate means a specialist, the type keys RESIDENT and STUDENT mean those, anything else a physician. An organisation's verification has no end date and is not looked at again by the platform.
+- **Deleting one's own account is not built** (it never was). The about page says so truthfully: the person can see what is held on their verification page and ask; when an account is deleted, its verification goes with it.
+- **The site and the app show the student and resident mark** beside the name, outside it, so names elsewhere (and the browser tests that read them) are unchanged.
+
+**Open for the owner**
+
+1. The milestone's demo, and reading the Hebrew texts.
+2. The five numbers above (24 months, 60 and 30 days, eight years, 20 invitations a day): keep or change.
+3. Being the first reviewer: give your own account the VERIFIER role (`pnpm admin:create --role VERIFIER` makes a new account; an existing one gets it at `/admin/users`).
+4. Before real use: asking the Ministry whether an automatic look-up is allowed, if one is wanted; and the legal review (M20) of holding licence numbers and students' confirmations.
 
 ## Next step
 

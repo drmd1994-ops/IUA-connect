@@ -127,21 +127,24 @@ pnpm dev
 
 Fictional people on the reserved `demo.test` domain. They all share one demo password: **`ilikeIUAconnect11`**. The seed refuses to run in production, and it runs once (it's skipped if the demo admin already exists).
 
-| Account                                                    | What it shows                                                       |
-| ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| `admin@demo.test`                                          | Organisation and platform admin: approvals, members, import         |
-| `director.rambam@demo.test`, `director.sheba@demo.test`    | Department directors (Rambam, Sheba urology)                        |
-| `member.full@demo.test`                                    | Active full member with a digital card                              |
-| `member.resident@demo.test`, `member.honorary@demo.test`   | Active resident and honorary member                                 |
-| `member.suspended@demo.test`, `member.expired@demo.test`   | A suspended and an expired membership                               |
-| `applicant.director@demo.test`                             | Application waiting for the Rambam director                         |
-| `applicant.admin@demo.test`, `applicant.student@demo.test` | Applications waiting for final approval                             |
-| `applicant.nodirector@demo.test`                           | Application from a department without a director (flagged)          |
-| `applicant.rejected@demo.test`                             | Application the director didn't approve, with the reason            |
-| `editor@demo.test`                                         | Content editor: writes news, education items and exam questions     |
-| `events@demo.test`                                         | Event admin: creates events, sees registrations and attendance (M5) |
-| `admin2@demo.test`                                         | A second admin, so a message to members can be approved (M7)        |
-| `super@demo.test`                                          | Super admin: gives and removes roles, changes the settings (M8)     |
+| Account                                                       | What it shows                                                       |
+| ------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `admin@demo.test`                                             | Organisation and platform admin: approvals, members, import         |
+| `director.rambam@demo.test`, `director.sheba@demo.test`       | Department directors (Rambam, Sheba urology)                        |
+| `member.full@demo.test`                                       | Active full member with a digital card                              |
+| `member.resident@demo.test`, `member.honorary@demo.test`      | Active resident and honorary member                                 |
+| `member.suspended@demo.test`, `member.expired@demo.test`      | A suspended and an expired membership                               |
+| `applicant.director@demo.test`                                | Application waiting for the Rambam director                         |
+| `applicant.admin@demo.test`, `applicant.student@demo.test`    | Applications waiting for final approval                             |
+| `applicant.nodirector@demo.test`                              | Application from a department without a director (flagged)          |
+| `applicant.rejected@demo.test`                                | Application the director didn't approve, with the reason            |
+| `editor@demo.test`                                            | Content editor: writes news, education items and exam questions     |
+| `events@demo.test`                                            | Event admin: creates events, sees registrations and attendance (M5) |
+| `admin2@demo.test`                                            | A second admin, so a message to members can be approved (M7)        |
+| `super@demo.test`                                             | Super admin: gives and removes roles, changes the settings (M8)     |
+| `verifier@demo.test`                                          | Physician verifier: checks requests to be verified (M17)            |
+| `waiting.resident@demo.test`, `waiting.specialist@demo.test`  | In no organisation; waiting to be verified (M17)                    |
+| `refused.physician@demo.test`, `verified.physician@demo.test` | In no organisation; refused with a reason, and verified (M17)       |
 
 The admins, the directors, the editor and the event admin must have two-step verification, because their roles require it. After `pnpm db:seed` alone, each sets it up at first sign-in (a passkey or an authenticator app). After **`pnpm demo:reset`** it is already set up, with one shared authenticator entry for all of them, so a pitch isn't interrupted: the reset writes `outbox/demo-authenticator.svg`; open it and scan it once with an authenticator app. The entry's secret is `DEMO_TOTP_SECRET` in `.env` (not in the repository), and it applies to `@demo.test` accounts only.
 
@@ -149,6 +152,7 @@ The admins, the directors, the editor and the event admin must have two-step ver
 - **News and guidelines (M3):** `/news` and `/guidelines` are public. The seed adds sample news in every state (draft, waiting for review, scheduled, published, members-only, archived) and fictional guidelines. The editor writes at `/admin/news`; the admin reviews there (publish, schedule or send back) and manages `/admin/guidelines`. On a database seeded before M3, run `pnpm db:seed` again to add the content.
 - **Events (M5):** `/events` is public. The seed adds five fictional events: an annual meeting with a programme, a one-place workshop with a waiting list, a members-only meeting, a cancelled one and a past one with attendance. `member.full@demo.test` is registered for the annual meeting with two overlapping sessions (see **My schedule** in the account menu). The event admin works at `/admin/events`: the event page there has the programme, the registrations and the attendance, including the QR code to show at the venue. On a database seeded before M5, run `pnpm db:seed` again.
 - **Imported sample (M4), no longer in the demo:** until M16 the seed loaded a small sample from a real association’s website. It is out of the seed; `pnpm import:remove` takes it out of a database seeded earlier. The importer and its fixtures stay in the repository, unused.
+- **Verification (M17):** a physician who belongs to no organisation signs up, then asks at **Verification** in the account menu (`/account/verification`): a licence number, a specialist certificate number too, or for a student a school, a graduation date and the school's confirmation. The reviewer works at `/admin/verifications`: they search the Ministry of Health's public register by name and type the number it shows; the number the person gave is never shown. Students and residents are marked beside their names. Home shows a newcomer how to ask, and a verified person their first steps and a way to invite a colleague. `/about` says what the product is and how a physician joins. On a database seeded before M17, run `pnpm db:deploy` and `pnpm db:seed` again.
 - **Organisations (M16):** the header’s **Organisations** opens the section of the demo’s fictional society (`/organisations/demo-urological-society`): who it is, your membership and card, its news, events and rooms. News and events lists say whose each item is.
 - **Education (M6):** `/education` is public. The seed adds ten fictional library items of every type (one members-only, one waiting for review, one draft, one archived) and a course of four lessons. Videos, webinars and podcasts are links to where they are hosted (ADR 0008). The editor writes at `/admin/education`; the admin reviews there. On a database seeded before M6, run `pnpm db:seed` again.
 - **Exam questions (M6):** `/education/exam` asks one multiple-choice question at a time; after the answer it shows the right option, why each option is right or wrong, and a short summary of the topic. Signed-in people find their score under **My exam results** in the account menu. The seed loads ten sample urology questions **published**: the owner, a urologist, read them and found them fine on 2 October 2026. A question written in the app still goes through review at `/admin/education/questions` before anyone is asked it.
