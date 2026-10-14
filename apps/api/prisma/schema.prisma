@@ -86,6 +86,7 @@ model User {
   memberships         Membership[]
   applications        VerificationRequest[]
   physicianChecks     PhysicianVerification[]
+  invitationsSent     PlatformInvitation[]     @relation("InvitationsSent")
   files               StoredFile[]
   newsAuthored        News[]
   eventRegistrations  EventRegistration[]
@@ -2459,4 +2460,22 @@ model PhysicianVerificationDecision {
 
   @@index([verificationId, at])
   @@map("physician_verification_decisions")
+}
+
+/// A verified person invites a colleague to the platform by email (M17 step 6). It carries no
+/// rights: it only brings them to the door. The address is kept as a keyed hash only, to know
+/// when it joins and not to send twice.
+model PlatformInvitation {
+  id         String    @id @db.Uuid
+  inviterId  String    @map("inviter_id") @db.Uuid
+  emailHash  String    @map("email_hash") @db.VarChar(128)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// When an account was made with the address.
+  acceptedAt DateTime? @map("accepted_at") @db.Timestamptz(6)
+
+  inviter User @relation("InvitationsSent", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([inviterId, createdAt])
+  @@index([emailHash])
+  @@map("platform_invitations")
 }

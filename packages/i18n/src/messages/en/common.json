@@ -21,6 +21,8 @@
   "home": {
     "heroTitle": "A professional home for urologists in Israel",
     "heroBody": "One place for news, conferences and events, educational content and your organisations, in Hebrew and English.",
+    "join": "How a physician joins",
+    "signUp": "Create an account",
     "sections": {
       "news": {
         "title": "News",

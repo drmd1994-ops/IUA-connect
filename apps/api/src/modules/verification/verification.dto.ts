@@ -169,3 +169,22 @@ export class RevokeVerificationDto extends createZodDto(
 export class DocumentLinkDto extends createZodDto(
   z.strictObject({ url: z.string(), expiresAt: z.iso.datetime() }),
 ) {}
+
+// --- Invitations ---------------------------------------------------------------------------
+
+/** Invite a colleague by email. locale: the language of the email (the reader's, by default). */
+export class PlatformInviteDto extends createZodDto(
+  z.strictObject({
+    email: z.email().max(254),
+    locale: z.enum(['he', 'en']).optional(),
+  }),
+) {}
+
+/** Counts only: who was invited, and whether they are here, is never shown. */
+export class PlatformInvitationsDto extends createZodDto(
+  z.strictObject({
+    sent: z.number().int(),
+    joined: z.number().int(),
+    leftToday: z.number().int(),
+  }),
+) {}

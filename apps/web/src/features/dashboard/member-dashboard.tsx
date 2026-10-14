@@ -8,6 +8,7 @@ import { useLocalName } from '@/features/membership/reference';
 import { useNoticeText } from '@/features/notifications/notifications-page';
 import { sectionHref } from '@/features/organisations/organisations';
 import { Link } from '@/i18n/navigation';
+import { FirstSteps } from '@/features/verification/first-steps';
 
 type Schemas = components['schemas'];
 type Membership = Schemas['MyMembershipDto']['membership'];
@@ -114,6 +115,8 @@ export function MemberDashboard() {
           </p>
         )}
       </div>
+
+      <FirstSteps />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Section id="home-membership" title={h('membership.title')}>

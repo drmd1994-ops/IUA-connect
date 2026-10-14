@@ -6,6 +6,7 @@ import {
 } from '../src/modules/verification/verification-expiry.job';
 import {
   type Harness,
+  STRONG_PASSWORD,
   bearer,
   createVerifiedUser,
   grantRole,
@@ -531,5 +532,47 @@ describe('verification by the platform (integration)', () => {
     await p.post('/api/v1/me/verification', { kind: 'PHYSICIAN', licence: p.licence }).expect(201);
     await h.app.get(VerificationExpiryJob).run();
     expect(h.mailer.count(p.email, 'physicianVerificationExpiring')).toBe(0);
+  });
+
+  describe('inviting a colleague', () => {
+    const invite = (token: string, email: string) =>
+      h.http().post('/api/v1/me/invitations').set(bearer(token)).send({ email });
+    const counts = async (token: string) =>
+      (await h.http().get('/api/v1/me/invitations').set(bearer(token)).expect(200)).body;
+
+    it('only a verified person invites; the invitation gives nothing', async () => {
+      const unverified = await person('not-yet');
+      const refused = await invite(unverified.accessToken, 'someone@example.test').expect(403);
+      expect(firstCode(refused.body)).toBe('verifiedOnly');
+
+      const inviter = await approvedEndingIn(400, 'inviter');
+      const colleague = `colleague-${Date.now()}@example.test`;
+      await invite(inviter.accessToken, colleague).expect(202);
+      const email = h.mailer.last(colleague, 'platformInvitation');
+      expect(email?.params).toMatchObject({ inviter: 'Noa Fictional' });
+      expect(await counts(inviter.accessToken)).toMatchObject({ sent: 1, joined: 0 });
+
+      // Twice within a month: counted, not sent again.
+      await invite(inviter.accessToken, colleague.toUpperCase()).expect(202);
+      expect(h.mailer.count(colleague, 'platformInvitation')).toBe(1);
+
+      // The colleague joins: counted as joined, and not verified by it.
+      await h
+        .http()
+        .post('/api/v1/auth/register')
+        .send({ email: colleague, password: STRONG_PASSWORD, locale: 'en' })
+        .expect(202);
+      expect(await counts(inviter.accessToken)).toMatchObject({ sent: 2, joined: 2 });
+      const row = await h.db.query('SELECT verified_at FROM users WHERE email = $1', [colleague]);
+      expect(row.rows[0].verified_at).toBeNull();
+    });
+
+    it('someone already here: the same answer, no email, never counted as joined', async () => {
+      const inviter = await approvedEndingIn(400, 'inviter-2');
+      const existing = await person('already-here');
+      await invite(inviter.accessToken, existing.email).expect(202);
+      expect(h.mailer.count(existing.email, 'platformInvitation')).toBe(0);
+      expect(await counts(inviter.accessToken)).toMatchObject({ sent: 1, joined: 0 });
+    });
   });
 });

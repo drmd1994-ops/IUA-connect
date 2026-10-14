@@ -32,6 +32,7 @@ import {
 } from './message-parts';
 import { Modal } from './modal';
 import { RoomPicture, useRoomText } from './rooms-list';
+import { PersonMark } from '@/features/verification/person-mark';
 
 type Pins = components['schemas']['RoomPinsDto']['items'];
 type Members = components['schemas']['RoomMembersDto'];
@@ -696,6 +697,7 @@ export function RoomView({ id, me, subscribe }: { id: string; me: Me; subscribe:
                         <span className="font-semibold" data-testid="sender">
                           {message.mine ? t('room.you') : personLabel(message.sender)}
                         </span>
+                        {!message.mine && <PersonMark mark={message.sender.mark} />}
                         {message.announcement && (
                           <span className="font-semibold text-warning-700">
                             {t('room.announcement')}

@@ -23,6 +23,8 @@ export interface EmailTemplates {
   physicianVerificationRevoked: { reason: string; link: string };
   physicianVerificationExpiring: { until: string; link: string };
   physicianVerificationExpired: { link: string };
+  /** A colleague invites the address to the platform (M17); inviter is their name. */
+  platformInvitation: { inviter: string; link: string };
   // News (M3), to the item's author.
   newsSentBack: { title: string; reason: string; link: string };
   newsPublished: { title: string; link: string };

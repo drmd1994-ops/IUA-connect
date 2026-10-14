@@ -4,9 +4,11 @@ import { FilesModule } from '../files';
 import { NotificationsModule } from '../notifications';
 import {
   MedicalSchoolsController,
+  MyInvitationsController,
   MyVerificationController,
   PhysicianVerificationsController,
 } from './verification.controller';
+import { InvitationsService } from './invitations.service';
 import { VerificationExpiryJob } from './verification-expiry.job';
 import { VerificationService } from './verification.service';
 
@@ -17,7 +19,8 @@ import { VerificationService } from './verification.service';
     MyVerificationController,
     MedicalSchoolsController,
     PhysicianVerificationsController,
+    MyInvitationsController,
   ],
-  providers: [VerificationService, VerificationExpiryJob],
+  providers: [VerificationService, VerificationExpiryJob, InvitationsService],
 })
 export class VerificationModule {}

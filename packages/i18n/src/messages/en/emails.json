@@ -201,5 +201,12 @@
     "heading": "Unread chat messages",
     "body": "You have messages in the chat on Med Connect that you haven’t read. To keep them private, this email doesn’t show them or who sent them.",
     "action": "Open chat"
+  },
+  "platformInvitation": {
+    "subject": "{inviter} invites you to Med Connect",
+    "heading": "An invitation from a colleague",
+    "body": "{inviter} invites you to Med Connect, a professional platform for physicians in Israel. The invitation does not verify you: once you join, you ask to be verified like everyone else.",
+    "notYou": "If you don’t know who sent this, you can ignore it. We don’t keep your address itself, only a code that stops you being invited twice.",
+    "action": "How to join"
   }
 }

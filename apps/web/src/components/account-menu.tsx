@@ -86,6 +86,9 @@ export function AccountMenu() {
           <MenuLink href="/account/profile" onClick={() => setOpen(false)}>
             {tm('profile')}
           </MenuLink>
+          <MenuLink href="/account/verification" onClick={() => setOpen(false)}>
+            {all('verification.nav')}
+          </MenuLink>
           <MenuLink href="/account/membership" onClick={() => setOpen(false)}>
             {tm('membership')}
           </MenuLink>

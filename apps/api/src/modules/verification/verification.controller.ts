@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  ApiAcceptedResponse,
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
@@ -33,6 +34,8 @@ import { PrismaService } from '../../infra/prisma/prisma.service';
 import { FileDto } from '../files';
 import {
   DocumentLinkDto,
+  PlatformInviteDto,
+  PlatformInvitationsDto,
   MedicalSchoolListDto,
   MyVerificationDto,
   ReviewVerificationDto,
@@ -43,6 +46,7 @@ import {
   VerificationDecisionDto,
   VerificationRequestDto,
 } from './verification.dto';
+import { InvitationsService } from './invitations.service';
 import { VerificationService } from './verification.service';
 
 /** A school's confirmation: a picture or a PDF, 10 MB (checked again from the content). */
@@ -190,5 +194,35 @@ export class PhysicianVerificationsController {
     @Meta() meta: RequestMeta,
   ): Promise<void> {
     return this.verification.revoke(principalOf(req), userId, body.reason, meta);
+  }
+}
+
+/**
+ * Inviting colleagues (M17 step 6). The answer is the same whoever the address belongs to; an
+ * invitation gives nobody anything.
+ */
+@ApiTags('verification')
+@ApiBearerAuth()
+@Controller('me/invitations')
+@Authenticated()
+export class MyInvitationsController {
+  constructor(private readonly invitations: InvitationsService) {}
+
+  @Get()
+  @ApiOkResponse({ type: PlatformInvitationsDto })
+  mine(@Req() req: RequestWithPrincipal): Promise<PlatformInvitationsDto> {
+    return this.invitations.mine(principalOf(req).userId);
+  }
+
+  @Post()
+  @HttpCode(202)
+  @RateLimit(RATE_LIMITS.accountCreationPerIp)
+  @ApiAcceptedResponse()
+  invite(
+    @Req() req: RequestWithPrincipal,
+    @Body() body: PlatformInviteDto,
+    @Meta() meta: RequestMeta,
+  ): Promise<void> {
+    return this.invitations.invite(principalOf(req), body, meta);
   }
 }

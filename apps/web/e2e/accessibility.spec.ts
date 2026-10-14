@@ -55,6 +55,10 @@ const PAGES = [
   '/organisations/demo-urological-society/news',
   '/organisations/demo-urological-society/events',
   '/organisations/demo-urological-society/membership',
+  // M17
+  '/about',
+  '/account/verification',
+  '/admin/verifications',
 ];
 
 for (const locale of ['he', 'en'] as const) {

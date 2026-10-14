@@ -203,6 +203,8 @@
     "chatModeratorBanned": "This person is banned from this room. Lift the ban first.",
     "chatCategoryInUse": "Rooms use this category. Move them to another one first.",
     "chatLastReportReason": "At least one report reason must stay switched on.",
-    "chatReportNoRoom": "This report is not about a room."
+    "chatReportNoRoom": "This report is not about a room.",
+    "verifiedOnly": "This is for verified physicians and medical students.",
+    "invitationLimit": "You have sent as many invitations as you can today. Please try again tomorrow."
   }
 }

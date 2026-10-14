@@ -3,8 +3,10 @@ import { DEFAULT_LOCALE, type Locale, isLocale } from '@medconnect/i18n';
 import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { AppException } from '../../common/errors/app.exception';
+import { invitationHashInput } from '../../common/invitation-hash';
 import { type RequestMeta } from '../../common/request-meta';
 import { PasswordHasher } from '../../infra/crypto/password-hasher';
+import { SecretHasher } from '../../infra/crypto/secrets';
 import { Mailer } from '../../infra/mailer/mailer';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { type User } from '../../generated/prisma/client';
@@ -40,6 +42,7 @@ export class AuthService {
     private readonly devices: DevicesService,
     private readonly mailer: Mailer,
     private readonly audit: AuditService,
+    private readonly hasher: SecretHasher,
   ) {}
 
   // --- registration ----------------------------------------------------------
@@ -76,6 +79,11 @@ export class AuthService {
     }
 
     const user = await this.users.create({ email: input.email, passwordHash, locale });
+    // Invitations to this address now count as joined (M17); they give the account nothing.
+    await this.prisma.platformInvitation.updateMany({
+      where: { emailHash: this.hasher.hash(invitationHashInput(input.email)), acceptedAt: null },
+      data: { acceptedAt: new Date() },
+    });
     await this.sendVerification(user);
     await this.audit.record({
       action: 'auth.register',

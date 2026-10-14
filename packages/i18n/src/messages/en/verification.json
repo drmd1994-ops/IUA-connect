@@ -123,5 +123,25 @@
     "revokeReason": "Reason (sent to the person)",
     "confirmRevoke": "Withdraw it",
     "revoked": "The verification was withdrawn."
+  },
+  "start": {
+    "askTitle": "Ask to be verified",
+    "ask": "The directory, chat, rooms and what is for verified physicians open once you are verified. It takes a few minutes to ask.",
+    "waiting": "Your request to be verified is waiting for a reviewer. We will write to you with the answer.",
+    "askLink": "Ask to be verified",
+    "follow": "Follow your request",
+    "stepsTitle": "First steps",
+    "steps": {
+      "profile": "Complete your profile: your title and a photo",
+      "directory": "Choose whether colleagues find you in the directory",
+      "colleagues": "Find colleagues",
+      "organisation": "Open your organisation’s section"
+    },
+    "done": "done",
+    "inviteTitle": "Invite a colleague",
+    "inviteIntro": "We send them an email on how to join. It doesn’t verify them; they ask like everyone else.",
+    "inviteEmail": "Their email address",
+    "inviteSubmit": "Send the invitation",
+    "inviteSent": "Thank you. If the address can receive an invitation, it is on its way."
   }
 }
