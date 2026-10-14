@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-14 (M17 built: the platform verifies physicians and medical students by itself; in a pull request)_
+_Last updated: 2026-10-14 (M17 closed: the platform verifies physicians and medical students by itself; merged, pull request #28)_
 
 ## Summary
 
@@ -1043,7 +1043,7 @@ Part 1 was merged on 2026-10-13 (pull request #26), after the owner confirmed th
 4. GitHub's checks are still blocked by the account's billing; the project rule asks for green checks before a milestone ends. The owner asked for part 2 to be merged on the checks run on this computer (2026-10-14).
 5. A trademark and web-address check of "Med Connect": the owner put it off until later (2026-10-14). It comes before any public use.
 
-## M17 Verifying physicians, and a new person's first steps (built 2026-10-14; in a pull request)
+## M17 Verifying physicians, and a new person's first steps (closed 2026-10-14)
 
 Plan: `docs/plans/M17-verification-and-onboarding.md`, approved by the owner on 2026-10-14 with the answers in its §10: the platform's staff check by hand against the Ministry of Health's public register; Israel only; residents and medical students both in (a student by a confirmation from their school, deleted once decided; marked "medical student" wherever they appear); the first reviewer is the owner.
 
@@ -1083,9 +1083,11 @@ Plan: `docs/plans/M17-verification-and-onboarding.md`, approved by the owner on 
 - **Deleting one's own account is not built** (it never was). The about page says so truthfully: the person can see what is held on their verification page and ask; when an account is deleted, its verification goes with it.
 - **The site and the app show the student and resident mark** beside the name, outside it, so names elsewhere (and the browser tests that read them) are unchanged.
 
+**Closed by the owner on 2026-10-14,** merged the same day (pull request #28). The owner decided: keep the five numbers below; the owner is the first reviewer (on this computer the super administrator `super@demo.test` already holds `physicians.verify`; no account of the owner's own exists here); **for this milestone, no demo and no green GitHub checks**. The list below is what remains.
+
 **Open for the owner**
 
-1. The milestone's demo, and reading the Hebrew texts.
+1. Reading the Hebrew texts.
 2. The five numbers above (24 months, 60 and 30 days, eight years, 20 invitations a day): keep or change.
 3. Being the first reviewer: give your own account the VERIFIER role (`pnpm admin:create --role VERIFIER` makes a new account; an existing one gets it at `/admin/users`).
 4. Before real use: asking the Ministry whether an automatic look-up is allowed, if one is wanted; and the legal review (M20) of holding licence numbers and students' confirmations.
