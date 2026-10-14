@@ -33,6 +33,7 @@ import { NotificationsModule } from './modules/notifications';
 import { OrganisationsModule } from './modules/organisations';
 import { ProfilesModule } from './modules/profiles';
 import { SearchModule } from './modules/search';
+import { VerificationModule } from './modules/verification';
 
 /**
  * Global request pipeline (ARCHITECTURE.md §3): guards → pipes → handler → interceptors → filter.
@@ -80,6 +81,7 @@ export class AppModule {
         SearchModule,
         ChatModule,
         AdminModule,
+        VerificationModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

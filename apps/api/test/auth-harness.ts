@@ -205,7 +205,7 @@ export async function grantAdmin(h: Harness, email: string): Promise<void> {
 /** Marks an account as a physician the platform knows (what a membership also does). */
 export async function verifyPhysician(h: Harness, email: string): Promise<void> {
   await h.db.query(
-    'UPDATE users SET verified_at = now() WHERE email = $1 AND verified_at IS NULL',
+    "UPDATE users SET verified_at = now(), verified_as = 'PHYSICIAN' WHERE email = $1 AND verified_at IS NULL",
     [email],
   );
 }

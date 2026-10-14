@@ -237,6 +237,7 @@ export async function seedDemoContent(prisma: PrismaClient): Promise<void> {
           passwordHash,
           emailVerifiedAt: new Date(now - 60 * DAY),
           verifiedAt: new Date(now - 60 * DAY),
+          verifiedAs: 'PHYSICIAN',
           locale: 'he',
         },
       });

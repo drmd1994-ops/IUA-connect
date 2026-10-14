@@ -12,6 +12,7 @@ import {
   organisationsOf,
   typesOf,
 } from './access-policy';
+import { verifiedNow } from '../../common/verified-as';
 
 /** Content kinds that carry an access tier (`content_access_rules.entity_type`). */
 export type ContentEntity = 'news' | 'guideline' | 'event' | 'education' | 'exam_question';
@@ -60,11 +61,11 @@ export class AccessService {
   async viewerOfUser(userId: string): Promise<Viewer> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { status: true, verifiedAt: true },
+      select: { status: true, verifiedAt: true, verifiedUntil: true },
     });
     if (!user || user.status !== 'ACTIVE') return ANONYMOUS;
     return {
-      verified: user.verifiedAt !== null,
+      verified: verifiedNow(user),
       memberships: await this.activeMemberships(userId),
     };
   }

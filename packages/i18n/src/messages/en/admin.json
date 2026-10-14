@@ -4,6 +4,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "applications": "Applications",
+    "verifications": "Verifying physicians",
     "members": "Members",
     "institutions": "Hospitals and directors",
     "import": "Import members",

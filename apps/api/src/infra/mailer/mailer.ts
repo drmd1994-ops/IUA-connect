@@ -15,6 +15,14 @@ export interface EmailTemplates {
   membershipRejected: { typeName: string; reason: string; link: string };
   /** An import created the account: set a password (ACCOUNT_SETUP link, 7 days). */
   membershipImportWelcome: { typeName: string; link: string };
+  // The platform's verification (M17). "as" is what they are verified as, and "until" the date,
+  // both in the recipient's language.
+  physicianVerificationReceived: { link: string };
+  physicianVerificationApproved: { as: string; until: string; link: string };
+  physicianVerificationRejected: { reason: string; link: string };
+  physicianVerificationRevoked: { reason: string; link: string };
+  physicianVerificationExpiring: { until: string; link: string };
+  physicianVerificationExpired: { link: string };
   // News (M3), to the item's author.
   newsSentBack: { title: string; reason: string; link: string };
   newsPublished: { title: string; link: string };

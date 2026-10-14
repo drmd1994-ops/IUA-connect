@@ -53,22 +53,27 @@ enum UserStatus {
 }
 
 model User {
-  id               String     @id @db.Uuid
-  email            String     @unique @db.Citext
-  emailVerifiedAt  DateTime?  @map("email_verified_at") @db.Timestamptz(6)
-  passwordHash     String     @map("password_hash")
-  status           UserStatus @default(ACTIVE)
+  id               String      @id @db.Uuid
+  email            String      @unique @db.Citext
+  emailVerifiedAt  DateTime?   @map("email_verified_at") @db.Timestamptz(6)
+  passwordHash     String      @map("password_hash")
+  status           UserStatus  @default(ACTIVE)
   /// Consecutive failed sign-ins since the last success or lock.
-  failedLoginCount Int        @default(0) @map("failed_login_count")
+  failedLoginCount Int         @default(0) @map("failed_login_count")
   /// Number of automatic lockouts since the last successful sign-in (drives the backoff).
-  lockoutCount     Int        @default(0) @map("lockout_count")
-  lockedUntil      DateTime?  @map("locked_until") @db.Timestamptz(6)
-  locale           String     @default("he") @db.VarChar(8)
-  lastLoginAt      DateTime?  @map("last_login_at") @db.Timestamptz(6)
+  lockoutCount     Int         @default(0) @map("lockout_count")
+  lockedUntil      DateTime?   @map("locked_until") @db.Timestamptz(6)
+  locale           String      @default("he") @db.VarChar(8)
+  lastLoginAt      DateTime?   @map("last_login_at") @db.Timestamptz(6)
   /// Known to the platform as a physician since then (M16). Empty: not verified.
-  verifiedAt       DateTime?  @map("verified_at") @db.Timestamptz(6)
-  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt        DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  verifiedAt       DateTime?   @map("verified_at") @db.Timestamptz(6)
+  /// What the platform knows the person as, while verified (M17). Empty: not verified.
+  verifiedAs       VerifiedAs? @map("verified_as")
+  /// When the verification is looked at again (M17): a student's expected graduation, or the
+  /// platform's re-check date. Empty: no end (an organisation vouches for the person).
+  verifiedUntil    DateTime?   @map("verified_until") @db.Timestamptz(6)
+  createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   roles               UserRole[]               @relation("UserRoles")
   rolesGranted        UserRole[]               @relation("RolesGrantedBy")
@@ -80,6 +85,7 @@ model User {
   profile             Profile?
   memberships         Membership[]
   applications        VerificationRequest[]
+  physicianChecks     PhysicianVerification[]
   files               StoredFile[]
   newsAuthored        News[]
   eventRegistrations  EventRegistration[]
@@ -780,6 +786,9 @@ enum FilePurpose {
   PROFILE_PHOTO
   /// Sent in a chat message: readable by whoever can read that message (M13).
   CHAT
+  /// A student's confirmation from their medical school (M17): its uploader and the platform's
+  /// reviewers only, and deleted once it is decided on.
+  VERIFICATION
 
   @@map("file_purpose")
 }
@@ -817,17 +826,18 @@ model StoredFile {
   attachedAt   DateTime?   @map("attached_at") @db.Timestamptz(6)
   createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  owner           User?               @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
-  profilePhoto    Profile?            @relation("ProfilePhoto")
+  owner           User?                  @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  profilePhoto    Profile?               @relation("ProfilePhoto")
   newsFeatured    News[]
   newsAttachment  NewsAttachment[]
   eventImage      Event[]
-  educationCover  EducationItem[]     @relation("EducationCover")
-  educationFile   EducationFile[]     @relation("EducationFile")
+  educationCover  EducationItem[]        @relation("EducationCover")
+  educationFile   EducationFile[]        @relation("EducationFile")
   speakerPhoto    Speaker[]
   sessionMaterial SessionMaterial[]
-  roomPicture     Conversation[]      @relation("RoomPicture")
-  chatAttachment  MessageAttachment[] @relation("MessageAttachment")
+  roomPicture     Conversation[]         @relation("RoomPicture")
+  verification    PhysicianVerification?
+  chatAttachment  MessageAttachment[]    @relation("MessageAttachment")
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -2335,4 +2345,118 @@ model ConversationBan {
   @@index([conversationId, userId])
   @@index([userId])
   @@map("conversation_bans")
+}
+
+// ---------------------------------------------------------------------------
+// Verifying physicians and medical students on the platform (M17).
+// docs/plans/M17-verification-and-onboarding.md; organisations' applications are above.
+// ---------------------------------------------------------------------------
+
+/// What a verified person is known as. A mark is shown for RESIDENT and STUDENT.
+enum VerifiedAs {
+  SPECIALIST
+  RESIDENT
+  PHYSICIAN
+  STUDENT
+
+  @@map("verified_as")
+}
+
+/// PENDING → APPROVED or REJECTED (or WITHDRAWN by the person). An approved one ends as REVOKED
+/// (by a reviewer) or EXPIRED (its date passed).
+enum PhysicianVerificationState {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+  REVOKED
+  EXPIRED
+
+  @@map("physician_verification_state")
+}
+
+enum PhysicianDecision {
+  APPROVE
+  REJECT
+  REVOKE
+
+  @@map("physician_decision")
+}
+
+/// What the Ministry of Health's public register showed the reviewer.
+enum RegisterStatus {
+  ACTIVE_PERMANENT
+  ACTIVE_TEMPORARY
+  SUSPENDED
+  NOT_FOUND
+
+  @@map("register_status")
+}
+
+/// Israel's medical schools, for students (reference data).
+model MedicalSchool {
+  id     String  @id @db.Uuid
+  /// Stable key the reference seed matches on (e.g. "tau").
+  code   String  @unique @db.VarChar(64)
+  nameHe String  @map("name_he") @db.VarChar(200)
+  nameEn String  @map("name_en") @db.VarChar(200)
+  active Boolean @default(true)
+
+  verifications PhysicianVerification[]
+
+  @@map("medical_schools")
+}
+
+/// A request to be verified by the platform. One open per person (partial unique index); a
+/// licence number is in one open or approved request at most (partial unique index).
+model PhysicianVerification {
+  id                 String                     @id @db.Uuid
+  userId             String                     @map("user_id") @db.Uuid
+  kind               VerifiedAs
+  state              PhysicianVerificationState @default(PENDING)
+  /// The medical licence number, encrypted, and a keyed hash to compare. Never returned.
+  licenceEnc         String?                    @map("licence_enc")
+  licenceHash        String?                    @map("licence_hash") @db.VarChar(128)
+  /// The specialist certificate number (specialists), the same way.
+  certificateEnc     String?                    @map("certificate_enc")
+  certificateHash    String?                    @map("certificate_hash") @db.VarChar(128)
+  /// Students: the school, when they expect to graduate, and the school's confirmation until it
+  /// is decided on.
+  schoolId           String?                    @map("school_id") @db.Uuid
+  expectedGraduation DateTime?                  @map("expected_graduation") @db.Date
+  documentFileId     String?                    @unique @map("document_file_id") @db.Uuid
+  /// What the person wants the reviewer to know, or their answer to a refusal.
+  note               String?                    @db.VarChar(1000)
+  createdAt          DateTime                   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  closedAt           DateTime?                  @map("closed_at") @db.Timestamptz(6)
+  /// When the person was told their approved verification ends soon (step 7).
+  noticeSentAt       DateTime?                  @map("notice_sent_at") @db.Timestamptz(6)
+
+  user      User                            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school    MedicalSchool?                  @relation(fields: [schoolId], references: [id], onDelete: Restrict)
+  document  StoredFile?                     @relation(fields: [documentFileId], references: [id], onDelete: SetNull)
+  decisions PhysicianVerificationDecision[]
+
+  @@index([state, createdAt])
+  @@index([userId])
+  @@map("physician_verifications")
+}
+
+/// Who decided what, and on what the register showed. Kept when the document is deleted.
+model PhysicianVerificationDecision {
+  id                 String            @id @db.Uuid
+  verificationId     String            @map("verification_id") @db.Uuid
+  decision           PhysicianDecision
+  decidedBy          String?           @map("decided_by") @db.Uuid
+  reason             String?           @db.VarChar(1000)
+  registerStatus     RegisterStatus?   @map("register_status")
+  licenceMatches     Boolean?          @map("licence_matches")
+  certificateMatches Boolean?          @map("certificate_matches")
+  at                 DateTime          @default(now()) @db.Timestamptz(6)
+
+  verification PhysicianVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+
+  @@index([verificationId, at])
+  @@map("physician_verification_decisions")
 }

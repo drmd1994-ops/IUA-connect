@@ -134,7 +134,7 @@ export function InvitePanel({
             const name = personName(person) ?? '';
             return (
               <li key={person.id} className="flex items-center gap-3">
-                <Avatar person={{ ...person, listed: true }} size="size-8" />
+                <Avatar person={{ ...person, listed: true, mark: null }} size="size-8" />
                 <span className="min-w-0 flex-1 truncate">{name}</span>
                 <Button
                   type="button"

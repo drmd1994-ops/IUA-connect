@@ -16,6 +16,7 @@ import {
   SESSION_POLICY,
   type SessionKind,
 } from './session-policy';
+import { verifiedNow } from '../../common/verified-as';
 
 /** What started a session, and for the app what it called the phone. */
 export interface SessionClientInfo {
@@ -326,7 +327,7 @@ export class SessionsService extends PrincipalResolver {
       roles: profile.roles.filter((role) => role.organisationId === null).map((role) => role.key),
       permissions: effectivePermissions(profile, mfa),
       organisationPermissions: organisationPermissions(profile, mfa),
-      verified: user.verifiedAt !== null,
+      verified: verifiedNow(user),
       mfaEnrollmentRequired: profile.requiresMfa && !hasFactor,
     };
   }

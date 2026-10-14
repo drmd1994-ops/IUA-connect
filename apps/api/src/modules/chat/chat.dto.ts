@@ -54,6 +54,8 @@ const person = z.strictObject({
   photoFileId: nullableString(),
   /** Their page in the member directory can be opened. */
   listed: z.boolean(),
+  /** A medical student or a resident (M17); null for anyone else. */
+  mark: z.enum(['STUDENT', 'RESIDENT']).nullable(),
 });
 
 const lastMessage = z.strictObject({

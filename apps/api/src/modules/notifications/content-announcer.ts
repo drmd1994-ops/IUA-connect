@@ -9,6 +9,7 @@ import { isUniqueViolation } from '../../infra/prisma/errors';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { type AccessTier, type ActiveMembership, canSee } from '../../common/access-policy';
 import { UnsubscribeTokens } from './unsubscribe-tokens';
+import { verifiedNow } from '../../common/verified-as';
 
 export const CONTENT_DIGEST_JOB = 'notifications.content-digest';
 export const NOTIFICATIONS_CLEANUP_JOB = 'notifications.cleanup';
@@ -176,6 +177,7 @@ export class ContentAnnouncer implements OnModuleInit {
             email: true,
             locale: true,
             verifiedAt: true,
+            verifiedUntil: true,
             memberships: { where: { organisation: { active: true } }, select: MEMBERSHIP_FACTS },
           },
         },
@@ -194,7 +196,7 @@ export class ContentAnnouncer implements OnModuleInit {
     let sent = 0;
     for (const { user, kinds } of people.values()) {
       const viewer = {
-        verified: user.verifiedAt !== null,
+        verified: verifiedNow(user, now),
         memberships: activeMemberships(user.memberships, now),
       };
       const locale: Locale = isLocale(user.locale) ? user.locale : DEFAULT_LOCALE;

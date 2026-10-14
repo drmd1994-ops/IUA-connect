@@ -452,5 +452,6 @@ export function personView(id: string | null, card: PersonCard | undefined) {
     lastName: card?.lastName ?? null,
     photoFileId: card?.photoFileId ?? null,
     listed: card?.listed ?? false,
+    mark: card?.mark ?? null,
   };
 }

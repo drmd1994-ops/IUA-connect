@@ -96,7 +96,7 @@ export function chatActors(harness: () => Harness, adminToken: () => string) {
    * do this: the person keeps the platform. How verification is given and withdrawn is M17.)
    */
   const unverify = (p: ChatPerson) =>
-    h().db.query('UPDATE users SET verified_at = NULL WHERE id = $1', [p.id]);
+    h().db.query('UPDATE users SET verified_at = NULL, verified_as = NULL WHERE id = $1', [p.id]);
 
   const start = (from: ChatPerson, toId: string) =>
     h().http().post('/api/v1/chat/conversations').set(bearer(from.token)).send({ userId: toId });

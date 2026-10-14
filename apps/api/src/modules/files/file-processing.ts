@@ -9,7 +9,7 @@ import sharp, { type Sharp } from 'sharp';
  * metadata (EXIF, GPS, comments) and anything hidden after the image data.
  */
 export type Kind = 'IMAGE' | 'DOCUMENT';
-export type Purpose = 'CONTENT' | 'PROFILE_PHOTO' | 'CHAT';
+export type Purpose = 'CONTENT' | 'PROFILE_PHOTO' | 'CHAT' | 'VERIFICATION';
 
 const MB = 1024 * 1024;
 
@@ -88,13 +88,17 @@ export async function prepareUpload(
   if (purpose === 'PROFILE_PHOTO' && allowed.kind !== 'IMAGE') {
     throw new FileRejected('fileTypeNotAllowed');
   }
-  if (purpose === 'CHAT' && !CHAT_FILE_TYPES.includes(detected.mime)) {
+  // A school's confirmation (M17) is a picture or a PDF, as in chat.
+  if (
+    (purpose === 'CHAT' || purpose === 'VERIFICATION') &&
+    !CHAT_FILE_TYPES.includes(detected.mime)
+  ) {
     throw new FileRejected('fileTypeNotAllowed');
   }
   const limit =
     purpose === 'PROFILE_PHOTO'
       ? PROFILE_PHOTO_MAX_BYTES
-      : purpose === 'CHAT'
+      : purpose === 'CHAT' || purpose === 'VERIFICATION'
         ? CHAT_FILE_MAX_BYTES
         : allowed.maxBytes;
   if (input.length > limit) throw new FileRejected('fileTooLarge');

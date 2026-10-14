@@ -20,6 +20,7 @@ import { AuditService } from '../../audit';
 import { AuthTokensService } from '../../auth';
 import { type IdentifierKind, identifierHashInput } from '../identifier';
 import { recordHistory } from '../memberships.service';
+import { verifiedAsFor } from '../../../common/verified-as';
 import { isoDate, todayInIsrael } from '../period';
 import { OPEN_STATES } from '../workflow';
 import {
@@ -316,10 +317,11 @@ export class ImportService {
         });
       }
 
-      // Whoever an organisation brings in as a member is known to the platform as a physician.
+      // Whoever an organisation brings in as a member is known to the platform as a physician
+      // (or what the type says).
       await tx.user.updateMany({
         where: { id: userId, verifiedAt: null },
-        data: { verifiedAt: new Date() },
+        data: { verifiedAt: new Date(), verifiedAs: verifiedAsFor(type) },
       });
 
       const details = { batch: batchId, type: type.key, endDate: isoDate(record.endDate) };

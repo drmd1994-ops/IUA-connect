@@ -10672,6 +10672,7 @@
                 "ORG_ADMIN",
                 "CONTENT_EDITOR",
                 "EVENT_ADMIN",
+                "VERIFIER",
                 "DEPARTMENT_DIRECTOR",
                 "RESEARCH_ADMIN",
                 "SUBSPECIALTY_ADMIN",
@@ -11240,6 +11241,355 @@
         },
         "tags": [
           "settings"
+        ]
+      }
+    },
+    "/api/v1/me/verification": {
+      "get": {
+        "operationId": "MyVerificationController_mine",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyVerificationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      },
+      "post": {
+        "operationId": "MyVerificationController_submit",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitVerificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationRequestDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/me/verification/withdraw": {
+      "post": {
+        "operationId": "MyVerificationController_withdraw",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationRequestDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/me/verification/document": {
+      "post": {
+        "operationId": "MyVerificationController_document",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/medical-schools": {
+      "get": {
+        "operationId": "MedicalSchoolsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicalSchoolListDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/physician-verifications": {
+      "get": {
+        "operationId": "PhysicianVerificationsController_queue",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "PENDING",
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "APPROVED",
+                "REJECTED",
+                "WITHDRAWN",
+                "REVOKED",
+                "EXPIRED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewVerificationListDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/physician-verifications/{id}": {
+      "get": {
+        "operationId": "PhysicianVerificationsController_one",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewVerificationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/physician-verifications/{id}/document": {
+      "get": {
+        "operationId": "PhysicianVerificationsController_document",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentLinkDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/physician-verifications/{id}/decisions": {
+      "post": {
+        "operationId": "PhysicianVerificationsController_decide",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationDecisionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewVerificationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
+        ]
+      }
+    },
+    "/api/v1/physician-verifications/people/{userId}/revoke": {
+      "post": {
+        "operationId": "PhysicianVerificationsController_revoke",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeVerificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "verification"
         ]
       }
     }
@@ -11950,6 +12300,22 @@
           "verified": {
             "type": "boolean"
           },
+          "verifiedAs": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "SPECIALIST",
+                  "RESIDENT",
+                  "PHYSICIAN",
+                  "STUDENT"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "mfaEnabled": {
             "type": "boolean"
           },
@@ -11985,6 +12351,7 @@
           "platformPermissions",
           "organisations",
           "verified",
+          "verifiedAs",
           "mfaEnabled",
           "mfaEnrollmentRequired",
           "session"
@@ -13607,6 +13974,20 @@
                       "type": "null"
                     }
                   ]
+                },
+                "mark": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "STUDENT",
+                        "RESIDENT"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
@@ -13620,7 +14001,8 @@
                 "hospital",
                 "department",
                 "subspecialties",
-                "photoFileId"
+                "photoFileId",
+                "mark"
               ],
               "additionalProperties": false
             }
@@ -13821,6 +14203,20 @@
               }
             ]
           },
+          "mark": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "STUDENT",
+                  "RESIDENT"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "bio": {
             "anyOf": [
               {
@@ -13895,6 +14291,7 @@
           "department",
           "subspecialties",
           "photoFileId",
+          "mark",
           "bio",
           "researchInterests",
           "orcid",
@@ -25200,6 +25597,20 @@
                     },
                     "listed": {
                       "type": "boolean"
+                    },
+                    "mark": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "STUDENT",
+                            "RESIDENT"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -25207,7 +25618,8 @@
                     "firstName",
                     "lastName",
                     "photoFileId",
-                    "listed"
+                    "listed",
+                    "mark"
                   ],
                   "additionalProperties": false
                 },
@@ -25481,6 +25893,20 @@
               },
               "listed": {
                 "type": "boolean"
+              },
+              "mark": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "STUDENT",
+                      "RESIDENT"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -25488,7 +25914,8 @@
               "firstName",
               "lastName",
               "photoFileId",
-              "listed"
+              "listed",
+              "mark"
             ],
             "additionalProperties": false
           },
@@ -25784,6 +26211,20 @@
                         },
                         "listed": {
                           "type": "boolean"
+                        },
+                        "mark": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "STUDENT",
+                                "RESIDENT"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
@@ -25791,7 +26232,8 @@
                         "firstName",
                         "lastName",
                         "photoFileId",
-                        "listed"
+                        "listed",
+                        "mark"
                       ],
                       "additionalProperties": false
                     },
@@ -26096,6 +26538,20 @@
                     },
                     "listed": {
                       "type": "boolean"
+                    },
+                    "mark": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "STUDENT",
+                            "RESIDENT"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -26103,7 +26559,8 @@
                     "firstName",
                     "lastName",
                     "photoFileId",
-                    "listed"
+                    "listed",
+                    "mark"
                   ],
                   "additionalProperties": false
                 },
@@ -26304,6 +26761,20 @@
                     },
                     "listed": {
                       "type": "boolean"
+                    },
+                    "mark": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "STUDENT",
+                            "RESIDENT"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -26311,7 +26782,8 @@
                     "firstName",
                     "lastName",
                     "photoFileId",
-                    "listed"
+                    "listed",
+                    "mark"
                   ],
                   "additionalProperties": false
                 },
@@ -26681,6 +27153,20 @@
               },
               "listed": {
                 "type": "boolean"
+              },
+              "mark": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "STUDENT",
+                      "RESIDENT"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -26688,7 +27174,8 @@
               "firstName",
               "lastName",
               "photoFileId",
-              "listed"
+              "listed",
+              "mark"
             ],
             "additionalProperties": false
           },
@@ -27089,6 +27576,20 @@
                     },
                     "listed": {
                       "type": "boolean"
+                    },
+                    "mark": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "STUDENT",
+                            "RESIDENT"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -27096,7 +27597,8 @@
                     "firstName",
                     "lastName",
                     "photoFileId",
-                    "listed"
+                    "listed",
+                    "mark"
                   ],
                   "additionalProperties": false
                 },
@@ -28714,6 +29216,20 @@
                 },
                 "listed": {
                   "type": "boolean"
+                },
+                "mark": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "STUDENT",
+                        "RESIDENT"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
@@ -28721,7 +29237,8 @@
                 "firstName",
                 "lastName",
                 "photoFileId",
-                "listed"
+                "listed",
+                "mark"
               ],
               "additionalProperties": false
             }
@@ -28836,6 +29353,20 @@
                 "listed": {
                   "type": "boolean"
                 },
+                "mark": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "STUDENT",
+                        "RESIDENT"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "role": {
                   "type": "string",
                   "enum": [
@@ -28850,6 +29381,7 @@
                 "lastName",
                 "photoFileId",
                 "listed",
+                "mark",
                 "role"
               ],
               "additionalProperties": false
@@ -29001,6 +29533,20 @@
                         },
                         "listed": {
                           "type": "boolean"
+                        },
+                        "mark": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "STUDENT",
+                                "RESIDENT"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
@@ -29008,7 +29554,8 @@
                         "firstName",
                         "lastName",
                         "photoFileId",
-                        "listed"
+                        "listed",
+                        "mark"
                       ],
                       "additionalProperties": false
                     },
@@ -30633,6 +31180,20 @@
                 "listed": {
                   "type": "boolean"
                 },
+                "mark": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "STUDENT",
+                        "RESIDENT"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "role": {
                   "type": "string",
                   "enum": [
@@ -30647,6 +31208,7 @@
                 "lastName",
                 "photoFileId",
                 "listed",
+                "mark",
                 "role"
               ],
               "additionalProperties": false
@@ -30765,6 +31327,20 @@
                     },
                     "listed": {
                       "type": "boolean"
+                    },
+                    "mark": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "STUDENT",
+                            "RESIDENT"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -30772,7 +31348,8 @@
                     "firstName",
                     "lastName",
                     "photoFileId",
-                    "listed"
+                    "listed",
+                    "mark"
                   ],
                   "additionalProperties": false
                 },
@@ -30827,6 +31404,20 @@
                       },
                       "listed": {
                         "type": "boolean"
+                      },
+                      "mark": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "STUDENT",
+                              "RESIDENT"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
                       }
                     },
                     "required": [
@@ -30834,7 +31425,8 @@
                       "firstName",
                       "lastName",
                       "photoFileId",
-                      "listed"
+                      "listed",
+                      "mark"
                     ],
                     "additionalProperties": false
                   }
@@ -30974,6 +31566,20 @@
                     },
                     "listed": {
                       "type": "boolean"
+                    },
+                    "mark": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "STUDENT",
+                            "RESIDENT"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -30981,7 +31587,8 @@
                     "firstName",
                     "lastName",
                     "photoFileId",
-                    "listed"
+                    "listed",
+                    "mark"
                   ],
                   "additionalProperties": false
                 },
@@ -31793,6 +32400,7 @@
                       "membership.manage",
                       "membership.approve.department",
                       "membership.approve.final",
+                      "physicians.verify",
                       "institutions.manage",
                       "news.create",
                       "news.review",
@@ -32131,6 +32739,1230 @@
         "required": [
           "contact",
           "notice"
+        ],
+        "additionalProperties": false
+      },
+      "MyVerificationDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "NOT_ASKED",
+              "WAITING",
+              "VERIFIED",
+              "REFUSED",
+              "REVOKED",
+              "EXPIRED"
+            ]
+          },
+          "verifiedAs": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "SPECIALIST",
+                  "RESIDENT",
+                  "PHYSICIAN",
+                  "STUDENT"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verifiedUntil": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "byOrganisation": {
+            "type": "boolean"
+          },
+          "canAsk": {
+            "type": "boolean"
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "SPECIALIST",
+                      "RESIDENT",
+                      "PHYSICIAN",
+                      "STUDENT"
+                    ]
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "APPROVED",
+                      "REJECTED",
+                      "WITHDRAWN",
+                      "REVOKED",
+                      "EXPIRED"
+                    ]
+                  },
+                  "licenceProvided": {
+                    "type": "boolean"
+                  },
+                  "certificateProvided": {
+                    "type": "boolean"
+                  },
+                  "school": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "nameHe": {
+                            "type": "string"
+                          },
+                          "nameEn": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "nameHe",
+                          "nameEn"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "expectedGraduation": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "documentHeld": {
+                    "type": "boolean"
+                  },
+                  "note": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 100000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                  },
+                  "closedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "decisions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "decision": {
+                          "type": "string",
+                          "enum": [
+                            "APPROVE",
+                            "REJECT",
+                            "REVOKE"
+                          ]
+                        },
+                        "reason": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 100000
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                        }
+                      },
+                      "required": [
+                        "decision",
+                        "reason",
+                        "at"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "kind",
+                  "state",
+                  "licenceProvided",
+                  "certificateProvided",
+                  "school",
+                  "expectedGraduation",
+                  "documentHeld",
+                  "note",
+                  "createdAt",
+                  "closedAt",
+                  "decisions"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "verifiedAs",
+          "verifiedUntil",
+          "byOrganisation",
+          "canAsk",
+          "latest"
+        ],
+        "additionalProperties": false
+      },
+      "SubmitVerificationDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "SPECIALIST",
+              "RESIDENT",
+              "PHYSICIAN",
+              "STUDENT"
+            ]
+          },
+          "licence": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "certificate": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "schoolId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "expectedGraduation": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "documentFileId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "VerificationRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "SPECIALIST",
+              "RESIDENT",
+              "PHYSICIAN",
+              "STUDENT"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED",
+              "WITHDRAWN",
+              "REVOKED",
+              "EXPIRED"
+            ]
+          },
+          "licenceProvided": {
+            "type": "boolean"
+          },
+          "certificateProvided": {
+            "type": "boolean"
+          },
+          "school": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expectedGraduation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documentHeld": {
+            "type": "boolean"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "closedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "APPROVE",
+                    "REJECT",
+                    "REVOKE"
+                  ]
+                },
+                "reason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "decision",
+                "reason",
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "state",
+          "licenceProvided",
+          "certificateProvided",
+          "school",
+          "expectedGraduation",
+          "documentHeld",
+          "note",
+          "createdAt",
+          "closedAt",
+          "decisions"
+        ],
+        "additionalProperties": false
+      },
+      "MedicalSchoolListDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "nameHe": {
+                  "type": "string"
+                },
+                "nameEn": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "nameHe",
+                "nameEn"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "ReviewVerificationListDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "SPECIALIST",
+                    "RESIDENT",
+                    "PHYSICIAN",
+                    "STUDENT"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "APPROVED",
+                    "REJECTED",
+                    "WITHDRAWN",
+                    "REVOKED",
+                    "EXPIRED"
+                  ]
+                },
+                "licenceProvided": {
+                  "type": "boolean"
+                },
+                "certificateProvided": {
+                  "type": "boolean"
+                },
+                "school": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "nameHe": {
+                          "type": "string"
+                        },
+                        "nameEn": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "nameHe",
+                        "nameEn"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expectedGraduation": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "documentHeld": {
+                  "type": "boolean"
+                },
+                "note": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "closedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "decisions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "decision": {
+                        "type": "string",
+                        "enum": [
+                          "APPROVE",
+                          "REJECT",
+                          "REVOKE"
+                        ]
+                      },
+                      "reason": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 100000
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                      }
+                    },
+                    "required": [
+                      "decision",
+                      "reason",
+                      "at"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "person": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "firstName": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 100000
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastName": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 100000
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "nameHe": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 100000
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "nameEn": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 100000
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "userId",
+                    "email",
+                    "firstName",
+                    "lastName",
+                    "nameHe",
+                    "nameEn"
+                  ],
+                  "additionalProperties": false
+                },
+                "waitingDays": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "findings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "decision": {
+                        "type": "string",
+                        "enum": [
+                          "APPROVE",
+                          "REJECT",
+                          "REVOKE"
+                        ]
+                      },
+                      "registerStatus": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "ACTIVE_PERMANENT",
+                              "ACTIVE_TEMPORARY",
+                              "SUSPENDED",
+                              "NOT_FOUND"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "licenceMatches": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      },
+                      "certificateMatches": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      },
+                      "at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                      }
+                    },
+                    "required": [
+                      "decision",
+                      "registerStatus",
+                      "licenceMatches",
+                      "certificateMatches",
+                      "at"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "earlier": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "SPECIALIST",
+                          "RESIDENT",
+                          "PHYSICIAN",
+                          "STUDENT"
+                        ]
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "APPROVED",
+                          "REJECTED",
+                          "WITHDRAWN",
+                          "REVOKED",
+                          "EXPIRED"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "kind",
+                      "state",
+                      "createdAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "state",
+                "licenceProvided",
+                "certificateProvided",
+                "school",
+                "expectedGraduation",
+                "documentHeld",
+                "note",
+                "createdAt",
+                "closedAt",
+                "decisions",
+                "person",
+                "waitingDays",
+                "findings",
+                "earlier"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "ReviewVerificationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "SPECIALIST",
+              "RESIDENT",
+              "PHYSICIAN",
+              "STUDENT"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED",
+              "WITHDRAWN",
+              "REVOKED",
+              "EXPIRED"
+            ]
+          },
+          "licenceProvided": {
+            "type": "boolean"
+          },
+          "certificateProvided": {
+            "type": "boolean"
+          },
+          "school": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "nameHe": {
+                    "type": "string"
+                  },
+                  "nameEn": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "nameHe",
+                  "nameEn"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expectedGraduation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documentHeld": {
+            "type": "boolean"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "closedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "APPROVE",
+                    "REJECT",
+                    "REVOKE"
+                  ]
+                },
+                "reason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "decision",
+                "reason",
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "person": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 100000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastName": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 100000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "nameHe": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 100000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "nameEn": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 100000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "userId",
+              "email",
+              "firstName",
+              "lastName",
+              "nameHe",
+              "nameEn"
+            ],
+            "additionalProperties": false
+          },
+          "waitingDays": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "APPROVE",
+                    "REJECT",
+                    "REVOKE"
+                  ]
+                },
+                "registerStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "ACTIVE_PERMANENT",
+                        "ACTIVE_TEMPORARY",
+                        "SUSPENDED",
+                        "NOT_FOUND"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "licenceMatches": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "certificateMatches": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "decision",
+                "registerStatus",
+                "licenceMatches",
+                "certificateMatches",
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "earlier": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "SPECIALIST",
+                    "RESIDENT",
+                    "PHYSICIAN",
+                    "STUDENT"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "APPROVED",
+                    "REJECTED",
+                    "WITHDRAWN",
+                    "REVOKED",
+                    "EXPIRED"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "state",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "state",
+          "licenceProvided",
+          "certificateProvided",
+          "school",
+          "expectedGraduation",
+          "documentHeld",
+          "note",
+          "createdAt",
+          "closedAt",
+          "decisions",
+          "person",
+          "waitingDays",
+          "findings",
+          "earlier"
+        ],
+        "additionalProperties": false
+      },
+      "DocumentLinkDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "url",
+          "expiresAt"
+        ],
+        "additionalProperties": false
+      },
+      "VerificationDecisionDto": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "registerStatus": {
+            "type": "string",
+            "enum": [
+              "ACTIVE_PERMANENT",
+              "ACTIVE_TEMPORARY",
+              "SUSPENDED",
+              "NOT_FOUND"
+            ]
+          },
+          "registerLicence": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "registerCertificate": {
+            "type": "string",
+            "maxLength": 40
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "additionalProperties": false
+      },
+      "RevokeVerificationDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "reason"
         ],
         "additionalProperties": false
       }

@@ -102,7 +102,7 @@ export function NewConversationDialog({ onClose }: { onClose: () => void }) {
                   onClick={() => void write(person.id)}
                   className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-start hover:bg-surface-muted"
                 >
-                  <Avatar person={{ ...person, listed: true }} size="size-9" />
+                  <Avatar person={{ ...person, listed: true, mark: null }} size="size-9" />
                   <span className="min-w-0">
                     <span className="block truncate font-semibold">{name}</span>
                     {person.title && (

@@ -1,6 +1,6 @@
 import { uuidv7 } from '@medconnect/shared';
 import { DEMO_ORGANISATION, FIRST_ORGANISATION } from './reference-data';
-import { type PrismaClient } from '../../src/generated/prisma/client';
+import { type PrismaClient, type VerifiedAs } from '../../src/generated/prisma/client';
 import { parseEnv } from '../../src/config/env.schema';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { FieldCipher, SecretHasher } from '../../src/infra/crypto/secrets';
@@ -29,6 +29,8 @@ interface Person {
   title?: string;
   position?: string;
   hospital?: string;
+  /** What the platform knows them as (M17). Left out: a physician. */
+  verifiedAs?: VerifiedAs;
 }
 
 const people = {
@@ -40,6 +42,7 @@ const people = {
     nameEn: 'Dana Mizrahi',
   },
   directorRambam: {
+    verifiedAs: 'SPECIALIST',
     local: 'director.rambam',
     firstName: 'Avi',
     lastName: 'Karmeli',
@@ -50,6 +53,7 @@ const people = {
     hospital: 'rambam',
   },
   directorSheba: {
+    verifiedAs: 'SPECIALIST',
     local: 'director.sheba',
     firstName: 'Michal',
     lastName: 'Ofer',
@@ -61,6 +65,7 @@ const people = {
     locale: 'en',
   },
   full: {
+    verifiedAs: 'SPECIALIST',
     local: 'member.full',
     firstName: 'Noa',
     lastName: 'Bar-Lev',
@@ -71,6 +76,7 @@ const people = {
     hospital: 'rambam',
   },
   resident: {
+    verifiedAs: 'RESIDENT',
     local: 'member.resident',
     firstName: 'Yoav',
     lastName: 'Sela',
@@ -89,6 +95,7 @@ const people = {
     locale: 'en',
   },
   suspended: {
+    verifiedAs: 'SPECIALIST',
     local: 'member.suspended',
     firstName: 'Eitan',
     lastName: 'Harel',
@@ -97,6 +104,7 @@ const people = {
     hospital: 'sheba',
   },
   expired: {
+    verifiedAs: 'RESIDENT',
     local: 'member.expired',
     firstName: 'Lior',
     lastName: 'Ben-Ami',
@@ -105,6 +113,7 @@ const people = {
     hospital: 'rambam',
   },
   pendingDirector: {
+    verifiedAs: 'RESIDENT',
     local: 'applicant.director',
     firstName: 'Tamar',
     lastName: 'Levin',
@@ -122,6 +131,7 @@ const people = {
     hospital: 'sheba',
   },
   student: {
+    verifiedAs: 'STUDENT',
     local: 'applicant.student',
     firstName: 'Maya',
     lastName: 'Adler',
@@ -204,8 +214,10 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
             email: `${person.local}@${DOMAIN}`,
             passwordHash,
             emailVerifiedAt: daysAgo(60),
-            // The demo's people are physicians the platform knows (M16).
+            // The demo's people are physicians the platform knows (M16), or the student,
+            // resident or specialist they are (M17).
             verifiedAt: daysAgo(60),
+            verifiedAs: person.verifiedAs ?? 'PHYSICIAN',
             locale: person.locale ?? 'he',
           },
         });

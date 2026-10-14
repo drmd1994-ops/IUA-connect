@@ -26,6 +26,7 @@ import {
   type UnsubscribeResultDto,
 } from './notifications.dto';
 import { UnsubscribeTokens } from './unsubscribe-tokens';
+import { verifiedNow } from '../../common/verified-as';
 
 interface Reader {
   userId: string;
@@ -210,6 +211,7 @@ export class NotificationsService {
       select: {
         createdAt: true,
         verifiedAt: true,
+        verifiedUntil: true,
         memberships: { where: { organisation: { active: true } }, select: MEMBERSHIP_FACTS },
         notificationPrefs: { select: { kind: true, channel: true, enabled: true } },
         notificationState: { select: { announcementsReadUntil: true } },
@@ -224,7 +226,7 @@ export class NotificationsService {
       kinds: CONTENT_NOTIFICATION_KINDS.filter((kind) =>
         notificationEnabled(kind, 'APP', user.notificationPrefs),
       ),
-      verified: user.verifiedAt !== null,
+      verified: verifiedNow(user),
       organisationIds: active.map((held) => held.organisationId),
       typeIds: active.map((held) => held.typeId),
       readUntil: user.notificationState?.announcementsReadUntil ?? null,

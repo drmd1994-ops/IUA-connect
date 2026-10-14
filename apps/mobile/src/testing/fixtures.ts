@@ -14,6 +14,7 @@ const person = (id: string, firstName: string, lastName: string) => ({
   lastName,
   photoFileId: null,
   listed: true,
+  mark: null,
 });
 export const ME = 'me-1';
 export const dana = person('u-dana', 'Dana', 'Levi');
@@ -49,6 +50,7 @@ export const me: S['MeDto'] = {
   platformPermissions: [],
   organisations: [],
   verified: true,
+  verifiedAs: 'PHYSICIAN',
   mfaEnabled: false,
   mfaEnrollmentRequired: false,
   session: { id: 's-1', mfa: false },
@@ -394,6 +396,7 @@ const directoryMember = {
   department: { id: 'd-1', nameHe: 'אורולוגיה', nameEn: 'Urology' },
   subspecialties: [subspecialty],
   photoFileId: null,
+  mark: 'RESIDENT' as const,
 };
 
 const page = <T>(items: T[]) => ({ items, page: 1, pageSize: 10, total: items.length });
@@ -697,7 +700,14 @@ export const everything: Record<string, Answer> = {
       {
         id: 'g-1',
         kind: 'GROUP',
-        other: { id: null, firstName: null, lastName: null, photoFileId: null, listed: false },
+        other: {
+          id: null,
+          firstName: null,
+          lastName: null,
+          photoFileId: null,
+          listed: false,
+          mark: null,
+        },
         group: { name: 'Journal club', memberCount: 3 },
         ...listed,
         unreadCount: 0,

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { uuidv7 } from '@medconnect/shared';
+import { verifiedAsFor } from '../../common/verified-as';
 import { type Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { ORGANISATION_REF } from '../organisations';
@@ -71,10 +72,12 @@ export class MembershipsService {
       },
       include: { type: true },
     });
-    // Whoever an organisation accepts as a member is known to the platform as a physician.
+    // Whoever an organisation accepts as a member is known to the platform as a physician (or
+    // the student, resident or specialist the type says). A person already verified stays as
+    // the platform knows them.
     await tx.user.updateMany({
       where: { id: input.userId, verifiedAt: null },
-      data: { verifiedAt: new Date() },
+      data: { verifiedAt: new Date(), verifiedAs: verifiedAsFor(type) },
     });
 
     if (!existing) {

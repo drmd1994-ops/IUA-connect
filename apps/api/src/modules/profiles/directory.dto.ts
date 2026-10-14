@@ -32,6 +32,8 @@ const member = z.strictObject({
   department: named.nullable(),
   subspecialties: z.array(named.extend({ key: z.string() })),
   photoFileId: nullableString(),
+  /** Marked as a medical student or a resident (M17), so nobody takes them for a specialist. */
+  mark: z.enum(['STUDENT', 'RESIDENT']).nullable(),
 });
 
 export class DirectoryListDto extends createZodDto(
