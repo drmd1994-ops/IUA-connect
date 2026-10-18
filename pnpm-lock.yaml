@@ -214,6 +214,9 @@ importers:
       '@medconnect/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@medconnect/calculators':
+        specifier: workspace:*
+        version: link:../../packages/calculators
       '@medconnect/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -344,6 +347,9 @@ importers:
       '@medconnect/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@medconnect/calculators':
+        specifier: workspace:*
+        version: link:../../packages/calculators
       '@medconnect/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

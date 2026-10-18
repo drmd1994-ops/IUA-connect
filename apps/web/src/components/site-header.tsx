@@ -12,6 +12,7 @@ export function SiteHeader() {
   const nav = useTranslations('content.nav');
   const events = useTranslations('events');
   const education = useTranslations('education');
+  const calculators = useTranslations('calculators');
   return (
     <header className="border-b border-border bg-surface">
       {/* Wraps on narrow screens (and at high zoom), so nothing needs sideways scrolling. */}
@@ -52,6 +53,12 @@ export function SiteHeader() {
             className="rounded-md px-2 py-1.5 text-sm font-semibold text-text hover:bg-surface-muted"
           >
             {nav('guidelines')}
+          </Link>
+          <Link
+            href="/calculators"
+            className="rounded-md px-2 py-1.5 text-sm font-semibold text-text hover:bg-surface-muted"
+          >
+            {calculators('nav')}
           </Link>
           <OrganisationsLink />
           <ChatLink />

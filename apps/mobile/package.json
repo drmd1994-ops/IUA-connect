@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@medconnect/api-client": "workspace:*",
+    "@medconnect/calculators": "workspace:*",
     "@medconnect/i18n": "workspace:*",
     "@medconnect/shared": "workspace:*",
     "@medconnect/ui-tokens": "workspace:*",

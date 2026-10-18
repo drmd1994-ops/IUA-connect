@@ -64,6 +64,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     portal,
     organisations,
     verification,
+    calculators,
   } = getMessages(locale);
 
   return (
@@ -94,6 +95,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             portal,
             organisations,
             verification,
+            calculators,
           }}
         >
           <AuthProvider>

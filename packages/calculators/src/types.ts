@@ -1,7 +1,7 @@
 /**
  * What a calculator is made of (M30 plan §2): its inputs, its calculation, the source it comes
  * from and who reviewed it. Every text a person reads is a key in the `calculators` messages
- * (`calculators.<id>.…`), so the site and the app show the same words in both languages.
+ * (`calculators.items.<id>.…`), so the site and the app show the same words in both languages.
  */
 
 export type CalculatorKind = 'questionnaire' | 'score' | 'formula';
@@ -26,7 +26,7 @@ export interface NumberField {
   };
 }
 
-/** One answer among a few. Each option's words are `calculators.<id>.options.<set>.<value>`. */
+/** One answer among a few. Each option's words are `calculators.options.<set>.<value>`. */
 export interface ChoiceField {
   key: string;
   type: 'choice';
@@ -51,7 +51,7 @@ export type FieldProblem =
   | { field: string; code: 'outOfRange'; min: number; max: number; unit: string };
 
 export interface Part {
-  /** A key in `calculators.<id>.parts`. */
+  /** A key in `calculators.items.<id>.parts`. */
   key: string;
   value: number | string;
   /** A key in `calculators.units`, if the value has one. */
@@ -67,10 +67,10 @@ export interface Result {
   unit?: string;
   /** Written instead of the bare number, as the score is usually written (e.g. "8ah"). */
   label?: string;
-  /** A key in `calculators.<id>.bands`: what the value means, as the source puts it. */
+  /** A key in `calculators.items.<id>.bands`: what the value means, as the source puts it. */
   band?: string;
   parts?: Part[];
-  /** Keys in `calculators.<id>.notes`, shown under the result. */
+  /** Keys in `calculators.items.<id>.notes`, shown under the result. */
   notes?: string[];
 }
 

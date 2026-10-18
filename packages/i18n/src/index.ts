@@ -1,5 +1,6 @@
 import enAdmin from './messages/en/admin.json';
 import enAuth from './messages/en/auth.json';
+import enCalculators from './messages/en/calculators.json';
 import enChat from './messages/en/chat.json';
 import enCommon from './messages/en/common.json';
 import enContent from './messages/en/content.json';
@@ -19,6 +20,7 @@ import enRooms from './messages/en/rooms.json';
 import enSearch from './messages/en/search.json';
 import heAdmin from './messages/he/admin.json';
 import heAuth from './messages/he/auth.json';
+import heCalculators from './messages/he/calculators.json';
 import heChat from './messages/he/chat.json';
 import heCommon from './messages/he/common.json';
 import heContent from './messages/he/content.json';
@@ -78,6 +80,7 @@ export type Messages = {
   portal: typeof hePortal;
   organisations: typeof heOrganisations;
   verification: typeof heVerification;
+  calculators: typeof heCalculators;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -101,6 +104,7 @@ const MESSAGES: Record<Locale, Messages> = {
     portal: hePortal,
     organisations: heOrganisations,
     verification: heVerification,
+    calculators: heCalculators,
   },
   en: {
     common: enCommon,
@@ -122,6 +126,7 @@ const MESSAGES: Record<Locale, Messages> = {
     portal: enPortal,
     organisations: enOrganisations,
     verification: enVerification,
+    calculators: enCalculators,
   },
 };
 
