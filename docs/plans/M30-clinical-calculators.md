@@ -1,6 +1,6 @@
 # M30: Clinical calculators
 
-**Status: proposed on 2026-10-07; checked against the code and the questionnaires' terms on 2026-10-14 (§0b). Not approved. Nothing of it is built.** Chosen by the owner on 2026-10-14 as the milestone after M17.
+**Status: proposed on 2026-10-07; checked against the code and the questionnaires' terms on 2026-10-14 (§0b); approved by the owner on 2026-10-18 with the answers in §10.** Chosen by the owner on 2026-10-14 as the milestone after M17.
 
 Track: Phase 3. Size: M. Needs first: A named physician to review every formula and interpretation.
 
@@ -92,6 +92,13 @@ My recommendation: **(1)** the owner reviews and signs each calculator; **(2)** 
 2. Which eGFR formula and TNM edition?
 3. May visitors use the calculators, or members only?
 
-## 10. Owner answers
+## 10. Owner answers (2026-10-18)
 
-None yet.
+The owner answered the four questions put in chat ("1.me 2.yes 3.everyone 4.yes"), which I take as approval of the plan as checked in §0b:
+
+1. **The reviewer is the owner.** Each calculator shows "not yet reviewed" until the owner signs it; the name and date are then written into its definition.
+2. **eGFR by CKD-EPI 2021, without race. TNM is left out** (licence), and so are IIEF and SHIM unless a licence is obtained.
+3. **Open to everyone**, signed in or not, on the site and in the app.
+4. **IPSS in Hebrew:** I write the text, marked "not a validated translation" until the owner confirms it or gives the validated version.
+
+So the scope of §2 is the nine of §0b, not the twelve of the specification.
