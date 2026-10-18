@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-14 (M17 closed: the platform verifies physicians and medical students by itself; merged, pull request #28)_
+_Last updated: 2026-10-18 (M30 built: nine clinical calculators on the site and in the app; in a pull request)_
 
 ## Summary
 
@@ -1091,6 +1091,46 @@ Plan: `docs/plans/M17-verification-and-onboarding.md`, approved by the owner on 
 2. The five numbers above (24 months, 60 and 30 days, eight years, 20 invitations a day): keep or change.
 3. Being the first reviewer: give your own account the VERIFIER role (`pnpm admin:create --role VERIFIER` makes a new account; an existing one gets it at `/admin/users`).
 4. Before real use: asking the Ministry whether an automatic look-up is allowed, if one is wanted; and the legal review (M20) of holding licence numbers and students' confirmations.
+
+## M30 Clinical calculators (built 2026-10-18; in a pull request)
+
+Plan: `docs/plans/M30-clinical-calculators.md`, approved by the owner on 2026-10-18 with the answers in its §10: the owner reviews each calculator; eGFR by CKD-EPI 2021 without race, TNM left out; open to everyone; the Hebrew IPSS written by me and marked as not a validated translation.
+
+**Built**
+
+- **Nine calculators** in a new package of our own, `@medconnect/calculators`, with no outside library: IPSS, PSA density, PSA velocity, creatinine clearance (Cockcroft-Gault), eGFR (CKD-EPI 2021), stone volume, R.E.N.A.L., PADUA and S.T.O.N.E. Each declares its fields with their units and ranges, its calculation, what the result means as its source puts it, and the source with its DOI.
+- **Not built, by the plan:** IIEF and SHIM (licensed by the Mapi Research Trust) and TNM (AJCC/UICC). The list says why.
+- **Rules of the plan:** nothing typed is sent or saved; a value outside the range a formula was made for is refused with the range, and no number is given; the disclaimer is always beside the result; each calculator shows its source, its version, and "not yet checked by the reviewing physician" until the owner signs it.
+- **The site:** `/calculators` and one page per calculator, open to visitors; a link in the header; the member's home turns "Open a calculator" from "coming soon" into a link.
+- **The app:** the same calculators from home, for members and visitors, worked out on the phone without a connection.
+- **Texts** in Hebrew and English. The Hebrew IPSS says it is not a validated translation.
+- **The reviewer's checklist** is in the plan's §11, with what I could not confirm from the sources.
+
+**Verified**
+
+- Unit tests of the calculators: 33, against worked examples from the published equations and the edges of every cut-off; a test that every text a calculator can show exists in both languages (300 sampled inputs each).
+- The app: 150 tests, among them each calculator screen in both languages and one worked out on the phone with no request to the server.
+- Browser tests (Playwright, Chromium, production builds): the whole suite, 137 tests: 135 passed, one passed on its second try (a chat message arriving, timing), and one failed: "the rooms fit a phone, in Hebrew". It found no sideways scrolling and passed the accessibility check at phone width with the new header link; it then could not find the demo room "הודעות האגודה" on the first page of the room list, which is full of rooms left by earlier test runs in this computer's development database. M30 touches nothing in chat; resetting the demo data should clear it (not done: the owner said not to rebuild the database). The calculators' own browser tests and the accessibility checks of their pages passed in both languages.
+- Lint, formatting and type checks for every package.
+
+**Not verified**
+
+- GitHub's checks (the owner said not to run tests on GitHub for now).
+- **No calculator is reviewed yet.** Every one says so on its screen.
+- Nobody has looked at it in a browser or on the phone, and the Hebrew texts have not been read by a Hebrew reader.
+
+**Deviations and findings**
+
+- **PSA density's 0.15 cut-off** is not in the paper cited for the formula (its abstract speaks of 0.1); I kept 0.15, the one in common use, for the reviewer to confirm.
+- **S.T.O.N.E.:** I could not read the original table. I scored obstruction 0 or 1 (a total of 4 to 12, which fits the paper's reported range of 4 to 11); later papers say 5 to 13. Marked for the reviewer.
+- **PSA velocity** asks for two values and the months between them, not dates; the result says the source used repeated measurements.
+- **A fix outside M30:** a test fixture of the shared client lacked the chat sender's mark added in M17, so the client's type check failed; fixed.
+
+**Open for the owner**
+
+1. Review each calculator (plan §11) and tell me the name to show; until then each says it is not checked.
+2. The Hebrew IPSS: confirm my wording, or give me the validated Hebrew version.
+3. The milestone's demo, and reading the Hebrew texts.
 
 ## Next step
 
