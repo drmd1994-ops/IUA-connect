@@ -5,7 +5,9 @@ FROM node:24.21.0-slim
 
 ENV CI=1 HUSKY=0 TURBO_TELEMETRY_DISABLED=1
 WORKDIR /app
-RUN corepack enable
+# Prisma's command-line tool needs OpenSSL, which the slim image leaves out.
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/* && corepack enable
 
 COPY . .
 RUN pnpm install --frozen-lockfile --filter "@medconnect/api..." --filter med-connect
