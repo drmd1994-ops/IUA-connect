@@ -2,7 +2,7 @@ import { uuidv7 } from '@medconnect/shared';
 import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
-import { DEMO_PASSWORD } from './demo';
+import { demoPassword } from '../../src/config/demo-password';
 
 /**
  * Demo notifications, directory and broadcasts (M7 plan §2.9). A second association admin, so
@@ -50,7 +50,7 @@ export async function seedDemoNotifications(prisma: PrismaClient): Promise<void>
     console.log('seed: demo notifications need the demo people first, skipped');
     return;
   }
-  const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
+  const passwordHash = await new PasswordHasher().hash(demoPassword());
   const adminRole = await prisma.role.findUniqueOrThrow({ where: { key: 'ORG_ADMIN' } });
   const [news, event, lesson, guideline] = await Promise.all([
     prisma.news.findFirst({

@@ -1,6 +1,7 @@
 import { uuidv7 } from '@medconnect/shared';
 import { DEMO_ORGANISATION, FIRST_ORGANISATION } from './reference-data';
 import { type PrismaClient, type VerifiedAs } from '../../src/generated/prisma/client';
+import { DOCUMENTED_DEMO_PASSWORD, demoPassword } from '../../src/config/demo-password';
 import { parseEnv } from '../../src/config/env.schema';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { FieldCipher, SecretHasher } from '../../src/infra/crypto/secrets';
@@ -16,7 +17,8 @@ import { endOfYear, todayInIsrael } from '../../src/modules/membership/period';
  * Every administrative role requires two-step verification, so the demo admin and directors set up
  * a passkey or an authenticator app at their first sign-in.
  */
-export const DEMO_PASSWORD = 'ilikeIUAconnect11';
+/** The documented password, for the browser tests; the seed itself uses `demoPassword()`. */
+export const DEMO_PASSWORD = DOCUMENTED_DEMO_PASSWORD;
 const DOMAIN = 'demo.test';
 
 interface Person {
@@ -171,7 +173,7 @@ export async function seedDemo(prisma: PrismaClient): Promise<void> {
   const env = parseEnv(process.env);
   const cipher = new FieldCipher(env);
   const hasher = new SecretHasher(env);
-  const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
+  const passwordHash = await new PasswordHasher().hash(demoPassword());
   const today = todayInIsrael();
   const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 

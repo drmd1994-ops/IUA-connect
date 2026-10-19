@@ -1,0 +1,20 @@
+# What the hosted demo's builds (M18) never receive. Secrets above all: the host has its own.
+.env
+.env.*
+!.env.example
+.git
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/.expo
+apps/mobile/android
+apps/mobile/ios
+storage
+apps/api/storage
+outbox
+coverage
+playwright-report
+test-results
+questions
+*.log

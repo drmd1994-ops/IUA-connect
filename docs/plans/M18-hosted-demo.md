@@ -1,6 +1,6 @@
 # M18: the demo on a hosted service (Railway)
 
-**Status: proposed on 2026-10-07 and rewritten the same day for Railway, after the owner said "start m16 for a 5$ plan on railway". Deferred by the owner on 2026-10-13. Checked against the code and rewritten on 2026-10-19, at the owner's request ("creat a plan for M 18"; see §0b). Not approved. Nothing of it is built.**
+**Status: proposed on 2026-10-07; deferred on 2026-10-13; checked against the code and rewritten on 2026-10-19 (§0b); approved by the owner on 2026-10-19, who opened a paid Railway plan and asked to deploy (§10). Being built.**
 
 Track: Operate. Size: M. Needs first:
 
@@ -164,4 +164,10 @@ My recommendation: **(1)** Railway, for the demo; **(2)** always on for the firs
 
 ## 10. Owner answers
 
-Given on 2026-10-07, before the rewrites: "start m16 for a 5$ plan on railway". Taken as: **the host is Railway, on its $5 Hobby plan**, with Railway's own free address. Question 1 asks whether that still stands. The rest of §9 is open.
+Given on 2026-10-07: "start m16 for a 5$ plan on railway". On 2026-10-19 the owner said "run the github tests" (GitHub Actions ran again, so its billing block is gone), then: "i have made a paied plan (20$) on railway now i want to deploy the updated apk so i can download it on my phone and test it". Taken as approval of this plan with my recommendations in §9:
+
+1. **The host is Railway,** on a paid plan the owner chose ($20 a month, above the Hobby plan this plan priced); always on, so question 2 falls away.
+2. **Passkeys in the app and email links that open the app wait for M18b.**
+3. **The .apk is built on GitHub,** which works again.
+4. **The demo password:** the owner types it into Railway; Claude never sees it.
+5. **Who else gets the address:** not answered yet; nobody until the owner says.

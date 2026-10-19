@@ -3,7 +3,7 @@ import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { slugify } from '../../src/modules/news/slug';
-import { DEMO_PASSWORD } from './demo';
+import { demoPassword } from '../../src/config/demo-password';
 
 /**
  * Demo events (M5 plan §2.11): an event admin, fictional speakers and events in every state.
@@ -180,7 +180,7 @@ export async function seedDemoEvents(prisma: PrismaClient): Promise<void> {
     console.log('seed: demo events need the demo people first, skipped');
     return;
   }
-  const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
+  const passwordHash = await new PasswordHasher().hash(demoPassword());
   const role = await prisma.role.findUniqueOrThrow({ where: { key: 'EVENT_ADMIN' } });
   const now = Date.now();
   // 06:00 UTC is the morning in Israel all year.
