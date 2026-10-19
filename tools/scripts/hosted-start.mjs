@@ -7,6 +7,7 @@
 //
 // Refuses to run unless DEMO_HOSTED=true. Never prints a password or a key.
 import { spawn } from 'node:child_process';
+import { accessSync, constants, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import pg from 'pg';
 import { provision } from './db-provision.mjs';
@@ -27,6 +28,22 @@ async function main() {
   if (process.env.DEMO_HOSTED !== 'true') {
     throw new Error('hosted-start is for the hosted demo only (DEMO_HOSTED=true).');
   }
+  if (process.getuid?.() === 0) {
+    throw new Error('hosted-start must not run as root; the image starts it as "node".');
+  }
+
+  step('Checking the disk for uploads and emails');
+  for (const name of ['STORAGE_DIR', 'MAIL_OUTBOX_DIR']) {
+    const dir = path.resolve(ROOT, requireEnv(name));
+    try {
+      mkdirSync(dir, { recursive: true });
+      accessSync(dir, constants.W_OK);
+      ok(`${name} is writable`);
+    } catch {
+      throw new Error(`${name} (${dir}) is not writable by the server's user.`);
+    }
+  }
+
   await provision();
 
   step('Applying database changes');

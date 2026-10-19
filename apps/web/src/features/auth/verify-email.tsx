@@ -62,7 +62,7 @@ export function VerifyEmail({ token }: { token: string | null }) {
       {resent ? (
         <Alert tone="success">{t('verify.resendDone')}</Alert>
       ) : (
-        <form onSubmit={resend} className="flex flex-col gap-5" noValidate>
+        <form method="post" onSubmit={resend} className="flex flex-col gap-5" noValidate>
           <TextField
             name="email"
             type="email"

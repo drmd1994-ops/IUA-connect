@@ -49,3 +49,20 @@ The rule stays on the accepted list for the site's pages, for the reason given a
 ## Reading a run
 
 Each run keeps its full reports for download: on GitHub, open the run → **Artifacts** → `zap-web` and `zap-api`.
+
+## Third run, when CI ran again (19 October 2026)
+
+CI had been paused since 13 October (GitHub billing). The first run after it found three new warnings on the site, from pages added in M16, M17 and M30.
+
+### Fixed
+
+| Rule                               | What ZAP saw                                                                                                   | What was done                                                                                                                                                                                                                                                                              |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 10024 Sensitive information in URL | The sign-in and sign-up forms, submitted the browser's own way, put the email and the password in the address. | Every form that takes a password, a code or an email now says `method="post"`, so nothing typed goes in an address. And a submit button stays disabled until the page has loaded its scripts (`apps/web/src/components/ui/button.tsx`), so a person can't submit a form the browser's way. |
+
+### Accepted
+
+| Rule                                           | What ZAP saw                                                                                              | Why it is accepted                                                                                                                                                                                                                                                                              |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 10031 User controllable HTML element attribute | Submitting a calculator's form, ZAP found its own values (`female`, `polar`, …) in the page's attributes. | They are the form's own option values, in the page before anything is sent. The calculator pages read nothing from the request (M30: nothing typed leaves the device). Switching the rule off also hides a real reflection elsewhere; the site renders no request values into attributes today. |
+| 10111 Authentication request identified        | The sign-in form.                                                                                         | Informational: ZAP noting where people sign in.                                                                                                                                                                                                                                                 |

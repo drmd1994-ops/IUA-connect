@@ -101,7 +101,7 @@ export function ReauthForm({
           <p className="mt-3 text-sm text-text-muted">{t('auth.login.or')}</p>
         </div>
       )}
-      <form onSubmit={submit} className="mt-4 flex flex-col gap-4" noValidate>
+      <form method="post" onSubmit={submit} className="mt-4 flex flex-col gap-4" noValidate>
         <TextField
           name="password"
           type="password"

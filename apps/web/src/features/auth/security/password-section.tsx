@@ -43,7 +43,7 @@ export function PasswordSection({ onChanged }: { onChanged: () => void }) {
 
   const problems = passwordProblems(error).map((key) => t(key));
   return (
-    <form onSubmit={submit} className="flex max-w-md flex-col gap-4" noValidate>
+    <form method="post" onSubmit={submit} className="flex max-w-md flex-col gap-4" noValidate>
       {done && <Alert tone="success">{t('auth.security.passwordChanged')}</Alert>}
       {error !== null && problems.length === 0 && (
         <Alert tone="error">{errorMessage(error, t)}</Alert>
