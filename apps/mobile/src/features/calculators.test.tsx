@@ -20,7 +20,7 @@ describe('calculators in the app', () => {
     const text = allText(screen);
     expect(text).toMatch(/ 86\s+mL\/min\/1\.73 m²/);
     expect(text).toContain('G2: mildly decreased (60 to 89).');
-    expect(text).toContain('Not yet checked by the reviewing physician.');
+    expect(text).toContain('Checked by Dr. Dahamshy on October 19, 2026.');
     expect(world.calls).toEqual([]);
   });
 

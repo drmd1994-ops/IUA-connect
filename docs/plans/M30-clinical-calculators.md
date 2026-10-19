@@ -107,6 +107,8 @@ So the scope of §2 is the nine of §0b, not the twelve of the specification.
 
 Every calculator shows "not yet checked by the reviewing physician" until the owner signs it. Signing one means: the owner tells me which, with the name to show; I write the name and the date into its definition (`packages/calculators/src`), and the warning goes.
 
+**Signed 2026-10-19:** the owner approved all nine as built in the table below, with the name "Dr. Dahamshy", and confirmed the Hebrew IPSS wording. The open points stay as built: PSA density's band at 0.15, S.T.O.N.E. with obstruction 0 or 1 (total 4–12) and its three bands, PSA velocity from two values, and Cockcroft-Gault with the weight as typed.
+
 What to check in each, and what I could not confirm from the sources I could read (the original papers are behind paywalls; PubMed gave the abstracts):
 
 | Calculator           | Built as                                                                                                                                                                        | To check                                                                                                                                                                      |

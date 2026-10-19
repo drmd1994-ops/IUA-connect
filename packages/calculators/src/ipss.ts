@@ -52,6 +52,6 @@ export const ipss: Calculator = {
       'Barry MJ, Fowler FJ Jr, O’Leary MP, et al. The American Urological Association symptom index for benign prostatic hyperplasia. J Urol. 1992;148(5):1549-57.',
     doi: '10.1016/s0022-5347(17)36966-5',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
   hebrewNotValidated: true,
 };

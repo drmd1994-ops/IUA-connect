@@ -23,7 +23,7 @@ function problems(id: string, raw: RawValues) {
 }
 
 describe('the list', () => {
-  it('has the nine of the plan, each with a source and no review yet', () => {
+  it('has the nine of the plan, each with a source and the reviewer’s signature', () => {
     expect(CALCULATORS.map((c) => c.id)).toEqual([
       'ipss',
       'psaDensity',
@@ -37,8 +37,8 @@ describe('the list', () => {
     ]);
     for (const calculator of CALCULATORS) {
       expect(calculator.reference.doi ?? calculator.reference.url).toBeTruthy();
-      // Set only when the owner has signed it (plan §10, answer 1).
-      expect(calculator.review).toBeNull();
+      // Signed by the owner on 2026-10-19 (plan §10, answer 1).
+      expect(calculator.review).toEqual({ by: 'Dr. Dahamshy', on: '2026-10-19' });
     }
   });
 
