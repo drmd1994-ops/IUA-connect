@@ -58,7 +58,7 @@ export const renal: Calculator = {
       'Kutikov A, Uzzo RG. The R.E.N.A.L. nephrometry score: a comprehensive standardized system for quantitating renal tumor size, location and depth. J Urol. 2009;182(3):844-53.',
     doi: '10.1016/j.juro.2009.05.035',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };
 
 /** The PADUA score of a renal tumour: six parts, 6 to 14 points, and the face it lies on. */
@@ -107,7 +107,7 @@ export const padua: Calculator = {
       'Ficarra V, Novara G, Secco S, et al. Preoperative aspects and dimensions used for an anatomical (PADUA) classification of renal tumours in patients who are candidates for nephron-sparing surgery. Eur Urol. 2009;56(5):786-93.',
     doi: '10.1016/j.eururo.2009.07.040',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };
 
 /**
@@ -152,5 +152,5 @@ export const stone: Calculator = {
       'Okhunov Z, Friedlander JI, George AK, et al. S.T.O.N.E. nephrolithometry: novel surgical classification system for kidney calculi. Urology. 2013;81(6):1154-9.',
     doi: '10.1016/j.urology.2012.10.083',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };

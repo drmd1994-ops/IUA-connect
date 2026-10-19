@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-18 (M30 built: nine clinical calculators on the site and in the app; in a pull request)_
+_Last updated: 2026-10-19 (M30 merged: nine clinical calculators on the site and in the app, each signed by the owner)_
 
 ## Summary
 
@@ -1092,7 +1092,7 @@ Plan: `docs/plans/M17-verification-and-onboarding.md`, approved by the owner on 
 3. Being the first reviewer: give your own account the VERIFIER role (`pnpm admin:create --role VERIFIER` makes a new account; an existing one gets it at `/admin/users`).
 4. Before real use: asking the Ministry whether an automatic look-up is allowed, if one is wanted; and the legal review (M20) of holding licence numbers and students' confirmations.
 
-## M30 Clinical calculators (built 2026-10-18; in a pull request)
+## M30 Clinical calculators (merged 2026-10-19, pull request #29; signed by the owner the same day)
 
 Plan: `docs/plans/M30-clinical-calculators.md`, approved by the owner on 2026-10-18 with the answers in its §10: the owner reviews each calculator; eGFR by CKD-EPI 2021 without race, TNM left out; open to everyone; the Hebrew IPSS written by me and marked as not a validated translation.
 
@@ -1116,7 +1116,6 @@ Plan: `docs/plans/M30-clinical-calculators.md`, approved by the owner on 2026-10
 **Not verified**
 
 - GitHub's checks (the owner said not to run tests on GitHub for now).
-- **No calculator is reviewed yet.** Every one says so on its screen.
 - Nobody has looked at it in a browser or on the phone, and the Hebrew texts have not been read by a Hebrew reader.
 
 **Deviations and findings**
@@ -1128,9 +1127,9 @@ Plan: `docs/plans/M30-clinical-calculators.md`, approved by the owner on 2026-10
 
 **Open for the owner**
 
-1. Review each calculator (plan §11) and tell me the name to show; until then each says it is not checked.
-2. The Hebrew IPSS: confirm my wording, or give me the validated Hebrew version.
-3. The milestone's demo, and reading the Hebrew texts.
+1. ~~Review each calculator~~ **Done 2026-10-19:** the owner approved all nine as built, and each now shows "Checked by Dr. Dahamshy on October 19, 2026" (in Hebrew, "נבדק על ידי Dr. Dahamshy בתאריך …"). With it the owner kept PSA density's 0.15 band, S.T.O.N.E. as built (obstruction 0 or 1, a total of 4 to 12, the three bands as in §11) and PSA velocity from two values.
+2. ~~The Hebrew IPSS~~ **Done 2026-10-19:** the owner confirmed my wording. It still says it is not a validated translation, which stays true.
+3. The milestone's demo, and reading the rest of the Hebrew texts.
 
 ## Next step
 

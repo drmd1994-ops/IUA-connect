@@ -73,7 +73,7 @@ export const psaDensity: Calculator = {
       'Benson MC, Whang IS, Pantuck A, et al. Prostate specific antigen density: a means of distinguishing benign prostatic hypertrophy and prostate cancer. J Urol. 1992;147(3 Pt 2):815-6.',
     doi: '10.1016/s0022-5347(17)37393-7',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };
 
 /**
@@ -104,7 +104,7 @@ export const psaVelocity: Calculator = {
       'Carter HB, Pearson JD, Metter EJ, et al. Longitudinal evaluation of prostate-specific antigen levels in men with and without prostate disease. JAMA. 1992;267(16):2215-20.',
     url: 'https://pubmed.ncbi.nlm.nih.gov/1372942/',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };
 
 /** Creatinine clearance by Cockcroft and Gault, in mL/min (not adjusted to body surface). */
@@ -130,7 +130,7 @@ export const creatinineClearance: Calculator = {
       'Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16(1):31-41.',
     doi: '10.1159/000180580',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };
 
 /** The stage of GFR in KDIGO's classification of chronic kidney disease. */
@@ -173,7 +173,7 @@ export const egfr: Calculator = {
     doi: '10.1056/NEJMoa2102953',
   },
   version: 'CKD-EPI 2021',
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };
 
 const diameter = (key: string): NumberField => ({
@@ -210,5 +210,5 @@ export const stoneVolume: Calculator = {
       'Tiselius HG, Andersson A. Stone burden in an average Swedish population of stone formers requiring active stone removal: how can the stone size be estimated in the clinical routine? Eur Urol. 2003;43(3):275-81.',
     doi: '10.1016/s0302-2838(03)00006-x',
   },
-  review: null,
+  review: { by: 'Dr. Dahamshy', on: '2026-10-19' },
 };

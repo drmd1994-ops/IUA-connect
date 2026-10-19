@@ -27,7 +27,7 @@ test('a visitor works out an eGFR, and nothing typed leaves the page', async ({ 
   await expect(page.getByRole('heading', { name: 'Clinical calculators', level: 1 })).toBeVisible();
   await page.getByRole('link', { name: 'eGFR (CKD-EPI 2021)' }).click();
   await expect(page).toHaveURL(/\/en\/calculators\/egfr$/);
-  await expect(page.getByText('Not yet checked by the reviewing physician.')).toBeVisible();
+  await expect(page.getByText('Checked by Dr. Dahamshy on October 19, 2026.')).toBeVisible();
 
   // Too young for the equation: no number, the range instead.
   await page.getByLabel('Age (years)').fill('17');
