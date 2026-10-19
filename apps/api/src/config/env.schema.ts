@@ -78,6 +78,16 @@ export const envSchema = z
     /** The fictional accounts' password in a hosted demo. Set on the host, never in the code. */
     DEMO_PASSWORD: z.string().optional(),
     API_PORT: z.coerce.number().int().min(1).max(65535).default(4000),
+    /**
+     * The proxies whose X-Forwarded-For is believed, in Express's terms (names such as loopback
+     * and uniquelocal, or address ranges, comma-separated). The rate limits and the audit log use
+     * the address this gives. On this computer the site's proxy is loopback. On a host, the host's
+     * front door and the site reach the server from its private network (M18).
+     */
+    TRUST_PROXY: z
+      .string()
+      .regex(/^[a-z0-9.:/, ]+$/i, 'must be names or address ranges, comma-separated')
+      .default('loopback'),
     WEB_ORIGIN: z
       .string()
       .min(1)

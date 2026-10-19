@@ -113,6 +113,14 @@ describe('parseEnv', () => {
     expect(problems).toContain('WEBAUTHN_RP_ID');
   });
 
+  it('trusts only the loopback proxy unless told otherwise, and refuses anything odd', () => {
+    expect(parseEnv(valid).TRUST_PROXY).toBe('loopback');
+    expect(
+      parseEnv({ ...valid, TRUST_PROXY: 'loopback, uniquelocal, 100.64.0.0/10' }).TRUST_PROXY,
+    ).toBe('loopback, uniquelocal, 100.64.0.0/10');
+    expect(parseError({ ...valid, TRUST_PROXY: 'true; rm' }).message).toContain('TRUST_PROXY');
+  });
+
   describe('the hosted demo (M18)', () => {
     // The same keys, under an ID that isn't "dev-", as the hosted demo's are.
     const hostedKeys = Object.fromEntries(

@@ -14,8 +14,10 @@ export const API_PREFIX = 'api/v1';
 export function configureApp(app: INestApplication, env: Env): void {
   app.useLogger(app.get(Logger));
   // The web app proxies /api/v1 to this server (same-origin cookies); trust X-Forwarded-For only
-  // from loopback, so req.ip is the browser's address and can't be spoofed by remote clients.
-  (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 'loopback');
+  // from the proxies in TRUST_PROXY (loopback on this computer), so req.ip is the browser's
+  // address and can't be spoofed by remote clients.
+  const proxies = env.TRUST_PROXY.split(',').map((entry) => entry.trim());
+  (app.getHttpAdapter().getInstance() as Application).set('trust proxy', proxies);
   // Membership imports send a CSV file of up to 5,000 rows as JSON (M2); 1 MB covers it.
   (app as NestExpressApplication).useBodyParser('json', { limit: '1mb' });
   app.use(cookieParser());
