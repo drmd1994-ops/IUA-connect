@@ -53,6 +53,10 @@ railway up --service api --detach
 railway up --service web --detach
 ```
 
+**Then check it:** `pnpm smoke:hosted` (`tools/scripts/smoke-hosted.mjs`): the site, the server, the site reaching the server, a calculator, and sign-in refusing a wrong password. To also sign in as a demo member and open live chat, set `SMOKE_PASSWORD` to the demo password in the shell first; it is read from there only and never printed.
+
+**The demo's emails** (sign-up confirmations, password resets) are under Administration → Demo emails, for platform staff (`users.manage`). Each opening is recorded in the audit log.
+
 `.railwayignore` and `.dockerignore` keep `.env` and local files out of the upload. The site's address for the server is fixed when the site is built (`API_INTERNAL_URL`, a build argument), so deploy the site again if that changes.
 
 **Reset the demo data:** delete the `Postgres` service's data and redeploy `api`. The next start finds no users and seeds again. Uploaded files on the `api` disk are left behind, unreferenced. This is done in Railway's dashboard by the owner; nothing in the repository does it, as `pnpm demo:reset` refuses any database not on this computer.

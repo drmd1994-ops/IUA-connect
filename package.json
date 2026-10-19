@@ -29,7 +29,8 @@
     "demo:reset": "pnpm --filter @medconnect/api demo:reset",
     "openapi:generate": "turbo run build --filter=@medconnect/api && pnpm --filter @medconnect/api openapi:export && pnpm --filter @medconnect/api-client generate",
     "prepare": "husky",
-    "hosted:start": "node tools/scripts/hosted-start.mjs"
+    "hosted:start": "node tools/scripts/hosted-start.mjs",
+    "smoke:hosted": "node tools/scripts/smoke-hosted.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",
