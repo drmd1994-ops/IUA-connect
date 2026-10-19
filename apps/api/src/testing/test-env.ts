@@ -11,6 +11,7 @@ export function testEnv(overrides: Record<string, string> = {}): Env {
     WEB_ORIGIN: 'http://localhost:3001',
     DATABASE_URL: 'postgresql://unused@localhost:5432/unused',
     STORAGE_DIR: 'storage/test',
+    MAIL_OUTBOX_DIR: 'outbox/test',
     JOB_QUEUE: 'manual',
     ...secrets,
     ...overrides,

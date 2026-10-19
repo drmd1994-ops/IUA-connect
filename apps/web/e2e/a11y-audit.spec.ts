@@ -102,6 +102,7 @@ const ADMIN_PAGES: { path: string; openFirst?: string }[] = [
   { path: '/admin/users', openFirst: 'accounts-table' },
   { path: '/admin/users/roles' },
   { path: '/admin/audit' },
+  { path: '/admin/demo-outbox' },
   { path: '/admin/settings' },
 ];
 

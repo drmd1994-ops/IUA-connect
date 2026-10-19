@@ -10,11 +10,13 @@ import {
   PublicSettingsController,
 } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
+import { DemoOutboxController } from './demo-outbox.controller';
+import { DemoOutboxService } from './demo-outbox.service';
 import { SettingsService } from './settings.service';
 
 /**
  * The admin portal's own screens (M8): the dashboard, accounts and roles, the audit log viewer
- * and the site settings.
+ * the site settings, and the demo's sent emails (M18).
  */
 @Module({
   imports: [AuthModule],
@@ -25,7 +27,14 @@ import { SettingsService } from './settings.service';
     AuditLogController,
     AdminSettingsController,
     PublicSettingsController,
+    DemoOutboxController,
   ],
-  providers: [AccountsService, AuditLogService, DashboardService, SettingsService],
+  providers: [
+    AccountsService,
+    AuditLogService,
+    DashboardService,
+    DemoOutboxService,
+    SettingsService,
+  ],
 })
 export class AdminModule {}

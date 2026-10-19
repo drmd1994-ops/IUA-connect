@@ -3524,6 +3524,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/demo-outbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DemoOutboxController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/demo-outbox/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DemoOutboxController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/verification": {
         parameters: {
             query?: never;
@@ -7557,6 +7589,26 @@ export interface components {
                 textHe: string;
                 textEn: string;
             } | null;
+        };
+        DemoOutboxListDto: {
+            items: {
+                id: string;
+                to: string;
+                subject: string;
+                template: string;
+                /** Format: date-time */
+                sentAt: string;
+            }[];
+        };
+        DemoEmailDto: {
+            id: string;
+            to: string;
+            subject: string;
+            template: string;
+            /** Format: date-time */
+            sentAt: string;
+            text: string;
+            links: string[];
         };
         MyVerificationDto: {
             /** @enum {string} */
@@ -14057,6 +14109,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicSettingsDto"];
+                };
+            };
+        };
+    };
+    DemoOutboxController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DemoOutboxListDto"];
+                };
+            };
+        };
+    };
+    DemoOutboxController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DemoEmailDto"];
                 };
             };
         };

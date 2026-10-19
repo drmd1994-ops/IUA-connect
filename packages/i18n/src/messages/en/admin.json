@@ -17,6 +17,7 @@
     "chatRooms": "Chat rooms",
     "users": "Accounts",
     "audit": "Audit log",
+    "demoOutbox": "Demo emails",
     "settings": "Settings"
   },
   "notAllowed": "This area is for staff, in a session with two-step verification.",
@@ -153,5 +154,19 @@
       "quoteInField": "A quote appears in the middle of a value (line {line})."
     },
     "totals": "Totals"
+  },
+  "demoOutbox": {
+    "title": "Emails the demo sent",
+    "intro": "The demo sends no real email. What it would send (a sign-up's confirmation, a password reset) is kept here, so its links can be followed. Opening an email is recorded in the audit log, because its links act for the person it was sent to.",
+    "notAvailable": "There are no demo emails here: the site sends real email.",
+    "empty": "No emails yet.",
+    "to": "To",
+    "subject": "Subject",
+    "sentAt": "Sent",
+    "open": "Open",
+    "back": "All emails",
+    "links": "Links to the site in this email",
+    "noLinks": "This email has no link to the site.",
+    "text": "The email"
   }
 }
