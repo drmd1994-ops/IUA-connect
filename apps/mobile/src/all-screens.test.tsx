@@ -10,6 +10,7 @@ import {
   SecurityScreen,
 } from '@/features/account';
 import { Directory, GuidelineView, GuidelinesList, MemberPage, Search } from '@/features/browse';
+import { CalculatorList, CalculatorScreen } from '@/features/calculators';
 import { MembershipCard } from '@/features/card';
 import { EducationItem, EducationList, ExamPractice, ExamResults } from '@/features/education';
 import { EventList, EventPage, MySchedule } from '@/features/events';
@@ -78,6 +79,10 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['a message from an organisation', <BroadcastMessage key="s" id="b-1" />],
   ['scanning a code', <ScanScreen key="s" />],
   ['my application', <Applications key="s" />],
+  ['calculators, for a visitor', <CalculatorList key="s" />, true],
+  ['IPSS', <CalculatorScreen key="s" id="ipss" />],
+  ['eGFR', <CalculatorScreen key="s" id="egfr" />],
+  ['R.E.N.A.L.', <CalculatorScreen key="s" id="renal" />, true],
 ];
 
 describe.each(['en', 'he'] as const)('every screen, in %s', (locale) => {

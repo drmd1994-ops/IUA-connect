@@ -211,11 +211,13 @@ test('a member lands on their dashboard; later features are shown but can’t be
 
   // "Coming soon" actions are labelled, and are neither links nor buttons.
   const later = dashboard.getByTestId('coming-soon-actions');
-  await expect(later.getByRole('listitem')).toHaveCount(4);
+  await expect(later.getByRole('listitem')).toHaveCount(3);
   await expect(later).toContainText('Create a case');
-  await expect(later.getByText('Coming soon')).toHaveCount(4);
+  await expect(later.getByText('Coming soon')).toHaveCount(3);
   await expect(later.getByRole('link')).toHaveCount(0);
   await expect(later.getByRole('button')).toHaveCount(0);
+  // Calculators were built in M30.
+  await expect(dashboard.getByRole('link', { name: 'Open a calculator' })).toBeVisible();
 
   // A working action goes somewhere.
   await dashboard.getByRole('link', { name: 'Find a colleague' }).click();

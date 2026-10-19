@@ -59,6 +59,10 @@ const PAGES = [
   '/about',
   '/account/verification',
   '/admin/verifications',
+  // M30 (a calculator with its result is checked in calculators.spec.ts)
+  '/calculators',
+  '/calculators/ipss',
+  '/calculators/egfr',
 ];
 
 for (const locale of ['he', 'en'] as const) {

@@ -1,0 +1,298 @@
+{
+  "nav": "Calculators",
+  "list": {
+    "title": "Clinical calculators",
+    "intro": "Scores and formulas used in urology, each with its source. Open to everyone; what you type stays on your device and is neither sent nor saved.",
+    "kinds": {
+      "questionnaire": "Questionnaires",
+      "score": "Scores",
+      "formula": "Formulas"
+    },
+    "notIncluded": "IIEF, SHIM and TNM staging are not here: their owners license their use in software.",
+    "notReviewed": "Not yet checked"
+  },
+  "form": {
+    "calculate": "Calculate",
+    "clear": "Clear",
+    "fix": "Check the fields marked below.",
+    "errors": {
+      "required": "Fill this in.",
+      "notNumber": "{decimals, plural, =0 {Enter a whole number.} one {Enter a number with at most # decimal.} other {Enter a number with at most # decimals.}}",
+      "outOfRange": "Enter a number from {min} to {max} {unit}. Outside this range the formula gives no answer."
+    },
+    "result": "Result",
+    "parts": "How it adds up",
+    "back": "All calculators"
+  },
+  "about": {
+    "disclaimer": "An aid to clinical judgement, not a substitute for it. Check the result against the source before acting on it.",
+    "nothingStored": "What you type stays on this device: nothing is sent or saved.",
+    "source": "Source",
+    "version": "Version: {version}",
+    "reviewed": "Checked by {name} on {date}.",
+    "notReviewed": "Not yet checked by the reviewing physician. Do not use it for patient care until it is.",
+    "hebrewNotValidated": "The Hebrew wording of this questionnaire is ours, not a validated translation."
+  },
+  "units": {
+    "mgdl": "mg/dL",
+    "umoll": "µmol/L",
+    "ngml": "ng/mL",
+    "ml": "mL",
+    "years": "years",
+    "months": "months",
+    "kg": "kg",
+    "mm": "mm",
+    "cm": "cm",
+    "hu": "HU",
+    "mm2": "mm²",
+    "mm3": "mm³",
+    "mlmin": "mL/min",
+    "mlmin173": "mL/min/1.73 m²",
+    "ngmlml": "ng/mL/mL",
+    "ngmlyear": "ng/mL per year",
+    "points": "points"
+  },
+  "options": {
+    "sex": { "female": "Female", "male": "Male" },
+    "creatinineUnit": { "mgdl": "mg/dL", "umoll": "µmol/L" },
+    "yesNo": { "no": "No", "yes": "Yes" },
+    "often": {
+      "0": "Not at all",
+      "1": "Less than 1 time in 5",
+      "2": "Less than half the time",
+      "3": "About half the time",
+      "4": "More than half the time",
+      "5": "Almost always"
+    },
+    "nocturia": {
+      "0": "None",
+      "1": "1 time",
+      "2": "2 times",
+      "3": "3 times",
+      "4": "4 times",
+      "5": "5 or more times"
+    },
+    "qol": {
+      "0": "Delighted",
+      "1": "Pleased",
+      "2": "Mostly satisfied",
+      "3": "Mixed: about equally satisfied and dissatisfied",
+      "4": "Mostly dissatisfied",
+      "5": "Unhappy",
+      "6": "Terrible"
+    },
+    "exophytic": {
+      "atLeastHalf": "50% or more exophytic",
+      "lessThanHalf": "Less than 50% exophytic",
+      "endophytic": "Entirely endophytic"
+    },
+    "face": { "a": "Anterior (a)", "p": "Posterior (p)", "x": "Neither (x)" },
+    "location": {
+      "beyond": "Entirely above the upper or below the lower polar line",
+      "crosses": "Crosses a polar line",
+      "within": "More than half across a polar line, crossing the axial midline, or entirely between the polar lines"
+    },
+    "longitudinal": { "polar": "Superior or inferior", "middle": "Middle" },
+    "rim": { "lateral": "Lateral", "medial": "Medial" },
+    "obstruction": { "noneOrMild": "None or mild", "moderateOrSevere": "Moderate or severe" },
+    "calyces": { "oneOrTwo": "1 or 2", "three": "3", "staghorn": "Full staghorn" }
+  },
+  "items": {
+    "ipss": {
+      "name": "IPSS: International Prostate Symptom Score",
+      "summary": "Seven questions on urinary symptoms over the past month, and one on quality of life.",
+      "fields": {
+        "emptying": {
+          "label": "1. Over the past month, how often have you had a sensation of not emptying your bladder completely after you finished urinating?"
+        },
+        "frequency": {
+          "label": "2. Over the past month, how often have you had to urinate again less than two hours after you finished urinating?"
+        },
+        "intermittency": {
+          "label": "3. Over the past month, how often have you found you stopped and started again several times when you urinated?"
+        },
+        "urgency": {
+          "label": "4. Over the past month, how often have you found it difficult to postpone urination?"
+        },
+        "weakStream": {
+          "label": "5. Over the past month, how often have you had a weak urinary stream?"
+        },
+        "straining": {
+          "label": "6. Over the past month, how often have you had to push or strain to begin urination?"
+        },
+        "nocturia": {
+          "label": "7. Over the past month, how many times did you most typically get up to urinate from the time you went to bed at night until the time you got up in the morning?"
+        },
+        "qol": {
+          "label": "Quality of life: if you were to spend the rest of your life with your urinary condition just the way it is now, how would you feel about that?"
+        }
+      },
+      "bands": {
+        "mild": "0 to 7: mild symptoms.",
+        "moderate": "8 to 19: moderate symptoms.",
+        "severe": "20 to 35: severe symptoms."
+      },
+      "parts": {
+        "voiding": "Voiding (questions 1, 3, 5, 6)",
+        "storage": "Storage (questions 2, 4, 7)",
+        "qol": "Quality of life (0 to 6, not added to the score)"
+      }
+    },
+    "psaDensity": {
+      "name": "PSA density",
+      "summary": "Serum PSA divided by the prostate's volume.",
+      "fields": {
+        "psa": { "label": "PSA" },
+        "volume": { "label": "Prostate volume", "hint": "From ultrasound or MRI." }
+      },
+      "bands": {
+        "below": "Below 0.15 ng/mL/mL.",
+        "atOrAbove": "0.15 ng/mL/mL or more: at or above the cut-off most often used."
+      },
+      "notes": {
+        "volume": "The density is only as good as the volume: the imaging and the way the volume is measured change the result."
+      }
+    },
+    "psaVelocity": {
+      "name": "PSA velocity",
+      "summary": "How fast PSA rises: the change between two measurements, per year.",
+      "fields": {
+        "first": { "label": "First PSA" },
+        "last": { "label": "Latest PSA" },
+        "months": { "label": "Months between the two" }
+      },
+      "bands": {
+        "below": "Below 0.75 ng/mL per year.",
+        "atOrAbove": "0.75 ng/mL per year or more: the rate the source study associated with prostate cancer."
+      },
+      "notes": {
+        "short": "The measurements are less than 18 months apart; over a short time, velocity is unreliable.",
+        "method": "Calculated from two measurements. The source used repeated measurements over years, and PSA varies between tests and laboratories."
+      }
+    },
+    "creatinineClearance": {
+      "name": "Creatinine clearance (Cockcroft-Gault)",
+      "summary": "Estimated creatinine clearance from age, sex, weight and serum creatinine.",
+      "fields": {
+        "age": { "label": "Age" },
+        "sex": { "label": "Sex" },
+        "weight": { "label": "Weight" },
+        "creatinineUnit": { "label": "Creatinine unit" },
+        "creatinine": { "label": "Serum creatinine" }
+      },
+      "notes": {
+        "weight": "Uses the weight as typed, as the source did. The result is in mL/min and is not adjusted to body surface area."
+      }
+    },
+    "egfr": {
+      "name": "eGFR (CKD-EPI 2021)",
+      "summary": "Estimated GFR from serum creatinine, age and sex, without race.",
+      "fields": {
+        "age": { "label": "Age" },
+        "sex": { "label": "Sex" },
+        "creatinineUnit": { "label": "Creatinine unit" },
+        "creatinine": { "label": "Serum creatinine" }
+      },
+      "bands": {
+        "g1": "G1: normal or high (90 or more).",
+        "g2": "G2: mildly decreased (60 to 89).",
+        "g3a": "G3a: mildly to moderately decreased (45 to 59).",
+        "g3b": "G3b: moderately to severely decreased (30 to 44).",
+        "g4": "G4: severely decreased (15 to 29).",
+        "g5": "G5: kidney failure (below 15)."
+      },
+      "notes": {
+        "steady": "Valid only when creatinine is stable, not in acute kidney injury. The categories are KDIGO's; chronic kidney disease also needs the finding to last more than 3 months."
+      }
+    },
+    "stoneVolume": {
+      "name": "Stone volume",
+      "summary": "A stone's volume from its three diameters (as an ellipsoid), and its area on one image.",
+      "fields": {
+        "length": { "label": "Length (longest diameter)" },
+        "width": { "label": "Width" },
+        "depth": { "label": "Depth (the third diameter)" }
+      },
+      "parts": {
+        "area": "Area on one image (π/4 × length × width)"
+      }
+    },
+    "renal": {
+      "name": "R.E.N.A.L. nephrometry score",
+      "summary": "The anatomy of a renal mass on CT or MRI, scored 4 to 12.",
+      "fields": {
+        "diameter": { "label": "(R) Maximal diameter" },
+        "exophytic": { "label": "(E) Exophytic or endophytic" },
+        "nearness": {
+          "label": "(N) Distance from the deepest part of the tumour to the collecting system or sinus"
+        },
+        "face": { "label": "(A) Anterior or posterior" },
+        "location": { "label": "(L) Location relative to the polar lines" },
+        "hilar": { "label": "Touches the main renal artery or vein (hilar, h)" }
+      },
+      "bands": {
+        "low": "4 to 6: low complexity.",
+        "moderate": "7 to 9: moderate complexity.",
+        "high": "10 to 12: high complexity."
+      },
+      "parts": {
+        "r": "R: radius",
+        "e": "E: exophytic or endophytic",
+        "n": "N: nearness",
+        "l": "L: location"
+      }
+    },
+    "padua": {
+      "name": "PADUA score",
+      "summary": "The anatomy of a renal tumour before nephron-sparing surgery, scored 6 to 14.",
+      "fields": {
+        "longitudinal": { "label": "Longitudinal (polar) location" },
+        "exophytic": { "label": "Exophytic rate" },
+        "rim": { "label": "Renal rim" },
+        "sinus": { "label": "Renal sinus involved" },
+        "collecting": { "label": "Urinary collecting system involved (dislocated or infiltrated)" },
+        "size": { "label": "Tumour size" },
+        "face": { "label": "Anterior or posterior face" }
+      },
+      "bands": {
+        "low": "6 to 7: low risk of complications, in the source.",
+        "intermediate": "8 to 9: intermediate risk of complications, in the source.",
+        "high": "10 or more: high risk of complications, in the source."
+      },
+      "parts": {
+        "longitudinal": "Longitudinal location",
+        "exophytic": "Exophytic rate",
+        "rim": "Renal rim",
+        "sinus": "Renal sinus",
+        "collecting": "Collecting system",
+        "size": "Size"
+      }
+    },
+    "stone": {
+      "name": "S.T.O.N.E. nephrolithometry",
+      "summary": "The complexity of kidney stones before percutaneous nephrolithotomy, from non-contrast CT.",
+      "fields": {
+        "area": {
+          "label": "(S) Stone size: area",
+          "hint": "Length × width; for several stones, added together."
+        },
+        "tract": { "label": "(T) Tract length: skin to stone" },
+        "obstruction": { "label": "(O) Obstruction: hydronephrosis" },
+        "calyces": { "label": "(N) Number of calyces involved" },
+        "density": { "label": "(E) Essence: stone density" }
+      },
+      "bands": {
+        "low": "4 to 5: low complexity.",
+        "moderate": "6 to 8: moderate complexity.",
+        "high": "9 or more: high complexity."
+      },
+      "parts": {
+        "s": "S: size",
+        "t": "T: tract length",
+        "o": "O: obstruction",
+        "n": "N: number of calyces",
+        "e": "E: essence (density)"
+      }
+    }
+  }
+}
