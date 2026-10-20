@@ -171,3 +171,8 @@ Given on 2026-10-07: "start m16 for a 5$ plan on railway". On 2026-10-19 the own
 3. **The .apk is built on GitHub,** which works again.
 4. **The demo password:** the owner types it into Railway; Claude never sees it.
 5. **Who else gets the address:** not answered yet; nobody until the owner says.
+
+On 2026-10-20 the owner said: "Make the sugested icon as temporary icon and mark the phone test as good".
+
+6. **The icon:** "MC" in white on the site's dark blue (`#134d67`), for the app (`apps/mobile/assets/`) and the site's tab (`apps/web/src/app/[locale]/icon.png`, `apple-icon.png`). **Temporary,** until the owner chooses a real logo; the name "Med Connect" still needs its trademark check. A start screen of its own needs `expo-splash-screen`, a new library, so it isn't added; Android shows the icon when the app opens.
+7. **The phone test passed:** the owner tried the .apk on their phone against the hosted demo and called it good.
