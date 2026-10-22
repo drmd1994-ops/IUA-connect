@@ -55,6 +55,7 @@ const MEMBER_PAGES = [
   '/account/chat',
   '/members',
   '/education/exam',
+  '/education/exam/mock',
   '/search?q=demo',
 ];
 

@@ -8,8 +8,8 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 /**
- * Labelled input with hint and errors wired to aria-describedby. Emails, passwords and codes are
- * forced left-to-right so they read correctly inside Hebrew pages.
+ * Labelled input with hint and errors wired to aria-describedby. Emails, passwords, web addresses
+ * and codes are forced left-to-right so they read correctly inside Hebrew pages.
  */
 export function TextField({
   label,
@@ -24,7 +24,7 @@ export function TextField({
   const inputId = id ?? generated;
   const hintId = hint ? `${inputId}-hint` : undefined;
   const errorId = errors.length ? `${inputId}-error` : undefined;
-  const ltr = ['email', 'password', 'tel'].includes(type) || rest.inputMode === 'numeric';
+  const ltr = ['email', 'password', 'tel', 'url'].includes(type) || rest.inputMode === 'numeric';
 
   return (
     <div className={`flex min-w-0 flex-col gap-1.5 ${className}`}>
