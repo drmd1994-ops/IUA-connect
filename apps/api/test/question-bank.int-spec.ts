@@ -276,6 +276,46 @@ describe('question bank (integration)', () => {
     await h.http().delete(`/api/v1/me/exam-bookmarks/${item.id}`).set(bearer(me)).expect(204);
     expect((await next(me, { set: 'bookmarks' }).expect(200)).body.question).toBeNull();
   });
+  it('shows progress by topic and by week from first answers, and the weak topics', async () => {
+    await h.http().get('/api/v1/me/exam-progress').expect(401);
+    const weakTopic = subspecialties[7]!;
+    const goodTopic = subspecialties[8]!;
+    const weakOnes = [];
+    for (let i = 0; i < 5; i += 1)
+      weakOnes.push(await published(question({ subspecialtyId: weakTopic.id })));
+    const goodOnes = [];
+    for (let i = 0; i < 5; i += 1)
+      goodOnes.push(await published(question({ subspecialtyId: goodTopic.id })));
+    const me = await person();
+    // Weak: 2 of 5 right (40%). Good: 3 of 5 (60%, not below). Answering again changes nothing.
+    for (const [i, item] of weakOnes.entries()) await answer(me, item.id, i < 2 ? 1 : 2);
+    for (const [i, item] of goodOnes.entries()) await answer(me, item.id, i < 3 ? 1 : 2);
+    await answer(me, weakOnes[4]!.id, 1);
+
+    const res = await h.http().get('/api/v1/me/exam-progress').set(bearer(me)).expect(200);
+    expect(res.body).toMatchObject({ answered: 10, correct: 5, percent: 50 });
+    const line = (key: string) => res.body.topics.find((t: { key: string }) => t.key === key);
+    expect(line(weakTopic.key)).toMatchObject({ answered: 5, correct: 2, percent: 40, weak: true });
+    expect(line(goodTopic.key)).toMatchObject({
+      answered: 5,
+      correct: 3,
+      percent: 60,
+      weak: false,
+    });
+    expect(line(goodTopic.key).available).toBeGreaterThanOrEqual(5);
+    expect(res.body.topics).toHaveLength(subspecialties.length);
+    expect(res.body.weeks).toHaveLength(12);
+    expect(res.body.weeks[11]).toMatchObject({ answered: 10, correct: 5 });
+
+    // Someone else's progress is theirs alone.
+    const other = await h
+      .http()
+      .get('/api/v1/me/exam-progress')
+      .set(bearer(await person()))
+      .expect(200);
+    expect(other.body).toMatchObject({ answered: 0, percent: null });
+  });
+
   describe('the mock exam', () => {
     const exams = '/api/v1/me/mock-exams';
     const start = (token: string, body: object) =>

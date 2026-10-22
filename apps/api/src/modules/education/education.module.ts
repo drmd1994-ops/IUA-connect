@@ -14,7 +14,8 @@ import {
 } from './exam.controller';
 import { ExamAdminService } from './exam-admin.service';
 import { ExamPracticeService } from './exam-practice.service';
-import { MockExamController } from './mock-exam.controller';
+import { ExamProgressService } from './exam-progress.service';
+import { ExamProgressController, MockExamController } from './mock-exam.controller';
 import { MockExamService } from './mock-exam.service';
 
 /** Education: the library, courses, the review workflow and the exam question demo (M6). */
@@ -28,6 +29,7 @@ import { MockExamService } from './mock-exam.service';
     ExamPracticeController,
     ExamResultsController,
     MockExamController,
+    ExamProgressController,
   ],
   providers: [
     EducationAdminService,
@@ -35,6 +37,7 @@ import { MockExamService } from './mock-exam.service';
     ExamAdminService,
     ExamPracticeService,
     MockExamService,
+    ExamProgressService,
   ],
   exports: [EducationAdminService, EducationPublicService],
 })

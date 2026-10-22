@@ -28,6 +28,7 @@ import {
   MockExamStartDto,
 } from './mock-exam.dto';
 import { MockExamService } from './mock-exam.service';
+import { ExamProgressDto, ExamProgressService } from './exam-progress.service';
 
 /** The signed-in person's mock exams (M23). Nobody else can read them. */
 @ApiTags('me')
@@ -87,5 +88,20 @@ export class MockExamController {
     @Query() query: MockExamQueryDto,
   ): Promise<MockExamDto> {
     return this.exams.finish(principalOf(req), id, query.locale);
+  }
+}
+
+/** The signed-in person's progress and weak topics (M23). Nobody else can read it. */
+@ApiTags('me')
+@ApiBearerAuth()
+@Controller('me/exam-progress')
+@Authenticated()
+export class ExamProgressController {
+  constructor(private readonly progress: ExamProgressService) {}
+
+  @Get()
+  @ApiOkResponse({ type: ExamProgressDto })
+  get(@Req() req: RequestWithPrincipal): Promise<ExamProgressDto> {
+    return this.progress.progress(principalOf(req));
   }
 }
