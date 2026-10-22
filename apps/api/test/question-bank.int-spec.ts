@@ -1,8 +1,10 @@
 import {
   type Harness,
   bearer,
+  createVerifiedUser,
   expectAdminOnly,
   grantRole,
+  signIn,
   signInAdmin,
   signInWithMfa,
   startHarness,
@@ -195,6 +197,83 @@ describe('question bank (integration)', () => {
     expect(history.body.items.map((i: { action: string }) => i.action)).toEqual(['import']);
   });
 
-  // Silences "declared but never read" until later steps use it.
-  void published;
+  const person = async () => (await signIn(h, await createVerifiedUser(h, 'bank'))).accessToken;
+  const next = (token: string | null, query: Record<string, string>) => {
+    const req = h
+      .http()
+      .get('/api/v1/exam-questions/next')
+      .query({ exclude: '', ...query });
+    return token ? req.set(bearer(token)) : req;
+  };
+  const answer = (token: string, id: string, position: number) =>
+    h
+      .http()
+      .post(`/api/v1/exam-questions/${id}/answer`)
+      .set(bearer(token))
+      .send({ position, locale: 'en' })
+      .expect(200);
+
+  it('leaves out what the person answered right in the last 30 days', async () => {
+    const topic = subspecialties[3]!;
+    const right = await published(question({ subspecialtyId: topic.id }));
+    await published(question({ subspecialtyId: topic.id }));
+    const me = await person();
+    await answer(me, right.id, 1);
+
+    // Every question of the topic, one by one: the one answered right never comes.
+    const seen: string[] = [];
+    for (;;) {
+      const res = await next(me, { subspecialty: topic.key, exclude: seen.join(',') }).expect(200);
+      expect(res.body.leftOutRecentlyRight).toBe(1);
+      if (!res.body.question) break;
+      seen.push(res.body.question.id);
+    }
+    expect(seen.length).toBeGreaterThan(0);
+    expect(seen).not.toContain(right.id);
+
+    // A visitor, or someone else, still gets it.
+    const other = await next(null, { subspecialty: topic.key }).expect(200);
+    expect(other.body.leftOutRecentlyRight).toBe(0);
+  });
+
+  it('practises the ones the person got wrong, until they get them right', async () => {
+    const item = await published();
+    const me = await person();
+    await next(null, { set: 'wrong' }).expect(401);
+    expect((await next(me, { set: 'wrong' }).expect(200)).body.question).toBeNull();
+    await answer(me, item.id, 2);
+    const wrong = await next(me, { set: 'wrong' }).expect(200);
+    expect(wrong.body).toMatchObject({ question: { id: item.id }, remaining: 0 });
+    await answer(me, item.id, 1);
+    expect((await next(me, { set: 'wrong' }).expect(200)).body.question).toBeNull();
+  });
+
+  it('keeps bookmarks for their person only, to read and to practise', async () => {
+    const item = await published();
+    const me = await person();
+    const other = await person();
+    await h.http().put(`/api/v1/me/exam-bookmarks/${item.id}`).expect(401);
+    await h.http().get('/api/v1/me/exam-bookmarks').expect(401);
+    await next(null, { set: 'bookmarks' }).expect(401);
+    const draft = await create();
+    await h.http().put(`/api/v1/me/exam-bookmarks/${draft.id}`).set(bearer(me)).expect(404);
+
+    await h.http().put(`/api/v1/me/exam-bookmarks/${item.id}`).set(bearer(me)).expect(204);
+    await h.http().put(`/api/v1/me/exam-bookmarks/${item.id}`).set(bearer(me)).expect(204);
+    const list = await h.http().get('/api/v1/me/exam-bookmarks').set(bearer(me)).expect(200);
+    expect(list.body.items.map((i: { questionId: string }) => i.questionId)).toEqual([item.id]);
+    const theirs = await h.http().get('/api/v1/me/exam-bookmarks').set(bearer(other)).expect(200);
+    expect(theirs.body.items).toEqual([]);
+
+    const practice = await next(me, { set: 'bookmarks' }).expect(200);
+    expect(practice.body).toMatchObject({
+      question: { id: item.id, bookmarked: true },
+      remaining: 0,
+    });
+    expect((await answer(me, item.id, 1)).body.bookmarked).toBe(true);
+    expect((await next(other, { set: 'bookmarks' }).expect(200)).body.question).toBeNull();
+
+    await h.http().delete(`/api/v1/me/exam-bookmarks/${item.id}`).set(bearer(me)).expect(204);
+    expect((await next(me, { set: 'bookmarks' }).expect(200)).body.question).toBeNull();
+  });
 });

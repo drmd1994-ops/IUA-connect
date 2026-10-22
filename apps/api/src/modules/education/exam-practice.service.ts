@@ -8,11 +8,12 @@ import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
 import {
   type AnswerResultDto,
+  type ExamBookmarkListDto,
   type ExamResultsDto,
   type NextQuestionDto,
   type NextQuestionQueryDto,
 } from './exam.dto';
-import { referencesOf, reviewerView, score } from './exam-rules';
+import { RIGHT_RECENTLY_DAYS, referencesOf, reviewerView, score, wrongNow } from './exam-rules';
 
 const INCLUDE = {
   translations: true,
@@ -43,10 +44,15 @@ export class ExamPracticeService {
     private readonly access: AccessService,
   ) {}
 
-  /** A random question the reader hasn't seen in this visit, for the chosen filters. */
+  /**
+   * A random question the reader hasn't seen in this visit, for the chosen filters and set
+   * (M23 plan §2). A signed-in person's practice leaves out what they answered right in the
+   * last 30 days.
+   */
   async next(principal: Principal | null, query: NextQuestionQueryDto): Promise<NextQuestionDto> {
+    if (query.set !== 'all' && !principal) throw new AppException('UNAUTHENTICATED');
     const viewer = await this.access.viewerOf(principal);
-    const where: Prisma.ExamQuestionWhereInput = {
+    const base: Prisma.ExamQuestionWhereInput = {
       status: 'PUBLISHED',
       AND: [await this.access.visibleWhere('exam_question', viewer)],
       ...(query.exclude.length ? { id: { notIn: query.exclude } } : {}),
@@ -54,8 +60,23 @@ export class ExamPracticeService {
       ...(query.level ? { OR: [{ level: query.level }, { level: null }] } : {}),
       ...(query.subspecialty ? { subspecialty: { key: query.subspecialty } } : {}),
     };
+    const userId = principal?.userId;
+    let narrow: Prisma.ExamQuestionWhereInput | null = null;
+    if (userId && query.set === 'all') {
+      const since = new Date(Date.now() - RIGHT_RECENTLY_DAYS * 24 * 60 * 60 * 1000);
+      narrow = { answers: { none: { userId, correct: true, at: { gte: since } } } };
+    } else if (userId && query.set === 'bookmarks') {
+      narrow = { bookmarks: { some: { userId } } };
+    } else if (userId && query.set === 'wrong') {
+      narrow = { id: { in: await this.wrongIds(userId) } };
+    }
+    const where: Prisma.ExamQuestionWhereInput = narrow ? { AND: [base, narrow] } : base;
     const total = await this.prisma.examQuestion.count({ where });
-    if (total === 0) return { question: null, remaining: 0 };
+    const leftOutRecentlyRight =
+      userId && query.set === 'all'
+        ? (await this.prisma.examQuestion.count({ where: base })) - total
+        : 0;
+    if (total === 0) return { question: null, remaining: 0, leftOutRecentlyRight };
     const row = await this.prisma.examQuestion.findFirst({
       where,
       include: INCLUDE,
@@ -63,7 +84,7 @@ export class ExamPracticeService {
       skip: Math.floor(Math.random() * total),
     });
     // The set can shrink between the count and the read (a question was just archived).
-    if (!row) return { question: null, remaining: 0 };
+    if (!row) return { question: null, remaining: 0, leftOutRecentlyRight };
     const text = pick(row.translations, query.locale);
     return {
       question: {
@@ -82,9 +103,11 @@ export class ExamPracticeService {
               nameEn: row.subspecialty.nameEn,
             }
           : null,
+        bookmarked: userId ? await this.isBookmarked(userId, row.id) : false,
         locale: text.locale as Locale,
       },
       remaining: total - 1,
+      leftOutRecentlyRight,
     };
   }
 
@@ -121,6 +144,7 @@ export class ExamPracticeService {
       summary: pick(row.translations, locale).summary,
       references: referencesOf(row.references),
       reviewer: reviewerView(row),
+      bookmarked: principal ? await this.isBookmarked(principal.userId, row.id) : false,
       saved: principal !== null,
       countsForScore,
     };
@@ -151,6 +175,68 @@ export class ExamPracticeService {
         };
       }),
     };
+  }
+
+  /** Bookmarks a question the person may read (again is fine). */
+  async bookmark(principal: Principal, id: string): Promise<void> {
+    await this.visible(principal, id);
+    await this.prisma.examBookmark.upsert({
+      where: { userId_questionId: { userId: principal.userId, questionId: id } },
+      create: { userId: principal.userId, questionId: id },
+      update: {},
+    });
+  }
+
+  async unbookmark(principal: Principal, id: string): Promise<void> {
+    await this.prisma.examBookmark.deleteMany({
+      where: { userId: principal.userId, questionId: id },
+    });
+  }
+
+  /** The person's bookmarks that are still published and theirs to read, newest first. */
+  async bookmarks(principal: Principal, locale: Locale): Promise<ExamBookmarkListDto> {
+    const viewer = await this.access.viewerOf(principal);
+    const rows = await this.prisma.examBookmark.findMany({
+      where: {
+        userId: principal.userId,
+        question: {
+          status: 'PUBLISHED',
+          AND: [await this.access.visibleWhere('exam_question', viewer)],
+        },
+      },
+      orderBy: [{ createdAt: 'desc' }, { questionId: 'asc' }],
+      include: { question: { include: { translations: true, subspecialty: true } } },
+    });
+    return {
+      items: rows.map((row) => ({
+        questionId: row.questionId,
+        stem: pick(row.question.translations, locale).stem,
+        subspecialty: row.question.subspecialty
+          ? {
+              key: row.question.subspecialty.key,
+              nameHe: row.question.subspecialty.nameHe,
+              nameEn: row.question.subspecialty.nameEn,
+            }
+          : null,
+        createdAt: row.createdAt.toISOString(),
+      })),
+    };
+  }
+
+  private async isBookmarked(userId: string, questionId: string): Promise<boolean> {
+    const found = await this.prisma.examBookmark.findUnique({
+      where: { userId_questionId: { userId, questionId } },
+      select: { userId: true },
+    });
+    return found !== null;
+  }
+
+  private async wrongIds(userId: string): Promise<string[]> {
+    const answers = await this.prisma.examAnswer.findMany({
+      where: { userId },
+      select: { questionId: true, correct: true, at: true },
+    });
+    return wrongNow(answers);
   }
 
   /** The published question, if the caller may see it; otherwise 404. */

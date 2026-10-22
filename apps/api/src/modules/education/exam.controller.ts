@@ -41,6 +41,7 @@ import {
   AdminExamQuestionListQueryDto,
   AnswerInputDto,
   AnswerResultDto,
+  ExamBookmarkListDto,
   ExamImportInputDto,
   ExamImportResultDto,
   ExamQuestionInputDto,
@@ -218,5 +219,43 @@ export class ExamResultsController {
     @Query() query: ExamResultsQueryDto,
   ): Promise<ExamResultsDto> {
     return this.practice.results(principalOf(req), query.locale);
+  }
+}
+
+/** The signed-in person's bookmarked questions (M23). Nobody else can read them. */
+@ApiTags('me')
+@ApiBearerAuth()
+@Controller('me/exam-bookmarks')
+@Authenticated()
+export class ExamBookmarksController {
+  constructor(private readonly practice: ExamPracticeService) {}
+
+  @Get()
+  @ApiOkResponse({ type: ExamBookmarkListDto })
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: ExamResultsQueryDto,
+  ): Promise<ExamBookmarkListDto> {
+    return this.practice.bookmarks(principalOf(req), query.locale);
+  }
+
+  @Put(':questionId')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  add(
+    @Req() req: RequestWithPrincipal,
+    @Param('questionId', new ParseUUIDPipe()) questionId: string,
+  ): Promise<void> {
+    return this.practice.bookmark(principalOf(req), questionId);
+  }
+
+  @Delete(':questionId')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  remove(
+    @Req() req: RequestWithPrincipal,
+    @Param('questionId', new ParseUUIDPipe()) questionId: string,
+  ): Promise<void> {
+    return this.practice.unbookmark(principalOf(req), questionId);
   }
 }

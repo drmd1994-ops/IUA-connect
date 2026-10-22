@@ -90,3 +90,21 @@ export function reviewerView(row: {
     at: row.reviewedAt.toISOString(),
   };
 }
+
+/** Practice leaves out a question the person answered right within this many days (M23 §2). */
+export const RIGHT_RECENTLY_DAYS = 30;
+
+/**
+ * "The ones I got wrong": the questions whose latest answer was wrong. Answering one right later
+ * takes it off the list.
+ */
+export function wrongNow(
+  answers: readonly { questionId: string; correct: boolean; at: Date }[],
+): string[] {
+  const latest = new Map<string, { correct: boolean; at: Date }>();
+  for (const answer of answers) {
+    const seen = latest.get(answer.questionId);
+    if (!seen || answer.at > seen.at) latest.set(answer.questionId, answer);
+  }
+  return [...latest].filter(([, answer]) => !answer.correct).map(([questionId]) => questionId);
+}

@@ -8,6 +8,7 @@ import { EducationAdminService } from './education-admin.service';
 import { EducationPublicService } from './education-public.service';
 import {
   ExamAdminController,
+  ExamBookmarksController,
   ExamPracticeController,
   ExamResultsController,
 } from './exam.controller';
@@ -21,6 +22,7 @@ import { ExamPracticeService } from './exam-practice.service';
     EducationAdminController,
     EducationPublicController,
     ExamAdminController,
+    ExamBookmarksController,
     ExamPracticeController,
     ExamResultsController,
   ],

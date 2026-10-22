@@ -1,4 +1,4 @@
-import { type QuestionDraft, questionProblem, score } from './exam-rules';
+import { type QuestionDraft, questionProblem, referencesOf, score, wrongNow } from './exam-rules';
 
 describe('exam question rules', () => {
   const option = (correct = false) => ({ correct, hebrewText: true, hebrewExplanation: true });
@@ -59,5 +59,31 @@ describe('exam question rules', () => {
       expect(score([{ questionId: 'a', correct: true, counts: true }]).percent).toBe(100);
       expect(score([{ questionId: 'a', correct: false, counts: true }]).percent).toBe(0);
     });
+  });
+
+  it('lists a question as wrong while its latest answer is wrong', () => {
+    const at = (minute: number) => new Date(Date.UTC(2026, 9, 23, 10, minute));
+    expect(
+      wrongNow([
+        { questionId: 'a', correct: false, at: at(1) },
+        { questionId: 'a', correct: true, at: at(2) },
+        { questionId: 'b', correct: true, at: at(1) },
+        { questionId: 'b', correct: false, at: at(3) },
+        { questionId: 'c', correct: false, at: at(5) },
+      ]).sort(),
+    ).toEqual(['b', 'c']);
+  });
+
+  it('reads stored references, leaving out anything malformed', () => {
+    expect(
+      referencesOf([
+        { title: 'A', url: 'https://x.test' },
+        { title: 'B' },
+        { url: 'x' },
+        'y',
+        null,
+      ]),
+    ).toEqual([{ title: 'A', url: 'https://x.test' }, { title: 'B' }]);
+    expect(referencesOf(null)).toEqual([]);
   });
 });

@@ -165,6 +165,12 @@ export class NextQuestionQueryDto extends createZodDto(
     level: z.enum(LEVELS).optional(),
     /** A subspecialty key. */
     subspecialty: z.string().max(64).optional(),
+    /**
+     * all: every question, leaving out (for a signed-in person) those they answered right in the
+     * last 30 days; bookmarks: their bookmarks; wrong: those whose latest answer was wrong. The
+     * last two need sign-in.
+     */
+    set: z.enum(['all', 'bookmarks', 'wrong']).default('all'),
     exclude,
   }),
 ) {}
@@ -177,6 +183,8 @@ const askedQuestion = z.strictObject({
   level: z.enum(LEVELS).nullable(),
   difficulty: difficulty.nullable(),
   subspecialty,
+  /** Whether the reader bookmarked it (always false for a visitor). */
+  bookmarked: z.boolean(),
   /** The language of the text returned. */
   locale,
 });
@@ -187,6 +195,8 @@ export class NextQuestionDto extends createZodDto(
     question: askedQuestion.nullable(),
     /** How many more questions match after this one. */
     remaining: z.number().int(),
+    /** How many were left out because the reader answered them right in the last 30 days. */
+    leftOutRecentlyRight: z.number().int(),
   }),
 ) {}
 
@@ -217,6 +227,8 @@ export class AnswerResultDto extends createZodDto(
     summary: z.string(),
     references: z.array(reference),
     reviewer,
+    /** Whether the reader bookmarked it (always false for a visitor). */
+    bookmarked: z.boolean(),
     /** True when the answer was stored (signed-in people only). */
     saved: z.boolean(),
     /** True when this was the first answer to the question: the one that counts for the score. */
@@ -263,6 +275,22 @@ export class ExamImportResultDto extends createZodDto(
     /** Every problem found; the file is refused whole when there is any. Row 1 is the header. */
     problems: z.array(
       z.strictObject({ row: z.number().int(), column: nullableString(), code: z.string() }),
+    ),
+  }),
+) {}
+
+// --- Bookmarks ------------------------------------------------------------------------------
+
+export class ExamBookmarkListDto extends createZodDto(
+  z.strictObject({
+    /** The newest first. Questions taken down since are left out. */
+    items: z.array(
+      z.strictObject({
+        questionId: z.uuid(),
+        stem: z.string(),
+        subspecialty,
+        createdAt: z.iso.datetime(),
+      }),
     ),
   }),
 ) {}
