@@ -60,3 +60,33 @@ export function score(answers: readonly AnswerRecord[]): {
     percent: answered === 0 ? null : Math.round((correct / answered) * 100),
   };
 }
+
+export interface QuestionReference {
+  title: string;
+  url?: string;
+}
+
+/** The references stored on a question (JSON), as shown. Anything malformed is left out. */
+export function referencesOf(value: unknown): QuestionReference[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item: unknown) => {
+    if (!item || typeof item !== 'object') return [];
+    const { title, url } = item as Record<string, unknown>;
+    if (typeof title !== 'string' || !title) return [];
+    return [typeof url === 'string' && url ? { title, url } : { title }];
+  });
+}
+
+/** "Reviewed by … on …", from the columns the publish step fills; null before it is published. */
+export function reviewerView(row: {
+  reviewerNameHe: string | null;
+  reviewerNameEn: string | null;
+  reviewedAt: Date | null;
+}): { nameHe: string | null; nameEn: string | null; at: string } | null {
+  if (!row.reviewedAt) return null;
+  return {
+    nameHe: row.reviewerNameHe,
+    nameEn: row.reviewerNameEn,
+    at: row.reviewedAt.toISOString(),
+  };
+}

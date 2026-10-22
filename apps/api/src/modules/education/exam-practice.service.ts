@@ -12,7 +12,7 @@ import {
   type NextQuestionDto,
   type NextQuestionQueryDto,
 } from './exam.dto';
-import { score } from './exam-rules';
+import { referencesOf, reviewerView, score } from './exam-rules';
 
 const INCLUDE = {
   translations: true,
@@ -74,6 +74,7 @@ export class ExamPracticeService {
           text: pick(option.translations, query.locale).text,
         })),
         level: row.level,
+        difficulty: row.difficulty,
         subspecialty: row.subspecialty
           ? {
               key: row.subspecialty.key,
@@ -118,6 +119,8 @@ export class ExamPracticeService {
         };
       }),
       summary: pick(row.translations, locale).summary,
+      references: referencesOf(row.references),
+      reviewer: reviewerView(row),
       saved: principal !== null,
       countsForScore,
     };

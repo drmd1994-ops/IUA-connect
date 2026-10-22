@@ -2,10 +2,22 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
 import { LEVELS, PLATFORM_TIERS, STATUSES, TIERS } from './education.dto';
+import { DIFFICULTIES } from './exam-import';
 import { MAX_OPTIONS, MIN_OPTIONS } from './exam-rules';
 
 const locale = z.enum(['he', 'en']);
 const position = z.number().int().min(1).max(MAX_OPTIONS);
+const difficulty = z.enum(DIFFICULTIES);
+const httpUrl = z.url({ protocol: /^https?$/ }).max(500);
+/** What the right answer rests on: a guideline, a paper or a book; the address when there is one. */
+const reference = z.strictObject({
+  title: z.string().trim().min(1).max(300),
+  url: httpUrl.optional(),
+});
+/** "Reviewed by … on …": the person who published the question, and when. */
+const reviewer = z
+  .strictObject({ nameHe: nullableString(), nameEn: nullableString(), at: z.iso.datetime() })
+  .nullable();
 const subspecialty = z
   .strictObject({ key: z.string(), nameHe: z.string(), nameEn: z.string() })
   .nullable();
@@ -34,6 +46,10 @@ export class ExamQuestionInputDto extends createZodDto(
     .strictObject({
       /** Leave out for all levels. */
       level: z.enum(LEVELS).nullable().optional(),
+      difficulty: difficulty.nullable().optional(),
+      references: z.array(reference).max(10).default([]),
+      /** Where the question comes from, for the reviewer: "written new by …". Never shown to readers. */
+      source: z.string().trim().max(500).nullable().optional(),
       subspecialtyId: z.uuid().nullable().optional(),
       accessTier: z.enum(PLATFORM_TIERS).default('PUBLIC'),
       /** The membership types allowed to practise it, when accessTier is TYPES. */
@@ -72,6 +88,10 @@ export class AdminExamQuestionDto extends createZodDto(
     id: z.uuid(),
     status: z.enum(STATUSES),
     level: z.enum(LEVELS).nullable(),
+    difficulty: difficulty.nullable(),
+    references: z.array(reference),
+    source: nullableString(),
+    reviewer,
     subspecialtyId: z.uuid().nullable(),
     accessTier: z.enum(TIERS),
     typeIds: z.array(z.uuid()),
@@ -155,6 +175,7 @@ const askedQuestion = z.strictObject({
   stem: z.string(),
   options: z.array(z.strictObject({ position, text: z.string() })),
   level: z.enum(LEVELS).nullable(),
+  difficulty: difficulty.nullable(),
   subspecialty,
   /** The language of the text returned. */
   locale,
@@ -194,6 +215,8 @@ export class AnswerResultDto extends createZodDto(
     ),
     /** A short summary of the topic. */
     summary: z.string(),
+    references: z.array(reference),
+    reviewer,
     /** True when the answer was stored (signed-in people only). */
     saved: z.boolean(),
     /** True when this was the first answer to the question: the one that counts for the score. */
@@ -220,6 +243,26 @@ export class ExamResultsDto extends createZodDto(
         attempts: z.number().int(),
         lastAnsweredAt: z.iso.datetime(),
       }),
+    ),
+  }),
+) {}
+
+// --- Import ---------------------------------------------------------------------------------
+
+export class ExamImportInputDto extends createZodDto(
+  z.strictObject({
+    /** The spreadsheet saved as CSV (UTF-8), as text. */
+    csv: z.string().min(1).max(900_000),
+  }),
+) {}
+
+export class ExamImportResultDto extends createZodDto(
+  z.strictObject({
+    /** How many drafts were made; 0 when the file was refused. */
+    imported: z.number().int(),
+    /** Every problem found; the file is refused whole when there is any. Row 1 is the header. */
+    problems: z.array(
+      z.strictObject({ row: z.number().int(), column: nullableString(), code: z.string() }),
     ),
   }),
 ) {}

@@ -206,7 +206,7 @@ describe('exam questions (integration)', () => {
     expect(res.body.question).not.toBeNull();
     const asked = res.body.question as { id: string; options: object[] };
     expect(Object.keys(asked).sort()).toEqual(
-      ['id', 'level', 'locale', 'options', 'stem', 'subspecialty'].sort(),
+      ['difficulty', 'id', 'level', 'locale', 'options', 'stem', 'subspecialty'].sort(),
     );
     for (const option of asked.options) {
       expect(Object.keys(option).sort()).toEqual(['position', 'text']);
