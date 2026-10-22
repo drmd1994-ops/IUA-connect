@@ -276,4 +276,121 @@ describe('question bank (integration)', () => {
     await h.http().delete(`/api/v1/me/exam-bookmarks/${item.id}`).set(bearer(me)).expect(204);
     expect((await next(me, { set: 'bookmarks' }).expect(200)).body.question).toBeNull();
   });
+  describe('the mock exam', () => {
+    const exams = '/api/v1/me/mock-exams';
+    const start = (token: string, body: object) =>
+      h.http().post(exams).query({ locale: 'en' }).set(bearer(token)).send(body);
+    const choose = (token: string, id: string, position: number, chosen: number | null) =>
+      h
+        .http()
+        .put(`${exams}/${id}/answers/${position}`)
+        .set(bearer(token))
+        .send({ position: chosen });
+    /** Moves the exam's clock as if it had started this many seconds earlier. */
+    const age = (id: string, seconds: number) =>
+      h.db.query(
+        `UPDATE mock_exams SET started_at = started_at - make_interval(secs => $2),
+           ends_at = ends_at - make_interval(secs => $2) WHERE id = $1`,
+        [id, seconds],
+      );
+
+    it('is for signed-in people, and each exam is its own person’s', async () => {
+      await h.http().get(exams).expect(401);
+      await h.http().post(exams).send({ size: 10 }).expect(401);
+      const me = await person();
+      await start(me, { size: 12 }).expect(400);
+      await start(me, { size: 10, subspecialties: ['no-such-topic'] })
+        .expect(422)
+        .expect((res) => expect(res.body.error.details[0].code).toBe('mockExamNoQuestions'));
+      await published(question({ subspecialtyId: subspecialties[4]!.id }));
+      const exam = (
+        await start(me, { size: 10, subspecialties: [subspecialties[4]!.key] }).expect(201)
+      ).body;
+      const other = await person();
+      await h.http().get(`${exams}/${exam.id}`).set(bearer(other)).expect(404);
+      await choose(other, exam.id, 1, 1).expect(404);
+      await h.http().post(`${exams}/${exam.id}/finish`).set(bearer(other)).expect(404);
+      expect((await h.http().get(exams).set(bearer(other)).expect(200)).body.items).toEqual([]);
+    });
+
+    it('hides every answer until the end, keeps the clock, and then explains each question', async () => {
+      const topic = subspecialties[5]!;
+      for (let i = 0; i < 3; i += 1) await published(question({ subspecialtyId: topic.id }));
+      const me = await person();
+      const started = await start(me, { size: 10, subspecialties: [topic.key] }).expect(201);
+      const exam = started.body;
+      // Fewer questions than asked for match: the exam has what there is, 90 seconds each.
+      expect(exam.total).toBeGreaterThanOrEqual(3);
+      expect(exam.total).toBeLessThanOrEqual(10);
+      expect(Date.parse(exam.endsAt) - Date.parse(exam.startedAt)).toBe(exam.total * 90_000);
+      expect(exam).toMatchObject({ status: 'RUNNING', correct: null, answered: 0 });
+      for (const item of exam.questions) {
+        expect(item).toMatchObject({ correctPosition: null, summary: null, references: [] });
+        for (const option of item.options) {
+          expect(option).toMatchObject({ correct: null, explanation: null });
+        }
+      }
+
+      // The first option is right in this file's questions.
+      await choose(me, exam.id, 1, 2).expect(204);
+      await choose(me, exam.id, 1, 1).expect(204);
+      await choose(me, exam.id, 2, 2).expect(204);
+      await choose(me, exam.id, 3, 9).expect(400);
+      await choose(me, exam.id, 99, 1).expect(404);
+      const running = await h.http().get(`${exams}/${exam.id}`).set(bearer(me)).expect(200);
+      expect(running.body).toMatchObject({ status: 'RUNNING', answered: 2, correct: null });
+      expect(running.body.questions[0]).toMatchObject({ chosenPosition: 1, correctPosition: null });
+
+      const done = await h
+        .http()
+        .post(`${exams}/${exam.id}/finish`)
+        .query({ locale: 'en' })
+        .set(bearer(me))
+        .expect(200);
+      expect(done.body).toMatchObject({ status: 'FINISHED', answered: 2, correct: 1 });
+      expect(done.body.questions[0]).toMatchObject({ chosenPosition: 1, correctPosition: 1 });
+      expect(done.body.questions[0].options[0]).toMatchObject({ correct: true });
+      expect(done.body.questions[0].options[0].explanation).toMatch(/^Why 1/);
+      expect(done.body.questions[0].summary).toMatch(/^Summary/);
+      // Over: no more answers.
+      await choose(me, exam.id, 3, 1)
+        .expect(409)
+        .expect((res) => expect(res.body.error.details[0].code).toBe('mockExamOver'));
+
+      // Its answers count like practice, marked with the exam: the first one counts.
+      const results = await h.http().get('/api/v1/me/exam-results').set(bearer(me)).expect(200);
+      expect(results.body).toMatchObject({ answered: 2, correct: 1 });
+      const list = await h.http().get(exams).set(bearer(me)).expect(200);
+      expect(list.body.items).toEqual([
+        expect.objectContaining({ id: exam.id, status: 'FINISHED', total: exam.total, correct: 1 }),
+      ]);
+    });
+
+    it('refuses an answer after the time, and closes itself when its time is up', async () => {
+      await published(question({ subspecialtyId: subspecialties[6]!.id }));
+      const me = await person();
+      const exam = (
+        await start(me, { size: 10, subspecialties: [subspecialties[6]!.key] }).expect(201)
+      ).body;
+      await choose(me, exam.id, 1, 1).expect(204);
+      await age(exam.id, exam.total * 90 + 5);
+      await choose(me, exam.id, 1, 2)
+        .expect(409)
+        .expect((res) => expect(res.body.error.details[0].code).toBe('mockExamOver'));
+      const closed = await h.http().get(`${exams}/${exam.id}`).set(bearer(me)).expect(200);
+      // The answer given in time stands; the late one never replaced it.
+      expect(closed.body).toMatchObject({ status: 'FINISHED', correct: 1 });
+      expect(closed.body.questions[0].chosenPosition).toBe(1);
+      expect(Date.parse(closed.body.finishedAt)).toBe(Date.parse(closed.body.endsAt));
+
+      // An exam nobody opens again is closed when the list is read.
+      const left = (
+        await start(me, { size: 10, subspecialties: [subspecialties[6]!.key] }).expect(201)
+      ).body;
+      await choose(me, left.id, 1, 2).expect(204);
+      await age(left.id, left.total * 90 + 5);
+      const list = await h.http().get(exams).set(bearer(me)).expect(200);
+      expect(list.body.items[0]).toMatchObject({ id: left.id, status: 'FINISHED', correct: 0 });
+    });
+  });
 });

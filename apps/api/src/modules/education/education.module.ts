@@ -14,6 +14,8 @@ import {
 } from './exam.controller';
 import { ExamAdminService } from './exam-admin.service';
 import { ExamPracticeService } from './exam-practice.service';
+import { MockExamController } from './mock-exam.controller';
+import { MockExamService } from './mock-exam.service';
 
 /** Education: the library, courses, the review workflow and the exam question demo (M6). */
 @Module({
@@ -25,8 +27,15 @@ import { ExamPracticeService } from './exam-practice.service';
     ExamBookmarksController,
     ExamPracticeController,
     ExamResultsController,
+    MockExamController,
   ],
-  providers: [EducationAdminService, EducationPublicService, ExamAdminService, ExamPracticeService],
+  providers: [
+    EducationAdminService,
+    EducationPublicService,
+    ExamAdminService,
+    ExamPracticeService,
+    MockExamService,
+  ],
   exports: [EducationAdminService, EducationPublicService],
 })
 export class EducationModule {}
