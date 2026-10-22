@@ -19,6 +19,7 @@ import { MeScreen } from '@/features/me';
 import { OrganisationScreen } from '@/features/organisation';
 import { VerificationScreen } from '@/features/verification';
 import { NewsArticle, NewsList } from '@/features/news';
+import { MockExamSitting, MockExamStart } from '@/features/question-bank';
 import { NotificationSettings, Notifications } from '@/features/notifications';
 import { ScanScreen } from '@/features/scan';
 import { SignIn } from '@/features/sign-in';
@@ -67,6 +68,9 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['exam practice', <ExamPractice key="s" />],
   ['exam practice, for a visitor', <ExamPractice key="s" />, true],
   ['exam results', <ExamResults key="s" />],
+  ['mock exams', <MockExamStart key="s" />],
+  ['a mock exam, running', <MockExamSitting key="s" id="mx-1" />],
+  ['a mock exam, reviewed', <MockExamSitting key="s" id="mx-2" />],
   ['guidelines', <GuidelinesList key="s" />],
   ['a guideline', <GuidelineView key="s" id="gl-1" />],
   ['the member directory', <Directory key="s" />],

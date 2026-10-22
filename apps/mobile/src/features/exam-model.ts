@@ -47,3 +47,25 @@ export function hostOf(url: string): string {
   const match = /^[a-z][a-z0-9+.-]*:\/\/(?:[^@/]*@)?([^/:?#]+)/i.exec(url);
   return match?.[1]?.replace(/^www\./i, '') ?? url;
 }
+
+/** Minutes and seconds left, as a clock shows them (M23 mock exam). */
+export function clock(milliseconds: number): string {
+  const total = Math.max(0, Math.ceil(milliseconds / 1000));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
+/** The share right, rounded; 0 for an exam with no questions. */
+export function percent(correct: number, total: number): number {
+  return total === 0 ? 0 : Math.round((correct / total) * 100);
+}
+
+/**
+ * Which warning is due as the mock exam's clock runs down, once each: five minutes and one minute
+ * before the end. Once the one-minute warning was given, the five-minute one is never said late.
+ */
+export function dueWarning(left: number, given: ReadonlySet<number>): 5 | 1 | null {
+  if (left <= 0 || given.has(1)) return null;
+  if (left <= 60_000) return 1;
+  if (left <= 5 * 60_000 && !given.has(5)) return 5;
+  return null;
+}

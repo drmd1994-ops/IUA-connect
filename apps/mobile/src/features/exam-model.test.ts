@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { countAnswer, hostOf, optionMarks, savedNote, stateAfterNext } from './exam-model';
+import {
+  clock,
+  countAnswer,
+  dueWarning,
+  hostOf,
+  optionMarks,
+  percent,
+  savedNote,
+  stateAfterNext,
+} from './exam-model';
 
 describe('exam practice', () => {
   it('asks while there is a question', () => {
@@ -42,5 +51,32 @@ describe('the place a link leads to', () => {
     expect(hostOf('https://www.youtube.com/watch?v=x')).toBe('youtube.com');
     expect(hostOf('https://player.vimeo.com:443/video/1')).toBe('player.vimeo.com');
     expect(hostOf('not a link')).toBe('not a link');
+  });
+});
+
+describe('the mock exam', () => {
+  it('shows the time left as minutes and seconds, never below zero', () => {
+    expect(clock(15 * 60_000)).toBe('15:00');
+    expect(clock(61_500)).toBe('1:02');
+    expect(clock(-3000)).toBe('0:00');
+  });
+
+  it('scores as a share of every question', () => {
+    expect(percent(7, 10)).toBe(70);
+    expect(percent(0, 0)).toBe(0);
+  });
+
+  it('warns at five minutes and at one minute, once each', () => {
+    const given = new Set<number>();
+    expect(dueWarning(6 * 60_000, given)).toBeNull();
+    expect(dueWarning(5 * 60_000, given)).toBe(5);
+    given.add(5);
+    expect(dueWarning(4 * 60_000, given)).toBeNull();
+    expect(dueWarning(60_000, given)).toBe(1);
+    given.add(1);
+    expect(dueWarning(30_000, given)).toBeNull();
+    // Opened with less than a minute left: only the one-minute warning.
+    expect(dueWarning(40_000, new Set())).toBe(1);
+    expect(dueWarning(0, new Set())).toBeNull();
   });
 });
