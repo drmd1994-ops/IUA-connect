@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableString } from '../../common/dto/nullable-string';
 import { type Principal } from '../../common/auth/principal';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AccessService } from '../access';
@@ -20,9 +21,9 @@ export class ExamProgressDto extends createZodDto(
      */
     topics: z.array(
       z.strictObject({
-        key: z.string().nullable(),
-        nameHe: z.string().nullable(),
-        nameEn: z.string().nullable(),
+        key: nullableString(),
+        nameHe: nullableString(),
+        nameEn: nullableString(),
         answered: z.number().int(),
         correct: z.number().int(),
         percent: z.number().int().nullable(),
