@@ -184,6 +184,13 @@
     "body": "“{title}” is now published on Med Connect.",
     "action": "View it"
   },
+  "examReportHandled": {
+    "subject": "Your report on a question was dealt with",
+    "heading": "Your report was dealt with",
+    "body": "Thank you. A reviewer looked at your report on the question “{title}”.",
+    "reason": "Their answer: {reason}",
+    "action": "See your reports"
+  },
   "contentDigest": {
     "subject": "New on Med Connect",
     "heading": "New on Med Connect",

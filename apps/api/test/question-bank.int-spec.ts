@@ -316,6 +316,135 @@ describe('question bank (integration)', () => {
     expect(other.body).toMatchObject({ answered: 0, percent: null });
   });
 
+  it('takes a reader’s report to the reviewers, who never see who sent it, and tells the reader', async () => {
+    const item = await published();
+    const email = await createVerifiedUser(h, 'reporter');
+    const me = (await signIn(h, email)).accessToken;
+    const reportsOf = `/api/v1/exam-questions/${item.id}/reports`;
+    await h.http().post(reportsOf).send({ reason: 'UNCLEAR' }).expect(401);
+    await h.http().post(reportsOf).set(bearer(me)).send({ reason: 'OTHER' }).expect(400);
+    const draft = await create();
+    await h
+      .http()
+      .post(`/api/v1/exam-questions/${draft.id}/reports`)
+      .set(bearer(me))
+      .send({ reason: 'UNCLEAR' })
+      .expect(404);
+
+    const sent = await h
+      .http()
+      .post(reportsOf)
+      .set(bearer(me))
+      .send({ reason: 'WRONG_ANSWER', text: `Option 2 looks right to me ${run}` })
+      .expect(201);
+    // One open report per person and question.
+    await h
+      .http()
+      .post(reportsOf)
+      .set(bearer(me))
+      .send({ reason: 'TYPO' })
+      .expect(409)
+      .expect((res) => expect(res.body.error.details[0].code).toBe('examReportOpen'));
+
+    // The queue is for question reviewers; an editor who only writes can't open it.
+    await h.http().get('/api/v1/admin/exam-reports').set(as(editor)).expect(403);
+    await h.http().get('/api/v1/admin/exam-reports').set(bearer(me)).expect(403);
+    const queue = await h
+      .http()
+      .get('/api/v1/admin/exam-reports')
+      .query({ pageSize: 100 })
+      .set(as(reviewer))
+      .expect(200);
+    const mine = queue.body.items.find((r: { id: string }) => r.id === sent.body.id);
+    expect(mine).toMatchObject({
+      questionId: item.id,
+      questionStatus: 'PUBLISHED',
+      reason: 'WRONG_ANSWER',
+      status: 'OPEN',
+    });
+    expect(JSON.stringify(queue.body)).not.toContain(email);
+    expect(Object.keys(mine)).not.toContain('userId');
+
+    // The question stays published while the report waits.
+    await answer(me, item.id, 1);
+
+    const decision = `/api/v1/admin/exam-reports/${sent.body.id}/decision`;
+    await h
+      .http()
+      .post(decision)
+      .set(as(editor))
+      .send({ outcome: 'DISMISSED', response: 'x' })
+      .expect(403);
+    await h
+      .http()
+      .post(decision)
+      .set(as(reviewer))
+      .send({ outcome: 'DISMISSED', response: 'Option 1 is right; see the reference.' })
+      .expect(204);
+    await h
+      .http()
+      .post(decision)
+      .set(as(reviewer))
+      .send({ outcome: 'RESOLVED', response: 'again' })
+      .expect(409);
+    const told = h.mailer.last(email, 'examReportHandled');
+    expect(told?.params).toMatchObject({ reason: 'Option 1 is right; see the reference.' });
+    const reports = await h
+      .http()
+      .get('/api/v1/me/exam-reports')
+      .query({ locale: 'en' })
+      .set(bearer(me))
+      .expect(200);
+    expect(reports.body.items).toEqual([
+      expect.objectContaining({
+        id: sent.body.id,
+        status: 'DISMISSED',
+        response: 'Option 1 is right; see the reference.',
+      }),
+    ]);
+    const others = await h
+      .http()
+      .get('/api/v1/me/exam-reports')
+      .set(bearer(await person()))
+      .expect(200);
+    expect(others.body.items).toEqual([]);
+
+    // Dealt with: a new report may be sent.
+    await h.http().post(reportsOf).set(bearer(me)).send({ reason: 'TYPO' }).expect(201);
+  });
+
+  it('gives staff each question’s statistics only from five people, and never who', async () => {
+    const item = await published();
+    const statistics = `/api/v1/admin/exam-questions/${item.id}/statistics`;
+    await expectAdminOnly(h, 'get', statistics);
+    const people = [];
+    for (let i = 0; i < 5; i += 1) people.push(await person());
+    // Four people: 1, 1, 2, 3. The first answer is the one that counts.
+    for (const [i, me] of people.slice(0, 4).entries()) await answer(me, item.id, [1, 1, 2, 3][i]!);
+    await answer(people[0]!, item.id, 3);
+    const few = await h.http().get(statistics).set(as(editor)).expect(200);
+    expect(few.body).toEqual({
+      answered: null,
+      percentCorrect: null,
+      options: [1, 2, 3].map((position) => ({ position, chosen: null })),
+      shownFrom: 5,
+      openReports: 0,
+    });
+    await answer(people[4]!, item.id, 1);
+    const enough = await h.http().get(statistics).set(as(editor)).expect(200);
+    expect(enough.body).toEqual({
+      answered: 5,
+      percentCorrect: 60,
+      options: [
+        { position: 1, chosen: 3 },
+        { position: 2, chosen: 1 },
+        { position: 3, chosen: 1 },
+      ],
+      shownFrom: 5,
+      openReports: 0,
+    });
+  });
+
   describe('the mock exam', () => {
     const exams = '/api/v1/me/mock-exams';
     const start = (token: string, body: object) =>

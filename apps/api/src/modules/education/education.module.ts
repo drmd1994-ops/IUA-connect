@@ -15,6 +15,13 @@ import {
 import { ExamAdminService } from './exam-admin.service';
 import { ExamPracticeService } from './exam-practice.service';
 import { ExamProgressService } from './exam-progress.service';
+import {
+  ExamReportAdminController,
+  ExamReportController,
+  ExamStatisticsController,
+  MyExamReportsController,
+} from './exam-report.controller';
+import { ExamReportService } from './exam-report.service';
 import { ExamProgressController, MockExamController } from './mock-exam.controller';
 import { MockExamService } from './mock-exam.service';
 
@@ -30,6 +37,10 @@ import { MockExamService } from './mock-exam.service';
     ExamResultsController,
     MockExamController,
     ExamProgressController,
+    ExamReportController,
+    MyExamReportsController,
+    ExamReportAdminController,
+    ExamStatisticsController,
   ],
   providers: [
     EducationAdminService,
@@ -38,6 +49,7 @@ import { MockExamService } from './mock-exam.service';
     ExamPracticeService,
     MockExamService,
     ExamProgressService,
+    ExamReportService,
   ],
   exports: [EducationAdminService, EducationPublicService],
 })

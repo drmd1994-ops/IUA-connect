@@ -108,3 +108,30 @@ export function wrongNow(
   }
   return [...latest].filter(([, answer]) => !answer.correct).map(([questionId]) => questionId);
 }
+
+/** Staff see no number about a question until at least this many people answered it (M23). */
+export const STATISTICS_FROM = 5;
+
+/**
+ * How people answered a question, from first answers (one per person). Below STATISTICS_FROM
+ * people every number is withheld, so nobody's answer can be worked out.
+ */
+export function questionStatistics(
+  firstAnswers: readonly { position: number; correct: boolean }[],
+  optionPositions: readonly number[],
+): {
+  answered: number | null;
+  percentCorrect: number | null;
+  options: { position: number; chosen: number | null }[];
+} {
+  const enough = firstAnswers.length >= STATISTICS_FROM;
+  const correct = firstAnswers.filter((answer) => answer.correct).length;
+  return {
+    answered: enough ? firstAnswers.length : null,
+    percentCorrect: enough ? Math.round((correct / firstAnswers.length) * 100) : null,
+    options: optionPositions.map((position) => ({
+      position,
+      chosen: enough ? firstAnswers.filter((answer) => answer.position === position).length : null,
+    })),
+  };
+}
