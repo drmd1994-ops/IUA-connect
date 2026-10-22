@@ -1,0 +1,503 @@
+[
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urethral Strictures" }],
+    "he": {
+      "stem": "למטופל היצרות קצרה (1.5 ס״מ) בשופכה הבולברית, שחזרה אחרי חיתוך אנדוסקופי אחד (DVIU). מהו הטיפול המומלץ עכשיו?",
+      "summary": "חיתוך אנדוסקופי (DVIU) יכול להצליח בהיצרות קצרה וראשונה, אך אחרי הישנות הסיכוי להצלחה בחיתוך נוסף נמוך מאוד. לכן אחרי כישלון ממליצים על אורתרופלסטיקה, שמשיגה שיעורי הצלחה גבוהים ועמידים."
+    },
+    "en": {
+      "stem": "A patient has a short (1.5 cm) bulbar urethral stricture that recurred after one endoscopic urethrotomy (DVIU). What is now recommended?",
+      "summary": "Endoscopic urethrotomy (DVIU) can work for a short, first stricture, but after recurrence a repeat urethrotomy rarely succeeds. After failure, urethroplasty is recommended, with high and durable success rates."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אורתרופלסטיקה",
+          "explanation": "נכון. אחרי כישלון של חיתוך אנדוסקופי, זה הטיפול המועדף."
+        },
+        "en": {
+          "text": "Urethroplasty",
+          "explanation": "Right. After a failed urethrotomy it is the preferred treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חיתוך אנדוסקופי חוזר",
+          "explanation": "שגוי. הסיכוי להצלחה של חיתוך חוזר נמוך."
+        },
+        "en": {
+          "text": "A repeat urethrotomy",
+          "explanation": "Wrong. A repeat urethrotomy has a low chance of success."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קטטר קבוע לצמיתות",
+          "explanation": "שגוי. זה אינו טיפול בהיצרות ומלווה בסיבוכים."
+        },
+        "en": {
+          "text": "A permanent indwelling catheter",
+          "explanation": "Wrong. It does not treat the stricture and carries complications."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תרופה מקבוצת חוסמי אלפא",
+          "explanation": "שגוי. חוסמי אלפא אינם משפיעים על היצרות שופכה."
+        },
+        "en": {
+          "text": "An alpha-blocker",
+          "explanation": "Wrong. Alpha-blockers do not affect a urethral stricture."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urethral Strictures" }],
+    "he": {
+      "stem": "מהי רקמת השתל המועדפת לאורתרופלסטיקה בהחלפה (substitution urethroplasty)?",
+      "summary": "רירית הלחי (buccal mucosa) היא השתל המועדף: היא עמידה ללחות, נקלטת היטב, וקל לקחת אותה עם תחלואה מעטה באזור הלקיחה. שתלי עור מאזור איברי המין פחות מתאימים, במיוחד בליכן סקלרוזוס."
+    },
+    "en": {
+      "stem": "What is the preferred graft tissue for substitution urethroplasty?",
+      "summary": "Buccal mucosa is the preferred graft: it tolerates a wet environment, takes well, and is easy to harvest with little donor-site morbidity. Genital skin grafts are less suitable, especially in lichen sclerosus."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "רירית הלחי", "explanation": "נכון. זהו השתל המועדף בשחזור השופכה." },
+        "en": {
+          "text": "Buccal mucosa",
+          "explanation": "Right. It is the preferred graft in urethral reconstruction."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "עור מהירך", "explanation": "שגוי. עור שעיר ויבש אינו מתאים לשופכה." },
+        "en": {
+          "text": "Skin from the thigh",
+          "explanation": "Wrong. Hairy, dry skin does not suit the urethra."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "רירית מעי גס", "explanation": "שגוי. רירית מעי אינה משמשת לשתל שופכה." },
+        "en": {
+          "text": "Colonic mucosa",
+          "explanation": "Wrong. Bowel mucosa is not used as a urethral graft."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רשת סינתטית",
+          "explanation": "שגוי. חומר סינתטי אינו משמש לשחזור השופכה."
+        },
+        "en": {
+          "text": "Synthetic mesh",
+          "explanation": "Wrong. Synthetic material is not used to rebuild the urethra."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urological Trauma" }],
+    "he": {
+      "stem": "מטופל אחרי שבר באגן עם קרע מלא של השופכה האחורית, יציב. מהו הטיפול הראשוני המקובל?",
+      "summary": "בקרע מלא של השופכה האחורית בשבר אגן, הטיפול הראשוני המקובל הוא ניקוז השתן בצנתר על־ערווה (suprapubic). השחזור (אורתרופלסטיקה אנסטומוטית) נדחה לרוב לכשלושה חודשים, אחרי שההמטומה נספגת. יישור מוקדם אנדוסקופי אפשרי במרכזים מנוסים."
+    },
+    "en": {
+      "stem": "A stable patient after a pelvic fracture has a complete posterior urethral rupture. What is the usual initial treatment?",
+      "summary": "For a complete posterior urethral rupture with a pelvic fracture, the usual initial treatment is urinary drainage by a suprapubic catheter. Reconstruction (anastomotic urethroplasty) is usually delayed to about three months, after the haematoma resolves. Early endoscopic realignment is possible in experienced centres."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "צנתר על־ערווה ושחזור מאוחר", "explanation": "נכון. זו הגישה המקובלת." },
+        "en": {
+          "text": "A suprapubic catheter and delayed reconstruction",
+          "explanation": "Right. This is the accepted approach."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אורתרופלסטיקה פתוחה מיידית",
+          "explanation": "שגוי. ניתוח מיידי בשדה מדמם קשה ומלווה בסיבוכים רבים."
+        },
+        "en": {
+          "text": "Immediate open urethroplasty",
+          "explanation": "Wrong. Immediate surgery in a bleeding field is hard and complicated."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "החדרה בכוח של צנתר דרך השופכה",
+          "explanation": "שגוי. ניסיון כזה עלול להחמיר את הקרע."
+        },
+        "en": {
+          "text": "Forcing a urethral catheter in",
+          "explanation": "Wrong. This may make the rupture worse."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מעקב בלי ניקוז",
+          "explanation": "שגוי. המטופל אינו יכול להשתין; יש לנקז."
+        },
+        "en": {
+          "text": "Observation without drainage",
+          "explanation": "Wrong. The patient cannot void; drainage is needed."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urological Trauma" }],
+    "he": {
+      "stem": "אחרי חבלה באגן נראה דם בפתח השופכה. מה יש לעשות לפני הכנסת צנתר לשלפוחית?",
+      "summary": "דם בפתח השופכה אחרי חבלה מחשיד לפגיעה בשופכה. לפני ניסיון להכניס צנתר דרך השופכה מבצעים צילום שופכה רטרוגרדי (RUG). אם יש קרע, מנקזים בצנתר על־ערווה."
+    },
+    "en": {
+      "stem": "After pelvic trauma there is blood at the urethral meatus. What should be done before passing a catheter into the bladder?",
+      "summary": "Blood at the meatus after trauma suggests urethral injury. Before trying a urethral catheter, a retrograde urethrogram (RUG) is done. If there is a rupture, the bladder is drained by a suprapubic catheter."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "צילום שופכה רטרוגרדי", "explanation": "נכון. הוא מראה אם יש קרע בשופכה." },
+        "en": {
+          "text": "A retrograde urethrogram",
+          "explanation": "Right. It shows whether the urethra is torn."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הכנסת צנתר רגילה, בעדינות",
+          "explanation": "שגוי. גם החדרה עדינה עלולה להפוך קרע חלקי למלא."
+        },
+        "en": {
+          "text": "Pass a normal catheter, gently",
+          "explanation": "Wrong. Even gentle passage may turn a partial tear into a complete one."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ציסטוסקופיה גמישה בחדר המיון כבדיקה ראשונה",
+          "explanation": "שגוי. הבדיקה הראשונה המקובלת היא צילום רטרוגרדי."
+        },
+        "en": {
+          "text": "Flexible cystoscopy in the emergency room as the first test",
+          "explanation": "Wrong. The usual first test is a retrograde urethrogram."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אולטרסאונד של הכליות",
+          "explanation": "שגוי. אולטרסאונד של הכליות אינו מאבחן פגיעה בשופכה."
+        },
+        "en": {
+          "text": "A kidney ultrasound",
+          "explanation": "Wrong. A kidney ultrasound does not diagnose urethral injury."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urological Trauma" }],
+    "he": {
+      "stem": "לאחר תאונת דרכים, למטופל יציב המודינמית יש פגיעה בכליה בדרגה IV ב־CT. מהי הגישה המקובלת?",
+      "summary": "רוב פגיעות הכליה, כולל דרגה IV, מטופלות שמרנית כשהמטופל יציב: מנוחה, ניטור, בדיקות דם והדמיה חוזרת לפי הצורך. אמבוליזציה מתאימה לדימום פעיל. ניתוח שמור לחוסר יציבות המודינמית או לכישלון הטיפול השמרני."
+    },
+    "en": {
+      "stem": "After a road accident, a haemodynamically stable patient has a grade IV kidney injury on CT. What is the accepted approach?",
+      "summary": "Most kidney injuries, including grade IV, are managed conservatively when the patient is stable: bed rest, monitoring, blood tests and repeat imaging as needed. Embolisation suits active bleeding. Surgery is kept for haemodynamic instability or failed conservative care."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "טיפול שמרני עם ניטור, ואמבוליזציה אם יש דימום פעיל",
+          "explanation": "נכון. כך נשמרת הכליה ברוב המקרים."
+        },
+        "en": {
+          "text": "Conservative care with monitoring, and embolisation if there is active bleeding",
+          "explanation": "Right. This saves the kidney in most cases."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "כריתת כליה מיידית", "explanation": "שגוי. כריתה אינה נחוצה במטופל יציב." },
+        "en": {
+          "text": "Immediate nephrectomy",
+          "explanation": "Wrong. Nephrectomy is not needed in a stable patient."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ניתוח חוקר בכל פגיעה בדרגה IV",
+          "explanation": "שגוי. ניתוח שגרתי מעלה את הסיכון לאובדן הכליה."
+        },
+        "en": {
+          "text": "Surgical exploration for every grade IV injury",
+          "explanation": "Wrong. Routine surgery raises the risk of losing the kidney."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שחרור לבית ללא מעקב",
+          "explanation": "שגוי. פגיעה בדרגה זו מחייבת אשפוז וניטור."
+        },
+        "en": {
+          "text": "Discharge home without follow-up",
+          "explanation": "Wrong. An injury of this grade needs admission and monitoring."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urological Trauma" }],
+    "he": {
+      "stem": "בציסטוגרפיה ב־CT אחרי חבלה נמצא קרע תוך־צפקי של השלפוחית. מהו הטיפול?",
+      "summary": "קרע תוך־צפקי של השלפוחית (לרוב בכיפת השלפוחית, בשלפוחית מלאה) מטופל בתיקון ניתוחי, כי השתן דולף לחלל הבטן. קרע חוץ־צפקי פשוט מטופל לרוב בניקוז בצנתר בלבד."
+    },
+    "en": {
+      "stem": "CT cystography after trauma shows an intraperitoneal bladder rupture. What is the treatment?",
+      "summary": "An intraperitoneal bladder rupture (usually at the dome, with a full bladder) is repaired surgically, because urine leaks into the abdomen. An uncomplicated extraperitoneal rupture is usually managed with catheter drainage alone."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "תיקון ניתוחי", "explanation": "נכון. קרע תוך־צפקי מחייב תיקון." },
+        "en": {
+          "text": "Surgical repair",
+          "explanation": "Right. An intraperitoneal rupture needs repair."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "צנתר שתן בלבד לשבועיים",
+          "explanation": "שגוי. זה מתאים לקרע חוץ־צפקי פשוט, לא לתוך־צפקי."
+        },
+        "en": {
+          "text": "A urinary catheter alone for two weeks",
+          "explanation": "Wrong. That suits a simple extraperitoneal rupture, not an intraperitoneal one."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "מעקב בלבד", "explanation": "שגוי. דליפת שתן לבטן מסוכנת." },
+        "en": {
+          "text": "Observation only",
+          "explanation": "Wrong. Urine leaking into the abdomen is dangerous."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "נפרוסטומיה דו־צדדית",
+          "explanation": "שגוי. ניקוז הכליות אינו מתקן את הקרע."
+        },
+        "en": {
+          "text": "Bilateral nephrostomies",
+          "explanation": "Wrong. Draining the kidneys does not fix the rupture."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [{ "title": "EAU Guidelines on Urethral Strictures" }],
+    "he": {
+      "stem": "למטופל היצרות ארוכה של השופכה הקדמית על רקע ליכן סקלרוזוס. איזו רקמה אין להשתמש בה לשחזור?",
+      "summary": "ליכן סקלרוזוס פוגע בעור איברי המין, ושתלים או מתלים מעור הפין נוטים להיפגע מהמחלה ולהיצרות חוזרת. לכן בשחזור משתמשים ברירית הלחי, ונמנעים מעור איברי המין. במקרים מורכבים שוקלים שחזור בשלבים או פתח שופכה בחיץ (perineal urethrostomy)."
+    },
+    "en": {
+      "stem": "A patient has a long anterior urethral stricture from lichen sclerosus. Which tissue should not be used for the reconstruction?",
+      "summary": "Lichen sclerosus affects genital skin, and grafts or flaps from penile skin tend to be affected by the disease and to re-stricture. Reconstruction therefore uses buccal mucosa and avoids genital skin. In complex cases, staged repair or a perineal urethrostomy is considered."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "עור הפין או עור איברי המין",
+          "explanation": "נכון. העור עצמו חשוף למחלה ולהיצרות חוזרת."
+        },
+        "en": {
+          "text": "Penile or genital skin",
+          "explanation": "Right. The skin itself is exposed to the disease and re-stricturing."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "רירית הלחי", "explanation": "שגוי. רירית הלחי היא הבחירה המועדפת כאן." },
+        "en": {
+          "text": "Buccal mucosa",
+          "explanation": "Wrong. Buccal mucosa is the preferred choice here."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רירית השפה התחתונה",
+          "explanation": "שגוי. רירית הפה, כולל השפה, מתאימה."
+        },
+        "en": {
+          "text": "Lower lip mucosa",
+          "explanation": "Wrong. Oral mucosa, including the lip, is suitable."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רירית הלשון",
+          "explanation": "שגוי. רירית הלשון היא חלופה אפשרית לרירית הלחי."
+        },
+        "en": {
+          "text": "Lingual mucosa",
+          "explanation": "Wrong. Lingual mucosa is a possible alternative to buccal mucosa."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urological Trauma" }],
+    "he": {
+      "stem": "במהלך כריתת רחם מתגלה חיתוך מלא של השופכן השמאלי, כ־4 ס״מ מעל השלפוחית. מהו התיקון המתאים?",
+      "summary": "בפגיעה בשליש התחתון של השופכן, סמוך לשלפוחית, התיקון המקובל הוא השתלה מחדש של השופכן בשלפוחית (ureteroneocystostomy), לעיתים עם psoas hitch או מתלה Boari להפחתת המתח. בפגיעות גבוהות יותר מבצעים חיבור קצה לקצה (ureteroureterostomy) על גבי תומך."
+    },
+    "en": {
+      "stem": "During a hysterectomy, a complete transection of the left ureter is found about 4 cm above the bladder. What is the right repair?",
+      "summary": "For an injury in the lower third of the ureter, near the bladder, the usual repair is reimplantation of the ureter into the bladder (ureteroneocystostomy), sometimes with a psoas hitch or Boari flap to reduce tension. Higher injuries are repaired end to end (ureteroureterostomy) over a stent."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "השתלה מחדש של השופכן בשלפוחית",
+          "explanation": "נכון. זה התיקון המקובל בשליש התחתון."
+        },
+        "en": {
+          "text": "Reimplantation of the ureter into the bladder",
+          "explanation": "Right. This is the usual repair in the lower third."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קשירת השופכן והשארת הכליה",
+          "explanation": "שגוי. קשירה גורמת לחסימה ולאובדן הכליה."
+        },
+        "en": {
+          "text": "Ligating the ureter and leaving the kidney",
+          "explanation": "Wrong. Ligation causes obstruction and loss of the kidney."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "כריתת כליה", "explanation": "שגוי. אין צורך לוותר על הכליה כשאפשר לתקן." },
+        "en": {
+          "text": "Nephrectomy",
+          "explanation": "Wrong. There is no need to give up the kidney when it can be repaired."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "השתלת מעי במקום השופכן",
+          "explanation": "שגוי. החלפה במעי שמורה לפגיעות ארוכות מאוד."
+        },
+        "en": {
+          "text": "Bowel interposition in place of the ureter",
+          "explanation": "Wrong. Bowel replacement is kept for very long defects."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urological Trauma" }],
+    "he": {
+      "stem": "גבר מתאר קול ״פיצוח״ בזמן יחסי מין, ירידה מיידית בזקפה ונפיחות כחולה של הפין. מהו הטיפול?",
+      "summary": "זהו שבר בפין: קרע בטוניקה אלבוגינאה של הגוף המחילתי. הטיפול המקובל הוא ניתוח מוקדם לתיקון הקרע, שמפחית עקמומיות והפרעה בזקפה בהמשך. כשיש דם בפתח השופכה או קושי בהשתנה, יש לחפש גם פגיעה בשופכה."
+    },
+    "en": {
+      "stem": "A man describes a 'crack' during intercourse, immediate loss of erection and blue swelling of the penis. What is the treatment?",
+      "summary": "This is a penile fracture: a tear in the tunica albuginea of the corpus cavernosum. The accepted treatment is early surgical repair, which lowers later curvature and erectile dysfunction. With blood at the meatus or difficulty voiding, urethral injury must also be sought."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "ניתוח מוקדם לתיקון הקרע",
+          "explanation": "נכון. תיקון מוקדם משפר את התוצאה."
+        },
+        "en": {
+          "text": "Early surgical repair of the tear",
+          "explanation": "Right. Early repair improves the outcome."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קרח ומשככי כאבים בלבד",
+          "explanation": "שגוי. טיפול שמרני מלווה ביותר עקמומיות ובעיות זקפה."
+        },
+        "en": {
+          "text": "Ice and painkillers only",
+          "explanation": "Wrong. Conservative care leads to more curvature and erectile problems."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מעכב PDE5 למניעת הפרעה בזקפה",
+          "explanation": "שגוי. תרופה אינה מתקנת את הקרע."
+        },
+        "en": {
+          "text": "A PDE5 inhibitor to prevent erectile dysfunction",
+          "explanation": "Wrong. A drug does not repair the tear."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שאיבת דם מהגוף המחילתי",
+          "explanation": "שגוי. זהו טיפול בפריאפיזם, לא בשבר."
+        },
+        "en": {
+          "text": "Aspiration of the corpus cavernosum",
+          "explanation": "Wrong. That treats priapism, not a fracture."
+        }
+      }
+    ]
+  }
+]

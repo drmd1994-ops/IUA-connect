@@ -1,0 +1,500 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "גבר עם הפרעה בזקפה נוטל ניטרטים בגלל תעוקת חזה. מה נכון לגבי מעכבי PDE5 (כמו סילדנפיל)?",
+      "summary": "מעכבי PDE5 עם ניטרטים (או דונורים אחרים של חנקן חמצני) גורמים לירידה מסוכנת בלחץ הדם, ולכן השילוב אסור. במטופלים אלה שוקלים טיפולים אחרים, כמו הזרקה לגוף המחילתי או משאבת ואקום, בתיאום עם הקרדיולוג."
+    },
+    "en": {
+      "stem": "A man with erectile dysfunction takes nitrates for angina. What is true about PDE5 inhibitors (such as sildenafil)?",
+      "summary": "PDE5 inhibitors with nitrates (or other nitric oxide donors) cause a dangerous fall in blood pressure, so the combination is forbidden. In these patients other treatments, such as intracavernous injection or a vacuum device, are considered with the cardiologist."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "השילוב אסור בגלל ירידה מסוכנת בלחץ הדם",
+          "explanation": "נכון. זו הוריית נגד מוחלטת."
+        },
+        "en": {
+          "text": "The combination is forbidden because of a dangerous fall in blood pressure",
+          "explanation": "Right. It is an absolute contraindication."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אפשר לשלב אם לוקחים את התרופות בהפרש של שעה",
+          "explanation": "שגוי. ההשפעה של מעכבי PDE5 נמשכת שעות רבות."
+        },
+        "en": {
+          "text": "They can be combined if taken an hour apart",
+          "explanation": "Wrong. PDE5 inhibitors act for many hours."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "השילוב בטוח ואף מגן על הלב", "explanation": "שגוי. השילוב מסוכן." },
+        "en": {
+          "text": "The combination is safe and even protects the heart",
+          "explanation": "Wrong. The combination is dangerous."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רק טדלפיל אסור; סילדנפיל מותר",
+          "explanation": "שגוי. האיסור חל על כל מעכבי PDE5."
+        },
+        "en": {
+          "text": "Only tadalafil is forbidden; sildenafil is allowed",
+          "explanation": "Wrong. The ban applies to all PDE5 inhibitors."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "גבר מגיע עם זקפה כואבת שנמשכת 6 שעות, אחרי הזרקה לגוף המחילתי. בגזים מהגוף המחילתי: דם כהה, היפוקסי וחומצי. מהו הטיפול הראשון?",
+      "summary": "זהו פריאפיזם איסכמי, מצב חירום. הטיפול הראשון: שאיבת דם מהגוף המחילתי, עם שטיפה, והזרקה של אגוניסט אלפא (פנילפרין) בניטור לחץ דם ודופק. אם אין תגובה, שוקלים ניתוח שאנט. ככל שהמצב נמשך זמן רב יותר, גדל הסיכון לפגיעה קבועה בזקפה."
+    },
+    "en": {
+      "stem": "A man presents with a painful erection lasting 6 hours after an intracavernous injection. Cavernous blood gas: dark, hypoxic and acidotic blood. What is the first treatment?",
+      "summary": "This is ischaemic priapism, an emergency. First treatment: aspiration of cavernous blood, with irrigation, and injection of an alpha agonist (phenylephrine) with blood pressure and heart rate monitoring. If there is no response, a shunt operation is considered. The longer it lasts, the higher the risk of permanent erectile damage."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "שאיבה מהגוף המחילתי והזרקת פנילפרין",
+          "explanation": "נכון. זה הטיפול הראשון בפריאפיזם איסכמי."
+        },
+        "en": {
+          "text": "Cavernous aspiration and phenylephrine injection",
+          "explanation": "Right. This is first-line for ischaemic priapism."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קרח מקומי ומעקב למשך 24 שעות",
+          "explanation": "שגוי. המתנה גורמת לנזק בלתי הפיך."
+        },
+        "en": {
+          "text": "Ice packs and observation for 24 hours",
+          "explanation": "Wrong. Waiting causes irreversible damage."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אמבוליזציה עורקית",
+          "explanation": "שגוי. אמבוליזציה מתאימה לפריאפיזם לא־איסכמי (עורקי)."
+        },
+        "en": {
+          "text": "Arterial embolisation",
+          "explanation": "Wrong. Embolisation suits non-ischaemic (arterial) priapism."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "השתלת תותב פין מיידית כטיפול ראשון",
+          "explanation": "שגוי. תותב שמור למקרים שנכשלו או ממושכים מאוד."
+        },
+        "en": {
+          "text": "Immediate penile prosthesis as first treatment",
+          "explanation": "Wrong. A prosthesis is kept for failed or very prolonged cases."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "מהי הדרך המהירה להבחין בין פריאפיזם איסכמי לבין פריאפיזם לא־איסכמי?",
+      "summary": "בגזים מהגוף המחילתי: בפריאפיזם איסכמי הדם כהה, עם חמצן נמוך, פחמן דו־חמצני גבוה וחמצת; בפריאפיזם לא־איסכמי (עורקי) הגזים דומים לדם עורקי. דופלר יכול להראות זרימה מוגברת ופיסטולה עורקית בפריאפיזם לא־איסכמי."
+    },
+    "en": {
+      "stem": "What is the quick way to tell ischaemic priapism from non-ischaemic priapism?",
+      "summary": "On cavernous blood gas: in ischaemic priapism the blood is dark, with low oxygen, high carbon dioxide and acidosis; in non-ischaemic (arterial) priapism the gas resembles arterial blood. Doppler can show high flow and an arterial fistula in non-ischaemic priapism."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בדיקת גזים בדם שנשאב מהגוף המחילתי",
+          "explanation": "נכון. זו הבדיקה המכריעה והמהירה."
+        },
+        "en": {
+          "text": "A blood gas from cavernous aspirate",
+          "explanation": "Right. It is the quick, decisive test."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "בדיקת טסטוסטרון בדם", "explanation": "שגוי. אין לה תפקיד באבחנה המבדלת." },
+        "en": {
+          "text": "Serum testosterone",
+          "explanation": "Wrong. It has no role in telling the two apart."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "CT של האגן",
+          "explanation": "שגוי. CT אינו מבדיל בין הסוגים ומעכב טיפול."
+        },
+        "en": {
+          "text": "Pelvic CT",
+          "explanation": "Wrong. CT does not tell the types apart and delays treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "בדיקת שתן כללית", "explanation": "שגוי. בדיקת שתן אינה תורמת לאבחנה זו." },
+        "en": {
+          "text": "A urinalysis",
+          "explanation": "Wrong. A urinalysis does not help with this diagnosis."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "מדוע ורידן (varicocele) שכיח הרבה יותר בצד שמאל?",
+      "summary": "וריד האשך השמאלי מתנקז לווריד הכליה השמאלי בזווית ישרה, והלחץ בו גבוה יותר; הימני מתנקז ישירות לווריד הנבוב התחתון בזווית חדה. ורידן חדש בצד ימין בלבד, או ורידן שאינו מתמלא בשכיבה, מחייב לשלול גוש בבטן."
+    },
+    "en": {
+      "stem": "Why is a varicocele much more common on the left side?",
+      "summary": "The left testicular vein drains into the left renal vein at a right angle, with higher pressure; the right drains straight into the inferior vena cava at an acute angle. A new right-sided-only varicocele, or one that does not empty when lying down, calls for ruling out an abdominal mass."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "וריד האשך השמאלי מתנקז לווריד הכליה השמאלי בזווית ישרה",
+          "explanation": "נכון. זו הסיבה האנטומית העיקרית."
+        },
+        "en": {
+          "text": "The left testicular vein drains into the left renal vein at a right angle",
+          "explanation": "Right. This is the main anatomical reason."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "האשך השמאלי גדול יותר", "explanation": "שגוי. גודל האשך אינו הסיבה." },
+        "en": {
+          "text": "The left testis is larger",
+          "explanation": "Wrong. Testicular size is not the reason."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "וריד האשך השמאלי מתנקז ישירות לווריד הנבוב התחתון",
+          "explanation": "שגוי. זה המסלול של הוריד הימני."
+        },
+        "en": {
+          "text": "The left testicular vein drains straight into the inferior vena cava",
+          "explanation": "Wrong. That is the right vein's course."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רוב הגברים ישנים על צד שמאל",
+          "explanation": "שגוי. תנוחת שינה אינה גורם."
+        },
+        "en": {
+          "text": "Most men sleep on their left side",
+          "explanation": "Wrong. Sleeping position is not a factor."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "לגבר עם אזוספרמיה נפח אשכים תקין ו־FSH תקין. מהי האבחנה הסבירה ביותר?",
+      "summary": "באזוספרמיה, אשכים בגודל תקין עם FSH תקין מרמזים על ייצור זרע תקין וחסימה בדרכי ההובלה (אזוספרמיה חסימתית). FSH גבוה ואשכים קטנים מרמזים על כשל בייצור. בבירור כוללים בדיקה גופנית של צינור הזרע (העדר מולד בשל CFTR) והדמיה לפי הצורך."
+    },
+    "en": {
+      "stem": "A man with azoospermia has normal testicular volume and normal FSH. What is the most likely diagnosis?",
+      "summary": "In azoospermia, normal-sized testes with normal FSH suggest normal sperm production and a blockage in the ducts (obstructive azoospermia). High FSH with small testes suggests failed production. The work-up includes examining the vas deferens (congenital absence with CFTR) and imaging as needed."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "אזוספרמיה חסימתית", "explanation": "נכון. הייצור תקין, וההובלה חסומה." },
+        "en": {
+          "text": "Obstructive azoospermia",
+          "explanation": "Right. Production is normal and transport is blocked."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כשל אשכים ראשוני",
+          "explanation": "שגוי. בכשל ראשוני ה־FSH גבוה והאשכים קטנים לרוב."
+        },
+        "en": {
+          "text": "Primary testicular failure",
+          "explanation": "Wrong. In primary failure FSH is high and the testes are usually small."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "היפוגונדיזם היפוגונדוטרופי", "explanation": "שגוי. במצב זה ה־FSH נמוך." },
+        "en": {
+          "text": "Hypogonadotropic hypogonadism",
+          "explanation": "Wrong. In that case FSH is low."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תסמונת קליינפלטר",
+          "explanation": "שגוי. בקליינפלטר האשכים קטנים וה־FSH גבוה."
+        },
+        "en": {
+          "text": "Klinefelter syndrome",
+          "explanation": "Wrong. In Klinefelter the testes are small and FSH is high."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "לגבר בן 30 עם אי־פוריות יש אשכים קטנים ונוקשים, FSH גבוה ואזוספרמיה. בבדיקת קריוטיפ נמצא 47,XXY. מה האפשרות להשיג זרע?",
+      "summary": "בתסמונת קליינפלטר רוב הגברים הם אזוספרמיים, אך בחלק מהם יש מוקדים של ייצור זרע. מיקרו־TESE (שאיבת זרע מהאשך בעזרת מיקרוסקופ) מאתרת זרע בחלק ניכר מהמקרים, לשימוש בהפריה חוץ־גופית עם הזרקת זרע (ICSI)."
+    },
+    "en": {
+      "stem": "A 30-year-old infertile man has small, firm testes, high FSH and azoospermia. Karyotype shows 47,XXY. What is the option for obtaining sperm?",
+      "summary": "In Klinefelter syndrome most men are azoospermic, but some have foci of sperm production. Micro-TESE (microscope-guided testicular sperm extraction) finds sperm in a good share of cases, for IVF with ICSI."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "מיקרו־TESE לאיתור זרע בתוך האשך",
+          "explanation": "נכון. זו הדרך להשיג זרע במצב זה."
+        },
+        "en": {
+          "text": "Micro-TESE to find sperm inside the testis",
+          "explanation": "Right. This is how sperm can be obtained here."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "טיפול בטסטוסטרון לשיפור ייצור הזרע",
+          "explanation": "שגוי. טסטוסטרון מדכא את ייצור הזרע."
+        },
+        "en": {
+          "text": "Testosterone to improve sperm production",
+          "explanation": "Wrong. Testosterone suppresses sperm production."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "תיקון ורידן", "explanation": "שגוי. אין קשר בין ורידן לבין המצב הגנטי." },
+        "en": {
+          "text": "Varicocele repair",
+          "explanation": "Wrong. A varicocele is unrelated to this genetic condition."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין כל אפשרות; רק תרומת זרע",
+          "explanation": "שגוי. בחלק מהמקרים אפשר למצוא זרע."
+        },
+        "en": {
+          "text": "There is no option; only donor sperm",
+          "explanation": "Wrong. Sperm can be found in some cases."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "גבר עם מחלת פירוני מעוניין בניתוח ליישור הפין. מתי מתאים לשקול ניתוח?",
+      "summary": "מחלת פירוני עוברת שלב פעיל (כאב, שינוי בעקמומיות) ואחריו שלב יציב. ניתוח נשקל רק בשלב היציב: לפחות שלושה חודשים בלי כאב ובלי שינוי בעקמומיות, ובדרך כלל לפחות שנה מתחילת המחלה. סוג הניתוח נבחר לפי מידת העקמומיות ותפקוד הזקפה."
+    },
+    "en": {
+      "stem": "A man with Peyronie's disease wants surgery to straighten the penis. When is it appropriate to consider surgery?",
+      "summary": "Peyronie's disease has an active phase (pain, changing curvature) and then a stable phase. Surgery is considered only in the stable phase: at least three months without pain and without change in curvature, and usually at least a year from onset. The operation is chosen by the degree of curvature and erectile function."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בשלב היציב: לפחות שלושה חודשים בלי כאב ובלי שינוי בעקמומיות",
+          "explanation": "נכון. ניתוח בשלב פעיל עלול להיכשל."
+        },
+        "en": {
+          "text": "In the stable phase: at least three months without pain or change in curvature",
+          "explanation": "Right. Surgery in the active phase may fail."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מיד באבחנה, כדי למנוע החמרה",
+          "explanation": "שגוי. בשלב הפעיל העקמומיות עוד משתנה."
+        },
+        "en": {
+          "text": "At diagnosis, to prevent worsening",
+          "explanation": "Wrong. In the active phase the curvature is still changing."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "רק אחרי עשר שנים", "explanation": "שגוי. אין צורך בהמתנה ארוכה כל כך." },
+        "en": {
+          "text": "Only after ten years",
+          "explanation": "Wrong. There is no need to wait that long."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רק אם יש גם אובדן של זקפה מלא",
+          "explanation": "שגוי. ניתוח מתאים גם עם זקפה טובה, בטכניקה מתאימה."
+        },
+        "en": {
+          "text": "Only with complete loss of erections too",
+          "explanation": "Wrong. Surgery suits good erections too, with the right technique."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "גבר בן 34 עם היפוגונדיזם מבקש טיפול בטסטוסטרון, והוא ובת זוגו מנסים להרות. מה נכון?",
+      "summary": "טסטוסטרון מבחוץ מדכא את ההורמונים מבלוטת יותרת המוח (LH ו־FSH) ולכן את ייצור הזרע, לעיתים עד אזוספרמיה. לגבר שמעוניין בפוריות אין לתת טסטוסטרון; שוקלים חלופות, כמו hCG או קלומיפן, לפי הסיבה."
+    },
+    "en": {
+      "stem": "A 34-year-old man with hypogonadism asks for testosterone therapy, and he and his partner are trying to conceive. What is true?",
+      "summary": "External testosterone suppresses pituitary hormones (LH and FSH) and so sperm production, sometimes to azoospermia. A man who wants fertility should not be given testosterone; alternatives such as hCG or clomiphene are considered, depending on the cause."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אין לתת טסטוסטרון, כי הוא מדכא את ייצור הזרע",
+          "explanation": "נכון. יש לבחור טיפול ששומר על הפוריות."
+        },
+        "en": {
+          "text": "Testosterone should not be given, as it suppresses sperm production",
+          "explanation": "Right. A treatment that preserves fertility should be chosen."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "טסטוסטרון משפר את ספירת הזרע", "explanation": "שגוי. הוא מוריד אותה." },
+        "en": {
+          "text": "Testosterone improves the sperm count",
+          "explanation": "Wrong. It lowers it."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "טסטוסטרון בטוח לפוריות אם ניתן בג׳ל",
+          "explanation": "שגוי. גם בג׳ל הוא מדכא את הייצור."
+        },
+        "en": {
+          "text": "Testosterone is safe for fertility if given as a gel",
+          "explanation": "Wrong. As a gel it still suppresses production."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין קשר בין טסטוסטרון לפוריות",
+          "explanation": "שגוי. ההשפעה על הפוריות ידועה ומשמעותית."
+        },
+        "en": {
+          "text": "Testosterone has nothing to do with fertility",
+          "explanation": "Wrong. The effect on fertility is known and significant."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Sexual and Reproductive Health" }],
+    "he": {
+      "stem": "גבר עם סוכרת מדווח על אורגזמה בלי שפיכה או עם נפח זרע קטן מאוד. איך מאבחנים שפיכה לאחור (retrograde ejaculation)?",
+      "summary": "בשפיכה לאחור הזרע עובר לשלפוחית בגלל סגירה לא תקינה של צוואר השלפוחית, למשל בסוכרת, אחרי ניתוח ערמונית או מתרופות (חוסמי אלפא). האבחנה: מציאת זרע בשתן שנאסף מיד אחרי האורגזמה."
+    },
+    "en": {
+      "stem": "A man with diabetes reports orgasm without ejaculate, or a very small volume. How is retrograde ejaculation diagnosed?",
+      "summary": "In retrograde ejaculation semen goes into the bladder because the bladder neck does not close properly, for example in diabetes, after prostate surgery or from drugs (alpha-blockers). Diagnosis: finding sperm in urine collected right after orgasm."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "מציאת זרע בשתן שנאסף מיד אחרי האורגזמה",
+          "explanation": "נכון. זו הבדיקה המאבחנת."
+        },
+        "en": {
+          "text": "Finding sperm in urine collected right after orgasm",
+          "explanation": "Right. This is the diagnostic test."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "בדיקת PSA", "explanation": "שגוי. PSA אינו קשור לאבחנה זו." },
+        "en": { "text": "A PSA test", "explanation": "Wrong. PSA is unrelated to this diagnosis." }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בדיקת דופלר של הפין",
+          "explanation": "שגוי. דופלר בודק זרימת דם בזקפה, לא שפיכה."
+        },
+        "en": {
+          "text": "Penile Doppler",
+          "explanation": "Wrong. Doppler tests blood flow in erection, not ejaculation."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בדיקת טסטוסטרון",
+          "explanation": "שגוי. רמת הטסטוסטרון אינה מאבחנת שפיכה לאחור."
+        },
+        "en": {
+          "text": "A testosterone level",
+          "explanation": "Wrong. Testosterone does not diagnose retrograde ejaculation."
+        }
+      }
+    ]
+  }
+]

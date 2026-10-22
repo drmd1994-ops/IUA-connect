@@ -1,0 +1,503 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "אישה בת 45 מדווחת על דליפת שתן בשיעול ובריצה. מהו הטיפול הראשון המומלץ?",
+      "summary": "בדליפת שתן במאמץ, הטיפול הראשון הוא תרגול רצפת אגן מודרך, לפחות שלושה חודשים, יחד עם ירידה במשקל כשיש עודף משקל. אם אין די בכך, שוקלים ניתוח, כמו סרט אמצע־שופכה (midurethral sling), או חלופות אחרות."
+    },
+    "en": {
+      "stem": "A 45-year-old woman reports leaking urine when she coughs or runs. What is the recommended first treatment?",
+      "summary": "For stress urinary incontinence, the first treatment is supervised pelvic floor muscle training for at least three months, with weight loss when overweight. If that is not enough, surgery such as a midurethral sling, or other options, is considered."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "תרגול רצפת אגן מודרך לפחות שלושה חודשים",
+          "explanation": "נכון. זה הטיפול הראשון בדליפה במאמץ."
+        },
+        "en": {
+          "text": "Supervised pelvic floor training for at least three months",
+          "explanation": "Right. It is first-line for stress incontinence."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תרופה אנטי־מוסקרינית",
+          "explanation": "שגוי. תרופות אלה מטפלות בדחיפות, לא בדליפה במאמץ."
+        },
+        "en": {
+          "text": "An antimuscarinic drug",
+          "explanation": "Wrong. These treat urgency, not stress leakage."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "סרט אמצע־שופכה מיידי, לפני כל טיפול אחר",
+          "explanation": "שגוי. ניתוח שמור למי שלא השתפרה בטיפול שמרני."
+        },
+        "en": {
+          "text": "An immediate midurethral sling, before anything else",
+          "explanation": "Wrong. Surgery is for those who do not improve with conservative care."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "צנתר קבוע", "explanation": "שגוי. אין הוריה לצנתר בדליפה במאמץ." },
+        "en": {
+          "text": "An indwelling catheter",
+          "explanation": "Wrong. There is no indication for a catheter in stress incontinence."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "בהכנסת סרט אמצע־שופכה בגישה רטרופובית (מאחורי עצם הערווה), איזה סיבוך מחייב ציסטוסקופיה בזמן הניתוח?",
+      "summary": "בגישה הרטרופובית, המחטים עוברות סמוך לשלפוחית, וניקוב של השלפוחית הוא סיבוך ידוע. לכן מבצעים ציסטוסקופיה בזמן הניתוח: אם יש ניקוב, מוציאים את המחט ומעבירים אותה מחדש. בגישה הטרנס־אובטורטורית ניקוב השלפוחית נדיר יותר."
+    },
+    "en": {
+      "stem": "When a midurethral sling is placed by the retropubic route, which complication requires cystoscopy during the operation?",
+      "summary": "In the retropubic route the needles pass close to the bladder, and bladder perforation is a known complication. Cystoscopy is therefore done during surgery: if there is a perforation, the needle is withdrawn and passed again. In the transobturator route bladder perforation is rarer."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "ניקוב של השלפוחית",
+          "explanation": "נכון. ציסטוסקופיה מגלה אותו בזמן הניתוח."
+        },
+        "en": {
+          "text": "Bladder perforation",
+          "explanation": "Right. Cystoscopy finds it during surgery."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פגיעה בעצב הירך",
+          "explanation": "שגוי. ציסטוסקופיה אינה מגלה פגיעה עצבית."
+        },
+        "en": {
+          "text": "Femoral nerve injury",
+          "explanation": "Wrong. Cystoscopy does not reveal nerve injury."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "זיהום בפצע",
+          "explanation": "שגוי. זיהום מתגלה בימים שאחרי הניתוח, לא בציסטוסקופיה."
+        },
+        "en": {
+          "text": "Wound infection",
+          "explanation": "Wrong. Infection shows in the days after surgery, not on cystoscopy."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כאב במפשעה",
+          "explanation": "שגוי. כאב מפשעתי שכיח יותר בגישה הטרנס־אובטורטורית ואינו מתגלה בציסטוסקופיה."
+        },
+        "en": {
+          "text": "Groin pain",
+          "explanation": "Wrong. Groin pain is more common with the transobturator route and is not seen on cystoscopy."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "איזו בדיקה פשוטה במרפאה מדגימה דליפת שתן במאמץ?",
+      "summary": "בבדיקת שיעול (cough stress test), עם שלפוחית מלאה, המטופלת משתעלת בעמידה או בשכיבה; דליפה מיידית בזמן השיעול מדגימה דליפה במאמץ. דליפה שמופיעה באיחור אחרי השיעול מרמזת על פעילות יתר של השלפוחית."
+    },
+    "en": {
+      "stem": "Which simple clinic test demonstrates stress urinary incontinence?",
+      "summary": "In a cough stress test, with a full bladder, the patient coughs standing or lying; immediate leakage with the cough shows stress incontinence. Leakage that comes some seconds after the cough suggests an overactive bladder."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בדיקת שיעול עם שלפוחית מלאה",
+          "explanation": "נכון. דליפה מיידית בשיעול מדגימה דליפה במאמץ."
+        },
+        "en": {
+          "text": "A cough stress test with a full bladder",
+          "explanation": "Right. Immediate leakage on coughing shows stress incontinence."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תרבית שתן",
+          "explanation": "שגוי. תרבית שוללת זיהום אך אינה מדגימה דליפה."
+        },
+        "en": {
+          "text": "A urine culture",
+          "explanation": "Wrong. A culture rules out infection but does not show leakage."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "CT של האגן", "explanation": "שגוי. אין להדמיה תפקיד באבחון דליפה במאמץ." },
+        "en": {
+          "text": "Pelvic CT",
+          "explanation": "Wrong. Imaging has no role in diagnosing stress incontinence."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בדיקת רמת אסטרוגן בדם",
+          "explanation": "שגוי. רמת ההורמון אינה מאבחנת דליפה."
+        },
+        "en": {
+          "text": "A blood oestrogen level",
+          "explanation": "Wrong. The hormone level does not diagnose leakage."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urological Infections" }],
+    "he": {
+      "stem": "אישה בת 68, אחרי גיל המעבר, עם דלקות שלפוחית חוזרות. איזה טיפול מונע לא־אנטיביוטי הוכח כמפחית את מספר הזיהומים?",
+      "summary": "בנשים אחרי גיל המעבר, אסטרוגן נרתיקי מחזיר את הפלורה הנרתיקית ומפחית דלקות שלפוחית חוזרות. אפשרויות לא־אנטיביוטיות נוספות כוללות שתייה מוגברת ומתנאמין היפוראט; אנטיביוטיקה מונעת שמורה כשאלה אינן מספיקות."
+    },
+    "en": {
+      "stem": "A 68-year-old postmenopausal woman has recurrent cystitis. Which non-antibiotic prevention has been shown to reduce infections?",
+      "summary": "In postmenopausal women, vaginal oestrogen restores the vaginal flora and reduces recurrent cystitis. Other non-antibiotic options include higher fluid intake and methenamine hippurate; antibiotic prophylaxis is kept for when these are not enough."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אסטרוגן נרתיקי",
+          "explanation": "נכון. הוא מפחית הישנות של דלקות שלפוחית אחרי גיל המעבר."
+        },
+        "en": {
+          "text": "Vaginal oestrogen",
+          "explanation": "Right. It reduces recurrent cystitis after menopause."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "הגבלת שתייה", "explanation": "שגוי. שתייה מוגברת, ולא מוגבלת, עוזרת." },
+        "en": { "text": "Restricting fluids", "explanation": "Wrong. More fluid, not less, helps." }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שטיפות נרתיקיות",
+          "explanation": "שגוי. שטיפות פוגעות בפלורה ועלולות להגביר זיהומים."
+        },
+        "en": {
+          "text": "Vaginal douching",
+          "explanation": "Wrong. Douching disturbs the flora and may increase infections."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "טיפול הורמונלי סיסטמי (בבליעה)",
+          "explanation": "שגוי. אסטרוגן בבליעה לא הוכח כמפחית דלקות שלפוחית."
+        },
+        "en": {
+          "text": "Systemic (oral) hormone therapy",
+          "explanation": "Wrong. Oral oestrogen has not been shown to reduce cystitis."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "מהי הסיבה השכיחה ביותר לפיסטולה בין השלפוחית לנרתיק (vesicovaginal fistula) בארצות מפותחות?",
+      "summary": "בארצות מפותחות רוב הפיסטולות בין השלפוחית לנרתיק נוצרות אחרי ניתוחי אגן, ובעיקר אחרי כריתת רחם. בארצות מתפתחות הסיבה העיקרית היא לידה ממושכת וחסומה. הסימן הוא דליפת שתן מתמדת מהנרתיק."
+    },
+    "en": {
+      "stem": "What is the most common cause of a vesicovaginal fistula in developed countries?",
+      "summary": "In developed countries most vesicovaginal fistulas follow pelvic surgery, mainly hysterectomy. In developing countries the main cause is prolonged, obstructed labour. The sign is continuous leakage of urine from the vagina."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "כריתת רחם", "explanation": "נכון. זו הסיבה העיקרית בארצות מפותחות." },
+        "en": {
+          "text": "Hysterectomy",
+          "explanation": "Right. It is the main cause in developed countries."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "לידה ממושכת וחסומה",
+          "explanation": "שגוי. זו הסיבה העיקרית בארצות מתפתחות."
+        },
+        "en": {
+          "text": "Prolonged, obstructed labour",
+          "explanation": "Wrong. That is the main cause in developing countries."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "אבן בשלפוחית", "explanation": "שגוי. אבן היא סיבה נדירה." },
+        "en": { "text": "A bladder stone", "explanation": "Wrong. A stone is a rare cause." }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "דלקת שלפוחית חוזרת",
+          "explanation": "שגוי. זיהומים אינם גורמים לפיסטולה כזו."
+        },
+        "en": {
+          "text": "Recurrent cystitis",
+          "explanation": "Wrong. Infections do not cause such a fistula."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "אישה מתלוננת על טפטוף אחרי השתנה, כאב ביחסי מין וזיהומים חוזרים, ובבדיקה נמושה נפיחות בדופן הקדמית של הנרתיק. מהי בדיקת ההדמיה המועדפת?",
+      "summary": "התמונה מתאימה לדיברטיקולום של השופכה. MRI של האגן הוא בדיקת ההדמיה המדויקת ביותר: הוא מראה את הדיברטיקולום, את גודלו, את צורתו ואת הקשר שלו לשופכה, ומסייע לתכנון הניתוח."
+    },
+    "en": {
+      "stem": "A woman reports dribbling after voiding, painful intercourse and recurrent infections, and a swelling is felt in the anterior vaginal wall. What is the preferred imaging test?",
+      "summary": "The picture fits a urethral diverticulum. Pelvic MRI is the most accurate imaging test: it shows the diverticulum, its size, shape and connection to the urethra, and helps plan surgery."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "MRI של האגן",
+          "explanation": "נכון. זו הבדיקה המדויקת ביותר לדיברטיקולום של השופכה."
+        },
+        "en": {
+          "text": "Pelvic MRI",
+          "explanation": "Right. It is the most accurate test for a urethral diverticulum."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "צילום בטן רגיל", "explanation": "שגוי. צילום רגיל אינו מראה רקמות רכות." },
+        "en": {
+          "text": "A plain abdominal X-ray",
+          "explanation": "Wrong. A plain film does not show soft tissue."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מיפוי כליות",
+          "explanation": "שגוי. מיפוי כליות בודק תפקוד כליות, לא את השופכה."
+        },
+        "en": {
+          "text": "A renal scan",
+          "explanation": "Wrong. A renal scan tests kidney function, not the urethra."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "בדיקת זרימת שתן", "explanation": "שגוי. בדיקת זרימה אינה מראה מבנה." },
+        "en": {
+          "text": "A urine flow test",
+          "explanation": "Wrong. A flow test does not show anatomy."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [{ "title": "EAU Guidelines on Chronic Pelvic Pain" }],
+    "he": {
+      "stem": "למטופלת עם תסמונת כאב שלפוחית (interstitial cystitis) נמצאו בציסטוסקופיה נגעי Hunner. מהו טיפול מתאים לנגעים?",
+      "summary": "נגעי Hunner הם תת־סוג מוגדר של תסמונת כאב שלפוחית. טיפול אנדוסקופי בנגעים, בצריבה, בלייזר או בהזרקת סטרואיד (טריאמצינולון) לנגע, מקל לעיתים קרובות על הכאב, אם כי ההקלה עשויה להיות זמנית ולחייב טיפול חוזר."
+    },
+    "en": {
+      "stem": "A patient with bladder pain syndrome (interstitial cystitis) has Hunner lesions on cystoscopy. What is a suitable treatment for the lesions?",
+      "summary": "Hunner lesions are a distinct subtype of bladder pain syndrome. Endoscopic treatment of the lesions, by fulguration, laser or steroid (triamcinolone) injection into the lesion, often relieves pain, though relief may be temporary and need repeating."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "טיפול אנדוסקופי בנגעים (צריבה, לייזר או הזרקת סטרואיד)",
+          "explanation": "נכון. זה טיפול ממוקד ויעיל לנגעי Hunner."
+        },
+        "en": {
+          "text": "Endoscopic treatment of the lesions (fulguration, laser or steroid injection)",
+          "explanation": "Right. It is a targeted, effective treatment for Hunner lesions."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כריתת שלפוחית כטיפול ראשון",
+          "explanation": "שגוי. כריתה שמורה למקרים קיצוניים שנכשלו בכל טיפול אחר."
+        },
+        "en": {
+          "text": "Cystectomy as first treatment",
+          "explanation": "Wrong. Cystectomy is kept for extreme cases that failed everything else."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה ממושכת",
+          "explanation": "שגוי. אין זיהום, ואנטיביוטיקה אינה מועילה."
+        },
+        "en": {
+          "text": "Long-term antibiotics",
+          "explanation": "Wrong. There is no infection, and antibiotics do not help."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "סרט אמצע־שופכה",
+          "explanation": "שגוי. סרט מטפל בדליפה במאמץ, לא בכאב שלפוחית."
+        },
+        "en": {
+          "text": "A midurethral sling",
+          "explanation": "Wrong. A sling treats stress leakage, not bladder pain."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urological Infections" }],
+    "he": {
+      "stem": "בבדיקה שגרתית נמצאה בקטריוריה בלי תסמינים. אצל מי יש לטפל באנטיביוטיקה?",
+      "summary": "בקטריוריה ללא תסמינים אינה מטופלת ברוב המקרים: טיפול אינו מועיל ומעודד עמידות. יוצאים מן הכלל עיקריים: אישה בהיריון, ולפני פעולה אורולוגית שבה תיתכן פגיעה ברירית (כמו TURP)."
+    },
+    "en": {
+      "stem": "A routine test finds bacteriuria with no symptoms. Who should be treated with antibiotics?",
+      "summary": "Asymptomatic bacteriuria is not treated in most cases: treatment does not help and promotes resistance. The main exceptions are pregnancy, and before a urological procedure that may breach the mucosa (such as TURP)."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אישה בהיריון",
+          "explanation": "נכון. בהיריון בקטריוריה מעלה את הסיכון לזיהום בכליות ומטופלת."
+        },
+        "en": {
+          "text": "A pregnant woman",
+          "explanation": "Right. In pregnancy bacteriuria raises the risk of kidney infection and is treated."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "אישה בריאה לפני גיל המעבר", "explanation": "שגוי. אין צורך בטיפול." },
+        "en": {
+          "text": "A healthy premenopausal woman",
+          "explanation": "Wrong. No treatment is needed."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אישה מבוגרת בבית אבות",
+          "explanation": "שגוי. טיפול אינו מועיל ומגביר עמידות."
+        },
+        "en": {
+          "text": "An older woman in a care home",
+          "explanation": "Wrong. Treatment does not help and increases resistance."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אישה עם סוכרת מאוזנת",
+          "explanation": "שגוי. גם בסוכרת אין לטפל בבקטריוריה ללא תסמינים."
+        },
+        "en": {
+          "text": "A woman with well-controlled diabetes",
+          "explanation": "Wrong. Even in diabetes asymptomatic bacteriuria is not treated."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "לפני ניתוח ראשון לדליפת שתן במאמץ, באישה עם דליפה במאמץ בלבד שהודגמה בבדיקה, בלי שארית שתן ובלי תסמינים מעורבים, מה נכון לגבי בדיקה אורודינמית?",
+      "summary": "בדליפה במאמץ פשוטה, שהודגמה בבדיקה, בלי תסמיני דחיפות משמעותיים, בלי שארית גדולה ובלי ניתוח קודם, בדיקה אורודינמית לפני הניתוח אינה משפרת את התוצאות ואינה הכרחית. היא מומלצת כשהתמונה מורכבת או כשתוצאתה עשויה לשנות את הטיפול."
+    },
+    "en": {
+      "stem": "Before a first operation for stress incontinence, in a woman with pure stress leakage shown on examination, no residual urine and no mixed symptoms, what is true about urodynamics?",
+      "summary": "In uncomplicated stress incontinence, shown on examination, without significant urgency, a large residual or previous surgery, urodynamics before surgery does not improve outcomes and is not required. It is recommended when the picture is complex or when the result may change treatment."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "היא אינה הכרחית במצב פשוט כזה",
+          "explanation": "נכון. היא אינה משפרת את התוצאה בדליפה במאמץ פשוטה."
+        },
+        "en": {
+          "text": "It is not required in such an uncomplicated case",
+          "explanation": "Right. It does not improve the outcome in uncomplicated stress leakage."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היא חובה לפני כל ניתוח לדליפה",
+          "explanation": "שגוי. במצב פשוט אין בכך תועלת."
+        },
+        "en": {
+          "text": "It is mandatory before any incontinence surgery",
+          "explanation": "Wrong. In an uncomplicated case it adds no benefit."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היא מחליפה את הבדיקה הגופנית",
+          "explanation": "שגוי. הבדיקה הגופנית נשארת חיונית."
+        },
+        "en": {
+          "text": "It replaces the physical examination",
+          "explanation": "Wrong. The examination remains essential."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בלעדיה אסור לתת תרגול רצפת אגן",
+          "explanation": "שגוי. תרגול אינו מחייב בדיקה אורודינמית."
+        },
+        "en": {
+          "text": "Without it, pelvic floor training is not allowed",
+          "explanation": "Wrong. Training does not need urodynamics."
+        }
+      }
+    ]
+  }
+]

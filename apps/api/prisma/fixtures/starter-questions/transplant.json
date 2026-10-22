@@ -1,0 +1,507 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Renal Transplantation" }],
+    "he": {
+      "stem": "היכן ממוקמת לרוב כליה מושתלת במבוגר?",
+      "summary": "הכליה המושתלת ממוקמת לרוב בגומה הכסלית (iliac fossa), מחוץ לצפק. עורק הכליה מחובר לרוב לעורק הכסל החיצוני, הווריד לווריד הכסל החיצוני, והשופכן מושתל בשלפוחית. הכליות המקוריות נשארות לרוב במקומן."
+    },
+    "en": {
+      "stem": "Where is a transplanted kidney usually placed in an adult?",
+      "summary": "The transplanted kidney is usually placed in the iliac fossa, outside the peritoneum. The renal artery is usually joined to the external iliac artery, the vein to the external iliac vein, and the ureter is implanted into the bladder. The native kidneys usually stay in place."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "בגומה הכסלית, מחוץ לצפק", "explanation": "נכון. זה המיקום המקובל." },
+        "en": {
+          "text": "In the iliac fossa, outside the peritoneum",
+          "explanation": "Right. This is the usual position."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "במקום הכליה המקורית, אחרי כריתתה",
+          "explanation": "שגוי. הכליות המקוריות נשארות לרוב."
+        },
+        "en": {
+          "text": "In the native kidney's place, after removing it",
+          "explanation": "Wrong. The native kidneys usually stay."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בתוך חלל הבטן, בין לולאות המעי",
+          "explanation": "שגוי. במבוגרים ההשתלה מבוצעת מחוץ לצפק."
+        },
+        "en": {
+          "text": "Inside the abdomen, between bowel loops",
+          "explanation": "Wrong. In adults the graft goes outside the peritoneum."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "בבית החזה", "explanation": "שגוי. בית החזה אינו מקום להשתלת כליה." },
+        "en": {
+          "text": "In the chest",
+          "explanation": "Wrong. The chest is not a site for kidney transplantation."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Renal Transplantation" }],
+    "he": {
+      "stem": "מהם הסיבוכים האורולוגיים השכיחים ביותר אחרי השתלת כליה?",
+      "summary": "הסיבוכים האורולוגיים השכיחים הם דליפת שתן (לרוב בשבועות הראשונים) והיצרות של השופכן (לרוב בחודשים הראשונים), בעיקר בחיבור לשלפוחית ובגלל אספקת דם מוגבלת לשופכן. תומך שופכן בזמן ההשתלה מפחית אותם."
+    },
+    "en": {
+      "stem": "What are the most common urological complications after kidney transplantation?",
+      "summary": "The common urological complications are urine leak (usually in the first weeks) and ureteral stenosis (usually in the first months), mostly at the bladder anastomosis and because of the ureter's limited blood supply. A ureteral stent at transplantation reduces them."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "דליפת שתן והיצרות של השופכן",
+          "explanation": "נכון. אלה הסיבוכים האורולוגיים השכיחים ביותר."
+        },
+        "en": {
+          "text": "Urine leak and ureteral stenosis",
+          "explanation": "Right. These are the most common urological complications."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אבני כליה בשתל",
+          "explanation": "שגוי. אבנים בשתל אפשריות אך נדירות יחסית."
+        },
+        "en": {
+          "text": "Stones in the graft",
+          "explanation": "Wrong. Graft stones occur but are relatively rare."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "גידול בשתל", "explanation": "שגוי. גידולים בשתל נדירים." },
+        "en": { "text": "A tumour in the graft", "explanation": "Wrong. Graft tumours are rare." }
+      },
+      {
+        "correct": false,
+        "he": { "text": "פיסטולה בין השתל למעי", "explanation": "שגוי. זה סיבוך נדיר מאוד." },
+        "en": {
+          "text": "A fistula between the graft and the bowel",
+          "explanation": "Wrong. This is a very rare complication."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Renal Transplantation" }],
+    "he": {
+      "stem": "שישה שבועות אחרי השתלה מופיעים בצקת ברגל באותו צד ועליית קריאטינין, ובאולטרסאונד אוסף נוזל גדול ליד השתל הלוחץ על השופכן. בשאיבה: נוזל צלול עם קריאטינין כמו בדם. מהו הטיפול המקובל?",
+      "summary": "זהו לימפוצלה, אוסף הנוזל השכיח ביותר אחרי השתלה. קריאטינין בנוזל כמו בדם מבדיל אותו מדליפת שתן (שבה הקריאטינין בנוזל גבוה בהרבה). לימפוצלה עם תסמינים מטופלת בפתיחת חלון לצפק (fenestration), לרוב לפרוסקופית; ניקוז מלעורי לבדו מלווה בהישנות רבה."
+    },
+    "en": {
+      "stem": "Six weeks after a transplant, there is leg swelling on the same side and a rise in creatinine, and ultrasound shows a large fluid collection near the graft pressing on the ureter. Aspirate: clear fluid with creatinine like serum. What is the usual treatment?",
+      "summary": "This is a lymphocele, the most common fluid collection after transplantation. Fluid creatinine like serum tells it apart from a urine leak (where fluid creatinine is much higher). A symptomatic lymphocele is treated by opening a window into the peritoneum (fenestration), usually laparoscopically; percutaneous drainage alone often recurs."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "פתיחת חלון לצפק (fenestration), לרוב לפרוסקופית",
+          "explanation": "נכון. הלימפה מתנקזת לחלל הבטן ונספגת."
+        },
+        "en": {
+          "text": "Peritoneal fenestration, usually laparoscopic",
+          "explanation": "Right. The lymph drains into the abdomen and is absorbed."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "כריתת השתל", "explanation": "שגוי. אין סיבה לוותר על השתל." },
+        "en": {
+          "text": "Removing the graft",
+          "explanation": "Wrong. There is no reason to give up the graft."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תיקון ניתוחי של השופכן",
+          "explanation": "שגוי. השופכן נלחץ מבחוץ; אין בו פגיעה."
+        },
+        "en": {
+          "text": "Surgical repair of the ureter",
+          "explanation": "Wrong. The ureter is compressed from outside; it is not injured."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "הגברת הטיפול נוגד הדחייה", "explanation": "שגוי. אין כאן דחייה." },
+        "en": {
+          "text": "Increasing anti-rejection treatment",
+          "explanation": "Wrong. This is not rejection."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [
+      { "title": "KDIGO Clinical Practice Guideline for the Care of Kidney Transplant Recipients" }
+    ],
+    "he": {
+      "stem": "איזו תרופה נוגדת דחייה עלולה לפגוע בכליה עצמה ומחייבת ניטור רמות בדם?",
+      "summary": "מעכבי קלצינאורין (טקרולימוס, ציקלוספורין) הם עמוד התווך בדיכוי החיסוני אחרי השתלה, אך הם רעילים לכליה ברמות גבוהות. לכן מנטרים את רמתם בדם ומתאימים מינון. גם אינטראקציות עם תרופות אחרות משנות את רמתם."
+    },
+    "en": {
+      "stem": "Which anti-rejection drug can harm the kidney itself and needs blood level monitoring?",
+      "summary": "Calcineurin inhibitors (tacrolimus, ciclosporin) are the backbone of immunosuppression after transplantation, but they are nephrotoxic at high levels. Their blood levels are therefore monitored and doses adjusted. Interactions with other drugs also change their levels."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "טקרולימוס",
+          "explanation": "נכון. מעכב קלצינאורין עם רעילות כלייתית תלוית רמה."
+        },
+        "en": {
+          "text": "Tacrolimus",
+          "explanation": "Right. A calcineurin inhibitor with level-dependent nephrotoxicity."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פרדניזון",
+          "explanation": "שגוי. לסטרואידים יש תופעות לוואי רבות, אך הם אינם רעילים לכליה באופן זה."
+        },
+        "en": {
+          "text": "Prednisone",
+          "explanation": "Wrong. Steroids have many side effects, but are not nephrotoxic in this way."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מיקופנולט",
+          "explanation": "שגוי. תופעות הלוואי העיקריות שלו הן במערכת העיכול ובמח העצם."
+        },
+        "en": {
+          "text": "Mycophenolate",
+          "explanation": "Wrong. Its main side effects are gastrointestinal and on the bone marrow."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בסיליקסימאב",
+          "explanation": "שגוי. נוגדן זה ניתן בהשראה ואינו רעיל לכליה."
+        },
+        "en": {
+          "text": "Basiliximab",
+          "explanation": "Wrong. This antibody is given at induction and is not nephrotoxic."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Renal Transplantation" }],
+    "he": {
+      "stem": "בכריתת כליה מתורם חי, מדוע מעדיפים לרוב את הכליה השמאלית?",
+      "summary": "וריד הכליה השמאלי ארוך יותר מהימני, וזה מקל על החיבור בהשתלה. הבחירה תלויה גם באנטומיה של כלי הדם ובתפקוד היחסי של הכליות: את הכליה הטובה יותר משאירים לתורם."
+    },
+    "en": {
+      "stem": "In living donor nephrectomy, why is the left kidney usually preferred?",
+      "summary": "The left renal vein is longer than the right, which makes the transplant anastomosis easier. The choice also depends on vascular anatomy and the split function of the kidneys: the better kidney stays with the donor."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "וריד הכליה השמאלי ארוך יותר",
+          "explanation": "נכון. אורך הווריד מקל על החיבור."
+        },
+        "en": {
+          "text": "The left renal vein is longer",
+          "explanation": "Right. The longer vein makes the anastomosis easier."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הכליה השמאלית תמיד גדולה יותר",
+          "explanation": "שגוי. אין הבדל קבוע בגודל."
+        },
+        "en": {
+          "text": "The left kidney is always larger",
+          "explanation": "Wrong. There is no consistent size difference."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "לכליה השמאלית יש תמיד עורק אחד בלבד",
+          "explanation": "שגוי. ריבוי עורקים אפשרי בשני הצדדים."
+        },
+        "en": {
+          "text": "The left kidney always has a single artery",
+          "explanation": "Wrong. Multiple arteries can occur on either side."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הכבד מפריע לכל גישה לכליה הימנית",
+          "explanation": "שגוי. אפשר לכרות את הכליה הימנית, ולעיתים זו הבחירה הנכונה."
+        },
+        "en": {
+          "text": "The liver blocks all access to the right kidney",
+          "explanation": "Wrong. The right kidney can be removed, and is sometimes the right choice."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Renal Transplantation" }],
+    "he": {
+      "stem": "ביום הראשון אחרי השתלה, תפוקת השתן שהייתה טובה נפסקת בבת אחת. מהי הבדיקה הדחופה הראשונה, ומה היא באה לשלול?",
+      "summary": "הפסקה פתאומית של תפוקת השתן אחרי השתלה מחייבת קודם לוודא שהצנתר אינו חסום (שטיפה). אם הצנתר תקין, מבצעים מיד אולטרסאונד דופלר לשלילת פקקת של עורק או וריד השתל, מצב שמחייב ניתוח מיידי כדי להציל את השתל."
+    },
+    "en": {
+      "stem": "On the first day after transplantation, good urine output suddenly stops. What is the urgent first test, and what does it rule out?",
+      "summary": "A sudden stop in urine output after transplantation first calls for checking that the catheter is not blocked (flushing it). If the catheter is fine, Doppler ultrasound is done at once to rule out thrombosis of the graft artery or vein, which needs immediate surgery to save the graft."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אולטרסאונד דופלר, לשלילת פקקת בכלי הדם של השתל",
+          "explanation": "נכון. אחרי שוידאו שהצנתר אינו חסום, זו הבדיקה הדחופה."
+        },
+        "en": {
+          "text": "Doppler ultrasound, to rule out graft vessel thrombosis",
+          "explanation": "Right. Once the catheter is known not to be blocked, this is the urgent test."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ביופסיה של השתל בעוד שבוע",
+          "explanation": "שגוי. עיכוב יגרום לאובדן השתל אם יש פקקת."
+        },
+        "en": {
+          "text": "A graft biopsy in a week",
+          "explanation": "Wrong. Delay will lose the graft if there is thrombosis."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "CT עם חומר ניגוד",
+          "explanation": "שגוי. חומר ניגוד מזיק לשתל, ודופלר מהיר ומדויק."
+        },
+        "en": {
+          "text": "Contrast CT",
+          "explanation": "Wrong. Contrast harms the graft, and Doppler is fast and accurate."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "מעקב תפוקה ל־24 שעות", "explanation": "שגוי. אי אפשר להמתין בחשד לפקקת." },
+        "en": {
+          "text": "Watching the output for 24 hours",
+          "explanation": "Wrong. With suspected thrombosis there is no waiting."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [{ "title": "EAU Guidelines on Renal Transplantation" }],
+    "he": {
+      "stem": "מטופל בדיאליזה שנים רבות, כמעט ללא תפוקת שתן, ובבדיקה קיבולת השלפוחית שלו קטנה. השלפוחית תקינה מבחינה נוירולוגית. מה צפוי לרוב אחרי ההשתלה?",
+      "summary": "שלפוחית שלא מולאה זמן רב (defunctionalised) נראית קטנה, אך כשהיא תקינה מבחינה נוירולוגית ומבנית, הקיבולת חוזרת לרוב אחרי שהשתל מתחיל לייצר שתן. לכן אין צורך בהגדלת שלפוחית לפני ההשתלה רק בגלל קיבולת קטנה. שלפוחית לא תקינה (נוירוגנית, עם לחצים גבוהים) מחייבת הערכה וטיפול לפני ההשתלה."
+    },
+    "en": {
+      "stem": "A patient on dialysis for many years, with almost no urine output, has a small bladder capacity. The bladder is neurologically normal. What usually happens after transplantation?",
+      "summary": "A bladder that has not been filled for a long time (defunctionalised) looks small, but when it is neurologically and structurally normal, capacity usually returns once the graft makes urine. So augmentation before transplantation is not needed just for a small capacity. An abnormal bladder (neurogenic, with high pressures) needs assessment and treatment before transplantation."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "הקיבולת חוזרת לרוב כשהשתל מתחיל לייצר שתן",
+          "explanation": "נכון. שלפוחית תקינה מסתגלת למילוי."
+        },
+        "en": {
+          "text": "Capacity usually returns once the graft makes urine",
+          "explanation": "Right. A normal bladder adapts to filling."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש לבצע הגדלת שלפוחית לפני ההשתלה",
+          "explanation": "שגוי. אין צורך בכך בשלפוחית תקינה."
+        },
+        "en": {
+          "text": "Bladder augmentation is needed before transplantation",
+          "explanation": "Wrong. It is not needed for a normal bladder."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "השתלה אסורה במצב זה",
+          "explanation": "שגוי. קיבולת קטנה בשלפוחית תקינה אינה הוריית נגד."
+        },
+        "en": {
+          "text": "Transplantation is forbidden in this case",
+          "explanation": "Wrong. Small capacity in a normal bladder is not a contraindication."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש לנקז את השתל ישירות לעור לצמיתות",
+          "explanation": "שגוי. אין לכך הוריה."
+        },
+        "en": {
+          "text": "The graft should drain straight to the skin for good",
+          "explanation": "Wrong. There is no indication for that."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      { "title": "KDIGO Clinical Practice Guideline for the Care of Kidney Transplant Recipients" }
+    ],
+    "he": {
+      "stem": "בשנה הראשונה אחרי השתלה עולה הקריאטינין, ובדם נמצא PCR חיובי בעומס גבוה לנגיף BK. מה עיקר הטיפול?",
+      "summary": "נפרופתיה של נגיף BK היא סיבוך של דיכוי חיסוני חזק אחרי השתלה, ועלולה לגרום לאובדן השתל. אין תרופה אנטי־ויראלית יעילה מוכחת; עיקר הטיפול הוא הפחתה זהירה של הדיכוי החיסוני. סריקה שגרתית ב־PCR בדם בשנים הראשונות מאפשרת גילוי מוקדם."
+    },
+    "en": {
+      "stem": "In the first year after transplantation, creatinine rises, and blood PCR shows a high BK virus load. What is the mainstay of treatment?",
+      "summary": "BK virus nephropathy is a complication of strong immunosuppression after transplantation and may cause graft loss. There is no proven effective antiviral; the mainstay is a careful reduction of immunosuppression. Routine blood PCR screening in the first years allows early detection."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "הפחתה זהירה של הדיכוי החיסוני", "explanation": "נכון. זה עיקר הטיפול." },
+        "en": {
+          "text": "Careful reduction of immunosuppression",
+          "explanation": "Right. This is the mainstay of treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "הגברת הדיכוי החיסוני", "explanation": "שגוי. הגברה תחמיר את ההדבקה." },
+        "en": {
+          "text": "Increasing immunosuppression",
+          "explanation": "Wrong. Increasing it would worsen the infection."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "כריתת השתל מיד", "explanation": "שגוי. ברוב המקרים אפשר לשמור על השתל." },
+        "en": {
+          "text": "Removing the graft at once",
+          "explanation": "Wrong. The graft can be kept in most cases."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה רחבת טווח",
+          "explanation": "שגוי. אנטיביוטיקה אינה פועלת על נגיפים."
+        },
+        "en": {
+          "text": "Broad-spectrum antibiotics",
+          "explanation": "Wrong. Antibiotics do not act on viruses."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [
+      { "title": "EAU Guidelines on Renal Transplantation" },
+      { "title": "EAU Guidelines on Renal Cell Carcinoma" }
+    ],
+    "he": {
+      "stem": "לחולים בדיאליזה ממושכת ולמושתלי כליה יש סיכון מוגבר לגידול באיזה איבר?",
+      "summary": "בכליות המקוריות של חולים בדיאליזה ממושכת מתפתחת לעיתים מחלה ציסטית נרכשת, עם סיכון מוגבר לקרצינומה של תאי הכליה. הסיכון נמשך גם אחרי השתלה, ולכן מקובל לבצע הדמיה של הכליות המקוריות לפני ההשתלה ובמעקב."
+    },
+    "en": {
+      "stem": "Patients on long-term dialysis and kidney transplant recipients have a raised risk of a tumour in which organ?",
+      "summary": "The native kidneys of patients on long-term dialysis often develop acquired cystic disease, with a raised risk of renal cell carcinoma. The risk continues after transplantation, so imaging of the native kidneys is usual before transplantation and on follow-up."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בכליות המקוריות (קרצינומה של תאי הכליה)",
+          "explanation": "נכון. על רקע מחלה ציסטית נרכשת."
+        },
+        "en": {
+          "text": "In the native kidneys (renal cell carcinoma)",
+          "explanation": "Right. Arising from acquired cystic disease."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בבלוטת התריס",
+          "explanation": "שגוי. אין זה הסיכון האורולוגי הייחודי כאן."
+        },
+        "en": {
+          "text": "In the thyroid",
+          "explanation": "Wrong. That is not the specific urological risk here."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "באשכים",
+          "explanation": "שגוי. אין סיכון מוגבר ידוע לגידולי אשך בהקשר זה."
+        },
+        "en": {
+          "text": "In the testes",
+          "explanation": "Wrong. There is no known raised risk of testicular tumours here."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בשופכן המושתל בלבד",
+          "explanation": "שגוי. הסיכון העיקרי הוא בכליות המקוריות."
+        },
+        "en": {
+          "text": "Only in the transplanted ureter",
+          "explanation": "Wrong. The main risk is in the native kidneys."
+        }
+      }
+    ]
+  }
+]

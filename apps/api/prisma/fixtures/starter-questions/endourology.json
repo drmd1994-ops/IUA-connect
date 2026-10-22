@@ -1,0 +1,527 @@
+[
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "מהו היתרון העיקרי של שימוש בשרוול גישה לשופכן (ureteral access sheath) ביוריטרוסקופיה גמישה?",
+      "summary": "שרוול גישה מאפשר כניסה ויציאה חוזרות של האנדוסקופ ושל הרסיסים, ומשפר את זרימת נוזל השטיפה החוצה, כך שהלחץ בתוך הכליה נמוך יותר. החיסרון העיקרי הוא סיכון לפגיעה בדופן השופכן, ולכן אין להחדיר אותו בכוח."
+    },
+    "en": {
+      "stem": "What is the main benefit of a ureteral access sheath in flexible ureteroscopy?",
+      "summary": "An access sheath allows the scope and fragments to pass in and out repeatedly and improves outflow of irrigation fluid, so the pressure inside the kidney is lower. Its main drawback is a risk of injury to the ureteral wall, so it must never be forced in."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "לחץ נמוך יותר בתוך הכליה וגישה חוזרת קלה יותר",
+          "explanation": "נכון. זרימה טובה של הנוזל החוצה מורידה את הלחץ, וגישה חוזרת מקלה על הוצאת רסיסים."
+        },
+        "en": {
+          "text": "Lower pressure inside the kidney and easier repeated access",
+          "explanation": "Right. Good outflow lowers the pressure, and repeated access makes removing fragments easier."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא מבטל את הצורך בתומך שופכן לאחר הפעולה",
+          "explanation": "שגוי. ההחלטה על תומך תלויה במהלך הפעולה, לא בשרוול."
+        },
+        "en": {
+          "text": "It removes the need for a stent after the procedure",
+          "explanation": "Wrong. The decision on a stent depends on how the procedure went, not on the sheath."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא מונע לחלוטין פגיעה בשופכן",
+          "explanation": "שגוי. השרוול עצמו עלול לגרום לפגיעה בדופן השופכן."
+        },
+        "en": {
+          "text": "It fully prevents ureteral injury",
+          "explanation": "Wrong. The sheath itself can injure the ureteral wall."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא מחליף את הצורך בלייזר",
+          "explanation": "שגוי. השרוול אינו מרסק אבנים; הוא רק מקל על הגישה."
+        },
+        "en": {
+          "text": "It replaces the need for a laser",
+          "explanation": "Wrong. The sheath does not break stones; it only eases access."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "מדוע לייזר הולמיום:YAG בטוח יחסית לשימוש סמוך לרקמת השופכן?",
+      "summary": "אורך הגל של לייזר הולמיום (כ־2100 ננומטר) נבלע היטב במים, ולכן האנרגיה חודרת לעומק קטן מאוד ברקמה (פחות ממילימטר). כך אפשר לרסק אבנים במגע, עם סיכון נמוך לפגיעה עמוקה ברקמה הסמוכה, כל עוד הסיב אינו מופעל על הדופן."
+    },
+    "en": {
+      "stem": "Why is the holmium:YAG laser relatively safe to use close to ureteral tissue?",
+      "summary": "The holmium laser's wavelength (about 2100 nm) is strongly absorbed by water, so its energy penetrates tissue only very shallowly (less than a millimetre). Stones can be broken on contact with little risk of deep injury to nearby tissue, as long as the fibre is not fired at the wall."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "האנרגיה נבלעת במים ולכן חודרת לעומק קטן מאוד ברקמה",
+          "explanation": "נכון. עומק החדירה הקטן הוא הסיבה לבטיחות היחסית."
+        },
+        "en": {
+          "text": "Its energy is absorbed by water, so it penetrates tissue only very shallowly",
+          "explanation": "Right. The shallow penetration is why it is relatively safe."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא פועל רק על סידן ולא על רקמה רכה",
+          "explanation": "שגוי. הלייזר חותך גם רקמה רכה; הוא משמש גם לחיתוך היצרויות."
+        },
+        "en": {
+          "text": "It acts only on calcium, not on soft tissue",
+          "explanation": "Wrong. The laser cuts soft tissue too; it is also used to incise strictures."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא אינו מייצר חום",
+          "explanation": "שגוי. הלייזר מחמם את נוזל השטיפה, ולכן חשובה זרימה מספקת."
+        },
+        "en": {
+          "text": "It produces no heat",
+          "explanation": "Wrong. The laser heats the irrigation fluid, so adequate flow matters."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא פועל רק בהספק נמוך",
+          "explanation": "שגוי. מכשירים שונים מאפשרים טווח רחב של הספקים."
+        },
+        "en": {
+          "text": "It only works at low power",
+          "explanation": "Wrong. Machines offer a wide range of power settings."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "למטופלת אבן של 15 מ״מ בקוטב התחתון של הכליה, עם זווית חדה בין האינפונדיבולום לאגן ואינפונדיבולום ארוך וצר. מהו השיקול העיקרי בבחירת הטיפול?",
+      "summary": "באבני קוטב תחתון, אנטומיה לא נוחה (זווית חדה, אינפונדיבולום ארוך וצר) מורידה את הסיכוי שרסיסים אחרי SWL יפונו. במצב כזה עדיפים יוריטרוסקופיה גמישה (RIRS) או ניתוח מלעורי, לפי גודל האבן והעדפת המטופלת."
+    },
+    "en": {
+      "stem": "A patient has a 15 mm lower pole kidney stone, with a steep infundibulopelvic angle and a long, narrow infundibulum. What is the main consideration in choosing treatment?",
+      "summary": "For lower pole stones, unfavourable anatomy (a steep angle, a long and narrow infundibulum) lowers the chance that fragments clear after SWL. Here flexible ureteroscopy (RIRS) or percutaneous surgery is preferred, depending on stone size and the patient's preference."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "האנטומיה מפחיתה את פינוי הרסיסים אחרי SWL, ולכן עדיפים RIRS או PCNL",
+          "explanation": "נכון. האנטומיה של הקוטב התחתון קובעת במידה רבה את הצלחת SWL."
+        },
+        "en": {
+          "text": "The anatomy reduces fragment clearance after SWL, so RIRS or PCNL is preferred",
+          "explanation": "Right. Lower pole anatomy largely decides whether SWL succeeds."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "SWL הוא תמיד הטיפול הראשון לאבנים מתחת ל־2 ס״מ",
+          "explanation": "שגוי. בקוטב התחתון ובאנטומיה לא נוחה SWL פחות מוצלח."
+        },
+        "en": {
+          "text": "SWL is always first-line for stones under 2 cm",
+          "explanation": "Wrong. In the lower pole with poor anatomy SWL is less successful."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש להמתין, כי אבן בקוטב התחתון לעולם אינה גורמת לתסמינים",
+          "explanation": "שגוי. אבנים בקוטב התחתון יכולות לגדול, לגרום לכאב ולזיהום."
+        },
+        "en": {
+          "text": "Wait, because a lower pole stone never causes symptoms",
+          "explanation": "Wrong. Lower pole stones can grow and cause pain and infection."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש לבצע ניתוח פתוח",
+          "explanation": "שגוי. ניתוח פתוח אינו נחוץ לאבן בגודל זה."
+        },
+        "en": {
+          "text": "Open surgery is needed",
+          "explanation": "Wrong. Open surgery is not needed for a stone of this size."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "בניתוח מלעורי להוצאת אבן (PCNL), איזו גישה מעלה במיוחד את הסיכון לפגיעה בצדר (pleura)?",
+      "summary": "גישה מעל הצלע ה־12, ובמיוחד מעל הצלע ה־11, עוברת קרוב לחלל הצדר ומעלה את הסיכון לחזה אוויר או להצטברות נוזל. כשנדרשת גישה כזו, בודקים את בית החזה בסוף הפעולה."
+    },
+    "en": {
+      "stem": "In percutaneous nephrolithotomy (PCNL), which access especially raises the risk of pleural injury?",
+      "summary": "Access above the 12th rib, and especially above the 11th, passes close to the pleural space and raises the risk of pneumothorax or fluid collection. When such access is needed, the chest is checked at the end of the procedure."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "גישה מעל הצלע ה־11 (על־צלעית)",
+          "explanation": "נכון. ככל שהגישה גבוהה יותר, הסיכון לפגיעה בצדר גדל."
+        },
+        "en": {
+          "text": "Access above the 11th rib (supracostal)",
+          "explanation": "Right. The higher the access, the greater the pleural risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "גישה לקוטב התחתון מתחת לצלע ה־12",
+          "explanation": "שגוי. זו הגישה עם הסיכון הנמוך ביותר לפגיעה בצדר."
+        },
+        "en": {
+          "text": "Lower pole access below the 12th rib",
+          "explanation": "Wrong. This access has the lowest pleural risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "השכבת המטופל על הגב (supine)",
+          "explanation": "שגוי. תנוחת השכיבה אינה הגורם העיקרי לפגיעה בצדר."
+        },
+        "en": {
+          "text": "Placing the patient supine",
+          "explanation": "Wrong. Positioning is not the main factor in pleural injury."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שימוש בשרוול גישה צר (mini-PCNL)",
+          "explanation": "שגוי. קוטר השרוול אינו משנה את מיקום הגישה ביחס לצדר."
+        },
+        "en": {
+          "text": "Using a narrow access sheath (mini-PCNL)",
+          "explanation": "Wrong. Sheath size does not change where the access lies relative to the pleura."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Management of Non-neurogenic Male LUTS" }],
+    "he": {
+      "stem": "מדוע כריתה טרנס־אורתרלית של הערמונית (TURP) בטכניקה ביפולרית מפחיתה את הסיכון לתסמונת TUR?",
+      "summary": "תסמונת TUR נגרמת מספיגה של נוזל שטיפה היפוטוני (גליצין או מים) בניתוח מונופולרי, ומובילה להיפונתרמיה ולעומס נוזלים. בטכניקה ביפולרית משתמשים בסליין, ולכן התסמונת כמעט אינה מופיעה."
+    },
+    "en": {
+      "stem": "Why does bipolar transurethral resection of the prostate (TURP) lower the risk of TUR syndrome?",
+      "summary": "TUR syndrome comes from absorbing hypotonic irrigation fluid (glycine or water) in monopolar surgery, causing hyponatraemia and fluid overload. Bipolar resection uses saline, so the syndrome almost never occurs."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "נוזל השטיפה הוא סליין, ולא נוזל היפוטוני",
+          "explanation": "נכון. סליין אינו גורם להיפונתרמיה מדללת."
+        },
+        "en": {
+          "text": "The irrigation fluid is saline, not a hypotonic fluid",
+          "explanation": "Right. Saline does not cause dilutional hyponatraemia."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הניתוח קצר יותר תמיד",
+          "explanation": "שגוי. משך הניתוח דומה; ההבדל הוא בנוזל."
+        },
+        "en": {
+          "text": "The operation is always shorter",
+          "explanation": "Wrong. The duration is similar; the difference is the fluid."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין בו שימוש בנוזל שטיפה כלל",
+          "explanation": "שגוי. גם בטכניקה ביפולרית יש שטיפה מתמדת."
+        },
+        "en": {
+          "text": "No irrigation fluid is used",
+          "explanation": "Wrong. Bipolar resection also uses continuous irrigation."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הוא מבוצע בהרדמה כללית בלבד",
+          "explanation": "שגוי. סוג ההרדמה אינו מונע את התסמונת."
+        },
+        "en": {
+          "text": "It is done under general anaesthesia only",
+          "explanation": "Wrong. The type of anaesthesia does not prevent the syndrome."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [{ "title": "EAU Guidelines on Upper Urinary Tract Urothelial Carcinoma" }],
+    "he": {
+      "stem": "איזה מטופל עם קרצינומה אורותליאלית בדרכי השתן העליונות מתאים ביותר לטיפול אנדוסקופי משמר כליה?",
+      "summary": "בגידולים בסיכון נמוך, טיפול משמר כליה (יוריטרוסקופי או מלעורי) נותן תוצאות דומות לכריתה רדיקלית ושומר על תפקוד הכליה. סיכון נמוך: גידול יחיד, קטן מ־2 ס״מ, בדרגה נמוכה בציטולוגיה ובביופסיה, ובלי סימני חדירה ב־CT. נדרש מעקב אנדוסקופי צמוד."
+    },
+    "en": {
+      "stem": "Which patient with upper tract urothelial carcinoma is best suited to kidney-sparing endoscopic treatment?",
+      "summary": "For low-risk tumours, kidney-sparing treatment (ureteroscopic or percutaneous) gives results similar to radical surgery and preserves kidney function. Low risk: a single tumour, smaller than 2 cm, low grade on cytology and biopsy, and no sign of invasion on CT. Close endoscopic follow-up is needed."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "גידול יחיד בגודל 1 ס״מ, דרגה נמוכה, בלי סימני חדירה ב־CT",
+          "explanation": "נכון. אלה מאפייני גידול בסיכון נמוך."
+        },
+        "en": {
+          "text": "A single 1 cm low-grade tumour with no sign of invasion on CT",
+          "explanation": "Right. These are the features of a low-risk tumour."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "גידול בדרגה גבוהה בגודל 3 ס״מ",
+          "explanation": "שגוי. דרגה גבוהה וגודל מעל 2 ס״מ הם סיכון גבוה; לרוב נדרשת כריתה רדיקלית."
+        },
+        "en": {
+          "text": "A 3 cm high-grade tumour",
+          "explanation": "Wrong. High grade and size over 2 cm mean high risk; radical surgery is usually needed."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "גידול רב־מוקדי עם הידרונפרוזיס",
+          "explanation": "שגוי. ריבוי מוקדים והידרונפרוזיס מצביעים על סיכון גבוה."
+        },
+        "en": {
+          "text": "A multifocal tumour with hydronephrosis",
+          "explanation": "Wrong. Multifocality and hydronephrosis point to high risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "גידול עם ציטולוגיה בדרגה גבוהה, גם אם קטן",
+          "explanation": "שגוי. ציטולוגיה בדרגה גבוהה היא מאפיין סיכון גבוה."
+        },
+        "en": {
+          "text": "A tumour with high-grade cytology, even if small",
+          "explanation": "Wrong. High-grade cytology is a high-risk feature."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "אחרי יוריטרוסקופיה פשוטה ללא סיבוכים להוצאת אבן קטנה, מה נכון לגבי השארת תומך שופכן (סטנט)?",
+      "summary": "אחרי יוריטרוסקופיה פשוטה (בלי פגיעה בשופכן, בלי שאריות, בכליה תקינה) אפשר לוותר על תומך: אין עלייה בסיבוכים, ונחסכים התסמינים של התומך. תומך נשאר כשיש פגיעה, בצקת, שאריות, כליה יחידה או סיכון גבוה לסיבוכים."
+    },
+    "en": {
+      "stem": "After a simple, uncomplicated ureteroscopy to remove a small stone, what is true about leaving a ureteral stent?",
+      "summary": "After simple ureteroscopy (no ureteral injury, no residual fragments, a normal kidney) a stent may be omitted: complications do not rise, and stent symptoms are avoided. A stent is left when there is injury, oedema, residual fragments, a solitary kidney or a high risk of complications."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אפשר לוותר על תומך",
+          "explanation": "נכון. בפעולה פשוטה תומך אינו מפחית סיבוכים ומוסיף תסמינים."
+        },
+        "en": {
+          "text": "A stent may be omitted",
+          "explanation": "Right. After a simple procedure a stent does not reduce complications and adds symptoms."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תמיד חובה להשאיר תומך לשישה שבועות",
+          "explanation": "שגוי. אין חובה כזו בפעולה פשוטה."
+        },
+        "en": {
+          "text": "A stent must always be left for six weeks",
+          "explanation": "Wrong. There is no such rule after a simple procedure."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש להשאיר נפרוסטומיה",
+          "explanation": "שגוי. נפרוסטומיה אינה נחוצה אחרי יוריטרוסקופיה פשוטה."
+        },
+        "en": {
+          "text": "A nephrostomy should be left",
+          "explanation": "Wrong. A nephrostomy is not needed after a simple ureteroscopy."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש להשאיר קטטר שופכן לשלושה חודשים",
+          "explanation": "שגוי. אין לכך הוריה."
+        },
+        "en": {
+          "text": "A ureteral catheter should be left for three months",
+          "explanation": "Wrong. There is no indication for this."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "מטופל מתלונן על תכיפות, דחיפות וכאב במותן בזמן השתנה, שבוע אחרי הכנסת תומך שופכן. איזו תרופה מקלה לרוב על תסמיני התומך?",
+      "summary": "תסמיני תומך שופכן (תכיפות, דחיפות, כאב בהשתנה ובמותן, דם בשתן) שכיחים מאוד. חוסמי אלפא מקלים עליהם, ותרופות אנטי־מוסקריניות יכולות להוסיף הקלה. חשוב לשלול זיהום אם יש חום."
+    },
+    "en": {
+      "stem": "A week after a ureteral stent was placed, a patient reports frequency, urgency and flank pain when voiding. Which drug usually relieves stent symptoms?",
+      "summary": "Stent symptoms (frequency, urgency, pain on voiding and in the flank, blood in the urine) are very common. Alpha-blockers relieve them, and antimuscarinics may add relief. Infection must be ruled out if there is fever."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "חוסם אלפא", "explanation": "נכון. חוסמי אלפא מפחיתים את תסמיני התומך." },
+        "en": {
+          "text": "An alpha-blocker",
+          "explanation": "Right. Alpha-blockers reduce stent symptoms."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מעכב PDE5 בלבד",
+          "explanation": "שגוי. יש לכך נתונים מעטים בלבד, והוא אינו הטיפול המקובל."
+        },
+        "en": {
+          "text": "A PDE5 inhibitor alone",
+          "explanation": "Wrong. There are few data for this, and it is not the usual treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה קבועה עד הוצאת התומך",
+          "explanation": "שגוי. בלי זיהום אין הוריה לאנטיביוטיקה."
+        },
+        "en": {
+          "text": "Continuous antibiotics until the stent is removed",
+          "explanation": "Wrong. Without infection antibiotics are not indicated."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "הגבלת שתייה", "explanation": "שגוי. הגבלת שתייה אינה מקלה ועלולה להזיק." },
+        "en": {
+          "text": "Restricting fluids",
+          "explanation": "Wrong. Restricting fluids does not help and may harm."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "מהו הסיכון העיקרי בהשארת תומך שופכן בגוף זמן רב מהמתוכנן?",
+      "summary": "תומך שנשכח מצטפה במשקעים (encrustation), וזה עלול לגרום לחסימה, לזיהום ולפגיעה בכליה. ככל שהתומך נשאר זמן רב יותר, הסיכון גדל, והוצאה עלולה לדרוש כמה פעולות. רישום מסודר של מועד ההוצאה מונע זאת."
+    },
+    "en": {
+      "stem": "What is the main risk of leaving a ureteral stent in place longer than planned?",
+      "summary": "A forgotten stent becomes encrusted, which may cause obstruction, infection and kidney damage. The longer it stays, the higher the risk, and removal may need several procedures. A proper record of the removal date prevents this."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "הצטפות במשקעים, חסימה וזיהום",
+          "explanation": "נכון. ההצטפות גדלה עם הזמן."
+        },
+        "en": {
+          "text": "Encrustation, obstruction and infection",
+          "explanation": "Right. Encrustation increases with time."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "התומך מתפרק ונעלם מעצמו",
+          "explanation": "שגוי. רוב התומכים אינם מתכלים."
+        },
+        "en": {
+          "text": "The stent dissolves and disappears by itself",
+          "explanation": "Wrong. Most stents are not biodegradable."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "התומך נודד תמיד לשלפוחית ויוצא בשתן",
+          "explanation": "שגוי. נדידה אפשרית אך אינה הסיכון העיקרי."
+        },
+        "en": {
+          "text": "The stent always migrates to the bladder and passes in the urine",
+          "explanation": "Wrong. Migration can happen but is not the main risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין סיכון: אפשר להשאיר תומך לצמיתות בלי מעקב",
+          "explanation": "שגוי. גם תומכים לטווח ארוך דורשים החלפה ומעקב."
+        },
+        "en": {
+          "text": "No risk: a stent can stay for good without follow-up",
+          "explanation": "Wrong. Even long-term stents need changing and follow-up."
+        }
+      }
+    ]
+  }
+]
