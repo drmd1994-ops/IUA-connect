@@ -163,7 +163,7 @@ export function LoginForm() {
               <p className="text-center text-sm text-text-muted">{t('auth.login.or')}</p>
             )}
             <p className="text-text-muted">{t('auth.login.mfaIntro')}</p>
-            <form onSubmit={submitCode} className="flex flex-col gap-5" noValidate>
+            <form method="post" onSubmit={submitCode} className="flex flex-col gap-5" noValidate>
               <TextField
                 name="code"
                 label={t('auth.fields.code')}
@@ -216,7 +216,7 @@ export function LoginForm() {
           <p className="text-center text-sm text-text-muted">{t('auth.login.or')}</p>
         </>
       )}
-      <form onSubmit={submitPassword} className="flex flex-col gap-5" noValidate>
+      <form method="post" onSubmit={submitPassword} className="flex flex-col gap-5" noValidate>
         <TextField
           name="email"
           type="email"

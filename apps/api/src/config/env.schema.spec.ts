@@ -1,3 +1,4 @@
+import { DOCUMENTED_DEMO_PASSWORD } from './demo-password';
 import { generateDevSecrets } from './dev-secrets';
 import { InvalidEnvironmentError, parseEnv } from './env.schema';
 
@@ -110,6 +111,76 @@ describe('parseEnv', () => {
   it('refuses localhost as the passkey relying party in production', () => {
     const problems = parseError({ ...valid, NODE_ENV: 'production' }).problems.join('\n');
     expect(problems).toContain('WEBAUTHN_RP_ID');
+  });
+
+  it('trusts only the loopback proxy unless told otherwise, and refuses anything odd', () => {
+    expect(parseEnv(valid).TRUST_PROXY).toBe('loopback');
+    expect(
+      parseEnv({ ...valid, TRUST_PROXY: 'loopback, uniquelocal, 100.64.0.0/10' }).TRUST_PROXY,
+    ).toBe('loopback, uniquelocal, 100.64.0.0/10');
+    expect(parseError({ ...valid, TRUST_PROXY: 'true; rm' }).message).toContain('TRUST_PROXY');
+  });
+
+  describe('the hosted demo (M18)', () => {
+    // The same keys, under an ID that isn't "dev-", as the hosted demo's are.
+    const hostedKeys = Object.fromEntries(
+      Object.entries(secrets).map(([key, value]) => [key, value.replaceAll('dev-', 'demo-')]),
+    );
+    const hosted: Record<string, string> = {
+      ...valid,
+      ...hostedKeys,
+      NODE_ENV: 'production',
+      DEMO_HOSTED: 'true',
+      DEMO_PASSWORD: 'a-password-of-its-own',
+      APP_BASE_URL: 'https://demo.up.railway.app',
+    };
+
+    it('accepts the demo stand-ins with its own password and keys', () => {
+      const env = parseEnv(hosted);
+      expect(env.DEMO_HOSTED).toBe(true);
+      expect(env.STORAGE_ADAPTER).toBe('local');
+      expect(env.MAILER_ADAPTER).toBe('console');
+    });
+
+    it('is off unless set', () => {
+      expect(parseEnv(valid).DEMO_HOSTED).toBe(false);
+    });
+
+    it('refuses the documented password, a short one, or none', () => {
+      for (const password of [DOCUMENTED_DEMO_PASSWORD, 'short', undefined]) {
+        const source = { ...hosted };
+        if (password === undefined) delete source.DEMO_PASSWORD;
+        else source.DEMO_PASSWORD = password;
+        expect(parseError(source).problems.join('\n')).toContain('DEMO_PASSWORD');
+      }
+    });
+
+    it('still refuses development keys, scaled rate limits and a localhost passkey domain', () => {
+      const problems = parseError({
+        ...hosted,
+        ...secrets,
+        RATE_LIMIT_SCALE: '10',
+        APP_BASE_URL: 'http://localhost:3001',
+      }).problems.join('\n');
+      expect(problems).toContain('JWT_KEY_ID');
+      expect(problems).toContain('FIELD_ENCRYPTION_KEY_ID');
+      expect(problems).toContain('RATE_LIMIT_SCALE');
+      expect(problems).toContain('WEBAUTHN_RP_ID');
+    });
+
+    it('runs only as production, and real production keeps refusing the stand-ins', () => {
+      expect(parseError({ ...hosted, NODE_ENV: 'development' }).message).toContain('DEMO_HOSTED');
+      const problems = parseError({ ...hosted, DEMO_HOSTED: 'false' }).problems.join('\n');
+      expect(problems).toContain('STORAGE_ADAPTER');
+      expect(problems).toContain('MAILER_ADAPTER');
+      expect(problems).toContain('MALWARE_SCANNER');
+    });
+
+    it('never echoes the demo password', () => {
+      expect(parseError({ ...hosted, DEMO_PASSWORD: 'tooShort9' }).message).not.toContain(
+        'tooShort9',
+      );
+    });
   });
 
   it('never includes secret values in error messages', () => {

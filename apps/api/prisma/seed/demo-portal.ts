@@ -1,7 +1,7 @@
 import { uuidv7 } from '@medconnect/shared';
 import { type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
-import { DEMO_PASSWORD } from './demo';
+import { demoPassword } from '../../src/config/demo-password';
 
 /**
  * Demo admin portal data (M8 plan §2.8): a super admin, who gives and removes roles and changes
@@ -17,7 +17,7 @@ export async function seedDemoPortal(prisma: PrismaClient): Promise<void> {
     console.log('seed: demo portal already present, skipped');
     return;
   }
-  const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
+  const passwordHash = await new PasswordHasher().hash(demoPassword());
   const role = await prisma.role.findUniqueOrThrow({ where: { key: 'SUPER_ADMIN' } });
   const settings = await prisma.setting.count();
 

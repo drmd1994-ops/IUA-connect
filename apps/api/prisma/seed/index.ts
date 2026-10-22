@@ -20,6 +20,7 @@
 import path from 'node:path';
 import { config as loadEnv } from 'dotenv';
 import { PrismaClient } from '../../src/generated/prisma/client';
+import { parseEnv } from '../../src/config/env.schema';
 import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedDemo } from './demo';
 import { seedDemoChat } from './demo-chat';
@@ -62,7 +63,12 @@ const LAYERS: SeedLayer[] = [
 async function main(): Promise<void> {
   loadEnv({ path: path.resolve(__dirname, '../../../../.env'), quiet: true });
   if (process.env.NODE_ENV === 'production') {
-    throw new Error('Seeding is disabled when NODE_ENV=production.');
+    if (process.env.DEMO_HOSTED !== 'true') {
+      throw new Error('Seeding is disabled when NODE_ENV=production.');
+    }
+    // A hosted demo (M18): the same checks as the server's start, so it is seeded only with its
+    // own demo password and keys that are not "dev".
+    parseEnv(process.env);
   }
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error('DATABASE_URL is not set. Run `pnpm setup:dev`.');

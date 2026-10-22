@@ -46,6 +46,7 @@ const PAGES = [
   '/admin/users',
   '/admin/users/roles',
   '/admin/audit',
+  '/admin/demo-outbox',
   '/admin/settings',
   // M9
   '/accessibility',

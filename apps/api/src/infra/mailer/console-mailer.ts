@@ -10,6 +10,11 @@ import { renderEmail } from './render';
 /** Repository root (apps/api/{src|dist}/infra/mailer → four levels up). */
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 
+/** Where the demo mailer writes its emails; the demo's outbox page reads them there (M18). */
+export function outboxDir(env: Env): string {
+  return path.resolve(REPO_ROOT, env.MAIL_OUTBOX_DIR);
+}
+
 /** "dana.levi@example.test" → "d***@example.test", for logs. */
 export function maskEmail(email: string): string {
   const [local = '', domain = ''] = email.split('@');
@@ -28,7 +33,7 @@ export class ConsoleMailer extends Mailer {
 
   constructor(@Inject(APP_CONFIG) env: Env) {
     super();
-    this.outbox = path.resolve(REPO_ROOT, env.MAIL_OUTBOX_DIR);
+    this.outbox = outboxDir(env);
   }
 
   async send<T extends EmailTemplate>(message: EmailMessage<T>): Promise<void> {

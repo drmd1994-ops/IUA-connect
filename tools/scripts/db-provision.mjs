@@ -76,7 +76,11 @@ export async function provision() {
   const superuserUrl = requireEnv('PG_SUPERUSER_URL');
   const owner = identifier('DB_OWNER_USER');
   const app = identifier('DB_APP_USER');
-  const databases = [identifier('DB_NAME'), identifier('DB_TEST_NAME')];
+  // A host (M18) has the demo database only; this computer also has the test database.
+  const databases = [
+    identifier('DB_NAME'),
+    ...(process.env.DB_TEST_NAME ? [identifier('DB_TEST_NAME')] : []),
+  ];
 
   step('Provisioning PostgreSQL roles and databases');
   await withClient(superuserUrl, async (client) => {

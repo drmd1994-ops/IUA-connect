@@ -24,8 +24,47 @@ Nothing below is done. Every line must be ticked before a real member's details 
 
 The open decisions behind lines 1, 4 and 13 are listed in `docs/demo/KNOWN_LIMITATIONS.md` §5.
 
+## The hosted demo on Railway (M18)
+
+A demo, not a deployment for real members: fictional data, the demo's stand-ins (files on a disk, emails to a folder, no virus scan), and the readiness checklist above still all open. Plan: `docs/plans/M18-hosted-demo.md`.
+
+- **Where:** the Railway project `med-connect-demo`, in the owner's account. Three services:
+  - `Postgres`, reachable only over Railway's private network;
+  - `api`, with a disk at `/data` for uploads and the email folder;
+  - `web`.
+- **Addresses:** the site at https://web-production-3a424c.up.railway.app, the server at https://api-production-81c9.up.railway.app (the app talks to it directly). The browser talks only to the site, which passes `/api/v1` on to the server's private address.
+- **The hosted state:** the server runs with `NODE_ENV=production` and `DEMO_HOSTED=true`. It then allows the stand-ins, and refuses to start without:
+  - its own `DEMO_PASSWORD` (12 or more characters, not the documented one), which the owner typed into Railway and nobody else has seen;
+  - keys whose ID is not `dev-`.
+
+  Real production, without `DEMO_HOSTED`, keeps every check.
+
+- **Settings:** the server's keys and database passwords were generated once and given to Railway through standard input, never printed. They live only in the `api` service's variables. If the field-encryption key is lost, the stored (made-up) licence numbers can't be read; reseed.
+- **On every start** the server runs `pnpm hosted:start` (`tools/scripts/hosted-start.mjs`):
+  1. the two database roles and the database `medconnect`, as `db-provision.mjs` does on this computer;
+  2. `prisma migrate deploy`, as the owner role;
+  3. the demo seed, only when the database has no users yet;
+  4. the server, as the application role.
+
+**Deploy a new version** (from the repository root, signed in with `railway login`, after the checks are green):
+
+```powershell
+railway up --service api --detach
+railway up --service web --detach
+```
+
+**Then check it:** `pnpm smoke:hosted` (`tools/scripts/smoke-hosted.mjs`): the site, the server, the site reaching the server, a calculator, and sign-in refusing a wrong password. To also sign in as a demo member and open live chat, set `SMOKE_PASSWORD` to the demo password in the shell first; it is read from there only and never printed.
+
+**The demo's emails** (sign-up confirmations, password resets) are under Administration → Demo emails, for platform staff (`users.manage`). Each opening is recorded in the audit log.
+
+`.railwayignore` and `.dockerignore` keep `.env` and local files out of the upload. The site's address for the server is fixed when the site is built (`API_INTERNAL_URL`, a build argument), so deploy the site again if that changes.
+
+**Reset the demo data:** delete the `Postgres` service's data and redeploy `api`. The next start finds no users and seeds again. Uploaded files on the `api` disk are left behind, unreferenced. This is done in Railway's dashboard by the owner; nothing in the repository does it, as `pnpm demo:reset` refuses any database not on this computer.
+
+**The app:** the repository variables `DEMO_API_URL` and `DEMO_WEB_URL` hold the hosted addresses. The **Demo APK** workflow (Actions → Demo APK → Run workflow) builds an .apk that uses them. The tunnel's address was `https://hqvwt07k-4000.euw.devtunnels.ms`; to go back to the tunnel, set `DEMO_API_URL` to it again and rebuild.
+
 ## Build artefacts
 
 - API: `pnpm --filter @medconnect/api build` → `apps/api/dist`, start with `node dist/main.js`. Run `prisma migrate deploy` with the owner connection before starting a new version.
 - Web: `pnpm --filter @medconnect/web build` → `next start`. The web app renders per request (nonce-based CSP).
-- Docker images are used in CI/deployment only (DEVELOPMENT_ROADMAP.md); none are required locally. Dockerfiles are added with the first staging environment.
+- Docker images are used for the hosted demo only (`apps/api/Dockerfile`, `apps/web/Dockerfile`, built by Railway from the repository root); none are required locally.

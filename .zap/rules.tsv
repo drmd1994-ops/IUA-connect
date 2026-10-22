@@ -6,3 +6,6 @@
 10055	IGNORE	(CSP: style-src unsafe-inline) accepted and documented; scripts stay nonce-only
 10109	IGNORE	(Modern Web Application) informational
 90004	IGNORE	(Cross-Origin-Embedder-Policy) not needed: no cross-origin isolation features are used
+10031	IGNORE	(User controllable HTML element attribute) the calculators: the values ZAP sends are the form's own option values; the page reads nothing from the request
+10111	IGNORE	(Authentication Request Identified) informational: ZAP noting the sign-in form
+10202	IGNORE	(Absence of Anti-CSRF Tokens) the forms never post to the site; their script calls the API with a bearer token, and the one cookie request (refresh) needs the CSRF header

@@ -3,7 +3,7 @@ import { FIRST_ORGANISATION } from './reference-data';
 import { type Prisma, type PrismaClient } from '../../src/generated/prisma/client';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { slugify } from '../../src/modules/news/slug';
-import { DEMO_PASSWORD } from './demo';
+import { demoPassword } from '../../src/config/demo-password';
 
 /**
  * Demo content (M3 plan §2.9): a content editor, news items in every workflow state and a few
@@ -220,7 +220,7 @@ export async function seedDemoContent(prisma: PrismaClient): Promise<void> {
     console.log('seed: demo content needs the demo people first, skipped');
     return;
   }
-  const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
+  const passwordHash = await new PasswordHasher().hash(demoPassword());
   const editorRole = await prisma.role.findUniqueOrThrow({ where: { key: 'CONTENT_EDITOR' } });
   const subspecialties = new Map(
     (await prisma.subspecialty.findMany()).map((s) => [s.key, s.id] as const),

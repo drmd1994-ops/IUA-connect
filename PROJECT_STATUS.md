@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-19 (M30 merged: nine clinical calculators on the site and in the app, each signed by the owner)_
+_Last updated: 2026-10-22 (M18: the demo runs on Railway with this computer off; the app uses it)_
 
 ## Summary
 
@@ -1131,6 +1131,59 @@ Plan: `docs/plans/M30-clinical-calculators.md`, approved by the owner on 2026-10
 2. ~~The Hebrew IPSS~~ **Done 2026-10-19:** the owner confirmed my wording. It still says it is not a validated translation, which stays true.
 3. The milestone's demo, and reading the rest of the Hebrew texts.
 
+## M18 The hosted demo (built 2026-10-19 to 2026-10-20, pull request #31; demo 2026-10-22)
+
+Plan: `docs/plans/M18-hosted-demo.md`, approved by the owner on 2026-10-19 with the answers in its §10: Railway on a $20 plan the owner opened, always on; passkeys in the app and email links that open the app wait for M18b; the .apk built on GitHub; the owner types the demo password into Railway and Claude never sees it; nobody else gets the address until the owner says.
+
+**Built**
+
+- **The demo on Railway,** project `med-connect-demo`, three services: the server (`https://api-production-81c9.up.railway.app`, with a disk for files and the demo's emails), the site (`https://web-production-3a424c.up.railway.app`), and PostgreSQL, which has no public address. The demo works with this computer switched off.
+- **A "hosted demo" state of the server** (`DEMO_HOSTED=true` with `NODE_ENV=production`): the demo stand-ins are allowed only in it, and only with a demo password of at least 12 characters that is not the one written in the code, and keys that are not the development ones. Real production still refuses every stand-in.
+- **The demo password** comes from a Railway setting the owner typed; the seed uses it. On this computer it stays `ilikeIUAconnect11`.
+- **Start-up on Railway** (`pnpm hosted:start`): makes the two database roles as in development, applies the database changes, seeds the demo once (when there are no users), then starts the server, never as the root user.
+- **Container files** for the server and the site (`apps/api/Dockerfile`, `apps/web/Dockerfile`), so the set-up can be rebuilt from nothing.
+- **Which proxies to believe** is a setting (`TRUST_PROXY`), so behind Railway's proxy the rate limits and the audit log see each visitor's own address, not the proxy's.
+- **The demo's emails page** (Administration → Demo emails), for platform staff: sign-up confirmations and password resets the demo "sent", with only the links that lead to the site. Each opening is recorded in the audit log. It is absent when real email is used.
+- **A check after each deploy** (`pnpm smoke:hosted`): the site, the server, the site reaching the server, a calculator page, and sign-in refusing a wrong password; with the password given on the computer, also a demo sign-in and the live chat stream.
+- **The app** points at the Railway addresses (GitHub's repository settings) and is built on GitHub; the .apk is on a GitHub pre-release: `demo-apk-2026-10-20-icon`.
+- **A temporary icon:** "MC" in white on the site's dark blue, for the app and the site's tab, until the owner chooses a real logo (plan §10, answer 6).
+- **Written down** in `DEPLOYMENT.md`: the services and their settings, how to deploy a new version, the check, the demo's emails, how to reset the demo data, and the old tunnel kept as a fallback.
+
+**Verified**
+
+- GitHub's eight checks on the last commit (run 39492805736): lint, type checks, unit, integration, security scans, the ZAP site scan, the browser tests in both languages, and the build. They passed on 2026-10-19 too, the first full pass since 13 October.
+- New tests: the settings check of the hosted state (6 cases, 26 in the file) and of `TRUST_PROXY`; the demo emails page (3 integration tests: staff only, bad names refused, the opening audited) and the rules that read an email (4 unit tests).
+- `pnpm smoke:hosted` against Railway on 2026-10-22: all checks passed.
+- **The owner's phone test** on 2026-10-20: the .apk against the hosted demo, "mark the phone test as good".
+- The server refused to start while the owner's first demo password was shorter than 12 characters, as designed.
+
+**Not verified**
+
+- Sign-in and live chat by `pnpm smoke:hosted`, which needs the password on this computer; the owner's phone test covers them.
+- Resetting the demo data on Railway (deleting the database's data and redeploying): written down, not tried.
+- That the audit log and the sessions list show each visitor's own address on Railway; it can be seen in Account → Security after a sign-in.
+- **The real cost:** one week on Railway ends around 2026-10-26, and Railway's sign-in on this computer has expired. The owner can see it in Railway → Usage.
+- The Hebrew texts of the demo emails page have not been read by a Hebrew reader.
+
+**Deviations and findings**
+
+- **The plan** priced the $5 Hobby plan with sleeping services as an option; the owner chose a $20 plan, always on.
+- **No start screen of the app's own:** it needs `expo-splash-screen`, a new library, so it isn't added. Android shows the icon when the app opens.
+- **Railway's command-line tool:** version 5.70.0 was installed first, younger than the 7-day rule; it was removed and 5.66.0 installed.
+- **Fixes found on the way,** outside the plan:
+  - Next.js 16.3.8, for a security advisory.
+  - `handlebars` pinned to 4.7.10 or later (pulled in by a test tool), for a critical advisory.
+  - The app names `babel-preset-expo`, without which GitHub could no longer build the .apk.
+  - Forms with a password always post, and their buttons wait until the page is ready, so a password can never end up in an address.
+- **ZAP:** three warnings accepted, with the reasons in `docs/security/ZAP_BASELINE.md` (10031, 10111, 10202); 10024 (a password in an address) was fixed.
+
+**Open for the owner**
+
+1. The real cost after one week (about 2026-10-26), and whether to set a spending limit in Railway (the plan recommends one).
+2. Who else gets the address. Nobody for now.
+3. A real logo, to replace the temporary icon.
+4. Merging pull request #31.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
@@ -1144,5 +1197,9 @@ Plan: `docs/plans/M30-clinical-calculators.md`, approved by the owner on 2026-10
 **M13 (groups, invitations, rooms by invitation, online status, forwarding, files and video)** was merged on 2026-10-05 (pull request #18). With it the owner's chat request (`chat.md.txt`) is built, apart from what was decided against. The owner marked its checkpoint test as good the same day, and read the Hebrew texts of M12 and M13.
 
 **M14 (the mobile app, part 1)** is merged (pull requests #20 and #21) and was checked by the owner on the phone on 2026-10-06; its demo is left. **M15 (part 2: the rest of the site, without the admin area)** is built, checked by the owner the same day, and waits in pull request #22. Component tests were promised by both plans and are not written.
+
+**M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
+
+**M18 (the hosted demo)** is built and live on Railway, checked on the owner's phone on 2026-10-20, and waits in pull request #31 for the owner's merge; its week's cost is read around 2026-10-26. **M23 (the question bank)** has a plan waiting for the owner's answers (branch `feat/m23-question-bank`). M18b (passkeys in the app, email links that open it) follows if the owner agrees.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

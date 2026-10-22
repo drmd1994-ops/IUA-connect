@@ -4,7 +4,7 @@ import { parseEnv } from '../../src/config/env.schema';
 import { PasswordHasher } from '../../src/infra/crypto/password-hasher';
 import { FieldCipher, SecretHasher } from '../../src/infra/crypto/secrets';
 import { numberHashInput } from '../../src/modules/verification/verification-rules';
-import { DEMO_PASSWORD } from './demo';
+import { demoPassword } from '../../src/config/demo-password';
 
 /**
  * Demo verification by the platform (M17 plan §10): a fictional reviewer, and fictional people
@@ -82,7 +82,7 @@ export async function seedDemoVerification(prisma: PrismaClient): Promise<void> 
   const env = parseEnv(process.env);
   const cipher = new FieldCipher(env);
   const hasher = new SecretHasher(env);
-  const passwordHash = await new PasswordHasher().hash(DEMO_PASSWORD);
+  const passwordHash = await new PasswordHasher().hash(demoPassword());
   const role = await prisma.role.findUniqueOrThrow({ where: { key: 'VERIFIER' } });
   const ago = (days: number) => new Date(Date.now() - days * DAY);
 

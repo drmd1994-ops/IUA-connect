@@ -32,6 +32,10 @@ overrides:
   # Security fix (GHSA-68fv-2mgg-jv7q, source-map-js <1.2.2, a crafted source map can stall the
   # process) for vite > postcss, the test runner's tooling. Remove when postcss asks for it itself.
   source-map-js: 1.2.2
+  # Security fix (GHSA-8r5x-fm3f-whwj and a second critical handlebars advisory, <=4.7.9) for
+  # ts-jest, the server's test runner; nothing of it runs in the product. Remove when ts-jest asks
+  # for 4.7.10 or later itself.
+  handlebars: '>=4.7.10 <5'
   # Peers that pnpm auto-installs at the newest release, ignoring minimumReleaseAge.
   # Keep these in step with the versions the workspace declares.
   '@types/node': 24.13.6

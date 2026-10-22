@@ -1,4 +1,6 @@
-import type { ButtonHTMLAttributes } from 'react';
+'use client';
+
+import { type ButtonHTMLAttributes, useSyncExternalStore } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'link';
 
@@ -16,6 +18,21 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   pendingLabel?: string;
 };
 
+const noSubscribe = () => () => {};
+
+/**
+ * False in the page as sent and until it has loaded its scripts. Until then a form can't do its
+ * work, and the browser's own submission would put what was typed in the address (a password,
+ * a calculator's values): ZAP 10024, 10031.
+ */
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false,
+  );
+}
+
 export function Button({
   variant = 'primary',
   pending = false,
@@ -25,11 +42,14 @@ export function Button({
   disabled,
   ...rest
 }: Props) {
+  // A disabled submit button also stops the browser submitting the form when Enter is pressed.
+  const hydrated = useHydrated();
+  const early = rest.type === 'submit' && !hydrated;
   const padding = variant === 'link' ? '' : 'px-5 py-2.5';
   return (
     <button
       {...rest}
-      disabled={disabled || pending}
+      disabled={disabled || pending || early}
       aria-busy={pending || undefined}
       className={`inline-flex items-center justify-center rounded-md font-semibold transition-colors ${padding} ${styles[variant]} ${className}`}
     >

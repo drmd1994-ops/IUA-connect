@@ -43,7 +43,7 @@ export function ForgotPasswordForm() {
         <>
           <p className="text-text-muted">{t('auth.forgot.intro')}</p>
           {error !== null && <Alert tone="error">{errorMessage(error, t)}</Alert>}
-          <form onSubmit={submit} className="flex flex-col gap-5" noValidate>
+          <form method="post" onSubmit={submit} className="flex flex-col gap-5" noValidate>
             <TextField
               name="email"
               type="email"

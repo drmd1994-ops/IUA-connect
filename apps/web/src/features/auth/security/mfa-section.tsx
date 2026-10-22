@@ -143,7 +143,7 @@ export function MfaSection({ refreshKey = 0 }: { refreshKey?: number }) {
           >
             {setup.secret}
           </code>
-          <form onSubmit={confirm} className="flex flex-col gap-4" noValidate>
+          <form method="post" onSubmit={confirm} className="flex flex-col gap-4" noValidate>
             <TextField
               name="code"
               label={t('auth.fields.code')}

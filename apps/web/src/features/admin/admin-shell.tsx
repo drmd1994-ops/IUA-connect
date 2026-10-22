@@ -49,6 +49,8 @@ export const ADMIN_SECTIONS = [
   { href: '/admin/chat/rooms', key: 'chatRooms', permission: 'chat.rooms.manage' },
   { href: '/admin/users', key: 'users', permission: 'users.read' },
   { href: '/admin/audit', key: 'audit', permission: 'audit.read' },
+  // M18: only the demo has it; the page says so where the site sends real email.
+  { href: '/admin/demo-outbox', key: 'demoOutbox', permission: 'users.manage' },
   { href: '/admin/settings', key: 'settings', permission: 'settings.manage' },
 ] as const;
 

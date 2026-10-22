@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DOCUMENTED_DEMO_PASSWORD } from './demo-password';
 
 /**
  * Typed environment (ARCHITECTURE.md §5, §11). Validated once at startup; the process exits
@@ -64,7 +65,29 @@ const fieldKeys = z.string().transform((value, ctx) => {
 export const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    /**
+     * The demo on a hosted service (M18 plan §3): runs as production, but with the demo's
+     * stand-ins (files on the disk, emails to a folder, no virus scan) and fictional data. It
+     * requires keys that are not "dev" and a demo password that is not the documented one. Real
+     * production (NODE_ENV=production without this) keeps every check.
+     */
+    DEMO_HOSTED: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
+    /** The fictional accounts' password in a hosted demo. Set on the host, never in the code. */
+    DEMO_PASSWORD: z.string().optional(),
     API_PORT: z.coerce.number().int().min(1).max(65535).default(4000),
+    /**
+     * The proxies whose X-Forwarded-For is believed, in Express's terms (names such as loopback
+     * and uniquelocal, or address ranges, comma-separated). The rate limits and the audit log use
+     * the address this gives. On this computer the site's proxy is loopback. On a host, the host's
+     * front door and the site reach the server from its private network (M18).
+     */
+    TRUST_PROXY: z
+      .string()
+      .regex(/^[a-z0-9.:/, ]+$/i, 'must be names or address ranges, comma-separated')
+      .default('loopback'),
     WEB_ORIGIN: z
       .string()
       .min(1)
@@ -137,7 +160,25 @@ export const envSchema = z
         message: 'must name one of the keys in FIELD_ENCRYPTION_KEYS',
       });
     }
+    if (env.DEMO_HOSTED && env.NODE_ENV !== 'production') {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['DEMO_HOSTED'],
+        message: 'a hosted demo runs with NODE_ENV=production',
+      });
+    }
     if (env.NODE_ENV !== 'production') return;
+    if (env.DEMO_HOSTED) {
+      const password = env.DEMO_PASSWORD ?? '';
+      if (password.length < 12 || password === DOCUMENTED_DEMO_PASSWORD) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['DEMO_PASSWORD'],
+          message:
+            'a hosted demo needs its own demo password of at least 12 characters, not the documented one',
+        });
+      }
+    }
     if (env.WEBAUTHN_RP_ID === 'localhost') {
       ctx.addIssue({
         code: 'custom',
@@ -161,6 +202,8 @@ export const envSchema = z
         });
       }
     }
+    // The hosted demo is allowed the stand-ins; real production never.
+    if (env.DEMO_HOSTED) return;
     for (const [key, demoValue] of Object.entries(DEMO_ADAPTERS)) {
       if (env[key as keyof typeof DEMO_ADAPTERS] === demoValue) {
         ctx.addIssue({
