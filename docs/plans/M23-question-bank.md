@@ -1,6 +1,6 @@
 # M23: The full question bank
 
-**Status: proposed on 2026-10-07. Checked against the code and rewritten on 2026-10-19, at the owner's request ("creat a plan for M 23"; see §0b). Not approved. Nothing of it is built.**
+**Status: approved by the owner on 2026-10-23 with the answers in §10. Proposed on 2026-10-07; checked against the code and rewritten on 2026-10-19 (§0b).**
 
 Track: Phase 2. Size: L (was M; the checks in §0b add an import, a report button and a reviewer line). Needs first: questions. Today there are ten; a bank needs hundreds, written and reviewed by physicians (§9, question 1).
 
@@ -132,4 +132,10 @@ My recommendation: **(1)** I draft a starter set of 100 new questions (about 9 p
 
 ## 10. Owner answers
 
-None yet.
+Given on 2026-10-23, when the owner said "start m23" and chose my recommendation for each question:
+
+1. **Questions:** I draft a starter set of 100 new questions (about 9 per topic); the owner reviews and publishes them, as with the first ten.
+2. **Topics and exam:** the 11 subspecialties are the topics. The bank prepares for the Israeli urology board exams without claiming to match them.
+3. **Teachers:** nobody else sees a person's results, programme directors included.
+4. **The numbers:** kept as written: mock exams of 10, 25 or 50 questions at 90 seconds each; weak below 60% with at least 5 answered; statistics from 5 answers; right answers left out of practice for 30 days.
+5. **Who sits a mock exam:** any signed-in person, on the questions they may read.
