@@ -4612,6 +4612,230 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/research/projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ResearchController_list"];
+        put?: never;
+        post: operations["ResearchController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/projects/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ResearchController_get"];
+        put: operations["ResearchController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/projects/{id}/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResearchController_end"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/projects/{id}/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResearchController_ask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ResearchController_requests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/requests/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResearchController_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/requests/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResearchController_decline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/research/requests/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResearchController_withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/publications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PublicationsController_mine"];
+        put?: never;
+        post: operations["PublicationsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/publications/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["PublicationsController_order"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/publications/lookup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PublicationsController_lookup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/publications/orcid": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PublicationsController_orcid"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/publications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["PublicationsController_update"];
+        post?: never;
+        delete: operations["PublicationsController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/{id}/publications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PublicationsController_ofMember"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7281,7 +7505,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -7302,7 +7526,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -7311,7 +7535,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
                 app: boolean;
                 email: boolean;
             }[];
@@ -7320,7 +7544,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -9767,6 +9991,265 @@ export interface components {
         CommunityModeratorInputDto: {
             /** Format: uuid */
             userId: string;
+        };
+        ProjectListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                /** @enum {string} */
+                studyType: "PROSPECTIVE" | "RETROSPECTIVE" | "TRIAL" | "REGISTRY" | "SURVEY" | "OTHER";
+                /** @enum {string} */
+                status: "PLANNING" | "RECRUITING" | "ONGOING" | "COMPLETED";
+                /** @enum {string} */
+                ethics: "APPROVED" | "SUBMITTED" | "NOT_YET" | "NOT_NEEDED";
+                needs: ("CENTRES" | "CO_INVESTIGATORS" | "STATISTICIAN" | "RESIDENTS" | "STUDENTS")[];
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                }[];
+                lead: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                };
+                open: boolean;
+                ended: boolean;
+                stale: boolean;
+                /** Format: date-time */
+                updatedAt: string;
+                excerpt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        ProjectInputDto: {
+            title: string;
+            description: string;
+            /** @enum {string} */
+            studyType: "PROSPECTIVE" | "RETROSPECTIVE" | "TRIAL" | "REGISTRY" | "SURVEY" | "OTHER";
+            /**
+             * @default PLANNING
+             * @enum {string}
+             */
+            status: "PLANNING" | "RECRUITING" | "ONGOING" | "COMPLETED";
+            /** @enum {string} */
+            ethics: "APPROVED" | "SUBMITTED" | "NOT_YET" | "NOT_NEEDED";
+            /** @default null */
+            funding: string | null;
+            /** @default null */
+            contact: string | null;
+            /** @default [] */
+            needs: ("CENTRES" | "CO_INVESTIGATORS" | "STATISTICIAN" | "RESIDENTS" | "STUDENTS")[];
+            /** @default [] */
+            subspecialtyIds: string[];
+            /** @default true */
+            open: boolean;
+        };
+        ProjectDto: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            /** @enum {string} */
+            studyType: "PROSPECTIVE" | "RETROSPECTIVE" | "TRIAL" | "REGISTRY" | "SURVEY" | "OTHER";
+            /** @enum {string} */
+            status: "PLANNING" | "RECRUITING" | "ONGOING" | "COMPLETED";
+            /** @enum {string} */
+            ethics: "APPROVED" | "SUBMITTED" | "NOT_YET" | "NOT_NEEDED";
+            needs: ("CENTRES" | "CO_INVESTIGATORS" | "STATISTICIAN" | "RESIDENTS" | "STUDENTS")[];
+            subspecialties: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            }[];
+            lead: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+            };
+            open: boolean;
+            ended: boolean;
+            stale: boolean;
+            /** Format: date-time */
+            updatedAt: string;
+            description: string;
+            funding: string | null;
+            contact: string | null;
+            mine: boolean;
+            myRequest: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                state: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED";
+            } | null;
+            groupId: string | null;
+            members: number;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        JoinInputDto: {
+            message: string;
+        };
+        ResearchRequestDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            role: "lead" | "asker";
+            project: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+            };
+            other: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+            };
+            /** @enum {string} */
+            state: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED";
+            message: string;
+            /** Format: date-time */
+            createdAt: string;
+            answeredAt: string | null;
+        };
+        ResearchRequestListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                role: "lead" | "asker";
+                project: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                };
+                other: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                };
+                /** @enum {string} */
+                state: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED";
+                message: string;
+                /** Format: date-time */
+                createdAt: string;
+                answeredAt: string | null;
+            }[];
+        };
+        PublicationListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                authors: string;
+                journal: string | null;
+                year: number | null;
+                doi: string | null;
+                pmid: string | null;
+                url: string | null;
+                topics: string[];
+                /** @enum {string} */
+                source: "MANUAL" | "PUBMED" | "ORCID";
+                hidden: boolean;
+            }[];
+        };
+        PublicationInputDto: {
+            title: string;
+            /** @default  */
+            authors: string;
+            /** @default null */
+            journal: string | null;
+            /** @default null */
+            year: number | null;
+            /** @default null */
+            doi: string | null;
+            /** @default null */
+            pmid: string | null;
+            /** @default null */
+            url: string | null;
+            /** @default [] */
+            topics: string[];
+            /**
+             * @default MANUAL
+             * @enum {string}
+             */
+            source: "MANUAL" | "PUBMED" | "ORCID";
+            /** @default false */
+            hidden: boolean;
+        };
+        PublicationDto: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            authors: string;
+            journal: string | null;
+            year: number | null;
+            doi: string | null;
+            pmid: string | null;
+            url: string | null;
+            topics: string[];
+            /** @enum {string} */
+            source: "MANUAL" | "PUBMED" | "ORCID";
+            hidden: boolean;
+        };
+        PublicationOrderDto: {
+            ids: string[];
+        };
+        PublicationLookupDto: {
+            pmid?: string;
+            doi?: string;
+        };
+        PublicationDraftListDto: {
+            /** @enum {string} */
+            source: "PUBMED" | "ORCID";
+            items: {
+                title: string;
+                authors: string;
+                journal: string | null;
+                year: number | null;
+                doi: string | null;
+                pmid: string | null;
+                url: string | null;
+                saved: boolean;
+            }[];
         };
     };
     responses: never;
@@ -17987,6 +18470,402 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    ResearchController_list: {
+        parameters: {
+            query?: {
+                q?: string;
+                subspecialty?: string;
+                studyType?: "PROSPECTIVE" | "RETROSPECTIVE" | "TRIAL" | "REGISTRY" | "SURVEY" | "OTHER";
+                need?: "CENTRES" | "CO_INVESTIGATORS" | "STATISTICIAN" | "RESIDENTS" | "STUDENTS";
+                status?: "PLANNING" | "RECRUITING" | "ONGOING" | "COMPLETED";
+                mine?: boolean;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectListDto"];
+                };
+            };
+        };
+    };
+    ResearchController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    ResearchController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    ResearchController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    ResearchController_end: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    ResearchController_ask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JoinInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchRequestDto"];
+                };
+            };
+        };
+    };
+    ResearchController_requests: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchRequestListDto"];
+                };
+            };
+        };
+    };
+    ResearchController_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchRequestDto"];
+                };
+            };
+        };
+    };
+    ResearchController_decline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchRequestDto"];
+                };
+            };
+        };
+    };
+    ResearchController_withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchRequestDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationListDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublicationInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_order: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublicationOrderDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationListDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_lookup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublicationLookupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationDraftListDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_orcid: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationDraftListDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublicationInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationDto"];
+                };
+            };
+        };
+    };
+    PublicationsController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PublicationsController_ofMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicationListDto"];
                 };
             };
         };
