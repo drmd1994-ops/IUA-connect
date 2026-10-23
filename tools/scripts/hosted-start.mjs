@@ -55,8 +55,12 @@ async function main() {
     pnpm(['--filter', '@medconnect/api', 'db:seed']);
   } else {
     ok('demo data present; not seeded again');
-    step('Adding the question bank starter set if missing');
-    pnpm(['--filter', '@medconnect/api', 'db:seed'], { env: { SEED_LAYERS: 'question-bank' } });
+    // The reference layer brings new roles and permissions; the others add what a later
+    // milestone brought, once (M23 questions, M28 positions and mentors).
+    step('Adding what newer versions brought, if missing');
+    pnpm(['--filter', '@medconnect/api', 'db:seed'], {
+      env: { SEED_LAYERS: 'reference,question-bank,careers' },
+    });
   }
 
   step('Starting the server');

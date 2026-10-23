@@ -47,6 +47,7 @@ describe('an organisation sees only its own (integration)', () => {
     speaker: '',
     room: '',
     broadcast: '',
+    position: '',
     membership: '',
     application: '',
     batch: '',
@@ -87,6 +88,15 @@ describe('an organisation sees only its own (integration)', () => {
     audience: { all: true },
     translations: { he: { title: `הודעת המכללה ${run}`, body: 'טקסט.' } },
     ...extra,
+  });
+
+  const positionBody = () => ({
+    kind: 'JOB',
+    institutionName: `College clinic ${run}`,
+    city: 'Haifa',
+    applyEmail: `jobs-${run}@example.test`,
+    closesOn: '2032-04-30',
+    translations: { he: { title: `משרה במכללה ${run}`, body: 'טקסט.' } },
   });
 
   async function named(label: string): Promise<{ email: string; token: string; userId: string }> {
@@ -197,6 +207,14 @@ describe('an organisation sees only its own (integration)', () => {
         .send(broadcastBody())
         .expect(201)
     ).body.id;
+    theirs.position = (
+      await h
+        .http()
+        .post('/api/v1/admin/positions')
+        .set(as(collegeOffice))
+        .send(positionBody())
+        .expect(201)
+    ).body.id;
 
     const applicant = await named('college-applicant');
     theirs.application = (
@@ -255,6 +273,7 @@ describe('an organisation sees only its own (integration)', () => {
       ['admin/chat/rooms/', { id: theirs.room, userId: fellow.userId }],
       ['admin/chat/reports/', { id: theirs.report }],
       ['admin/broadcasts/', { id: theirs.broadcast }],
+      ['admin/positions/', { id: theirs.position }],
       ['admin/memberships/import/', { batchId: theirs.batch }],
       ['admin/memberships/', { id: theirs.membership }],
     ];
@@ -279,6 +298,8 @@ describe('an organisation sees only its own (integration)', () => {
       'PUT admin/chat/rooms/:id': roomBody({ nameHe: `שם אחר ${run}` }),
       'POST admin/chat/rooms/:id/moderators': { userId: fellow.userId },
       'POST admin/chat/reports/:id/resolve': { decision: 'dismiss', reason: 'Not theirs' },
+      'PUT admin/positions/:id': positionBody(),
+      'POST admin/positions/:id/transitions': { action: 'SUBMIT' },
       'PUT admin/broadcasts/:id': broadcastBody(),
       'POST admin/broadcasts/:id/reject': { reason: 'Test' },
       'POST admin/memberships/import/:batchId/apply': { csv: batchCsv },
@@ -303,15 +324,17 @@ describe('an organisation sees only its own (integration)', () => {
   async function snapshot(): Promise<string> {
     const one = async (path: string) =>
       (await h.http().get(path).set(as(collegeOffice)).expect(200)).body as Record<string, unknown>;
-    const [news, event, room, broadcast, membership, sessions, speakers] = await Promise.all([
-      one(`/api/v1/admin/news/${theirs.news}`),
-      one(`/api/v1/admin/events/${theirs.event}`),
-      one(`/api/v1/admin/chat/rooms/${theirs.room}`),
-      one(`/api/v1/admin/broadcasts/${theirs.broadcast}`),
-      one(`/api/v1/admin/memberships/${theirs.membership}`),
-      one(`/api/v1/admin/events/${theirs.event}/sessions`),
-      one('/api/v1/admin/speakers'),
-    ]);
+    const [news, event, room, broadcast, membership, sessions, speakers, position] =
+      await Promise.all([
+        one(`/api/v1/admin/news/${theirs.news}`),
+        one(`/api/v1/admin/events/${theirs.event}`),
+        one(`/api/v1/admin/chat/rooms/${theirs.room}`),
+        one(`/api/v1/admin/broadcasts/${theirs.broadcast}`),
+        one(`/api/v1/admin/memberships/${theirs.membership}`),
+        one(`/api/v1/admin/events/${theirs.event}/sessions`),
+        one('/api/v1/admin/speakers'),
+        one(`/api/v1/admin/positions/${theirs.position}`),
+      ]);
     const { rows } = await h.db.query(
       `SELECT (SELECT status::text FROM import_batches WHERE id = $1) AS batch,
               (SELECT state::text FROM verification_requests WHERE id = $2) AS application,
@@ -323,6 +346,7 @@ describe('an organisation sees only its own (integration)', () => {
       event: [event.status, event.version, event.translations],
       room: [room.nameHe, room.archived, room.moderators],
       broadcast: [broadcast.status, broadcast.translations],
+      position: [position.status, position.version, position.translations],
       membership: [
         (membership.membership as Record<string, unknown>).status,
         (membership.membership as Record<string, unknown>).paymentStatus,

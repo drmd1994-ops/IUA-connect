@@ -23,6 +23,7 @@ describe('UnsubscribeTokens', () => {
       'NEW_EVENTS',
       'EDUCATION',
       'GUIDELINES',
+      'POSITIONS',
     ]);
   });
 

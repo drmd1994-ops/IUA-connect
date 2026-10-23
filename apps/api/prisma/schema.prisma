@@ -118,6 +118,11 @@ model User {
   chatSuspensions     ChatSuspension[]
   messageReactions    MessageReaction[]
   conversationBans    ConversationBan[]
+  positionsWritten    Position[]               @relation("PositionsWritten")
+  savedPositions      SavedPosition[]
+  mentorProfile       MentorProfile?
+  mentorshipsMentor   Mentorship[]             @relation("MentorshipsAsMentor")
+  mentorshipsMentee   Mentorship[]             @relation("MentorshipsAsMentee")
 
   @@map("users")
 }
@@ -370,6 +375,7 @@ model Hospital {
   departments  Department[]
   profiles     Profile[]
   applications VerificationRequest[]
+  positions    Position[]
 
   @@map("hospitals")
 }
@@ -389,6 +395,7 @@ model Department {
   hospital     Hospital              @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
   profiles     Profile[]
   applications VerificationRequest[]
+  positions    Position[]
 
   @@unique([hospitalId, code])
   /// Target of the composite foreign keys that keep a profile's or application's department
@@ -411,6 +418,8 @@ model Subspecialty {
   guidelines    Guideline[]
   education     EducationItem[]
   examQuestions ExamQuestion[]
+  positions     PositionSubspecialty[]
+  mentors       MentorSubspecialty[]
 
   @@map("subspecialties")
 }
@@ -450,6 +459,7 @@ model Organisation {
   staff           UserRole[]
   importBatches   ImportBatch[]
   applications    VerificationRequest[]
+  positions       Position[]
 
   @@map("organisations")
 }
@@ -1812,6 +1822,10 @@ enum NotificationKind {
   MESSAGES
   /// Chat rooms (M12): someone mentioned you or replied to you, or an announcement in your room.
   ROOMS
+  /// A job, fellowship or research post was published (M28).
+  POSITIONS
+  /// Mentorship (M28): a request to you, and the answer to yours.
+  MENTORSHIP
 
   @@map("notification_kind")
 }
@@ -2164,6 +2178,7 @@ model Conversation {
   pins         MessagePin[]
   bans         ConversationBan[]
   invitations  ConversationInvitation[]
+  mentorships  Mentorship[]
   organisation Organisation?            @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@unique([userLowId, userHighId])
@@ -2604,4 +2619,215 @@ model PlatformInvitation {
   @@index([inviterId, createdAt])
   @@index([emailHash])
   @@map("platform_invitations")
+}
+
+// ---------------------------------------------------------------------------
+// Jobs, fellowships and mentorship (M28). docs/plans/M28-jobs-mentorship.md.
+// ---------------------------------------------------------------------------
+
+enum PositionKind {
+  JOB
+  FELLOWSHIP
+  RESEARCH
+
+  @@map("position_kind")
+}
+
+/// DRAFT → IN_REVIEW → PUBLISHED → ARCHIVED; sent back to DRAFT from review, or taken back to
+/// DRAFT from PUBLISHED to be corrected (and reviewed again).
+enum PositionStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+
+  @@map("position_status")
+}
+
+/// Who a position is for.
+enum PositionAudience {
+  ANYONE
+  SPECIALISTS
+  RESIDENTS
+  STUDENTS
+
+  @@map("position_audience")
+}
+
+/// A job, fellowship or research post (M28). Everyone reads a published one, visitors too
+/// (owner answer §10.4); it leaves the list after its closing date. It belongs to an
+/// organisation, or to the platform (organisation_id empty), which is also where a department
+/// director's positions go. The place is a hospital (and department) from the list, or an
+/// institution named as text, abroad or elsewhere, with its city and country.
+model Position {
+  id              String           @id @db.Uuid
+  kind            PositionKind
+  status          PositionStatus   @default(DRAFT)
+  organisationId  String?          @map("organisation_id") @db.Uuid
+  hospitalId      String?          @map("hospital_id") @db.Uuid
+  departmentId    String?          @map("department_id") @db.Uuid
+  /// An institution not in the hospital list, as written.
+  institutionName String?          @map("institution_name") @db.VarChar(200)
+  /// The city, for an institution named as text; a hospital's own city is used otherwise.
+  city            String?          @db.VarChar(100)
+  /// ISO 3166-1 alpha-2, upper case.
+  country         String           @default("IL") @db.Char(2)
+  audience        PositionAudience @default(ANYONE)
+  applyUrl        String?          @map("apply_url") @db.VarChar(500)
+  applyEmail      String?          @map("apply_email") @db.Citext
+  /// The last day to apply, in Israel. The position leaves the list the day after.
+  closesOn        DateTime         @map("closes_on") @db.Date
+  authorUserId    String?          @map("author_user_id") @db.Uuid
+  /// Who submitted it for review (four eyes: they can't publish it).
+  submittedBy     String?          @map("submitted_by") @db.Uuid
+  reviewedBy      String?          @map("reviewed_by") @db.Uuid
+  publishedAt     DateTime?        @map("published_at") @db.Timestamptz(6)
+  archivedAt      DateTime?        @map("archived_at") @db.Timestamptz(6)
+  /// Increases on every change; the ETag for concurrent edits.
+  version         Int              @default(1)
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organisation   Organisation?          @relation(fields: [organisationId], references: [id], onDelete: Restrict)
+  hospital       Hospital?              @relation(fields: [hospitalId], references: [id], onDelete: Restrict)
+  department     Department?            @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  author         User?                  @relation("PositionsWritten", fields: [authorUserId], references: [id], onDelete: SetNull)
+  translations   PositionTranslation[]
+  subspecialties PositionSubspecialty[]
+  history        PositionHistory[]
+  saves          SavedPosition[]
+
+  @@index([status, closesOn])
+  @@index([organisationId])
+  @@index([departmentId])
+  @@map("positions")
+}
+
+model PositionTranslation {
+  positionId String @map("position_id") @db.Uuid
+  locale     String @db.VarChar(8)
+  title      String @db.VarChar(300)
+  /// Sanitised Markdown.
+  body       String @default("")
+
+  position Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+
+  @@id([positionId, locale])
+  @@map("position_translations")
+}
+
+model PositionSubspecialty {
+  positionId     String @map("position_id") @db.Uuid
+  subspecialtyId String @map("subspecialty_id") @db.Uuid
+
+  position     Position     @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  subspecialty Subspecialty @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+
+  @@id([positionId, subspecialtyId])
+  @@index([subspecialtyId])
+  @@map("position_subspecialties")
+}
+
+/// Append-only workflow history (like news_history).
+model PositionHistory {
+  id          String          @id @db.Uuid
+  positionId  String          @map("position_id") @db.Uuid
+  action      String          @db.VarChar(40)
+  fromStatus  PositionStatus? @map("from_status")
+  toStatus    PositionStatus  @map("to_status")
+  actorUserId String?         @map("actor_user_id") @db.Uuid
+  comment     String?         @db.VarChar(1000)
+  at          DateTime        @default(now()) @db.Timestamptz(6)
+
+  position Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+
+  @@index([positionId, at])
+  @@map("position_history")
+}
+
+/// A position a person keeps to come back to. Theirs alone; staff never see who saved what.
+model SavedPosition {
+  userId     String   @map("user_id") @db.Uuid
+  positionId String   @map("position_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  position Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, positionId])
+  @@index([positionId])
+  @@map("saved_positions")
+}
+
+/// A verified specialist who offers mentorship (M28). Listed only while `open` and while they
+/// are a verified specialist; switching it off ends nothing already accepted. Their hospital and
+/// department come from their profile.
+model MentorProfile {
+  userId            String   @id @map("user_id") @db.Uuid
+  open              Boolean  @default(true)
+  academicInterests String   @default("") @map("academic_interests") @db.VarChar(1000)
+  careerInterests   String   @default("") @map("career_interests") @db.VarChar(1000)
+  /// How much time they have, in their words ("one call a month").
+  availability      String   @default("") @db.VarChar(300)
+  /// ISO 639 language codes.
+  languages         String[] @default([])
+  /// How many mentees at once; at the limit they are shown as not taking mentees now.
+  capacity          Int      @default(2)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subspecialties MentorSubspecialty[]
+
+  @@map("mentor_profiles")
+}
+
+model MentorSubspecialty {
+  userId         String @map("user_id") @db.Uuid
+  subspecialtyId String @map("subspecialty_id") @db.Uuid
+
+  mentor       MentorProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  subspecialty Subspecialty  @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+
+  @@id([userId, subspecialtyId])
+  @@index([subspecialtyId])
+  @@map("mentor_subspecialties")
+}
+
+/// PENDING → ACCEPTED → ENDED, or PENDING → DECLINED, WITHDRAWN (by the mentee) or EXPIRED
+/// (30 days unanswered).
+enum MentorshipState {
+  PENDING
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+  EXPIRED
+  ENDED
+
+  @@map("mentorship_state")
+}
+
+/// A mentee's request to a mentor, and the mentorship it becomes (M28). Seen by the two people
+/// only: staff never see who asked whom. One open request or mentorship per pair (a partial
+/// unique index in the migration).
+model Mentorship {
+  id             String          @id @db.Uuid
+  mentorId       String          @map("mentor_id") @db.Uuid
+  menteeId       String          @map("mentee_id") @db.Uuid
+  state          MentorshipState @default(PENDING)
+  message        String          @db.VarChar(1000)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  answeredAt     DateTime?       @map("answered_at") @db.Timestamptz(6)
+  closedAt       DateTime?       @map("closed_at") @db.Timestamptz(6)
+  /// The private conversation opened when it was accepted.
+  conversationId String?         @map("conversation_id") @db.Uuid
+
+  mentor       User          @relation("MentorshipsAsMentor", fields: [mentorId], references: [id], onDelete: Cascade)
+  mentee       User          @relation("MentorshipsAsMentee", fields: [menteeId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([mentorId, state])
+  @@index([menteeId, state])
+  @@index([state, createdAt])
+  @@map("mentorships")
 }

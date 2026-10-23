@@ -382,7 +382,13 @@ describe('notices about new content (integration)', () => {
       const token = tokenOf(h.mailer.last(p.email, 'contentDigest')!.unsubscribe!.link);
 
       const done = await unsubscribe(token).expect(200);
-      expect(done.body.kinds).toEqual(['NEWS', 'NEW_EVENTS', 'EDUCATION', 'GUIDELINES']);
+      expect(done.body.kinds).toEqual([
+        'NEWS',
+        'NEW_EVENTS',
+        'EDUCATION',
+        'GUIDELINES',
+        'POSITIONS',
+      ]);
       const now = await preferences(p.token);
       expect(now.NEWS).toMatchObject({ app: true, email: false });
       expect(now.EDUCATION).toMatchObject({ app: true, email: false });

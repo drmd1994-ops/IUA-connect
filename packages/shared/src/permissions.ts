@@ -26,6 +26,9 @@ export const PERMISSIONS = [
   'broadcasts.approve',
   'chat.moderate',
   'chat.rooms.manage',
+  'positions.manage',
+  'positions.review',
+  'positions.post.department',
   'audit.read',
   'settings.manage',
 ] as const;
@@ -80,6 +83,11 @@ export const PERMISSION_LEVELS = {
   'broadcasts.approve': 'both',
   'chat.moderate': 'both',
   'chat.rooms.manage': 'both',
+  // Jobs, fellowships and research posts (M28): writing them, and reviewing them before they show.
+  'positions.manage': 'both',
+  'positions.review': 'both',
+  // A department director writes positions for the departments they direct (M28).
+  'positions.post.department': 'platform',
   'audit.read': 'platform',
   'settings.manage': 'platform',
 } as const satisfies Record<PermissionKey, PermissionLevel>;

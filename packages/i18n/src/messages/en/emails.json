@@ -9,7 +9,8 @@
       "NEWS": "News",
       "NEW_EVENTS": "Event",
       "EDUCATION": "Education",
-      "GUIDELINES": "Guideline"
+      "GUIDELINES": "Guideline",
+      "POSITIONS": "Position"
     }
   },
   "verifyEmail": {
@@ -190,6 +191,49 @@
     "body": "Thank you. A reviewer looked at your report on the question “{title}”.",
     "reason": "Their answer: {reason}",
     "action": "See your reports"
+  },
+  "positionSentBack": {
+    "subject": "Your position needs changes",
+    "heading": "Sent back for changes",
+    "body": "The reviewer sent the position “{title}” back to you.",
+    "reason": "Their comment: {reason}",
+    "action": "Open the position"
+  },
+  "positionPublished": {
+    "subject": "Your position is published",
+    "heading": "Published",
+    "body": "The position “{title}” is now listed on Med Connect.",
+    "action": "View it"
+  },
+  "mentorshipRequested": {
+    "subject": "A request for mentorship",
+    "heading": "Someone asks you to mentor them",
+    "body": "{name} asked you to be their mentor. You can accept or decline; if you decline, they are not told why.",
+    "action": "See the request"
+  },
+  "mentorshipAccepted": {
+    "subject": "Your mentorship request was accepted",
+    "heading": "Accepted",
+    "body": "{name} accepted your request. A private conversation between you is open in Chat.",
+    "action": "Open the conversation"
+  },
+  "mentorshipDeclined": {
+    "subject": "About your mentorship request",
+    "heading": "Not this time",
+    "body": "{name} can’t take your request now. You can ask another mentor.",
+    "action": "See the mentors"
+  },
+  "mentorshipExpired": {
+    "subject": "Your mentorship request was closed",
+    "heading": "No answer in 30 days",
+    "body": "{name} didn’t answer your request within 30 days, so it was closed. You can ask another mentor.",
+    "action": "See the mentors"
+  },
+  "mentorshipEnded": {
+    "subject": "A mentorship ended",
+    "heading": "The mentorship ended",
+    "body": "{name} ended your mentorship. Your conversation stays in Chat.",
+    "action": "See your mentorships"
   },
   "contentDigest": {
     "subject": "New on Med Connect",

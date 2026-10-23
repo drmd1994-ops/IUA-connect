@@ -209,6 +209,23 @@
     "chatLastReportReason": "At least one report reason must stay switched on.",
     "chatReportNoRoom": "This report is not about a room.",
     "verifiedOnly": "This is for verified physicians and medical students.",
-    "invitationLimit": "You have sent as many invitations as you can today. Please try again tomorrow."
+    "invitationLimit": "You have sent as many invitations as you can today. Please try again tomorrow.",
+    "positionChanged": "Someone changed this position in the meantime. Please reload it and try again.",
+    "positionNotEditable": "Only drafts can be edited. Take it back to draft first.",
+    "positionNotDeletable": "Only a draft that was never published can be deleted.",
+    "positionActionNotAllowed": "You don’t have permission for this step.",
+    "positionTransitionNotAllowed": "This step isn’t possible in the position’s current state.",
+    "positionTitleRequired": "Give the position a title before submitting it.",
+    "notYourDepartment": "You can post positions only for the department you direct.",
+    "mentorOnlySpecialists": "Only verified specialists can offer mentorship.",
+    "mentorNameRequired": "Add your first and last name to your profile first. The other person sees who you are.",
+    "mentorUnavailable": "This mentor isn’t available.",
+    "mentorFull": "This mentor isn’t taking mentees now.",
+    "mentorshipTooManyWaiting": "You already have 3 requests waiting for an answer. Wait for one of them, or withdraw one.",
+    "mentorshipAskedRecently": "This mentor declined your request less than 30 days ago.",
+    "mentorshipAlreadyOpen": "You already have a request or a mentorship with this mentor.",
+    "mentorshipNotWaiting": "This request was already answered or closed.",
+    "mentorshipNotActive": "This mentorship isn’t active.",
+    "mentorshipActionNotAllowed": "Only the other side can take this step."
   }
 }

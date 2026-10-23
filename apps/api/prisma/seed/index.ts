@@ -10,6 +10,8 @@
  *                 conversations, a blocked pair and a chat report waiting for review (M11);
  *                 room categories and chat rooms with a moderator, a ban and a report (M12);
  *                 groups, invitations, a room by invitation and files in messages (M13)
+ *   3. question-bank: the starter questions, waiting for review (M23)
+ *   4. careers:  fictional positions, mentors and mentorship requests (M28)
  * The sample imported from a real organisation's website (M4) is no longer a layer: nothing of a
  * real organisation is in the demo (M16). `seedImport` and the importer stay in the repository,
  * unused, and `pnpm import:remove` takes an earlier sample out of a database.
@@ -23,6 +25,7 @@ import { PrismaClient } from '../../src/generated/prisma/client';
 import { parseEnv } from '../../src/config/env.schema';
 import { createPgAdapter } from '../../src/infra/prisma/pg-adapter';
 import { seedDemo } from './demo';
+import { seedDemoCareers } from './demo-careers';
 import { seedDemoChat } from './demo-chat';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
@@ -62,6 +65,8 @@ const LAYERS: SeedLayer[] = [
   // The question bank's starter set, waiting for review (M23). Its own layer, so the hosted demo
   // can add it to a database seeded before M23 (SEED_LAYERS=question-bank).
   { name: 'question-bank', milestone: 'M23', run: seedStarterQuestions },
+  // Jobs, fellowships and mentors (M28), for the same reason.
+  { name: 'careers', milestone: 'M28', run: seedDemoCareers },
 ];
 
 async function main(): Promise<void> {
