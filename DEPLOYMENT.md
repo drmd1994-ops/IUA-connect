@@ -43,7 +43,7 @@ A demo, not a deployment for real members: fictional data, the demo's stand-ins 
 - **On every start** the server runs `pnpm hosted:start` (`tools/scripts/hosted-start.mjs`):
   1. the two database roles and the database `medconnect`, as `db-provision.mjs` does on this computer;
   2. `prisma migrate deploy`, as the owner role;
-  3. the demo seed, only when the database has no users yet; otherwise only the seed layers that check for themselves: the reference layer (new roles and permissions, such as those of M28), the question bank's starter set (M23) and the demo's positions and mentors (M28), each added once;
+  3. the demo seed, only when the database has no users yet; otherwise only the seed layers that check for themselves: the reference layer (new roles and permissions, such as those of M28), the question bank's starter set (M23), the demo's positions and mentors (M28), and its communities (M25, which also archives every chat room), each added once;
   4. the server, as the application role.
 
 **Deploy a new version** (from the repository root, signed in with `railway login`, after the checks are green):

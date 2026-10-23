@@ -270,3 +270,15 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`mentorships`**: a request and the mentorship it becomes (`PENDING`, `ACCEPTED`, `DECLINED`, `WITHDRAWN`, `EXPIRED`, `ENDED`), with the message and, once accepted, the private conversation. One open request or mentorship per pair (a partial unique index); a person can't ask themselves.
 - **`notification_kind`** gained `POSITIONS` and `MENTORSHIP`, in a migration of their own.
 - Two migrations (`20261023090000`, `20261023161839`), additions only.
+
+## 12. Communities (M25)
+
+- **`communities`**: one for each subspecialty (`subspecialty_id`, unique) and others staff open; `slug` in addresses, names and descriptions in Hebrew and English, `archived_at` when closed.
+- **`community_moderators`**, **`community_bans`** (with a reason and an optional end), **`community_follows`**.
+- **`posts`**: a question or a discussion in a community, with its writer, title and text, the comment marked as the answer, when it was edited, locked or removed (by whom and why), its latest activity and number of comments, and a search vector kept by a trigger.
+- **`post_comments`**: one level of replies (`parent_id`), with the same edit and removal fields and its own search vector.
+- **`post_files`**, **`post_reactions`** and **`comment_reactions`** (chat's six reactions, by a check constraint), **`post_bookmarks`**, **`post_follows`**.
+- **`chat_reports`** gained `post_id` and `comment_id`: a post or a comment is reported into chat's queue.
+- **`notification_kind`** gained `COMMUNITIES`, in a migration of its own.
+- **Chat rooms closed:** the migration archives every room (`conversations.archived_at`); nothing is deleted.
+- Three migrations (`20261023190000` to `20261023190200`), additions and the archiving.

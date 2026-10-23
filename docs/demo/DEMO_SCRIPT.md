@@ -139,7 +139,9 @@ Two windows: `member.full@demo.test` in the first, and in a private window `memb
 
 The seed leaves one report waiting (a sample advertisement, between two other demo members). `pnpm demo:reset` puts everything back.
 
-### 9. Chat rooms (3 minutes, optional; added in M12)
+### 9. Chat rooms (closed in M25: skip; see step 12)
+
+Communities replaced chat rooms in M25, and every room is archived. This step and the room rows of step 10 no longer apply; they are kept as a record.
 
 The same two windows, with `member.resident@demo.test` in the private window this time. Noa Bar-Lev (`member.full`) is the moderator of three demo rooms.
 
@@ -158,7 +160,7 @@ The same two windows, with `member.resident@demo.test` in the private window thi
 
 The seed also leaves a message removed by a moderator and one person banned for a week in "שאלות ותשובות" (open **פרטים** there as Noa to see the ban).
 
-### 10. Groups, invitations and files (3 minutes, optional; added in M13)
+### 10. Groups, invitations and files (3 minutes, optional; added in M13; the room rows no longer apply since M25)
 
 Two windows: `member.full@demo.test` (Noa Bar-Lev) in the first, and in a private window `member.honorary@demo.test` (Ruth Golan).
 
@@ -191,6 +193,21 @@ Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, a
 | Second window: **החונכויות שלי** → **קבלה**.                      | The request becomes active, with **לפתיחת השיחה**.                                                       | "If she declines, he isn't told why. If she accepts, a private conversation opens between them."       |
 | First window: **החונכויות שלי** → **לפתיחת השיחה**.               | The conversation, in Chat.                                                                               | "Neither of them had to be listed in the member directory."                                            |
 | As `admin@demo.test`: **ניהול → משרות**.                          | The positions, one waiting for review; the writer can't publish their own.                               | "A department director posts for their department; someone else reviews it before it shows."           |
+
+### 12. Communities (3 minutes, optional; added in M25)
+
+Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, and in a private window `member.full@demo.test` (Noa Bar-Lev, who moderates Andrology). The posts are made up and talk about training, never about a patient.
+
+| Do                                                                                                          | The audience sees                                                                                    | Say                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| First window: **קהילות**.                                                                                   | A community for each subspecialty, with how many posts; the note that staff can read them.           | "Questions and discussions by subspecialty, under each person's own name, and they stay to be found."       |
+| Open **אנדרולוגיה** → **כתיבת פוסט**, choose **שאלה**, and in the text type an ID number such as 123456782. | Before anything is sent: the number, and that it looks like an ID number; the Post button stays off. | "Nothing that identifies a patient gets through: the page stops it, and so does the server."                |
+| Replace the number with an ordinary question, and post it.                                                  | The question, with its comments below.                                                               |                                                                                                             |
+| Second window: open the question and answer it.                                                             | The comment appears.                                                                                 |                                                                                                             |
+| First window: **סימון כתשובה** on Noa's comment; press 🙏.                                                  | "התשובה" beside it; the question is marked "נענתה" in the list.                                      | "The one who asked marks what helped; anyone can thank."                                                    |
+| **מעקב** on the community, then **מהקהילות שאני עוקב/ת אחריהן**.                                            | The feed of followed communities.                                                                    |                                                                                                             |
+| Second window: on an off-topic comment, **הסרה** with a reason.                                             | "הוסר על ידי מנהל/ת הקהילה" and the reason, in its place.                                            | "Each community has its own moderators; what they remove leaves a note, and the audit log has who and why." |
+| **צ׳אט**.                                                                                                   | Private conversations and groups only.                                                               | "Rooms became communities."                                                                                 |
 
 ## The 5-minute version
 
