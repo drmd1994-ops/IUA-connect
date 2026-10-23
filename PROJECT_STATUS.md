@@ -1240,7 +1240,7 @@ Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("s
 1. Review the 100 starter questions (Administration → Education → Exam questions, "Waiting for review"), correcting and publishing them one by one.
 2. Read the new Hebrew texts.
 
-## M18b Passkeys in the app, and email links that open it (built 2026-10-23, pull request #33)
+## M18b Passkeys in the app, and email links that open it (merged 2026-10-23, pull request #33)
 
 Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026-10-23 ("start m18b") with my recommendation for each question (§10): the app gets its own private key, with a backup in the owner's Documents folder; the library react-native-passkey 3.6.2; sign-in and content links open the app, the admin area stays in the browser; Android only.
 
@@ -1288,6 +1288,6 @@ Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone on 2026-10-23, and waits in pull request #33.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33).
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
