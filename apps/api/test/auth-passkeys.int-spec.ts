@@ -1,8 +1,10 @@
 import { errorEnvelopeSchema } from '@medconnect/shared';
 import { Secret, TOTP } from 'otpauth';
+import { androidOrigin } from '../src/config/env.schema';
 import {
   type Harness,
   STRONG_PASSWORD,
+  TEST_APP_CERT_SHA256,
   createVerifiedUser,
   grantRole,
   signIn,
@@ -182,6 +184,51 @@ describe('identity: passkeys (M1b)', () => {
       authenticator.origin = 'http://localhost:3001';
       authenticator.rpId = 'evil.example';
       expect((await passkeySignIn(authenticator)).status).toBe(401);
+    });
+
+    it('signs the app in with a passkey made in it: the tokens in the answer, no cookie (M18b)', async () => {
+      const { email, authenticator } = await memberWithPasskey('pk-app');
+      authenticator.origin = androidOrigin(TEST_APP_CERT_SHA256);
+      const options = await h
+        .http()
+        .post('/api/v1/auth/passkeys/authentication/options')
+        .expect(200);
+      const res = await h
+        .http()
+        .post('/api/v1/auth/passkeys/authentication/verify')
+        .send({ response: authenticator.assert(options.body), client: 'app', deviceName: 'Pixel' })
+        .expect(200);
+      expect(res.body).toMatchObject({
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+        sessionExpiresAt: expect.any(String),
+        deviceToken: expect.any(String),
+      });
+      expect(res.headers['set-cookie']).toBeUndefined();
+      const me = await h.http().get('/api/v1/me').set(bearer(res.body.accessToken)).expect(200);
+      expect(me.body).toMatchObject({ email, session: { mfa: true } });
+      // The app's session refreshes the app's way.
+      await h
+        .http()
+        .post('/api/v1/auth/app/refresh')
+        .send({ refreshToken: res.body.refreshToken })
+        .expect(200);
+    });
+
+    it('refuses a passkey from an app signed with another key, and app fields from a browser', async () => {
+      const { authenticator } = await memberWithPasskey('pk-other-app');
+      authenticator.origin = androidOrigin(Array.from({ length: 32 }, () => 'CD').join(':'));
+      expect((await passkeySignIn(authenticator)).status).toBe(401);
+      authenticator.origin = 'http://localhost:3001';
+      const options = await h
+        .http()
+        .post('/api/v1/auth/passkeys/authentication/options')
+        .expect(200);
+      await h
+        .http()
+        .post('/api/v1/auth/passkeys/authentication/verify')
+        .send({ response: authenticator.assert(options.body), deviceName: 'Pixel' })
+        .expect(400);
     });
 
     it('refuses unknown passkeys and missing user verification', async () => {

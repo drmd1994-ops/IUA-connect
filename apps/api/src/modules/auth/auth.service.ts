@@ -207,13 +207,14 @@ export class AuthService {
     userId: string,
     deviceCookie: string | undefined,
     meta: RequestMeta,
+    from?: SessionClientInfo,
   ): Promise<{ tokens: IssuedTokens; newDeviceCookie: string | null }> {
     const user = await this.users.findById(userId);
     if (!user || user.status !== 'ACTIVE') throw new AppException('ACCOUNT_DISABLED');
     if (!user.emailVerifiedAt) throw new AppException('EMAIL_NOT_VERIFIED');
     await this.users.recordSuccessfulLogin(user.id);
     const device = await this.recognizeDevice(user, deviceCookie, meta);
-    const tokens = await this.startSession(user.id, device.deviceId, true, meta, 'passkey');
+    const tokens = await this.startSession(user.id, device.deviceId, true, meta, 'passkey', from);
     return { tokens, newDeviceCookie: device.newCookieToken };
   }
 

@@ -240,12 +240,12 @@ export class AuthController {
 }
 
 /** What a sign-in from the mobile app says about itself. */
-function appInfo(body: { deviceName?: string | undefined }): SessionClientInfo {
+export function appInfo(body: { deviceName?: string | undefined }): SessionClientInfo {
   return { client: 'APP', clientName: body.deviceName ?? null };
 }
 
 /** The tokens as the mobile app receives them: all in the answer, nothing in a cookie. */
-function appTokens(tokens: IssuedTokens) {
+export function appTokens(tokens: IssuedTokens) {
   return {
     accessToken: tokens.accessToken,
     expiresIn: tokens.expiresIn,

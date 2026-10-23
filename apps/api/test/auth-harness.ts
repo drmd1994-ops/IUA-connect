@@ -95,6 +95,9 @@ export interface Harness {
  * only when asked for; otherwise jobs run only when a test triggers them. `push` and `video`
  * replace those providers (the app's own send nothing and link to the host).
  */
+/** The signing-key fingerprint of the app the tests stand in for (passkeys in the app, M18b). */
+export const TEST_APP_CERT_SHA256 = Array.from({ length: 32 }, () => 'AB').join(':');
+
 export async function startHarness(
   options: {
     rateLimits?: boolean;
@@ -106,6 +109,7 @@ export async function startHarness(
   const mailer = new CapturingMailer();
   const env = testEnv({
     DATABASE_URL: testAppUrl(),
+    ANDROID_CERT_SHA256: TEST_APP_CERT_SHA256,
     ...(options.jobs ? { JOB_QUEUE: 'pgboss' } : {}),
   });
   let builder = Test.createTestingModule({ imports: [AppModule.forRoot(env)] })
