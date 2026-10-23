@@ -26,7 +26,8 @@
     "ROOMS": "Chat rooms",
     "POSITIONS": "New positions",
     "MENTORSHIP": "Mentorship",
-    "COMMUNITIES": "Communities"
+    "COMMUNITIES": "Communities",
+    "RESEARCH": "Research"
   },
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
@@ -40,7 +41,8 @@
     "ROOMS": "In a chat room you joined: someone mentioned you, someone replied to you, or a moderator posted an announcement. By email it joins the one-a-day message about unread chat messages.",
     "POSITIONS": "A job, fellowship or research post was published.",
     "MENTORSHIP": "A request to be your mentee, and the answer to a request you sent.",
-    "COMMUNITIES": "A comment on your post or a reply to your comment, a mention, and new posts in the communities and posts you follow. By email: comments, replies and mentions only."
+    "COMMUNITIES": "A comment on your post or a reply to your comment, a mention, and new posts in the communities and posts you follow. By email: comments, replies and mentions only.",
+    "RESEARCH": "A request to join your project, and the answer to yours."
   },
   "items": {
     "eventRegistered": "You are registered for “{title}”.",
@@ -89,7 +91,12 @@
     "communityReply": "{name} replied to your comment on “{title}”.",
     "communityMention": "{name} mentioned you in “{title}”.",
     "communityPost": "New in a community you follow: “{title}”, by {name}.",
-    "communityFollowedPost": "{name} commented on “{title}”, a post you follow."
+    "communityFollowedPost": "{name} commented on “{title}”, a post you follow.",
+    "researchRequested": "{name} asks to join your project “{title}”.",
+    "researchAccepted": "{name} accepted you into “{title}”.",
+    "researchDeclined": "{name} can’t take you into “{title}” now.",
+    "researchExpired": "Your request to join “{title}” was closed after 30 days.",
+    "researchStale": "Is your project “{title}” still current?"
   },
   "preferences": {
     "title": "Notification preferences",

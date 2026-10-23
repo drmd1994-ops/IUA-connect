@@ -240,6 +240,20 @@
     "communityNotAQuestion": "רק לשאלה יש תשובה.",
     "communityModeratorNotBanned": "אי אפשר למנוע ממנהל/ת של הקהילה לכתוב בה.",
     "communityModeratorNotVerified": "מנהל/ת קהילה צריך/ה להיות משתמש/ת מאומת/ת עם שם.",
-    "unknownReaction": "התגובה הזו אינה זמינה."
+    "unknownReaction": "התגובה הזו אינה זמינה.",
+    "researchPhysiciansOnly": "פרויקטים מפורסמים על ידי רופאים מאומתים. סטודנטים לרפואה יכולים לבקש להצטרף.",
+    "researchTooManyProjects": "כבר יש לך 5 פרויקטים פתוחים. יש לסיים אחד כדי לפרסם עוד.",
+    "researchOwnProject": "את/ה מוביל/ה את הפרויקט הזה.",
+    "researchNotTaking": "הפרויקט הזה אינו מקבל בקשות כרגע.",
+    "researchAlreadyOpen": "כבר ביקשת להצטרף לפרויקט הזה, או שאת/ה בו.",
+    "researchAskedRecently": "הפרויקט דחה את בקשתך לפני פחות מ־30 יום.",
+    "researchTooManyWaiting": "כבר יש לך 5 בקשות שממתינות לתשובה.",
+    "researchActionNotAllowed": "רק הצד השני יכול לבצע את הפעולה הזו.",
+    "researchNotWaiting": "הבקשה כבר נענתה או נסגרה.",
+    "publicationsTooMany": "אפשר לשמור עד 500 פרסומים.",
+    "publicationIdInvalid": "יש לבדוק: מזהה PubMed הוא ספרות בלבד, ו־DOI מתחיל ב־״10.״.",
+    "publicationNotFound": "לא נמצא פרסום עם המזהה הזה.",
+    "publicationSourceDown": "השירות לא ענה. אפשר לנסות שוב מאוחר יותר, או להקליד את הפרטים.",
+    "publicationsNoOrcid": "יש להוסיף קודם את מזהה ה־ORCID לפרופיל."
   }
 }

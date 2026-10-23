@@ -240,6 +240,20 @@
     "communityNotAQuestion": "Only a question has an answer.",
     "communityModeratorNotBanned": "A moderator of this community can't be stopped from writing here.",
     "communityModeratorNotVerified": "A moderator must be a verified person with a name.",
-    "unknownReaction": "This reaction isn't available."
+    "unknownReaction": "This reaction isn't available.",
+    "researchPhysiciansOnly": "Projects are listed by verified physicians. Medical students can ask to join one.",
+    "researchTooManyProjects": "You already lead 5 open projects. End one to list another.",
+    "researchOwnProject": "You lead this project.",
+    "researchNotTaking": "This project isn’t taking requests now.",
+    "researchAlreadyOpen": "You already asked to join this project, or are in it.",
+    "researchAskedRecently": "This project declined your request less than 30 days ago.",
+    "researchTooManyWaiting": "You already have 5 requests waiting for an answer.",
+    "researchActionNotAllowed": "Only the other side can take this step.",
+    "researchNotWaiting": "This request was already answered or closed.",
+    "publicationsTooMany": "You can keep up to 500 publications.",
+    "publicationIdInvalid": "Please check it: a PubMed ID is digits only, and a DOI starts with “10.”.",
+    "publicationNotFound": "No publication was found with this identifier.",
+    "publicationSourceDown": "The service didn’t answer. Try again later, or type the details in.",
+    "publicationsNoOrcid": "Add your ORCID iD to your profile first."
   }
 }

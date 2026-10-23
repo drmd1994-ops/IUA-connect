@@ -300,6 +300,17 @@ export class DirectoryService implements OnModuleInit {
    * membership of the association that was active today). The directory is the platform's:
    * belonging to an organisation neither lists a person nor hides them.
    */
+  /**
+   * Whether a listed member shows their research interests to members (M27): their
+   * publications show with the same choice.
+   */
+  async showsResearch(userId: string): Promise<boolean> {
+    const found = await this.prisma.profile.count({
+      where: { ...this.listed(), userId, visibility: shows('RESEARCH_INTERESTS') },
+    });
+    return found > 0;
+  }
+
   private listed(): Prisma.ProfileWhereInput {
     return {
       directoryOptIn: true,
@@ -348,6 +359,15 @@ export class DirectoryService implements OnModuleInit {
             AND EXISTS (
               SELECT 1 FROM profile_field_visibility v
               WHERE v.user_id = p.user_id AND v.field = 'NAME_EN'
+                AND v.visibility IN ('MEMBERS', 'PUBLIC')
+            )
+          )
+          -- Expertise (M27): research interests, when the member shows them.
+          OR (
+            normalize_he(coalesce(p.research_interests, '')) LIKE normalize_he(${pattern})
+            AND EXISTS (
+              SELECT 1 FROM profile_field_visibility v
+              WHERE v.user_id = p.user_id AND v.field = 'RESEARCH_INTERESTS'
                 AND v.visibility IN ('MEMBERS', 'PUBLIC')
             )
           )

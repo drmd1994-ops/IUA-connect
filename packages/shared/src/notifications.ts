@@ -35,6 +35,8 @@ export const NOTIFICATION_KINDS = [
    * community you follow.
    */
   'COMMUNITIES',
+  /** Research (M27): a request to join your project, and the answer to yours. */
+  'RESEARCH',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -61,6 +63,7 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   POSITIONS: { app: true, email: false, locked: false },
   MENTORSHIP: { app: true, email: true, locked: false },
   COMMUNITIES: { app: true, email: false, locked: false },
+  RESEARCH: { app: true, email: true, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -72,6 +75,7 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   // Chat rooms closed in M25 (owner answer §10.6): their kind is no longer offered.
   'COMMUNITIES',
   'MENTORSHIP',
+  'RESEARCH',
   'NEWS',
   'NEW_EVENTS',
   'EDUCATION',
