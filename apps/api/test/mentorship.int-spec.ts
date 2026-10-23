@@ -193,7 +193,9 @@ describe('mentorship (integration)', () => {
 
   it('allows 3 waiting requests at a time', async () => {
     const mentee = await person();
-    const mentors = await Promise.all([mentor(), mentor(), mentor(), mentor()]);
+    // One after another: signing several people up at the same moment drops connections.
+    const mentors: Person[] = [];
+    for (let i = 0; i < 4; i++) mentors.push(await mentor());
     for (const m of mentors.slice(0, 3)) await ask(mentee, m.id).expect(201);
     const fourth = await ask(mentee, mentors[3]!.id).expect(422);
     expect(fourth.body.error.details[0].code).toBe('mentorshipTooManyWaiting');
