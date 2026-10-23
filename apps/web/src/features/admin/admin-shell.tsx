@@ -20,6 +20,9 @@ const ADMIN_PERMISSIONS = [
   'broadcasts.create',
   'chat.moderate',
   'chat.rooms.manage',
+  'positions.manage',
+  'positions.review',
+  'positions.post.department',
   'users.read',
   'audit.read',
   'settings.manage',
@@ -47,6 +50,12 @@ export const ADMIN_SECTIONS = [
   { href: '/admin/broadcasts', key: 'broadcasts', permission: 'broadcasts.create' },
   { href: '/admin/chat/reports', key: 'chatReports', permission: 'chat.moderate' },
   { href: '/admin/chat/rooms', key: 'chatRooms', permission: 'chat.rooms.manage' },
+  // M28: staff who write or review positions, and department directors.
+  {
+    href: '/admin/positions',
+    key: 'positions',
+    permission: ['positions.manage', 'positions.review', 'positions.post.department'],
+  },
   { href: '/admin/users', key: 'users', permission: 'users.read' },
   { href: '/admin/audit', key: 'audit', permission: 'audit.read' },
   // M18: only the demo has it; the page says so where the site sends real email.
@@ -70,7 +79,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <ul className="flex flex-wrap gap-1">
                 {ADMIN_SECTIONS.filter(
                   (section) =>
-                    section.permission === null || me.permissions.includes(section.permission),
+                    section.permission === null ||
+                    (typeof section.permission === 'string'
+                      ? me.permissions.includes(section.permission)
+                      : section.permission.some((held) => me.permissions.includes(held))),
                 ).map((section) => {
                   const current =
                     section.href === '/admin'
