@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-22 (M18: the demo runs on Railway with this computer off; the app uses it)_
+_Last updated: 2026-10-23 (M23 built: the question bank, with 100 starter questions waiting for the owner's review)_
 
 ## Summary
 
@@ -1184,6 +1184,57 @@ Plan: `docs/plans/M18-hosted-demo.md`, approved by the owner on 2026-10-19 with 
 3. A real logo, to replace the temporary icon.
 4. Merging pull request #31.
 
+## M23 The question bank (built 2026-10-23, branch `feat/m23-question-bank`)
+
+Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("start m23") with my recommendation for each question (§10): I draft 100 starter questions and the owner reviews them; the 11 subspecialties are the topics, preparing for the Israeli board exams without claiming to match them; nobody else sees a person's results; the numbers as written; any signed-in person may sit a mock exam.
+
+**Built**
+
+- **On every question:** a difficulty, references (title, and a web address when there is one) and, for the reviewer only, where it comes from. Publishing records who reviewed it and when; readers see "Reviewed by … on …" with the answer.
+- **Practice** by topic and level, as before, plus a choice of set for a signed-in person: all questions (leaving out those they answered right in the last 30 days, and saying how many), their bookmarks, or the ones whose latest answer was wrong. Visitors practise as before.
+- **The mock exam:** 10, 25 or 50 questions on the topics chosen, 90 seconds each, timed by the server. No answer is shown until the end; an answer after the time is refused. Then every question with its explanations, references and reviewer, and the score. The answers count like practice.
+- **Progress:** by topic and by week (12 weeks), from first answers, with how many questions each topic has; topics to work on (5 or more answered, under 60% right).
+- **Bookmarks**, kept and removed on the question or the results page.
+- **Reporting a question:** a signed-in reader says what is wrong. Reviewers (education.review) deal with it in a queue without seeing who sent it; the reader is told, by notice and email, and sees the answer on their results page.
+- **For staff:** difficulty, references and source in the editor; how readers answered each question (first answers, nothing shown below 5 people, never who); the import from a spreadsheet (CSV template with the topic keys listed on the page); the report queue.
+- **The app:** the same practice sets, bookmarks, references, reviewer line, report form, mock exam and progress. The staff parts stay on the site, as planned.
+- **The starter set:** 100 new questions, 9 or 10 for each subspecialty, in Hebrew and English, each with a difficulty, a guideline reference and its source ("written new by Claude … a urologist must check it"). They load **waiting for review**, the right answer spread evenly over the four positions. The hosted demo adds them on its next start.
+- **Texts** in Hebrew and English.
+
+**Verified (on this computer; GitHub's checks are blocked by billing)**
+
+- Server unit tests: 436, among them the import rules, the mock exam's clock, progress against a worked example, the statistics' 5-person rule and the starter set as data. Integration tests: 593, among them 11 new ones for the bank (reviewer line, import, practice sets, bookmarks, the mock exam's hidden answers, its clock and its closing by itself, progress, reports and statistics).
+- The app: 159 screen tests (each new screen in both languages, the mock exam against the server's clock, bookmarking and reporting) and 82 model tests.
+- Lint, type checks and formatting for the whole repository.
+- Browser tests (Playwright, Chromium and Edge, development servers): the whole suite, 292 runs: 284 passed. New: the bank from writing to the reviewers' answer, the mock exam from start to review, and the import, with accessibility checks on every new page in both languages. The failures:
+  - **the demo emails page (M18) scrolled sideways at 320 px in Hebrew** in both browsers: a hidden label escaped the table's frame. Fixed; the admin audit then passed in both browsers, now with the two new admin pages;
+  - **"the rooms fit a phone, in Hebrew"**, in both browsers: the same failure as in M30, the demo room is not on the first page of a list full of rooms left by earlier runs in this computer's database;
+  - **four in Edge only** (sign-ins left on the login page, a page that never loaded) after an hour and a half of sign-ins from one address; rerun, they passed.
+
+**Not verified**
+
+- GitHub's checks: blocked by billing since 2026-10-22.
+- The owner's review of the 100 starter questions, and a Hebrew reader's reading of the new texts.
+- The hosted demo: M23 is not on Railway yet, and a new .apk can't be built while GitHub is blocked.
+
+**Deviations and findings**
+
+- **Reports:** reviewers never see who sent a report (the plan allowed it while dealing with one).
+- **The import** refuses the whole file when any row has a problem, listing every row, column and reason, so nothing is half-loaded.
+- **"The ones I got wrong"** are the questions whose latest answer was wrong; answering one right takes it off the list.
+- **The mock exam** forgives an answer arriving up to 2 seconds late. An exam left open closes the next time it, the list or the progress is read, rather than by a background job. Its answers go to the results when it ends. When fewer questions match than asked for, the exam is shorter.
+- **Weeks** in progress start on Sunday.
+- **The starter set's references** are guideline titles without links, so no address can be wrong; the owner may add links while reviewing.
+- **Prisma** tried to drop two hand-written database constraints in the new migration; those lines were removed, as the schema's header asks.
+- **Small changes outside M23:** web-address fields in forms read left to right; the editor's source field is labelled "Source (seen by reviewers only)"; the demo emails page (M18) no longer scrolls sideways on a narrow phone in Hebrew.
+
+**Open for the owner**
+
+1. Review the 100 starter questions (Administration → Education → Exam questions, "Waiting for review"), correcting and publishing them one by one.
+2. Read the new Hebrew texts.
+3. Fix GitHub's billing so the checks and the app's build can run; then put M23 on Railway and build a new .apk.
+4. The milestone's demo, then merging.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
@@ -1200,6 +1251,6 @@ Plan: `docs/plans/M18-hosted-demo.md`, approved by the owner on 2026-10-19 with 
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** is built and live on Railway, checked on the owner's phone on 2026-10-20, and waits in pull request #31 for the owner's merge; its week's cost is read around 2026-10-26. **M23 (the question bank)** has a plan waiting for the owner's answers (branch `feat/m23-question-bank`). M18b (passkeys in the app, email links that open it) follows if the owner agrees.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** is built on branch `feat/m23-question-bank`; its 100 starter questions wait for the owner's review, and its demo and merge follow. M18b (passkeys in the app, email links that open it) follows if the owner agrees.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

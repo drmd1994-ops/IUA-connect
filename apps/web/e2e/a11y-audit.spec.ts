@@ -94,6 +94,8 @@ const ADMIN_PAGES: { path: string; openFirst?: string }[] = [
   { path: '/admin/education/new' },
   { path: '/admin/education/questions', openFirst: 'questions-table' },
   { path: '/admin/education/questions/new' },
+  { path: '/admin/education/questions/import' },
+  { path: '/admin/education/reports' },
   { path: '/admin/broadcasts', openFirst: 'broadcasts-table' },
   { path: '/admin/broadcasts/new' },
   { path: '/admin/chat/reports', openFirst: 'chat-reports-table' },
