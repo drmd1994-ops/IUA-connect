@@ -22,6 +22,12 @@ describe('email links that open the app (M18b)', () => {
       route: '/broadcast/m1',
     });
     expect(to('/he/calculators/ipss')).toEqual({ kind: 'screen', route: '/calculators/ipss' });
+    expect(to('/he/positions/p1')).toEqual({ kind: 'screen', route: '/positions/p1' });
+    expect(to('/en/positions/saved')).toEqual({ kind: 'screen', route: '/positions/saved' });
+    expect(to('/he/mentorship/requests')).toEqual({
+      kind: 'screen',
+      route: '/mentorship/requests',
+    });
   });
 
   it('reads the token of a confirmation or a new password', () => {

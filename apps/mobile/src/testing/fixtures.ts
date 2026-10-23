@@ -40,6 +40,43 @@ const organisation = {
 };
 const hospital = { id: 'h-1', nameHe: 'בית חולים לדוגמה', nameEn: 'Sample Hospital' };
 
+/** A fictional position at the sample hospital (M28). */
+const positionSummary: S['PositionListDto']['items'][number] = {
+  id: 'p-1',
+  kind: 'FELLOWSHIP',
+  organisation: null,
+  place: {
+    hospital: { ...hospital, cityHe: 'עיר', cityEn: 'A city' },
+    department: { id: 'd-1', nameHe: 'אורולוגיה', nameEn: 'Urology' },
+    institutionName: null,
+    city: null,
+    country: 'IL',
+  },
+  audience: 'SPECIALISTS',
+  subspecialties: [subspecialty],
+  closesOn: '2026-12-01',
+  titleHe: 'השתלמות לדוגמה',
+  titleEn: 'A sample fellowship',
+  publishedAt: '2026-10-20T10:00:00.000Z',
+  saved: true,
+};
+const abroad = {
+  hospital: null,
+  department: null,
+  institutionName: 'A made-up institute',
+  city: 'Lyon',
+  country: 'FR',
+};
+/** A fictional mentor. */
+const mentorPerson = {
+  id: 'u-mentor',
+  firstName: 'Hila',
+  lastName: 'Shapira',
+  mark: null,
+  hospital,
+  department: { id: 'd-1', nameHe: 'אורולוגיה', nameEn: 'Urology' },
+};
+
 export const me: S['MeDto'] = {
   id: ME,
   email: 'member.full@demo.test',
@@ -781,6 +818,93 @@ export const everything: Record<string, Answer> = {
     page: 1,
     pageSize: 5,
   } satisfies S['SearchResultsDto'],
+  // Jobs, fellowships and mentorship (M28).
+  'GET /api/v1/positions': {
+    items: [positionSummary, { ...positionSummary, id: 'p-2', place: abroad, saved: false }],
+    page: 1,
+    pageSize: 10,
+    total: 2,
+    countries: ['FR', 'IL'],
+  } satisfies S['PositionListDto'],
+  'GET /api/v1/positions/saved': { items: [positionSummary] } satisfies S['SavedPositionListDto'],
+  'GET /api/v1/positions/*': {
+    ...positionSummary,
+    translations: {
+      he: { title: 'השתלמות לדוגמה', body: '**משרה לדוגמה, לא הצעה אמיתית.**\n\nשנה אחת.' },
+      en: {
+        title: 'A sample fellowship',
+        body: '**Sample position, not a real offer.**\n\nOne year.',
+      },
+    },
+    applyUrl: 'https://careers.example.test/apply',
+    applyEmail: 'careers@example.test',
+    closed: false,
+  } satisfies S['PositionDto'],
+  'PUT /api/v1/positions/*': {},
+  'DELETE /api/v1/positions/*': {},
+  'GET /api/v1/mentorship/mentors': {
+    items: [
+      {
+        person: mentorPerson,
+        subspecialties: [subspecialty],
+        academicInterests: 'Bladder cancer research.',
+        careerInterests: 'Choosing a fellowship.',
+        availability: 'One call a month',
+        languages: ['he', 'en'],
+        taking: true,
+        mine: null,
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    total: 1,
+  } satisfies S['MentorListDto'],
+  'GET /api/v1/mentorship/requests': {
+    items: [
+      {
+        id: 'ms-1',
+        role: 'mentor',
+        other: {
+          id: 'u-yoav',
+          firstName: 'Yoav',
+          lastName: 'Sela',
+          mark: 'RESIDENT',
+          hospital,
+          department: null,
+        },
+        state: 'PENDING',
+        message: 'I would like advice on research.',
+        createdAt: '2026-10-20T10:00:00.000Z',
+        answeredAt: null,
+        closedAt: null,
+        conversationId: null,
+      },
+      {
+        id: 'ms-2',
+        role: 'mentee',
+        other: mentorPerson,
+        state: 'ACCEPTED',
+        message: 'Could you mentor me this year?',
+        createdAt: '2026-10-10T10:00:00.000Z',
+        answeredAt: '2026-10-11T10:00:00.000Z',
+        closedAt: null,
+        conversationId: 'c-1',
+      },
+    ],
+  } satisfies S['MentorshipListDto'],
+  'GET /api/v1/mentorship/settings': {
+    eligible: true,
+    settings: {
+      open: true,
+      subspecialtyIds: ['sub-1'],
+      academicInterests: 'Bladder cancer research.',
+      careerInterests: 'Choosing a fellowship.',
+      availability: 'One call a month',
+      languages: ['he', 'en'],
+      capacity: 2,
+    },
+    active: 1,
+  } satisfies S['MentorSettingsDto'],
   'GET /api/v1/subspecialties': { items: [subspecialty] },
   'GET /api/v1/hospitals': { items: [{ ...hospital, cityHe: 'עיר', cityEn: 'A city' }] },
   'GET /api/v1/membership-types': {
