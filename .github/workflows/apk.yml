@@ -68,6 +68,9 @@ jobs:
           STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
+          echo "password length: ${#STORE_PASSWORD}"
+          openssl pkcs12 -in "$RUNNER_TEMP/medconnect.p12" -passin env:STORE_PASSWORD -info -noout \
+            && echo "openssl opens it"
           keytool -list -storetype pkcs12 -keystore "$RUNNER_TEMP/medconnect.p12" \
             -storepass:env STORE_PASSWORD -alias "$KEY_ALIAS"
       - name: Build the .apk
