@@ -42,6 +42,7 @@ export const world = {
   session: {
     signIn: jest.fn(),
     verifyCode: jest.fn(),
+    signInWithPasskey: jest.fn(),
     signOut: jest.fn(),
     restore: jest.fn(),
     refresh: jest.fn(async () => true),

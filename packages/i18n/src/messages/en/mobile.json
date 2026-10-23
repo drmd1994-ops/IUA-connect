@@ -20,8 +20,9 @@
     "back": "Use a different account",
     "forgot": "Forgot your password?",
     "join": "Not registered yet? Open an account",
-    "passkeyNote": "Passkeys don’t work in the app yet. Use your password, and your authenticator code if you have one.",
-    "guest": "Continue without signing in"
+    "guest": "Continue without signing in",
+    "passkey": "Sign in with a passkey",
+    "usePasskey": "Use a passkey instead"
   },
   "home": {
     "title": "Med Connect",
@@ -122,6 +123,11 @@
   "security": {
     "openApp": "Your authenticator app is on this phone, so there is no code to scan. Open it from here, or type the key below into it.",
     "openAppButton": "Open my authenticator app"
+  },
+  "passkeys": {
+    "intro": "A passkey signs you in without a password, with your fingerprint, face or the phone’s screen lock. It also counts as two-step verification. A passkey made on the site works here too, if it is synced to this phone.",
+    "unsupported": "This phone can’t use passkeys. They need a screen lock and Google Play services. Sign in with your password.",
+    "none": "This phone has no passkey for Med Connect. Sign in with your password, then add one under Security."
   },
   "scan": {
     "title": "Scan a code",

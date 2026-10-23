@@ -47,7 +47,12 @@ interface Tokens {
 /** The second step of a sign-in: the account has an authenticator, and its code is asked for. */
 export interface CodeNeeded {
   mfaToken: string;
+  /** What the account can finish with: the authenticator's code, a passkey, or both. */
+  methods: ('totp' | 'passkey')[];
 }
+
+/** The phone's passkey prompt: the server's options in, the phone's answer out (M18b). */
+export type PasskeyPrompt = (options: Record<string, unknown>) => Promise<Record<string, unknown>>;
 
 export class Session {
   private access: string | undefined;
@@ -89,10 +94,31 @@ export class Session {
       await this.options.store.set(DEVICE_KEY, body.deviceToken);
     }
     if (body.mfaRequired === true && typeof body.mfaToken === 'string') {
-      return { mfaToken: body.mfaToken };
+      const methods = Array.isArray(body.mfaMethods)
+        ? (body.mfaMethods as CodeNeeded['methods'])
+        : ['totp' as const];
+      return { mfaToken: body.mfaToken, methods };
     }
     await this.accept(body);
     return null;
+  }
+
+  /**
+   * Signs in with one of the site's passkeys on this phone (M18b). It counts as both steps, so it
+   * also finishes a sign-in that asked for a second step.
+   */
+  async signInWithPasskey(prompt: PasskeyPrompt): Promise<void> {
+    const options = await this.post('/api/v1/auth/passkeys/authentication/options', {});
+    const response = await prompt(options);
+    const deviceToken = await this.options.store.get(DEVICE_KEY);
+    const body = await this.post('/api/v1/auth/passkeys/authentication/verify', {
+      response,
+      ...this.asApp(deviceToken),
+    });
+    if (typeof body.deviceToken === 'string') {
+      await this.options.store.set(DEVICE_KEY, body.deviceToken);
+    }
+    await this.accept(body);
   }
 
   /** The second step: the code from the authenticator app, or a recovery code. */

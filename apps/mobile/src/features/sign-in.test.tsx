@@ -2,6 +2,7 @@ import { toApiError } from '@medconnect/api-client';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { allText, draw, settle } from '@/testing/draw';
 import { world } from '@/testing/world';
+import { PasskeyProblem, askForPasskey } from '@/session/passkey';
 import { SignIn } from './sign-in';
 
 const nothing = () => undefined;
@@ -23,7 +24,7 @@ describe('signing in', () => {
   });
 
   it('asks for the authenticator code when the account has one, and sends it', async () => {
-    world.session.signIn.mockResolvedValue({ mfaToken: 'challenge-1' });
+    world.session.signIn.mockResolvedValue({ mfaToken: 'challenge-1', methods: ['totp'] });
     world.session.verifyCode.mockResolvedValue(undefined);
     const drawn = await draw(signIn);
     await fill('member.full@demo.test', 'a long phrase');
@@ -35,6 +36,43 @@ describe('signing in', () => {
     await fireEvent.press(screen.getByLabelText('Continue'));
     await settle();
     expect(world.session.verifyCode).toHaveBeenCalledWith('challenge-1', '123456');
+  });
+
+  it('signs in with a passkey on the phone (M18b)', async () => {
+    world.session.signInWithPasskey.mockResolvedValue(undefined);
+    await draw(signIn);
+    await fireEvent.press(screen.getByLabelText('Sign in with a passkey'));
+    await settle();
+    expect(world.session.signInWithPasskey).toHaveBeenCalledWith(askForPasskey);
+  });
+
+  it('explains a closed passkey prompt, and a phone without a passkey', async () => {
+    world.session.signInWithPasskey.mockRejectedValueOnce(new PasskeyProblem('cancelled'));
+    const drawn = await draw(signIn);
+    await fireEvent.press(screen.getByLabelText('Sign in with a passkey'));
+    await settle();
+    expect(allText(drawn)).toContain('The passkey prompt was closed before it finished.');
+    world.session.signInWithPasskey.mockRejectedValueOnce(new PasskeyProblem('none'));
+    await fireEvent.press(screen.getByLabelText('Sign in with a passkey'));
+    await settle();
+    expect(allText(drawn)).toContain('This phone has no passkey for Med Connect.');
+  });
+
+  it('offers a passkey for the second step when the account has one', async () => {
+    world.session.signIn.mockResolvedValue({ mfaToken: 'c', methods: ['totp', 'passkey'] });
+    world.session.signInWithPasskey.mockResolvedValue(undefined);
+    await draw(signIn);
+    await fill('member.full@demo.test', 'a long phrase');
+    await fireEvent.press(screen.getByLabelText('Use a passkey instead'));
+    await settle();
+    expect(world.session.signInWithPasskey).toHaveBeenCalled();
+  });
+
+  it('offers no passkey for the second step when the account has none', async () => {
+    world.session.signIn.mockResolvedValue({ mfaToken: 'c', methods: ['totp'] });
+    await draw(signIn);
+    await fill('member.full@demo.test', 'a long phrase');
+    expect(screen.queryByLabelText('Use a passkey instead')).toBeNull();
   });
 
   it('says so, in words, when the server refuses', async () => {

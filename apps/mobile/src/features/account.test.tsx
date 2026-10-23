@@ -116,3 +116,59 @@ describe('account security', () => {
     expect(allText(drawn)).toContain('1 sessions signed out.');
   });
 });
+
+describe('passkeys on the security screen (M18b)', () => {
+  const { Passkey } = jest.requireMock('react-native-passkey') as {
+    Passkey: { isSupported: jest.Mock; get: jest.Mock; create: jest.Mock };
+  };
+
+  it('lists the passkeys, and adds one made on this phone under the name given', async () => {
+    world.routes = {
+      ...everything,
+      'POST /api/v1/auth/passkeys/registration/options': { challenge: 'c-1', rp: { id: 'x' } },
+      'POST /api/v1/auth/passkeys/registration/verify': { id: 'p-2' },
+    };
+    Passkey.create.mockResolvedValue({ id: 'cred', rawId: 'cred', response: {} });
+    const drawn = await draw(<SecurityScreen />);
+    expect(allText(drawn)).toContain('Pixel');
+    await fireEvent.changeText(screen.getByLabelText('Passkey name'), ' My phone ');
+    await fireEvent.press(screen.getByLabelText('Add a passkey'));
+    await settle();
+    expect(Passkey.create).toHaveBeenCalledWith({ challenge: 'c-1', rp: { id: 'x' } });
+    expect(callsTo('POST', '/api/v1/auth/passkeys/registration/verify')[0]?.body).toEqual({
+      response: {
+        type: 'public-key',
+        clientExtensionResults: {},
+        id: 'cred',
+        rawId: 'cred',
+        response: {},
+      },
+      name: 'My phone',
+    });
+  });
+
+  it('says so when the phone already has a passkey for the account', async () => {
+    world.routes = {
+      ...everything,
+      'POST /api/v1/auth/passkeys/registration/options': { challenge: 'c-1' },
+    };
+    Passkey.create.mockRejectedValue({ error: 'CredentialAlreadyExists', message: '' });
+    const drawn = await draw(<SecurityScreen />);
+    await fireEvent.press(screen.getByLabelText('Add a passkey'));
+    await settle();
+    expect(allText(drawn)).toContain('A passkey from this device is already on your account.');
+    expect(callsTo('POST', '/api/v1/auth/passkeys/registration/verify')).toEqual([]);
+  });
+
+  it('explains a phone that can’t use passkeys, instead of the button', async () => {
+    world.routes = everything;
+    Passkey.isSupported.mockReturnValue(false);
+    try {
+      const drawn = await draw(<SecurityScreen />);
+      expect(allText(drawn)).toContain('This phone can’t use passkeys.');
+      expect(screen.queryByLabelText('Add a passkey')).toBeNull();
+    } finally {
+      Passkey.isSupported.mockReturnValue(true);
+    }
+  });
+});

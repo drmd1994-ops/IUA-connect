@@ -117,3 +117,8 @@ beforeEach(() => {
   // The app is in front, as when someone is looking at it.
   (require('react-native').AppState as { currentState: string }).currentState = 'active';
 });
+
+// The phone's passkeys (M18b): a stand-in whose answers each test can set.
+jest.mock('react-native-passkey', () => ({
+  Passkey: { isSupported: jest.fn(() => true), get: jest.fn(), create: jest.fn() },
+}));

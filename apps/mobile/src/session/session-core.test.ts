@@ -1,5 +1,5 @@
 import { ApiError } from '@medconnect/api-client';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { DEVICE_KEY, REFRESH_KEY, type SecureStore, Session } from './session-core';
 
 /** A pretend secure storage that remembers everything ever written to it. */
@@ -124,6 +124,7 @@ describe('the app session', () => {
     });
     expect(await session.signIn('dana@demo.test', 'a long password')).toEqual({
       mfaToken: 'challenge',
+      methods: ['totp'],
     });
     // Not signed in yet, and nothing stored.
     expect(session.status).toBe('loading');
@@ -142,6 +143,40 @@ describe('the app session', () => {
     });
     expect(session.status).toBe('signedIn');
     expect(values.get(REFRESH_KEY)).toBe('refresh-2');
+  });
+
+  it('signs in with a passkey on the phone, the app’s way (M18b)', async () => {
+    const { session, values, requests } = make({
+      '/api/v1/auth/passkeys/authentication/options': [
+        { status: 200, body: { challenge: 'c-1', rpId: 'site.example' } },
+      ],
+      '/api/v1/auth/passkeys/authentication/verify': [
+        { status: 200, body: { ...tokens(3).body, deviceToken: 'device-3' } },
+      ],
+    });
+    const prompt = vi.fn(async () => ({ id: 'cred', rawId: 'cred', response: {} }));
+    await session.signInWithPasskey(prompt);
+    expect(prompt).toHaveBeenCalledWith({ challenge: 'c-1', rpId: 'site.example' });
+    expect(requests.at(-1)!.body).toEqual({
+      response: { id: 'cred', rawId: 'cred', response: {} },
+      client: 'app',
+      deviceName: 'Pixel 9',
+    });
+    expect(session.status).toBe('signedIn');
+    expect(values.get(REFRESH_KEY)).toBe('refresh-3');
+    expect(values.get(DEVICE_KEY)).toBe('device-3');
+  });
+
+  it('stores nothing when the passkey prompt is closed', async () => {
+    const { session, values, requests } = make({
+      '/api/v1/auth/passkeys/authentication/options': [{ status: 200, body: { challenge: 'c' } }],
+    });
+    const closed = new Error('cancelled');
+    await expect(session.signInWithPasskey(async () => Promise.reject(closed))).rejects.toBe(
+      closed,
+    );
+    expect(requests).toHaveLength(1);
+    expect(values.size).toBe(0);
   });
 
   it('throws what the server said about a wrong password, and stores nothing', async () => {
