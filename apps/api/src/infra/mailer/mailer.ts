@@ -42,6 +42,10 @@ export interface EmailTemplates {
   mentorshipDeclined: { name: string; link: string };
   mentorshipExpired: { name: string; link: string };
   mentorshipEnded: { name: string; link: string };
+  // Communities (M25). name is the writer's; title the post's.
+  communityComment: { name: string; title: string; link: string };
+  communityReply: { name: string; title: string; link: string };
+  communityMention: { name: string; title: string; link: string };
   // Events (M5), to people registered for the event. "when" is formatted for the recipient.
   eventRegistered: { title: string; when: string; link: string };
   eventWaitlisted: { title: string; link: string };

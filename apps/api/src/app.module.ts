@@ -21,6 +21,7 @@ import { AccessModule } from './modules/access';
 import { AdminModule } from './modules/admin';
 import { AuthModule } from './modules/auth';
 import { ChatModule } from './modules/chat';
+import { CommunityModule } from './modules/community';
 import { EducationModule } from './modules/education';
 import { EventsModule } from './modules/events';
 import { FilesModule } from './modules/files';
@@ -86,6 +87,7 @@ export class AppModule {
         VerificationModule,
         PositionsModule,
         MentorshipModule,
+        CommunityModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

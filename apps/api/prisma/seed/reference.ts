@@ -51,6 +51,34 @@ export async function seedReference(prisma: PrismaClient): Promise<void> {
   );
   await seedInstitutions(prisma);
   await seedChat(prisma);
+  await seedCommunities(prisma);
+}
+
+/**
+ * A community for each subspecialty (M25), named as it is: inserted when missing and otherwise
+ * left as staff edited it. Its address is the subspecialty's key ("uro-oncology").
+ */
+async function seedCommunities(prisma: PrismaClient): Promise<void> {
+  const subspecialties = await prisma.subspecialty.findMany({
+    where: { active: true },
+    orderBy: { sortOrder: 'asc' },
+  });
+  for (const subspecialty of subspecialties) {
+    const slug = subspecialty.key.toLowerCase().replace(/_/g, '-');
+    await prisma.community.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        id: uuidv7(),
+        slug,
+        nameHe: subspecialty.nameHe,
+        nameEn: subspecialty.nameEn,
+        subspecialtyId: subspecialty.id,
+        sortOrder: subspecialty.sortOrder,
+      },
+    });
+  }
+  console.log(`seed: reference layer — ${subspecialties.length} communities`);
 }
 
 /** The reasons a person can choose when reporting in chat (M11): inserted when missing. */

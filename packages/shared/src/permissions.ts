@@ -29,6 +29,7 @@ export const PERMISSIONS = [
   'positions.manage',
   'positions.review',
   'positions.post.department',
+  'communities.manage',
   'audit.read',
   'settings.manage',
 ] as const;
@@ -88,6 +89,8 @@ export const PERMISSION_LEVELS = {
   'positions.review': 'both',
   // A department director writes positions for the departments they direct (M28).
   'positions.post.department': 'platform',
+  // Communities (M25): opening and closing them, and appointing their moderators.
+  'communities.manage': 'platform',
   'audit.read': 'platform',
   'settings.manage': 'platform',
 } as const satisfies Record<PermissionKey, PermissionLevel>;

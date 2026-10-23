@@ -30,6 +30,11 @@ export const NOTIFICATION_KINDS = [
   'POSITIONS',
   /** Mentorship (M28): a request to you, and the answer to yours. */
   'MENTORSHIP',
+  /**
+   * Communities (M25): a comment on your post or under your comment, a mention, a new post in a
+   * community you follow.
+   */
+  'COMMUNITIES',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -55,6 +60,7 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   ROOMS: { app: true, email: false, locked: false },
   POSITIONS: { app: true, email: false, locked: false },
   MENTORSHIP: { app: true, email: true, locked: false },
+  COMMUNITIES: { app: true, email: false, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -63,7 +69,8 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   'MY_EVENTS',
   'ASSOCIATION',
   'MESSAGES',
-  'ROOMS',
+  // Chat rooms closed in M25 (owner answer §10.6): their kind is no longer offered.
+  'COMMUNITIES',
   'MENTORSHIP',
   'NEWS',
   'NEW_EVENTS',

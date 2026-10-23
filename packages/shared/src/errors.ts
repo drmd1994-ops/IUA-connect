@@ -45,6 +45,8 @@ export function errorCodeForStatus(status: number): ErrorCode {
 export const errorDetailSchema = z.object({
   field: z.string().optional(),
   code: z.string(),
+  /** The text a check found, when showing it helps (the patient-details check, M25). */
+  value: z.string().optional(),
 });
 
 export const errorEnvelopeSchema = z.object({

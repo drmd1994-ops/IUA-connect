@@ -259,5 +259,23 @@
     "body": "{inviter} invites you to Med Connect, a professional platform for physicians in Israel. The invitation does not verify you: once you join, you ask to be verified like everyone else.",
     "notYou": "If you don’t know who sent this, you can ignore it. We don’t keep your address itself, only a code that stops you being invited twice.",
     "action": "How to join"
+  },
+  "communityComment": {
+    "subject": "A new comment on your post",
+    "heading": "A new comment",
+    "body": "{name} commented on your post “{title}”.",
+    "action": "Open the post"
+  },
+  "communityReply": {
+    "subject": "A reply to your comment",
+    "heading": "A reply",
+    "body": "{name} replied to your comment on “{title}”.",
+    "action": "Open the post"
+  },
+  "communityMention": {
+    "subject": "You were mentioned in a community",
+    "heading": "You were mentioned",
+    "body": "{name} mentioned you in “{title}”.",
+    "action": "Open the post"
   }
 }

@@ -75,54 +75,63 @@ model User {
   createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles               UserRole[]               @relation("UserRoles")
-  rolesGranted        UserRole[]               @relation("RolesGrantedBy")
-  sessions            Session[]
-  devices             Device[]
-  mfaFactors          MfaFactor[]
-  recoveryCodes       RecoveryCode[]
-  authTokens          AuthToken[]
-  profile             Profile?
-  memberships         Membership[]
-  applications        VerificationRequest[]
-  physicianChecks     PhysicianVerification[]
-  invitationsSent     PlatformInvitation[]     @relation("InvitationsSent")
-  files               StoredFile[]
-  newsAuthored        News[]
-  eventRegistrations  EventRegistration[]
-  scheduleItems       ScheduleItem[]
-  eventAttendances    EventAttendance[]
-  eventReminders      EventReminder[]
-  examAnswers         ExamAnswer[]
-  mockExams           MockExam[]
-  examBookmarks       ExamBookmark[]
-  examReports         ExamReport[]
-  notifications       Notification[]
-  notificationPrefs   NotificationPreference[]
-  announcementReads   AnnouncementRead[]
-  notificationState   NotificationState?
-  broadcastDeliveries BroadcastDelivery[]
-  consents            Consent[]
-  conversationsLow    Conversation[]           @relation("ConversationUserLow")
-  conversationsHigh   Conversation[]           @relation("ConversationUserHigh")
-  conversationMembers ConversationMember[]
-  messages            Message[]
-  messageHides        MessageHide[]
-  chatInvitations     ConversationInvitation[] @relation("ChatInvited")
-  chatInvitationsMade ConversationInvitation[] @relation("ChatInviter")
-  chatBlocksMade      ChatBlock[]              @relation("ChatBlocker")
-  chatBlocksReceived  ChatBlock[]              @relation("ChatBlocked")
-  chatPreference      ChatPreference?
-  chatReportsMade     ChatReport[]             @relation("ChatReporter")
-  chatReportsReceived ChatReport[]             @relation("ChatReported")
-  chatSuspensions     ChatSuspension[]
-  messageReactions    MessageReaction[]
-  conversationBans    ConversationBan[]
-  positionsWritten    Position[]               @relation("PositionsWritten")
-  savedPositions      SavedPosition[]
-  mentorProfile       MentorProfile?
-  mentorshipsMentor   Mentorship[]             @relation("MentorshipsAsMentor")
-  mentorshipsMentee   Mentorship[]             @relation("MentorshipsAsMentee")
+  roles                UserRole[]               @relation("UserRoles")
+  rolesGranted         UserRole[]               @relation("RolesGrantedBy")
+  sessions             Session[]
+  devices              Device[]
+  mfaFactors           MfaFactor[]
+  recoveryCodes        RecoveryCode[]
+  authTokens           AuthToken[]
+  profile              Profile?
+  memberships          Membership[]
+  applications         VerificationRequest[]
+  physicianChecks      PhysicianVerification[]
+  invitationsSent      PlatformInvitation[]     @relation("InvitationsSent")
+  files                StoredFile[]
+  newsAuthored         News[]
+  eventRegistrations   EventRegistration[]
+  scheduleItems        ScheduleItem[]
+  eventAttendances     EventAttendance[]
+  eventReminders       EventReminder[]
+  examAnswers          ExamAnswer[]
+  mockExams            MockExam[]
+  examBookmarks        ExamBookmark[]
+  examReports          ExamReport[]
+  notifications        Notification[]
+  notificationPrefs    NotificationPreference[]
+  announcementReads    AnnouncementRead[]
+  notificationState    NotificationState?
+  broadcastDeliveries  BroadcastDelivery[]
+  consents             Consent[]
+  conversationsLow     Conversation[]           @relation("ConversationUserLow")
+  conversationsHigh    Conversation[]           @relation("ConversationUserHigh")
+  conversationMembers  ConversationMember[]
+  messages             Message[]
+  messageHides         MessageHide[]
+  chatInvitations      ConversationInvitation[] @relation("ChatInvited")
+  chatInvitationsMade  ConversationInvitation[] @relation("ChatInviter")
+  chatBlocksMade       ChatBlock[]              @relation("ChatBlocker")
+  chatBlocksReceived   ChatBlock[]              @relation("ChatBlocked")
+  chatPreference       ChatPreference?
+  chatReportsMade      ChatReport[]             @relation("ChatReporter")
+  chatReportsReceived  ChatReport[]             @relation("ChatReported")
+  chatSuspensions      ChatSuspension[]
+  messageReactions     MessageReaction[]
+  conversationBans     ConversationBan[]
+  positionsWritten     Position[]               @relation("PositionsWritten")
+  savedPositions       SavedPosition[]
+  mentorProfile        MentorProfile?
+  mentorshipsMentor    Mentorship[]             @relation("MentorshipsAsMentor")
+  mentorshipsMentee    Mentorship[]             @relation("MentorshipsAsMentee")
+  communitiesModerated CommunityModerator[]     @relation("CommunityModerator")
+  communityBans        CommunityBan[]           @relation("CommunityBanned")
+  communityFollows     CommunityFollow[]        @relation("CommunityFollower")
+  posts                Post[]                   @relation("PostAuthor")
+  postComments         PostComment[]            @relation("CommentAuthor")
+  postReactions        PostReaction[]           @relation("PostReactor")
+  commentReactions     CommentReaction[]        @relation("CommentReactor")
+  postBookmarks        PostBookmark[]           @relation("PostBookmarker")
+  postFollows          PostFollow[]             @relation("PostFollower")
 
   @@map("users")
 }
@@ -419,6 +428,7 @@ model Subspecialty {
   education     EducationItem[]
   examQuestions ExamQuestion[]
   positions     PositionSubspecialty[]
+  community     Community?
   mentors       MentorSubspecialty[]
 
   @@map("subspecialties")
@@ -852,6 +862,7 @@ model StoredFile {
   roomPicture     Conversation[]         @relation("RoomPicture")
   verification    PhysicianVerification?
   chatAttachment  MessageAttachment[]    @relation("MessageAttachment")
+  postFiles       PostFile[]             @relation("PostFile")
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -1826,6 +1837,9 @@ enum NotificationKind {
   POSITIONS
   /// Mentorship (M28): a request to you, and the answer to yours.
   MENTORSHIP
+  /// Communities (M25): a comment on your post or under your comment, a mention, a new post in
+  /// a community you follow.
+  COMMUNITIES
 
   @@map("notification_kind")
 }
@@ -2338,6 +2352,9 @@ model ChatReport {
   reportedUserId String?          @map("reported_user_id") @db.Uuid
   conversationId String?          @map("conversation_id") @db.Uuid
   messageId      String?          @map("message_id") @db.Uuid
+  /// A post or a comment in a community (M25).
+  postId         String?          @map("post_id") @db.Uuid
+  commentId      String?          @map("comment_id") @db.Uuid
   categoryId     String           @map("category_id") @db.Uuid
   description    String?          @db.VarChar(2000)
   snapshot       Json?
@@ -2353,6 +2370,8 @@ model ChatReport {
   reportedUser User?              @relation("ChatReported", fields: [reportedUserId], references: [id], onDelete: SetNull)
   conversation Conversation?      @relation(fields: [conversationId], references: [id], onDelete: SetNull)
   message      Message?           @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  post         Post?              @relation(fields: [postId], references: [id], onDelete: SetNull)
+  comment      PostComment?       @relation(fields: [commentId], references: [id], onDelete: SetNull)
   category     ChatReportCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
   @@index([status, createdAt(sort: Desc)])
@@ -2830,4 +2849,227 @@ model Mentorship {
   @@index([menteeId, state])
   @@index([state, createdAt])
   @@map("mentorships")
+}
+
+// ---------------------------------------------------------------------------
+// Professional communities (M25). docs/plans/M25-community.md. They replace chat rooms.
+// ---------------------------------------------------------------------------
+
+/// A community: one for each subspecialty, and others the platform's staff open. Every verified
+/// person reads and writes in every community (owner answer §10.3); staff read them all.
+model Community {
+  id             String    @id @db.Uuid
+  /// In addresses. Lower-case letters, digits and dashes.
+  slug           String    @unique @db.VarChar(64)
+  nameHe         String    @map("name_he") @db.VarChar(120)
+  nameEn         String    @map("name_en") @db.VarChar(120)
+  descriptionHe  String?   @map("description_he") @db.VarChar(1000)
+  descriptionEn  String?   @map("description_en") @db.VarChar(1000)
+  /// The subspecialty it is for; empty for another community.
+  subspecialtyId String?   @unique @map("subspecialty_id") @db.Uuid
+  sortOrder      Int       @default(0) @map("sort_order")
+  /// Closed by staff: read only, and not in the list.
+  archivedAt     DateTime? @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subspecialty Subspecialty?        @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  moderators   CommunityModerator[]
+  bans         CommunityBan[]
+  follows      CommunityFollow[]
+  posts        Post[]
+
+  @@map("communities")
+}
+
+/// A person staff appointed to moderate one community (owner answer §10.2).
+model CommunityModerator {
+  communityId String   @map("community_id") @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  grantedBy   String?  @map("granted_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation("CommunityModerator", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([communityId, userId])
+  @@index([userId])
+  @@map("community_moderators")
+}
+
+/// A person who may read a community but not write in it, with the reason; until a time, or
+/// until lifted.
+model CommunityBan {
+  communityId String    @map("community_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  reason      String    @db.VarChar(1000)
+  bannedBy    String?   @map("banned_by") @db.Uuid
+  until       DateTime? @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation("CommunityBanned", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([communityId, userId])
+  @@index([userId])
+  @@map("community_bans")
+}
+
+/// A person follows a community: its new posts are in their feed and their notices.
+model CommunityFollow {
+  communityId String   @map("community_id") @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation("CommunityFollower", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([communityId, userId])
+  @@index([userId])
+  @@map("community_follows")
+}
+
+enum PostKind {
+  QUESTION
+  DISCUSSION
+
+  @@map("post_kind")
+}
+
+/// A post in a community: a question or a discussion, with its comments.
+model Post {
+  id              String    @id @db.Uuid
+  communityId     String    @map("community_id") @db.Uuid
+  /// Empty once the writer's account is gone.
+  authorId        String?   @map("author_id") @db.Uuid
+  kind            PostKind  @default(DISCUSSION)
+  title           String    @db.VarChar(200)
+  body            String    @db.VarChar(10000)
+  /// A question's comment its writer marked as the answer.
+  answerCommentId String?   @unique @map("answer_comment_id") @db.Uuid
+  editedAt        DateTime? @map("edited_at") @db.Timestamptz(6)
+  /// Locked by a moderator: no more comments.
+  lockedAt        DateTime? @map("locked_at") @db.Timestamptz(6)
+  /// Removed by a moderator (a marker stays) or deleted by its writer; the text is cleared.
+  removedAt       DateTime? @map("removed_at") @db.Timestamptz(6)
+  removedBy       String?   @map("removed_by") @db.Uuid
+  removedReason   String?   @map("removed_reason") @db.VarChar(1000)
+  /// The newest comment's time, or the post's own: "latest activity" sorts by it.
+  activityAt      DateTime  @default(now()) @map("activity_at") @db.Timestamptz(6)
+  commentCount    Int       @default(0) @map("comment_count")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  community Community      @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  author    User?          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  answer    PostComment?   @relation("PostAnswer", fields: [answerCommentId], references: [id], onDelete: SetNull)
+  comments  PostComment[]  @relation("PostComments")
+  files     PostFile[]
+  reactions PostReaction[]
+  bookmarks PostBookmark[]
+  follows   PostFollow[]
+  reports   ChatReport[]
+
+  @@index([communityId, createdAt(sort: Desc)])
+  @@index([communityId, activityAt(sort: Desc)])
+  @@index([authorId])
+  @@map("posts")
+}
+
+/// A picture or PDF with a post (uploaded as for chat; no video).
+model PostFile {
+  postId   String @map("post_id") @db.Uuid
+  fileId   String @map("file_id") @db.Uuid
+  position Int    @db.SmallInt
+
+  post Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  file StoredFile @relation("PostFile", fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([postId, position])
+  @@unique([postId, fileId])
+  @@index([fileId])
+  @@map("post_files")
+}
+
+/// A comment on a post; a reply has the comment it answers (one level only).
+model PostComment {
+  id            String    @id @db.Uuid
+  postId        String    @map("post_id") @db.Uuid
+  parentId      String?   @map("parent_id") @db.Uuid
+  authorId      String?   @map("author_id") @db.Uuid
+  body          String    @db.VarChar(4000)
+  editedAt      DateTime? @map("edited_at") @db.Timestamptz(6)
+  removedAt     DateTime? @map("removed_at") @db.Timestamptz(6)
+  removedBy     String?   @map("removed_by") @db.Uuid
+  removedReason String?   @map("removed_reason") @db.VarChar(1000)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  post      Post              @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+  parent    PostComment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   PostComment[]     @relation("CommentReplies")
+  author    User?             @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  reactions CommentReaction[]
+  answerOf  Post?             @relation("PostAnswer")
+  reports   ChatReport[]
+
+  @@index([postId, createdAt])
+  @@index([parentId])
+  @@index([authorId])
+  @@map("post_comments")
+}
+
+/// One of chat's six reactions, by one person, on a post.
+model PostReaction {
+  postId    String   @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  reaction  String   @db.VarChar(16)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation("PostReactor", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId, reaction])
+  @@index([userId])
+  @@map("post_reactions")
+}
+
+model CommentReaction {
+  commentId String   @map("comment_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  reaction  String   @db.VarChar(16)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  comment PostComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User        @relation("CommentReactor", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([commentId, userId, reaction])
+  @@index([userId])
+  @@map("comment_reactions")
+}
+
+/// A post a person keeps to come back to. Theirs alone.
+model PostBookmark {
+  postId    String   @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation("PostBookmarker", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("post_bookmarks")
+}
+
+/// A person follows a post: they are told about its new comments. Its writer follows it.
+model PostFollow {
+  postId    String   @map("post_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation("PostFollower", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+  @@map("post_follows")
 }
