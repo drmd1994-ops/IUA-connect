@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-23 (M28 merged; M25 built: communities in place of chat rooms, pull request #35)_
+_Last updated: 2026-10-24 (M28 and M25 merged and on the hosted demo, new .apk; M27 started)_
 
 ## Summary
 
@@ -1322,7 +1322,7 @@ Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved
 1. Try it on the hosted demo and the phone once deployed ("deploy it").
 2. Read the new Hebrew texts, above all "חונכות" and "השתלמות (פלו)".
 
-## M25 Professional communities, in place of chat rooms (built 2026-10-23, pull request #35)
+## M25 Professional communities, in place of chat rooms (merged 2026-10-23, pull request #35)
 
 Plan: `docs/plans/M25-community.md`, checked against the code and approved by the owner on 2026-10-23 ("start M25") with the answers in its §10:
 
@@ -1384,9 +1384,15 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 - The site: type checks and lint; three browser tests (a question stopped once for an ID number, answered and marked, saved, a comment removed and the post locked; the pages in Hebrew and the rooms' old address; staff opening a community and appointing a moderator), with accessibility checks; the new pages added to both accessibility audits.
 - The app: 209 screen tests (every new screen in both languages, the check stopping a post, following, marking the answer, commenting) and 92 rule tests.
 
-**Not verified yet**
+**Verified on GitHub and online (2026-10-23)**
 
-- GitHub's checks, the hosted demo, the owner's look at it.
+- GitHub's checks on pull request #35, all green (twice: before and after it was moved onto `main` when M28 was merged). Merged the same day at the owner's word.
+- **On the hosted demo** (deployed at the owner's word): the server answers the communities' routes, its start ran the seed layers (communities, their demo posts, and archiving the rooms) without an error, and `pnpm smoke:hosted` passed. The communities themselves show only when signed in, so the owner's look is the check of their content.
+- **A new .apk** with M28 and M25 (run 40021987584), published as the pre-release `demo-apk-2026-10-24-m25`; it updates the app of 23 October without uninstalling.
+
+**Not verified**
+
+- The owner's look at the communities and the new app.
 
 **Deviations and findings**
 
@@ -1418,6 +1424,6 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** is built and waits in pull request #35.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** started on 2026-10-24.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
