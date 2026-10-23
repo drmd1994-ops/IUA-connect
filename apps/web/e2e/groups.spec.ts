@@ -1,19 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
 import { type Browser, type Locator, type Page, expect, test } from '@playwright/test';
-import {
-  addVirtualAuthenticator,
-  createAdmin,
-  expectSignedIn,
-  signIn,
-  uniqueEmail,
-} from './helpers';
+import { expectSignedIn, signIn } from './helpers';
 
 /**
  * M13 exit tests (docs/plans/M13-chat-groups-status.md §6): a member makes a group and invites
  * two people, one accepts and one declines, and nobody is in it before accepting; files in a
  * message, forwarding, pinning and opening a found message in its place; who is active, and the
- * switch that hides it; a room by invitation that an uninvited member can't find; the phone
- * layout. Plus axe on every new page and dialog. The demo people and the demo group come from
+ * switch that hides it; the phone layout. (Rooms by invitation closed with all rooms in M25.) Plus axe on every new page and dialog. The demo people and the demo group come from
  * the seed and are fictional; the tests leave them as they found them.
  */
 const DEMO_PASSWORD = 'ilikeIUAconnect11';
@@ -315,79 +308,6 @@ test('who is active is shown to the people a person talks with, until they switc
   await ruth.getByLabel('Show the people I talk with when I am active').check();
   await ruth.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(ruth.getByText('Saved.')).toBeVisible();
-});
-
-test('a room by invitation: not found by a member until a moderator invites them', async ({
-  browser,
-}) => {
-  const tag = Date.now().toString().slice(-6);
-  const roomName = `Closed room ${tag}`;
-  const admin = await (await browser.newContext()).newPage();
-  await addVirtualAuthenticator(admin);
-  const adminEmail = uniqueEmail('m13-rooms');
-  await signIn(admin, 'en', adminEmail, createAdmin(adminEmail));
-  await expect(admin).toHaveURL(/\/en\/account\/security$/);
-  await admin.getByLabel('Passkey name').fill('Laptop');
-  await admin.getByRole('button', { name: 'Add a passkey' }).click();
-  await expect(admin.getByText('Passkey added.')).toBeVisible();
-
-  // Staff open a room by invitation and appoint a moderator.
-  await admin.goto('/en/admin/chat/rooms/new');
-  await admin.getByLabel('Name in Hebrew').fill(`חדר סגור ${tag}`);
-  await admin.getByLabel('Name in English (optional)').fill(roomName);
-  await admin.getByLabel('By invitation only', { exact: false }).check();
-  await expectAccessible(admin);
-  await admin.getByRole('button', { name: 'Open the room' }).click();
-  await expect(admin).toHaveURL(/\/en\/admin\/chat\/rooms\/[0-9a-f-]{36}$/);
-  const roomId = new URL(admin.url()).pathname.split('/').at(-1)!;
-  await admin.getByLabel('Find a member by name or email').fill('Bar-Lev');
-  await admin
-    .getByRole('region', { name: 'Moderators' })
-    .getByRole('button', { name: 'Search', exact: true })
-    .click();
-  await admin.getByRole('button', { name: `Appoint ${NOA.name} as a moderator` }).click();
-  await expect(admin.getByTestId('admin-room-moderators')).toContainText(NOA.name);
-
-  // A member can't find it, and its address shows nothing.
-  const yoav = await memberPage(browser, 'en', YOAV.email);
-  await yoav.goto('/en/chat/rooms/browse');
-  await yoav.getByLabel('Search by name').fill(roomName);
-  await yoav
-    .getByTestId('browse-rooms')
-    .getByRole('button', { name: 'Search', exact: true })
-    .click();
-  await expect(yoav.getByText('No room matches.')).toBeVisible();
-  await yoav.goto(`/en/chat/rooms/${roomId}`);
-  await expect(yoav.getByText('The page or item you requested was not found.')).toBeVisible();
-
-  // The moderator invites him from the room.
-  const noa = await memberPage(browser, 'en', NOA.email);
-  await noa.goto(`/en/chat/rooms/${roomId}`);
-  await expect(noa.getByTestId('room-name')).toHaveText(roomName);
-  await expect(noa.getByTestId('room-members')).toContainText('By invitation');
-  const about = await details(noa);
-  const panel = about.getByTestId('invite-panel');
-  await panel.getByLabel('Invite members to this room').fill('Sela');
-  await panel.getByRole('button', { name: 'Search', exact: true }).click();
-  await panel.getByRole('button', { name: `Invite ${YOAV.name}` }).click();
-  await expect(panel.getByTestId('waiting-invitations')).toContainText(YOAV.name);
-  await expectAccessible(noa);
-
-  // Still nothing at the room's address; the invitation says what accepting shows of him.
-  await yoav.goto(`/en/chat/rooms/${roomId}`);
-  await expect(yoav.getByText('The page or item you requested was not found.')).toBeVisible();
-  await yoav.goto('/en/chat/invitations');
-  const invitation = yoav.getByTestId('invitation').filter({ hasText: roomName });
-  await expect(invitation).toContainText('Room by invitation');
-  await expect(invitation).toContainText('see your first and last name');
-  await yoav.getByRole('button', { name: `Accept the invitation to ${roomName}` }).click();
-  await expect(yoav.getByTestId('room-name')).toHaveText(roomName);
-  await expect(yoav.getByTestId('message-log')).toBeVisible();
-
-  // Tidied away: staff archive the test room.
-  await admin.reload();
-  await admin.getByRole('button', { name: 'Archive the room' }).click();
-  await expect(admin.getByRole('button', { name: 'Restore the room' })).toBeVisible();
 });
 
 test('invitations and a group fit a phone, in Hebrew', async ({ browser }) => {

@@ -705,6 +705,24 @@ describe('chat rooms (integration)', () => {
   });
 
   describe('notices', () => {
+    /**
+     * The rooms' switch, stored as the settings page stored it before rooms closed (M25): the
+     * page no longer offers it, and the room notices it governs stay in the code, unused.
+     */
+    const setRoomSwitch = async (userId: string, app: boolean, email: boolean) => {
+      for (const [channel, enabled] of [
+        ['APP', app],
+        ['EMAIL', email],
+      ] as const) {
+        await h.db.query(
+          `INSERT INTO notification_preferences (user_id, kind, channel, enabled, updated_at)
+           VALUES ($1, 'ROOMS', $2, $3, now())
+           ON CONFLICT (user_id, kind, channel) DO UPDATE SET enabled = EXCLUDED.enabled`,
+          [userId, channel, enabled],
+        );
+      }
+    };
+
     it('a mention, a reply and an announcement each make one notice, the most personal one', async () => {
       const { id, mod, a, b } = await roomWith({ nameEn: 'Notices room' });
       const first = (await roomSend(b, id, 'A question').expect(201)).body;
@@ -770,12 +788,7 @@ describe('chat rooms (integration)', () => {
         blocker.id,
         mod.id,
       ]);
-      await h
-        .http()
-        .put('/api/v1/me/notification-preferences')
-        .set(bearer(switchedOff.token))
-        .send({ items: [{ kind: 'ROOMS', app: false, email: false }] })
-        .expect(200);
+      await setRoomSwitch(switchedOff.id, false, false);
       await leave(leaver, id).expect(204);
 
       await roomSend(mod, id, 'To all', {
@@ -791,12 +804,7 @@ describe('chat rooms (integration)', () => {
       const { id, a, b } = await roomWith();
       const emails = (p: Person) =>
         h.mailer.sent.filter((m) => m.to === p.email && m.template === 'chatUnread');
-      await h
-        .http()
-        .put('/api/v1/me/notification-preferences')
-        .set(bearer(b.token))
-        .send({ items: [{ kind: 'ROOMS', app: true, email: true }] })
-        .expect(200);
+      await setRoomSwitch(b.id, true, true);
       const mod = (await room(a, id).expect(200)).body.moderators[0].id as string;
       await roomSend(a, id, '@both', { mentions: [b.id, mod] }).expect(201);
       await h.db.query(

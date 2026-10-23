@@ -2,7 +2,6 @@ import type { components } from '@medconnect/api-client';
 import { type Href, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useFormatter, useTranslations } from 'use-intl';
-import { threadRoute } from '@/chat/model';
 import { errorMessage } from '@/errors';
 import { useLocale } from '@/i18n/i18n-provider';
 import { useSession } from '@/session/session-provider';
@@ -14,14 +13,13 @@ type Organisation = Schemas['OrganisationDto'];
 type Membership = Schemas['MyMembershipsDto']['items'][number];
 type NewsItem = Schemas['PublicNewsListDto']['items'][number];
 type EventItem = Schemas['PublicEventListDto']['items'][number];
-type Room = Schemas['RoomListDto']['items'][number];
 
 /** How many of each the section shows; the full lists are in their own tabs. */
 const FEW = 3;
 
 /**
  * An organisation's section in the app (M16): who it is, the person's membership with the way
- * to the card, the membership and the application, and the organisation's rooms, news and
+ * to the card, the membership and the application, and the organisation's news and
  * events. Without a named organisation it is the person's own, or the only one there is; with
  * several and none of them the person's, the person chooses.
  */
@@ -108,13 +106,6 @@ export function OrganisationScreen({ slug }: { slug?: string }) {
         <Body muted={!about}>{about ?? t('section.noDescription')}</Body>
       </Card>
       <MembershipPart membership={membership} guest={guest} />
-      {membership?.status === 'ACTIVE' && <RoomsPart organisation={organisation} />}
-      {!guest && membership?.status !== 'ACTIVE' && (
-        <Card>
-          <Heading>{t('section.rooms.title')}</Heading>
-          <Body muted>{t('section.rooms.membersOnly')}</Body>
-        </Card>
-      )}
       <NewsPart organisation={organisation} />
       <EventsPart organisation={organisation} />
     </Screen>
@@ -168,45 +159,6 @@ function MembershipPart({
     </Card>
   );
 }
-
-/** The organisation's rooms that its member may open (the API decides which). */
-function RoomsPart({ organisation }: { organisation: Organisation }) {
-  const t = useTranslations('organisations.section.rooms');
-  const m = useTranslations('mobile');
-  const locale = useLocale();
-  const router = useRouter();
-  const { request } = useSession();
-  const [rooms, setRooms] = useState<Room[] | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    const query = new URLSearchParams({ limit: '50', organisation: organisation.id });
-    request<{ items: Room[] }>(`/api/v1/chat/rooms?${query.toString()}`)
-      .then((result) => active && setRooms(result.items))
-      .catch(() => active && setRooms([]));
-    return () => {
-      active = false;
-    };
-  }, [request, organisation.id]);
-
-  return (
-    <Card>
-      <Heading>{t('title')}</Heading>
-      {!rooms && <Body muted>{m('loading')}</Body>}
-      {rooms?.length === 0 && <Body muted>{t('empty')}</Body>}
-      {rooms?.map((room) => (
-        <Button
-          key={room.id}
-          label={locale === 'he' ? room.nameHe : (room.nameEn ?? room.nameHe)}
-          hint={t('members', { count: room.memberCount })}
-          variant="secondary"
-          onPress={() => router.push(threadRoute('room', room.id) as Href)}
-        />
-      ))}
-    </Card>
-  );
-}
-
 function NewsPart({ organisation }: { organisation: Organisation }) {
   const t = useTranslations('organisations.section.news');
   const m = useTranslations('mobile');

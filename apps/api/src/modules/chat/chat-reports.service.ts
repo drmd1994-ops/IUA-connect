@@ -51,6 +51,14 @@ const REPORT_SELECT = {
   conversation: {
     select: { id: true, kind: true, nameHe: true, nameEn: true, organisationId: true },
   },
+  postId: true,
+  commentId: true,
+  post: { select: { id: true, title: true, community: { select: { slug: true } } } },
+  comment: {
+    select: {
+      post: { select: { id: true, title: true, community: { select: { slug: true } } } },
+    },
+  },
 } satisfies Prisma.ChatReportSelect;
 type ReportRow = Prisma.ChatReportGetPayload<{ select: typeof REPORT_SELECT }>;
 
@@ -131,9 +139,46 @@ export class ChatReportsService implements OnModuleInit {
     }
 
     let reportedUserId: string | null;
-    let conversationId: string;
+    let conversationId: string | null = null;
     let snapshot: SnapshotMessage[] | null = null;
-    if (input.messageId) {
+    if (input.postId || input.commentId) {
+      // A post or a comment in a community (M25), for whoever may read communities.
+      if (!principal.verified) throw new AppException('NOT_FOUND');
+      const target = input.postId
+        ? await this.prisma.post.findFirst({
+            where: { id: input.postId, removedAt: null, community: { archivedAt: null } },
+            select: { authorId: true, title: true, body: true, createdAt: true },
+          })
+        : await this.prisma.postComment.findFirst({
+            where: {
+              id: input.commentId,
+              removedAt: null,
+              post: { removedAt: null, community: { archivedAt: null } },
+            },
+            select: { authorId: true, body: true, createdAt: true },
+          });
+      if (!target?.authorId) throw new AppException('NOT_FOUND');
+      if (target.authorId === me) {
+        throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatReportOwnMessage' }]);
+      }
+      reportedUserId = target.authorId;
+      // The text as it was, kept like a reported message.
+      snapshot = [
+        {
+          seq: 0,
+          senderId: target.authorId,
+          body:
+            'title' in target
+              ? `${target.title}
+
+${target.body}`
+              : target.body,
+          deleted: false,
+          createdAt: target.createdAt.toISOString(),
+          reported: true,
+        },
+      ];
+    } else if (input.messageId) {
       const message = await this.prisma.message.findFirst({
         where: { id: input.messageId, conversation: { members: { some: { userId: me } } } },
         select: { id: true, seq: true, senderId: true, conversationId: true },
@@ -211,6 +256,8 @@ export class ChatReportsService implements OnModuleInit {
         reportedUserId,
         messageId: input.messageId ?? null,
         ...(input.roomId ? { conversationId } : {}),
+        postId: input.postId ?? null,
+        commentId: input.commentId ?? null,
         status: 'OPEN',
       },
       select: { id: true },
@@ -225,6 +272,8 @@ export class ChatReportsService implements OnModuleInit {
         reportedUserId,
         conversationId,
         messageId: input.messageId ?? null,
+        postId: input.postId ?? null,
+        commentId: input.commentId ?? null,
         categoryId: category.id,
         description: input.description || null,
         ...(snapshot ? { snapshot: snapshot as unknown as Prisma.InputJsonValue } : {}),
@@ -240,6 +289,7 @@ export class ChatReportsService implements OnModuleInit {
       changes: {
         aboutMessage: input.messageId !== undefined,
         aboutRoom: input.roomId !== undefined,
+        aboutPost: input.postId !== undefined || input.commentId !== undefined,
       },
     });
     return { id, created: true };
@@ -304,7 +354,8 @@ export class ChatReportsService implements OnModuleInit {
     if (row.reporterId === me || row.reportedUserId === me) {
       throw new AppException('FORBIDDEN', [{ code: 'chatReportOwn' }]);
     }
-    if (input.decision === 'deleteMessage' && !row.messageId) {
+    const aboutPost = row.postId !== null || row.commentId !== null;
+    if (input.decision === 'deleteMessage' && !row.messageId && !aboutPost) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'chatReportNoMessage' }]);
     }
     if (input.decision === 'suspend' && !row.reportedUserId) {
@@ -344,7 +395,22 @@ export class ChatReportsService implements OnModuleInit {
     });
     if (claimed.count === 0) throw new AppException('CONFLICT', [{ code: 'chatReportClosed' }]);
 
-    if (input.decision === 'deleteMessage') await this.chat.removeAsStaff(row.messageId!, me);
+    if (input.decision === 'deleteMessage' && row.messageId) {
+      await this.chat.removeAsStaff(row.messageId, me);
+    }
+    // A post or a comment (M25): removed with the reviewer's reason, leaving its marker.
+    if (input.decision === 'deleteMessage' && row.postId) {
+      await this.prisma.post.updateMany({
+        where: { id: row.postId, removedAt: null },
+        data: { removedAt: new Date(), removedBy: me, removedReason: input.reason },
+      });
+    }
+    if (input.decision === 'deleteMessage' && row.commentId) {
+      await this.prisma.postComment.updateMany({
+        where: { id: row.commentId, removedAt: null },
+        data: { removedAt: new Date(), removedBy: me, removedReason: input.reason },
+      });
+    }
     if (input.decision === 'archiveRoom') {
       await this.prisma.conversation.updateMany({
         where: { id: row.conversation!.id, archivedAt: null },
@@ -552,6 +618,18 @@ export function reportsWhere(scope: StaffScope): Prisma.ChatReportWhereInput {
   };
 }
 
+/** The post a report is about, directly or through a comment on it (M25). */
+function postOf(row: ReportRow) {
+  const post = row.post ?? row.comment?.post ?? null;
+  if (!post) return null;
+  return {
+    id: post.id,
+    communitySlug: post.community.slug,
+    title: post.title,
+    comment: row.commentId !== null,
+  };
+}
+
 function personOf(id: string | null, cards: Map<string, PersonCard>) {
   const card = id ? cards.get(id) : undefined;
   return { id, firstName: card?.firstName ?? null, lastName: card?.lastName ?? null };
@@ -565,7 +643,9 @@ function summary(row: ReportRow, cards: Map<string, PersonCard>) {
     category: row.category,
     reporter: personOf(row.reporterId, cards),
     reported: personOf(row.reportedUserId, cards),
-    aboutMessage: row.messageId !== null || Array.isArray(row.snapshot),
+    aboutMessage:
+      row.messageId !== null ||
+      (Array.isArray(row.snapshot) && row.postId === null && row.commentId === null),
     room:
       row.conversation?.kind === 'ROOM' && row.conversation.nameHe
         ? {
@@ -579,6 +659,7 @@ function summary(row: ReportRow, cards: Map<string, PersonCard>) {
       row.messageId === null &&
       row.reportedUserId === null &&
       !Array.isArray(row.snapshot),
+    post: postOf(row),
     createdAt: row.createdAt.toISOString(),
     reviewedAt: row.reviewedAt?.toISOString() ?? null,
   };

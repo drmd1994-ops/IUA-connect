@@ -19,14 +19,14 @@ describe('an organisation’s section', () => {
     expectSound(await draw(<OrganisationScreen />, locale));
   });
 
-  it('shows the member’s own organisation: the membership, its rooms, news and events', async () => {
+  it('shows the member’s own organisation: the membership, its news and events', async () => {
     world.routes = everything;
     const drawn = await draw(<OrganisationScreen />);
     const text = allText(drawn);
     expect(text).toContain('A sample society');
     expect(text).toContain('Full member: Active');
     // The lists are asked for this organisation alone.
-    for (const path of ['/api/v1/chat/rooms', '/api/v1/news', '/api/v1/events']) {
+    for (const path of ['/api/v1/news', '/api/v1/events']) {
       expect(callsTo('GET', path)[0]?.query).toContain('organisation=o-1');
     }
   });
@@ -40,12 +40,12 @@ describe('an organisation’s section', () => {
     expect(world.pushed).toEqual(['/card', '/membership', '/applications']);
   });
 
-  it('keeps the rooms from someone who is not a member, without asking for them', async () => {
+  it('asks nothing about rooms: they closed in M25', async () => {
     world.routes = { ...everything, 'GET /api/v1/me/memberships': { items: [] } };
     const drawn = await draw(<OrganisationScreen />);
     const text = allText(drawn);
     expect(text).toContain('You are not a member of this organisation.');
-    expect(text).toContain('The rooms are open to the organisation’s members.');
+    expect(text).not.toContain('The rooms are open to the organisation’s members.');
     expect(callsTo('GET', '/api/v1/chat/rooms')).toEqual([]);
   });
 

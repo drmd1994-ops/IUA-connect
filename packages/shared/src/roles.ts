@@ -67,6 +67,7 @@ export const ROLES = {
       'chat.rooms.manage',
       'positions.manage',
       'positions.review',
+      'communities.manage',
       'audit.read',
     ],
     requiresMfa: true,

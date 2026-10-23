@@ -4196,6 +4196,422 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/communities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/feed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_feed"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/bookmarks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_bookmarks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/{slug}/follow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CommunityController_follow"];
+        post?: never;
+        delete: operations["CommunityController_unfollow"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/{slug}/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_posts_"];
+        put?: never;
+        post: operations["CommunityController_write"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/{slug}/bans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_bans"];
+        put?: never;
+        post: operations["CommunityController_ban"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/communities/{slug}/bans/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["CommunityController_liftBan"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunityController_post"];
+        put?: never;
+        post?: never;
+        delete: operations["CommunityController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["CommunityController_edit"];
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunityController_comment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/answer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CommunityController_answer"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/reactions/{reaction}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CommunityController_reactPost"];
+        post?: never;
+        delete: operations["CommunityController_unreactPost"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/bookmark": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CommunityController_bookmark"];
+        post?: never;
+        delete: operations["CommunityController_unbookmark"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/follow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CommunityController_followPost"];
+        post?: never;
+        delete: operations["CommunityController_unfollowPost"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunityController_removeByModerator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunityController_lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{id}/unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunityController_unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/post-comments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["CommunityController_deleteComment"];
+        options?: never;
+        head?: never;
+        patch: operations["CommunityController_editComment"];
+        trace?: never;
+    };
+    "/api/v1/post-comments/{id}/reactions/{reaction}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CommunityController_reactComment"];
+        post?: never;
+        delete: operations["CommunityController_unreactComment"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/post-comments/{id}/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunityController_removeComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/communities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunitiesAdminController_list"];
+        put?: never;
+        post: operations["CommunitiesAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/communities/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommunitiesAdminController_get"];
+        put: operations["CommunitiesAdminController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/communities/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunitiesAdminController_archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/communities/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunitiesAdminController_restore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/communities/{id}/moderators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CommunitiesAdminController_addModerator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/communities/{id}/moderators/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["CommunitiesAdminController_removeModerator"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4211,6 +4627,7 @@ export interface components {
                 details?: {
                     field?: string;
                     code: string;
+                    value?: string;
                 }[];
                 correlationId: string;
             };
@@ -6864,7 +7281,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -6885,7 +7302,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -6894,7 +7311,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
                 app: boolean;
                 email: boolean;
             }[];
@@ -6903,7 +7320,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -7050,7 +7467,7 @@ export interface components {
         SearchResultsDto: {
             groups: {
                 /** @enum {string} */
-                type: "news" | "events" | "education" | "guidelines" | "members";
+                type: "news" | "events" | "education" | "guidelines" | "members" | "posts";
                 total: number;
                 items: {
                     /** Format: uuid */
@@ -7437,6 +7854,10 @@ export interface components {
             /** Format: uuid */
             roomId?: string;
             /** Format: uuid */
+            postId?: string;
+            /** Format: uuid */
+            commentId?: string;
+            /** Format: uuid */
             categoryId: string;
             description?: string;
         };
@@ -7475,6 +7896,13 @@ export interface components {
                     nameEn: string | null;
                 } | null;
                 aboutRoom: boolean;
+                post: {
+                    /** Format: uuid */
+                    id: string;
+                    communitySlug: string;
+                    title: string;
+                    comment: boolean;
+                } | null;
                 /** Format: date-time */
                 createdAt: string;
                 reviewedAt: string | null;
@@ -7513,6 +7941,13 @@ export interface components {
                 nameEn: string | null;
             } | null;
             aboutRoom: boolean;
+            post: {
+                /** Format: uuid */
+                id: string;
+                communitySlug: string;
+                title: string;
+                comment: boolean;
+            } | null;
             /** Format: date-time */
             createdAt: string;
             reviewedAt: string | null;
@@ -8236,7 +8671,7 @@ export interface components {
                 scope: string;
                 /** @enum {string} */
                 level: "platform" | "organisation" | "either";
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "positions.manage" | "positions.review" | "positions.post.department" | "audit.read" | "settings.manage")[];
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "positions.manage" | "positions.review" | "positions.post.department" | "communities.manage" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -9038,6 +9473,300 @@ export interface components {
             answeredAt: string | null;
             closedAt: string | null;
             conversationId: string | null;
+        };
+        CommunityListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+                descriptionHe: string | null;
+                descriptionEn: string | null;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                } | null;
+                postCount: number;
+                following: boolean;
+                moderating: boolean;
+            }[];
+        };
+        PostListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                community: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
+                /** @enum {string} */
+                kind: "QUESTION" | "DISCUSSION";
+                title: string | null;
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                } | null;
+                removed: ("moderator" | "author") | null;
+                answered: boolean;
+                locked: boolean;
+                commentCount: number;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                activityAt: string;
+                excerpt: string;
+                bookmarked: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        CommunityDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            nameHe: string;
+            nameEn: string;
+            descriptionHe: string | null;
+            descriptionEn: string | null;
+            subspecialty: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            } | null;
+            postCount: number;
+            following: boolean;
+            moderators: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+            }[];
+            canWrite: boolean;
+            canModerate: boolean;
+            banned: {
+                reason: string;
+                until: string | null;
+            } | null;
+            archived: boolean;
+        };
+        PostInputDto: {
+            /**
+             * @default DISCUSSION
+             * @enum {string}
+             */
+            kind: "QUESTION" | "DISCUSSION";
+            title: string;
+            body: string;
+            /** @default [] */
+            fileIds: string[];
+            /** @default [] */
+            mentions: string[];
+        };
+        PostDto: {
+            /** Format: uuid */
+            id: string;
+            community: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            };
+            /** @enum {string} */
+            kind: "QUESTION" | "DISCUSSION";
+            title: string | null;
+            author: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+            } | null;
+            removed: ("moderator" | "author") | null;
+            answered: boolean;
+            locked: boolean;
+            commentCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            activityAt: string;
+            body: string;
+            removedReason: string | null;
+            edited: boolean;
+            files: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "IMAGE" | "DOCUMENT" | "VIDEO";
+                mimeType: string;
+                originalName: string;
+                sizeBytes: number;
+                width: number | null;
+                height: number | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            reactions: {
+                /** @enum {string} */
+                reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+                count: number;
+                mine: boolean;
+            }[];
+            comments: {
+                /** Format: uuid */
+                id: string;
+                parentId: string | null;
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                } | null;
+                body: string;
+                removed: ("moderator" | "author") | null;
+                removedReason: string | null;
+                edited: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                reactions: {
+                    /** @enum {string} */
+                    reaction: "like" | "heart" | "laugh" | "wow" | "thanks" | "check";
+                    count: number;
+                    mine: boolean;
+                }[];
+                isAnswer: boolean;
+                canEdit: boolean;
+            }[];
+            bookmarked: boolean;
+            following: boolean;
+            canEdit: boolean;
+            canComment: boolean;
+            canModerate: boolean;
+        };
+        BanListDto: {
+            items: {
+                person: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                };
+                reason: string;
+                until: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+        };
+        BanInputDto: {
+            /** Format: uuid */
+            userId: string;
+            reason: string;
+            days?: number;
+        };
+        PostEditDto: {
+            title: string;
+            body: string;
+        };
+        CommentInputDto: {
+            body: string;
+            /** Format: uuid */
+            parentId?: string;
+            /** @default [] */
+            mentions: string[];
+        };
+        PostAnswerInputDto: {
+            commentId: string | null;
+        };
+        ReasonDto: {
+            reason: string;
+        };
+        CommentEditDto: {
+            body: string;
+        };
+        AdminCommunityListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+                descriptionHe: string | null;
+                descriptionEn: string | null;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                } | null;
+                sortOrder: number;
+                archived: boolean;
+                postCount: number;
+                moderators: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                }[];
+            }[];
+        };
+        AdminCommunityInputDto: {
+            slug: string;
+            nameHe: string;
+            nameEn: string;
+            /** @default null */
+            descriptionHe: string | null;
+            /** @default null */
+            descriptionEn: string | null;
+            /** @default 100 */
+            sortOrder: number;
+        };
+        AdminCommunityDto: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            nameHe: string;
+            nameEn: string;
+            descriptionHe: string | null;
+            descriptionEn: string | null;
+            subspecialty: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            } | null;
+            sortOrder: number;
+            archived: boolean;
+            postCount: number;
+            moderators: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+            }[];
+        };
+        CommunityModeratorInputDto: {
+            /** Format: uuid */
+            userId: string;
         };
     };
     responses: never;
@@ -16430,6 +17159,834 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MentorshipDto"];
+                };
+            };
+        };
+    };
+    CommunityController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityListDto"];
+                };
+            };
+        };
+    };
+    CommunityController_feed: {
+        parameters: {
+            query?: {
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostListDto"];
+                };
+            };
+        };
+    };
+    CommunityController_bookmarks: {
+        parameters: {
+            query?: {
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostListDto"];
+                };
+            };
+        };
+    };
+    CommunityController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommunityDto"];
+                };
+            };
+        };
+    };
+    CommunityController_follow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_unfollow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_posts_: {
+        parameters: {
+            query?: {
+                sort?: "new" | "active";
+                kind?: "QUESTION" | "DISCUSSION";
+                page?: number;
+            };
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostListDto"];
+                };
+            };
+        };
+    };
+    CommunityController_write: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_bans: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BanListDto"];
+                };
+            };
+        };
+    };
+    CommunityController_ban: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BanInputDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_liftBan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_edit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostEditDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_comment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_answer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostAnswerInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_reactPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                reaction: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_unreactPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                reaction: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_bookmark: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_unbookmark: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_followPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_unfollowPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommunityController_removeByModerator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_unlock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_deleteComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_editComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentEditDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_reactComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                reaction: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_unreactComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                reaction: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunityController_removeComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityListDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminCommunityInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminCommunityInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_archive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_restore: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_addModerator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommunityModeratorInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
+                };
+            };
+        };
+    };
+    CommunitiesAdminController_removeModerator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCommunityDto"];
                 };
             };
         };

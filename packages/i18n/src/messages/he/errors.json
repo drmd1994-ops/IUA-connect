@@ -226,6 +226,20 @@
     "mentorshipAlreadyOpen": "כבר יש לך בקשה או חונכות עם החונך/ת הזה/זו.",
     "mentorshipNotWaiting": "הבקשה כבר נענתה או נסגרה.",
     "mentorshipNotActive": "החונכות הזו אינה פעילה.",
-    "mentorshipActionNotAllowed": "רק הצד השני יכול לבצע את הפעולה הזו."
+    "mentorshipActionNotAllowed": "רק הצד השני יכול לבצע את הפעולה הזו.",
+    "patientIdNumber": "זה נראה כמו מספר תעודת זהות. יש להסיר אותו: אסור לפרסם שום פרט שמזהה מטופל.",
+    "patientPhone": "זה נראה כמו מספר טלפון. יש להסיר אותו: אסור לפרסם שום פרט שמזהה מטופל.",
+    "patientDate": "זה נראה כמו תאריך מלא (יום, חודש ושנה). יש לכתוב גיל או שנה במקומו.",
+    "patientRecordNumber": "זה נראה כמו מספר תיק בבית החולים. יש להסיר אותו.",
+    "patientName": "זה נראה כמו שם של מטופל. יש להסיר אותו.",
+    "patientEmail": "זה נראה כמו כתובת דוא״ל. יש להסיר אותה.",
+    "communityBanned": "מנהל/ת הקהילה מנע/ה ממך לכתוב בקהילה הזו.",
+    "communityModeratorsOnly": "רק מנהלי הקהילה יכולים לעשות זאת.",
+    "communityPostLocked": "הפוסט נעול: אי אפשר להוסיף תגובות.",
+    "communityEditWindowOver": "כבר אי אפשר לשנות אותו.",
+    "communityNotAQuestion": "רק לשאלה יש תשובה.",
+    "communityModeratorNotBanned": "אי אפשר למנוע ממנהל/ת של הקהילה לכתוב בה.",
+    "communityModeratorNotVerified": "מנהל/ת קהילה צריך/ה להיות משתמש/ת מאומת/ת עם שם.",
+    "unknownReaction": "התגובה הזו אינה זמינה."
   }
 }

@@ -226,6 +226,20 @@
     "mentorshipAlreadyOpen": "You already have a request or a mentorship with this mentor.",
     "mentorshipNotWaiting": "This request was already answered or closed.",
     "mentorshipNotActive": "This mentorship isn’t active.",
-    "mentorshipActionNotAllowed": "Only the other side can take this step."
+    "mentorshipActionNotAllowed": "Only the other side can take this step.",
+    "patientIdNumber": "This looks like an ID number. Remove it: nothing that identifies a patient may be posted.",
+    "patientPhone": "This looks like a phone number. Remove it: nothing that identifies a patient may be posted.",
+    "patientDate": "This looks like a full date (a day, a month and a year). Write the age or the year instead.",
+    "patientRecordNumber": "This looks like a hospital record number. Remove it.",
+    "patientName": "This looks like a patient's name. Remove it.",
+    "patientEmail": "This looks like an email address. Remove it.",
+    "communityBanned": "A moderator stopped you from writing in this community.",
+    "communityModeratorsOnly": "Only this community's moderators can do this.",
+    "communityPostLocked": "This post is locked: no more comments.",
+    "communityEditWindowOver": "It can no longer be changed.",
+    "communityNotAQuestion": "Only a question has an answer.",
+    "communityModeratorNotBanned": "A moderator of this community can't be stopped from writing here.",
+    "communityModeratorNotVerified": "A moderator must be a verified person with a name.",
+    "unknownReaction": "This reaction isn't available."
   }
 }

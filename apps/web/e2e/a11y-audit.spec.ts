@@ -51,7 +51,7 @@ const MEMBER_PAGES = [
   '/account/notifications/preferences',
   '/account/security',
   // The chat pages themselves keep a connection open, so they never go quiet; chat.spec.ts
-  // and rooms.spec.ts run axe on them.
+  // runs axe on them.
   '/account/chat',
   '/members',
   '/education/exam',
@@ -62,6 +62,10 @@ const MEMBER_PAGES = [
   '/mentorship',
   '/mentorship/requests',
   '/mentorship/settings',
+  '/communities',
+  '/communities/following',
+  '/communities/saved',
+  '/communities/andrology',
 ];
 
 test('axe: every page a signed-in member sees, in both languages', async ({ browser }) => {
@@ -105,7 +109,6 @@ const ADMIN_PAGES: { path: string; openFirst?: string }[] = [
   { path: '/admin/broadcasts/new' },
   { path: '/admin/chat/reports', openFirst: 'chat-reports-table' },
   { path: '/admin/chat/rooms', openFirst: 'admin-rooms-table' },
-  { path: '/admin/chat/rooms/new' },
   { path: '/admin/chat/rooms/settings' },
   { path: '/admin/users', openFirst: 'accounts-table' },
   { path: '/admin/users/roles' },
@@ -113,6 +116,7 @@ const ADMIN_PAGES: { path: string; openFirst?: string }[] = [
   { path: '/admin/demo-outbox' },
   { path: '/admin/positions', openFirst: 'admin-positions' },
   { path: '/admin/positions/new' },
+  { path: '/admin/communities' },
   { path: '/admin/settings' },
 ];
 

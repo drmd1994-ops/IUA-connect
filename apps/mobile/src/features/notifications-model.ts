@@ -36,6 +36,16 @@ export function appRoute(link: string | null): string | null {
   ) {
     return path;
   }
+  // Communities (M25): the feed and saved posts open the list.
+  if (['/communities', '/communities/following', '/communities/saved'].includes(path)) {
+    return '/communities';
+  }
+  const community = /^\/communities\/([^/]+)(?:\/([^/]+))?$/.exec(path);
+  if (community) {
+    return community[2]
+      ? `/communities/${community[1]}/${community[2]}`
+      : `/communities/${community[1]}`;
+  }
   const position = /^\/positions\/([^/]+)$/.exec(path);
   if (position) return `/positions/${position[1]}`;
   const news = /^\/news\/([^/]+)$/.exec(path);

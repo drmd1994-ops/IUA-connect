@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-23 (M28 built: jobs, fellowships and mentorship; pull request #34)_
+_Last updated: 2026-10-23 (M28 merged; M25 built: communities in place of chat rooms, pull request #35)_
 
 ## Summary
 
@@ -1272,7 +1272,7 @@ Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026
 
 1. Keep the key folder's backup safe; without it a new key means every phone removes the app once.
 
-## M28 Jobs, fellowships and mentorship (built 2026-10-23, pull request #34)
+## M28 Jobs, fellowships and mentorship (merged 2026-10-23, pull request #34)
 
 Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved by the owner on 2026-10-23 ("build M28") with the answers in its §10: staff and department directors post, someone else reviews; positions abroad allowed; verified specialists mentor and any verified person asks; **positions are open to everyone, visitors too** (the owner's choice; my recommendation was verified people only); about 12 sample positions at hospitals from the list, each marked as a sample, and 6 mentors; the limits as written.
 
@@ -1322,6 +1322,86 @@ Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved
 1. Try it on the hosted demo and the phone once deployed ("deploy it").
 2. Read the new Hebrew texts, above all "חונכות" and "השתלמות (פלו)".
 
+## M25 Professional communities, in place of chat rooms (built 2026-10-23, pull request #35)
+
+Plan: `docs/plans/M25-community.md`, checked against the code and approved by the owner on 2026-10-23 ("start M25") with the answers in its §10:
+
+- **communities replace chat rooms**, all of them (the owner's choice; my recommendation was beside them), archived and kept for staff;
+- moderators appointed for each community;
+- every verified person takes part;
+- **the patient-details check blocks** (the owner's choice; my recommendation was a warning the writer could confirm);
+- the demo data as proposed.
+
+**Built**
+
+- **A community for each subspecialty** (11, from the reference data), and others the platform's staff open. Staff see every community; each page says so.
+- **Posts:**
+  - a question or a discussion, with a title, text and up to 3 pictures or PDF files (uploaded as in chat; no video);
+  - the writer changes a post for a day and deletes it; a marker stays.
+- **Comments,** with one level of replies; the writer changes a comment for 15 minutes and deletes it.
+- **On posts and comments:** chat's six reactions; the question's writer marks one comment as **the answer**.
+- **For each reader:** saving posts; following a community (its new posts) or a post (its new comments); **the feed** of the communities followed.
+- **Moderators** (appointed by staff for each community; chat's moderators act everywhere):
+  - remove a post or a comment with a reason shown in its place; a removed post hides its comments;
+  - lock a post;
+  - stop someone writing in a community for some days or until lifted. They still read.
+- **Reports:** a post or a comment goes to chat's staff queue, with the text as it was. A reviewer can remove it from there.
+- **The patient-details check** (in the shared code, so the site, the app and the server use the same one). It looks for:
+  - an Israeli ID number (by its check digit);
+  - a phone number, or a full date;
+  - a record number or a patient's name after its label;
+  - an email address.
+
+  The site and the app show what was found and where before sending; the server refuses it too. Ordinary medical text (ages, doses, years, lab values) passes, and the tests check that.
+- **Search** finds posts by their text and by their comments, for verified people.
+- **Notices:** a new kind, "Communities". A comment on your post, a reply to your comment and a mention come in the app and, if switched on, by email. New posts in followed communities and new comments on followed posts come in the app. Nobody is told about someone they blocked.
+- **Chat rooms closed:**
+  - every room is archived by the migration (and by the demo seed for a new database); nothing is deleted;
+  - Chat has no Rooms side; the old addresses lead to Communities; organisations' pages lose their rooms panel;
+  - staff can no longer open new rooms, but can still read an archived room from a report;
+  - the rooms' notice switch leaves the settings;
+  - the rooms' code stays, unused, so the decision can be undone.
+- **The site:** Communities in the main menu; "Ask the community" on the member's home is now a link; Administration → Communities to open, close and appoint moderators (by email address).
+- **The app:** the communities, the feed and saved posts, a community, writing a post, a post with its comments, replies, reactions and the answer.
+- **Demo data** (its own seed layer, which the hosted demo adds on its next start):
+  - 10 posts with comments in Uro-oncology, Urolithiasis, Andrology and Pediatric urology, by the demo's fictional people;
+  - one answered question, and one post removed by a moderator;
+  - moderators for the four communities.
+
+  They talk about training, meetings and research habits, never about a patient, and give no clinical advice.
+- **Texts** in Hebrew and English.
+
+**Verified (on this computer)**
+
+- Server: unit tests for the check (each pattern found, ordinary text passing) and the rules. 11 integration tests for communities:
+  - who reads; the check refusing with what it found;
+  - notices to followers, writers and mentions, and none to someone who blocked;
+  - answers, reactions and saving; the edit window;
+  - moderation and bans, with the audit log; reports into the queue;
+  - search; the staff pages.
+
+  The whole suite: 624 integration tests, after teaching three older tests the new settings.
+- The site: type checks and lint; three browser tests (a question stopped once for an ID number, answered and marked, saved, a comment removed and the post locked; the pages in Hebrew and the rooms' old address; staff opening a community and appointing a moderator), with accessibility checks; the new pages added to both accessibility audits.
+- The app: 209 screen tests (every new screen in both languages, the check stopping a post, following, marking the answer, commenting) and 92 rule tests.
+
+**Not verified yet**
+
+- GitHub's checks, the hosted demo, the owner's look at it.
+
+**Deviations and findings**
+
+- **Mentions:** the server tells mentioned people, but neither the site nor the app offers a way to pick someone to mention yet.
+- **Files** can be added to a post on the site; the app writes text only.
+- **The app** shows moderation as locking a post only; removing, banning and reporting are on the site.
+- **The rooms' tests** in the browser (four, and one in the groups tests) were removed with the rooms' screens; the rooms' server tests still run.
+- **Prisma again tried to drop the hand-written department constraints** (now also the positions'); those lines were removed, and this time the migration was written and checked before it was applied.
+- **Two server answer formats** shared a name with education's ("AnswerInputDto", "ModeratorInputDto"); renamed, as the project's test requires.
+
+**Open for the owner**
+
+1. Look at the communities on the hosted demo once deployed ("deploy it"), and read the new Hebrew texts.
+2. Decide whether organisations should get communities of their own, now that their rooms are closed.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
@@ -1338,6 +1418,6 @@ Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** is built and waits in pull request #34.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** is built and waits in pull request #35.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

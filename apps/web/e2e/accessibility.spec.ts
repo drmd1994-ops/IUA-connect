@@ -75,6 +75,9 @@ const PAGES = [
   '/mentorship/requests',
   '/mentorship/settings',
   '/admin/positions',
+  // M25 (the signed-in and filled views are checked in communities.spec.ts)
+  '/communities',
+  '/admin/communities',
 ];
 
 for (const locale of ['he', 'en'] as const) {

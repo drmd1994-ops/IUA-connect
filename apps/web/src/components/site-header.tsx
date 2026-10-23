@@ -14,6 +14,7 @@ export function SiteHeader() {
   const education = useTranslations('education');
   const calculators = useTranslations('calculators');
   const careers = useTranslations('careers');
+  const communities = useTranslations('communities');
   return (
     <header className="border-b border-border bg-surface">
       {/* Wraps on narrow screens (and at high zoom), so nothing needs sideways scrolling. */}
@@ -66,6 +67,12 @@ export function SiteHeader() {
             className="rounded-md px-2 py-1.5 text-sm font-semibold text-text hover:bg-surface-muted"
           >
             {careers('nav')}
+          </Link>
+          <Link
+            href="/communities"
+            className="rounded-md px-2 py-1.5 text-sm font-semibold text-text hover:bg-surface-muted"
+          >
+            {communities('nav')}
           </Link>
           <OrganisationsLink />
           <ChatLink />

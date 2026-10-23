@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
 import { CONTENT_SEARCH_TYPES } from './search-provider';
 
-export const SEARCH_TYPES = [...CONTENT_SEARCH_TYPES, 'members'] as const;
+/** Content, listed members, and community posts with their comments (M25). */
+export const SEARCH_TYPES = [...CONTENT_SEARCH_TYPES, 'members', 'posts'] as const;
 export type SearchType = (typeof SEARCH_TYPES)[number];
 /** Results per type on the overview, and per page when one type is opened. */
 export const SEARCH_PREVIEW_SIZE = 5;
