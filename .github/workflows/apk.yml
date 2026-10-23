@@ -61,6 +61,7 @@ jobs:
             exit 1
           fi
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/medconnect.p12"
+          sha256sum "$RUNNER_TEMP/medconnect.p12" | cut -c1-16
       # Java must open it, or the build would fail only at its end, many minutes later.
       - name: The signing key opens
         env:
@@ -68,7 +69,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
           keytool -list -storetype pkcs12 -keystore "$RUNNER_TEMP/medconnect.p12" \
-            -storepass:env STORE_PASSWORD -alias "$KEY_ALIAS" > /dev/null
+            -storepass:env STORE_PASSWORD -alias "$KEY_ALIAS"
       - name: Build the .apk
         working-directory: apps/mobile/android
         env:
