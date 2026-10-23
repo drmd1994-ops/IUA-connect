@@ -139,6 +139,11 @@ function MemberHome() {
           onPress={() => router.push('/positions')}
         />
         <Button
+          label={all('communities.nav')}
+          variant="secondary"
+          onPress={() => router.push('/communities')}
+        />
+        <Button
           label={all('directory.nav')}
           variant="secondary"
           onPress={() => router.push('/members')}

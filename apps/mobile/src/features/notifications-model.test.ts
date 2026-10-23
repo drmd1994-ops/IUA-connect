@@ -24,6 +24,9 @@ describe('where a notice leads', () => {
     expect(appRoute('/mentorship')).toBe('/mentorship');
     expect(appRoute('/mentorship/requests')).toBe('/mentorship/requests');
     expect(appRoute('/admin/positions/p1')).toBeNull();
+    expect(appRoute('/communities/following')).toBe('/communities');
+    expect(appRoute('/communities/andrology')).toBe('/communities/andrology');
+    expect(appRoute('/communities/andrology/po-1')).toBe('/communities/andrology/po-1');
   });
 
   it('leads nowhere for what the app does not have', () => {

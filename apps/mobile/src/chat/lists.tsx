@@ -19,7 +19,6 @@ type Conversation = Schemas['ConversationListDto']['items'][number];
 type Room = Schemas['RoomListDto']['items'][number];
 type RoomCategory = Schemas['RoomCategoriesDto']['items'][number];
 type Invitation = Schemas['InvitationListDto']['items'][number];
-type Side = 'private' | 'rooms';
 type Which = 'active' | 'archived';
 
 /** Loads again when the screen is returned to, and when a live event says something changed. */
@@ -33,7 +32,7 @@ function useReload(): [number, () => void] {
   return [version, reload];
 }
 
-/** The Chat tab: the reader's private conversations and groups, or their rooms. */
+/** The Chat tab: the reader's private conversations and groups. (Rooms closed in M25.) */
 export function ChatTab() {
   const all = useTranslations();
   const t = useTranslations('chat.list');
@@ -41,10 +40,8 @@ export function ChatTab() {
   const g = useTranslations('groups.list');
   const router = useRouter();
   const { request } = useSession();
-  const [side, setSide] = useState<Side>('private');
   const [which, setWhich] = useState<Which>('active');
   const [conversations, setConversations] = useState<Conversation[] | null>(null);
-  const [rooms, setRooms] = useState<Room[] | null>(null);
   const [invitations, setInvitations] = useState(0);
   const [enabled, setEnabled] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -60,43 +57,24 @@ export function ChatTab() {
     request<{ items: Invitation[] }>('/api/v1/chat/invitations')
       .then((result) => active && setInvitations(result.items.length))
       .catch(() => undefined);
-    if (side === 'private') {
-      request<{ items: Conversation[] }>(
-        `/api/v1/chat/conversations?limit=50&archived=${which === 'archived'}`,
-      )
-        .then((result) => {
-          if (!active) return;
-          setError(null);
-          setConversations(result.items);
-        })
-        .catch(fail);
-    } else {
-      request<{ items: Room[] }>('/api/v1/chat/rooms/mine?limit=50')
-        .then((result) => {
-          if (!active) return;
-          setError(null);
-          setRooms(result.items);
-        })
-        .catch(fail);
-    }
+    request<{ items: Conversation[] }>(
+      `/api/v1/chat/conversations?limit=50&archived=${which === 'archived'}`,
+    )
+      .then((result) => {
+        if (!active) return;
+        setError(null);
+        setConversations(result.items);
+      })
+      .catch(fail);
     return () => {
       active = false;
     };
-  }, [request, side, which, version]);
+  }, [request, which, version]);
 
   return (
     <Screen>
       <Title>{t('title')}</Title>
       {!enabled && <Notice tone="warning">{r('browse.membersOnly')}</Notice>}
-      <Choices<Side>
-        label={r('tabs.label')}
-        value={side}
-        onChange={setSide}
-        options={[
-          { value: 'private', label: r('tabs.private') },
-          { value: 'rooms', label: r('tabs.rooms') },
-        ]}
-      />
       {invitations > 0 && (
         <Button
           label={g('invitations', { count: invitations })}
@@ -105,44 +83,32 @@ export function ChatTab() {
       )}
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
 
-      {side === 'private' ? (
-        <>
-          <View style={styles.actions}>
-            <Button label={t('new')} onPress={() => router.push('/chat-new')} />
-            <Button
-              label={g('newGroup')}
-              variant="secondary"
-              onPress={() => router.push('/chat-new-group')}
-            />
-          </View>
-          <Choices<Which>
-            label={t('tabsLabel')}
-            value={which}
-            onChange={(next) => {
-              setConversations(null);
-              setWhich(next);
-            }}
-            options={[
-              { value: 'active', label: t('active') },
-              { value: 'archived', label: t('archived') },
-            ]}
-          />
-          {conversations?.length === 0 && (
-            <Body muted>{which === 'archived' ? t('emptyArchived') : t('empty')}</Body>
-          )}
-          {conversations?.map((item) => (
-            <ConversationLine key={item.id} item={item} />
-          ))}
-        </>
-      ) : (
-        <>
-          <Button label={r('list.browse')} onPress={() => router.push('/chat-rooms')} />
-          {rooms?.length === 0 && <Body muted>{r('list.empty')}</Body>}
-          {rooms?.map((room) => (
-            <RoomLine key={room.id} room={room} />
-          ))}
-        </>
+      <View style={styles.actions}>
+        <Button label={t('new')} onPress={() => router.push('/chat-new')} />
+        <Button
+          label={g('newGroup')}
+          variant="secondary"
+          onPress={() => router.push('/chat-new-group')}
+        />
+      </View>
+      <Choices<Which>
+        label={t('tabsLabel')}
+        value={which}
+        onChange={(next) => {
+          setConversations(null);
+          setWhich(next);
+        }}
+        options={[
+          { value: 'active', label: t('active') },
+          { value: 'archived', label: t('archived') },
+        ]}
+      />
+      {conversations?.length === 0 && (
+        <Body muted>{which === 'archived' ? t('emptyArchived') : t('empty')}</Body>
       )}
+      {conversations?.map((item) => (
+        <ConversationLine key={item.id} item={item} />
+      ))}
       <Button label={t('searchMessages')} variant="link" onPress={() => setSearching(true)} />
       {searching && <MessageSearchSheet onClose={() => setSearching(false)} />}
       <Button label={t('settings')} variant="link" onPress={() => router.push('/chat-settings')} />
