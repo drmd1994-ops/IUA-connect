@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-23 (M18b built and checked on the owner's phone: passkeys in the app, email links that open it; pull request #33)_
+_Last updated: 2026-10-23 (M28 built: jobs, fellowships and mentorship; pull request #34)_
 
 ## Summary
 
@@ -1272,6 +1272,51 @@ Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026
 
 1. Keep the key folder's backup safe; without it a new key means every phone removes the app once.
 
+## M28 Jobs, fellowships and mentorship (built 2026-10-23, pull request #34)
+
+Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved by the owner on 2026-10-23 ("build M28") with the answers in its §10: staff and department directors post, someone else reviews; positions abroad allowed; verified specialists mentor and any verified person asks; **positions are open to everyone, visitors too** (the owner's choice; my recommendation was verified people only); about 12 sample positions at hospitals from the list, each marked as a sample, and 6 mentors; the limits as written.
+
+**Built**
+
+- **Positions** (jobs, fellowships, research posts): kind, place (a hospital and department from the list, or an institution named as text with its city and country), who it is for, subspecialties, how to apply (a link or an email), closing date, text in Hebrew and English.
+  - Written by platform staff, an organisation's staff for their organisation, or a department director for their own department; published by someone else, never the person who submitted it. Taken back to draft to correct, or archived. Every step in its history and the audit log.
+  - Everyone reads them, visitors too. Search by words, kind, subspecialty, country and who it is for, nearest closing first. A position leaves the list after its closing date and keeps its page.
+  - Saving, for a signed-in person, theirs alone.
+  - A new notice kind, **"New positions"**: in the app on, by email off (in the daily summary).
+- **Mentorship**:
+  - A verified specialist switches on "List me as a mentor" with subspecialties, interests, time, languages and how many mentees at once; their hospital and department come from their profile.
+  - Verified people see the open mentors, filtered by subspecialty, hospital and language, and ask one with a short message.
+  - The mentor accepts or declines; a decline carries no reason. Accepting opens a private conversation between the two, even when neither is listed in the directory. Either side ends it later; the conversation stays.
+  - Limits: 3 requests waiting at a time; 30 days before asking the same mentor again after a decline; a request not answered in 30 days closes by itself; a mentor at their limit isn't asked. Blocking in chat applies.
+  - Only the two people see a request; staff have no screen for them.
+  - A new notice kind, **"Mentorship"**: in the app and by email, on.
+- **The site**: "Jobs and mentoring" in the main menu (positions, saved positions, mentors, my mentorships, be a mentor); **Administration → Positions** for staff and department directors.
+- **The app**: the same screens, without writing or reviewing positions (they stay on the site). Email and notice links to them open the app.
+- **Demo data** (a seed layer of its own, which the hosted demo adds on its next start): 12 sample positions (3 abroad at made-up institutions, one waiting for review, one by the Rambam department's director), each saying "Sample position, not a real offer"; 6 mentors (Dr. Avi Karmeli, Dr. Michal Ofer, Dr. Noa Bar-Lev, and three new fictional specialists: Dr. Hila Shapira, Dr. Yonatan Avrahami, Dr. Rana Khoury); one request waiting for Noa, one accepted mentorship with its conversation.
+- **Texts** in Hebrew and English. In Hebrew, mentorship is "חונכות" (the app's "הנחיות" already means guidelines).
+
+**Verified (on this computer)**
+
+- Server: 18 new unit tests (the review steps, the request limits and steps); 19 new integration tests (review by someone else, closing dates, search, a director kept to their department, an organisation kept to its own, saving; mentors only by choice and only specialists, the request flow and its conversation outside the directory, the limits, blocking, expiry, privacy). The whole suite: 614 integration tests, after teaching three older tests the new notice kinds and the new staff routes.
+- The site: type checks and lint; three browser tests (a position from writing to a visitor, saving in Hebrew, a request accepted and its conversation opened), with accessibility checks on every new page; the new pages added to both accessibility audits.
+- The app: 196 screen tests (22 new: every new screen in both languages, saving, asking, accepting, settings) and 92 rule tests.
+
+**Not verified yet**
+
+- GitHub's checks on pull request #34, the hosted demo, a new .apk, and the owner's phone test.
+
+**Deviations and findings**
+
+- **Prisma again tried to drop the two hand-written department constraints**, and the first generated migration was applied to this computer's database before I saw it. The lines were removed from the migration, the two constraints restored, and the migration's record corrected; the migration from scratch was then run by the tests.
+- **The website showed the person who submitted a position a Publish button** that the server refuses. It now says "Someone else must review what you submitted." instead (found by the browser test).
+- **The hosted demo's start** now also runs the reference layer, so new roles and permissions reach a database seeded before.
+- **Countries** on the site are named by the browser; the app has its own list of 26 country names.
+
+**Open for the owner**
+
+1. Try it on the hosted demo and the phone once deployed ("deploy it").
+2. Read the new Hebrew texts, above all "חונכות" and "השתלמות (פלו)".
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
@@ -1288,6 +1333,6 @@ Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33).
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** is built and waits in pull request #34.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

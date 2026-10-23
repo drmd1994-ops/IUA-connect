@@ -177,6 +177,21 @@ Two windows: `member.full@demo.test` (Noa Bar-Lev) in the first, and in a privat
 
 The seed has no sample video. To show one, attach any short MP4 from the computer (not of a person).
 
+### 11. Jobs and mentoring (3 minutes, optional; added in M28)
+
+Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, and in a private window `mentor.hila@demo.test` (Dr. Hila Shapira, a fictional mentor). Every position in the demo is made up and says so.
+
+| Do                                                                | The audience sees                                                                                        | Say                                                                                                    |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Signed out: **משרות וחונכות**.                                    | Jobs, fellowships and research posts at hospitals in Israel and three abroad, the nearest closing first. | "Anyone can look for a position, without an account. You apply to the hospital itself."                |
+| Choose **השתלמות (פלו)** and the country **צרפת**.                | The fellowship abroad.                                                                                   | "Fellowships abroad are listed too."                                                                   |
+| First window: open a position → **שמירה**, then **משרות ששמרתי**. | The saved position.                                                                                      | "A resident keeps a short list. Nobody else sees it."                                                  |
+| **חונכים** → filter by language.                                  | Six specialists who offer mentoring: hospital, interests, time, languages.                               | "Specialists choose to offer mentoring, and can stop at any time."                                     |
+| **בקשת חונכות** from Dr. Hila Shapira, with a short message.      | "הבקשה נשלחה".                                                                                           | "A short note. Three requests may wait at a time; a request not answered in 30 days closes by itself." |
+| Second window: **החונכויות שלי** → **קבלה**.                      | The request becomes active, with **לפתיחת השיחה**.                                                       | "If she declines, he isn't told why. If she accepts, a private conversation opens between them."       |
+| First window: **החונכויות שלי** → **לפתיחת השיחה**.               | The conversation, in Chat.                                                                               | "Neither of them had to be listed in the member directory."                                            |
+| As `admin@demo.test`: **ניהול → משרות**.                          | The positions, one waiting for review; the writer can't publish their own.                               | "A department director posts for their department; someone else reviews it before it shows."           |
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).
