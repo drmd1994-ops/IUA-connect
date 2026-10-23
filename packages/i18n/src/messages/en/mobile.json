@@ -140,7 +140,7 @@
   },
   "guest": {
     "intro": "You are not signed in. News, events, guidelines and the open part of the education library can be read without an account.",
-    "linkOpensSite": "The link in the email opens the website, where this step is finished.",
+    "linkOpensSite": "Open the link in the email on this phone to finish in the app, or on a computer to finish on the website.",
     "afterVerify": "After your address is verified, sign in here and apply for membership under “Me” → “My application”."
   }
 }

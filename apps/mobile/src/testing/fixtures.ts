@@ -819,6 +819,7 @@ export const everything: Record<string, Answer> = {
     requiredByRole: false,
     canDisable: true,
   } satisfies S['MfaStatusDto'],
+  'POST /api/v1/auth/verify-email': { status: 'ok' },
   'GET /api/v1/auth/passkeys': {
     passkeys: [
       {

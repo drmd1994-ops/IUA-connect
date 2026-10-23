@@ -21,7 +21,8 @@ describe('where a notice leads', () => {
   it('leads nowhere for what the app does not have', () => {
     expect(appRoute(null)).toBeNull();
     expect(appRoute('/admin/news')).toBeNull();
-    expect(appRoute('/account/applications')).toBeNull();
+    expect(appRoute('/organisations/some-org/news')).toBeNull();
+    expect(appRoute('/account/applications')).toBe('/applications');
     expect(appRoute('https://elsewhere.example.test/news/x')).toBeNull();
   });
 });

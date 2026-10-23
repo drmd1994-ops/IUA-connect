@@ -455,3 +455,137 @@ const styles = StyleSheet.create({
   meta: { fontSize: 14, lineHeight: 20, color: semantic.textMuted },
   strong: { fontSize: 16, lineHeight: 24, fontWeight: '600', color: semantic.text },
 });
+
+/**
+ * A link from an email that confirms the address (M18b): the token is sent as soon as the screen
+ * opens, as the site does. When it was used or has expired, a new link can be asked for.
+ */
+export function VerifyEmail({ token, onDone }: { token: string; onDone: () => void }) {
+  const all = useTranslations();
+  const t = useTranslations('auth.verify');
+  const { request } = useSession();
+  const [state, setState] = useState<'working' | 'done' | 'failed'>('working');
+  const [email, setEmail] = useState('');
+  const [resent, setResent] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+
+  useEffect(() => {
+    let active = true;
+    request('/api/v1/auth/verify-email', post({ token }))
+      .then(() => active && setState('done'))
+      .catch(() => active && setState('failed'));
+    return () => {
+      active = false;
+    };
+  }, [request, token]);
+
+  if (state === 'working') {
+    return (
+      <Screen>
+        <Title>{t('title')}</Title>
+        <Body>{t('verifying')}</Body>
+      </Screen>
+    );
+  }
+  if (state === 'done') {
+    return (
+      <Screen>
+        <Title>{t('successTitle')}</Title>
+        <Notice tone="success">{t('successBody')}</Notice>
+        <Button label={t('goToSignIn')} onPress={onDone} />
+      </Screen>
+    );
+  }
+  return (
+    <Screen>
+      <Title>{t('failedTitle')}</Title>
+      <Body>{t('failedBody')}</Body>
+      {resent ? (
+        <Notice tone="success">{t('resendDone')}</Notice>
+      ) : (
+        <>
+          <Field
+            label={all('auth.fields.email')}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            autoComplete="email"
+          />
+          {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
+          <Button
+            label={t('resendSubmit')}
+            disabled={!email.trim()}
+            onPress={() =>
+              void request('/api/v1/auth/verify-email/resend', post({ email: email.trim() }))
+                .then(() => setResent(true))
+                .catch(setError)
+            }
+          />
+        </>
+      )}
+      <Button label={t('goToSignIn')} variant="link" onPress={onDone} />
+    </Screen>
+  );
+}
+
+/**
+ * A link from an email that sets a new password (M18b): a forgotten password, or the first one
+ * of an account an import created. The server then ends every session of the account.
+ */
+export function ResetPassword({ token, onDone }: { token: string; onDone: () => void }) {
+  const t = useTranslations('auth');
+  const passwordError = usePasswordError();
+  const { request } = useSession();
+  const [password, setPassword] = useState('');
+  const [pending, setPending] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+
+  async function submit() {
+    setPending(true);
+    setError(null);
+    try {
+      await request('/api/v1/auth/password/reset', post({ token, newPassword: password }));
+      setPassword('');
+      setDone(true);
+    } catch (caught) {
+      setError(caught);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  if (done) {
+    return (
+      <Screen>
+        <Title>{t('reset.successTitle')}</Title>
+        <Notice tone="success">{t('reset.successBody')}</Notice>
+        <Button label={t('verify.goToSignIn')} onPress={onDone} />
+      </Screen>
+    );
+  }
+  return (
+    <Screen>
+      <Title>{t('reset.title')}</Title>
+      <Field
+        label={t('fields.newPassword')}
+        hint={t('hints.newPassword')}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        autoCapitalize="none"
+        autoComplete="new-password"
+        maxLength={128}
+      />
+      {error !== null && <Notice tone="error">{passwordError(error)}</Notice>}
+      <Button
+        label={t('reset.submit')}
+        pending={pending}
+        disabled={!password}
+        onPress={() => void submit()}
+      />
+      <Button label={t('security.cancel')} variant="link" onPress={onDone} />
+    </Screen>
+  );
+}

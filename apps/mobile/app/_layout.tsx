@@ -1,13 +1,20 @@
-import { Stack } from 'expo-router';
+import { type Href, Stack, useRootNavigationState, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslations } from 'use-intl';
 import { ChatEventsProvider } from '@/chat/events';
 import { API_URL } from '@/config';
+import { pendingLink } from '@/features/app-links';
 import { LanguageChoice } from '@/features/language-choice';
 import { SignIn } from '@/features/sign-in';
-import { ForgotPassword, GuestProvider, Register } from '@/features/visitor';
+import {
+  ForgotPassword,
+  GuestProvider,
+  Register,
+  ResetPassword,
+  VerifyEmail,
+} from '@/features/visitor';
 import { I18nProvider } from '@/i18n/i18n-provider';
 import { AppLock } from '@/lock/app-lock';
 import { SessionProvider, useSession } from '@/session/session-provider';
@@ -61,12 +68,24 @@ function Visitor() {
 function Gate() {
   const t = useTranslations('mobile');
   const { session, status } = useSession();
+  const link = useSyncExternalStore(pendingLink.subscribe, pendingLink.get);
+
+  // A link from an email with a one-time token (M18b): its own screen, signed in or not.
+  if (link && link.kind !== 'screen' && status !== 'loading') {
+    const done = () => pendingLink.set(null);
+    return link.kind === 'verifyEmail' ? (
+      <VerifyEmail token={link.token} onDone={done} />
+    ) : (
+      <ResetPassword token={link.token} onDone={done} />
+    );
+  }
 
   // The tabs, and over them the screens opened from a tab; the phone's back button returns.
   if (status === 'signedIn') {
     return (
       <ChatEventsProvider>
         <Stack screenOptions={{ headerShown: false }} />
+        <OpenLink />
       </ChatEventsProvider>
     );
   }
@@ -91,4 +110,20 @@ function Gate() {
       <Body muted>{t('loading')}</Body>
     </Screen>
   );
+}
+
+/**
+ * Signed in, a link from an email (M18b) opens its screen once the screens are ready. A link that
+ * came while signed out waits here for the sign-in.
+ */
+function OpenLink() {
+  const router = useRouter();
+  const ready = Boolean(useRootNavigationState()?.key);
+  const link = useSyncExternalStore(pendingLink.subscribe, pendingLink.get);
+  useEffect(() => {
+    if (!ready || link?.kind !== 'screen') return;
+    pendingLink.take();
+    router.push(link.route as Href);
+  }, [ready, link, router]);
+  return null;
 }

@@ -23,7 +23,13 @@ import { MockExamSitting, MockExamStart } from '@/features/question-bank';
 import { NotificationSettings, Notifications } from '@/features/notifications';
 import { ScanScreen } from '@/features/scan';
 import { SignIn } from '@/features/sign-in';
-import { Applications, ForgotPassword, Register } from '@/features/visitor';
+import {
+  Applications,
+  ForgotPassword,
+  Register,
+  ResetPassword,
+  VerifyEmail,
+} from '@/features/visitor';
 import { allText, draw, expectSound } from '@/testing/draw';
 import { everything } from '@/testing/fixtures';
 import { world } from '@/testing/world';
@@ -39,6 +45,8 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['sign-in', <SignIn key="s" onForgot={nothing} onRegister={nothing} onGuest={nothing} />],
   ['forgot password', <ForgotPassword key="s" onBack={nothing} />],
   ['open an account', <Register key="s" onBack={nothing} />],
+  ['an email’s link: the address confirmed', <VerifyEmail key="s" token="t" onDone={nothing} />],
+  ['an email’s link: a new password', <ResetPassword key="s" token="t" onDone={nothing} />],
   ['home', <Home key="s" />],
   ['home, for a visitor', <Home key="s" />, true],
   ['the membership card', <MembershipCard key="s" />],
