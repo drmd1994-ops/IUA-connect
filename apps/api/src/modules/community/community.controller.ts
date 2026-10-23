@@ -18,7 +18,7 @@ import { Authenticated } from '../../common/decorators/access.decorators';
 import { type RequestMeta, Meta } from '../../common/request-meta';
 import { CommunitiesService } from './communities.service';
 import {
-  AnswerInputDto,
+  PostAnswerInputDto,
   BanInputDto,
   BanListDto,
   CommentEditDto,
@@ -189,7 +189,7 @@ export class CommunityController {
   answer(
     @Req() req: RequestWithPrincipal,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body: AnswerInputDto,
+    @Body() body: PostAnswerInputDto,
   ): Promise<PostDto> {
     return this.posts.setAnswer(principalOf(req), id, body.commentId);
   }

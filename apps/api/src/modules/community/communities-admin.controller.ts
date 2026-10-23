@@ -19,7 +19,7 @@ import {
   AdminCommunityDto,
   AdminCommunityInputDto,
   AdminCommunityListDto,
-  ModeratorInputDto,
+  CommunityModeratorInputDto,
 } from './community.dto';
 
 /**
@@ -94,7 +94,7 @@ export class CommunitiesAdminController {
   addModerator(
     @Req() req: RequestWithPrincipal,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body: ModeratorInputDto,
+    @Body() body: CommunityModeratorInputDto,
     @Meta() meta: RequestMeta,
   ): Promise<AdminCommunityDto> {
     return this.communities.addModerator(principalOf(req), id, body.userId, meta);

@@ -197,7 +197,7 @@ export class CommentEditDto extends createZodDto(
   z.strictObject({ body: z.string().trim().min(1).max(COMMENT_MAX) }),
 ) {}
 
-export class AnswerInputDto extends createZodDto(
+export class PostAnswerInputDto extends createZodDto(
   z.strictObject({ commentId: z.uuid().nullable() }),
 ) {}
 
@@ -254,4 +254,6 @@ export class AdminCommunityListDto extends createZodDto(
   z.strictObject({ items: z.array(AdminCommunityDto.schema) }),
 ) {}
 
-export class ModeratorInputDto extends createZodDto(z.strictObject({ userId: z.uuid() })) {}
+export class CommunityModeratorInputDto extends createZodDto(
+  z.strictObject({ userId: z.uuid() }),
+) {}

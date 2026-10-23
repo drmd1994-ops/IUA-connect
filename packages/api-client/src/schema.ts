@@ -7075,7 +7075,12 @@ export interface components {
             leftOutRecentlyRight: number;
         };
         AnswerInputDto: {
-            commentId: string | null;
+            position: number;
+            /**
+             * @default he
+             * @enum {string}
+             */
+            locale: "he" | "en";
         };
         AnswerResultDto: {
             correct: boolean;
@@ -9685,6 +9690,9 @@ export interface components {
             /** @default [] */
             mentions: string[];
         };
+        PostAnswerInputDto: {
+            commentId: string | null;
+        };
         ReasonDto: {
             reason: string;
         };
@@ -9755,6 +9763,10 @@ export interface components {
                 lastName: string;
                 mark: ("STUDENT" | "RESIDENT") | null;
             }[];
+        };
+        CommunityModeratorInputDto: {
+            /** Format: uuid */
+            userId: string;
         };
     };
     responses: never;
@@ -17486,7 +17498,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AnswerInputDto"];
+                "application/json": components["schemas"]["PostAnswerInputDto"];
             };
         };
         responses: {
@@ -17943,7 +17955,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ModeratorInputDto"];
+                "application/json": components["schemas"]["CommunityModeratorInputDto"];
             };
         };
         responses: {

@@ -13673,7 +13673,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AnswerInputDto"
+                "$ref": "#/components/schemas/PostAnswerInputDto"
               }
             }
           }
@@ -14365,7 +14365,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ModeratorInputDto"
+                "$ref": "#/components/schemas/CommunityModeratorInputDto"
               }
             }
           }
@@ -27443,21 +27443,22 @@
       "AnswerInputDto": {
         "type": "object",
         "properties": {
-          "commentId": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid",
-                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-              },
-              {
-                "type": "null"
-              }
+          "position": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "locale": {
+            "default": "he",
+            "type": "string",
+            "enum": [
+              "he",
+              "en"
             ]
           }
         },
         "required": [
-          "commentId"
+          "position"
         ],
         "additionalProperties": false
       },
@@ -42083,6 +42084,27 @@
         ],
         "additionalProperties": false
       },
+      "PostAnswerInputDto": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "commentId"
+        ],
+        "additionalProperties": false
+      },
       "ReasonDto": {
         "type": "object",
         "properties": {
@@ -42459,6 +42481,20 @@
           "archived",
           "postCount",
           "moderators"
+        ],
+        "additionalProperties": false
+      },
+      "CommunityModeratorInputDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "userId"
         ],
         "additionalProperties": false
       }
