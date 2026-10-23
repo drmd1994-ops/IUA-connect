@@ -1,17 +1,9 @@
-import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ChatRoomEditorPage } from '@/features/admin/chat-rooms';
+import { redirect } from '@/i18n/navigation';
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'rooms.admin.editor' });
-  return { title: t('newTitle') };
-}
-
+/** No new chat rooms: communities replaced them in M25. */
 export default async function Page({ params }: Props) {
   const { locale } = await params;
-  setRequestLocale(locale);
-  return <ChatRoomEditorPage />;
+  redirect({ href: '/admin/communities', locale });
 }

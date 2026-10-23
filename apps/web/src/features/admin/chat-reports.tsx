@@ -298,6 +298,7 @@ export function ChatReportPage({ id }: { id: string }) {
   const name = usePersonName();
   const roomName = useRoomName();
   const m = useTranslations('rooms.room');
+  const c = useTranslations('communities.admin');
   const { api, call, me } = useAuth();
   const [report, setReport] = useState<Report | null>(null);
   const [decision, setDecision] = useState<Decision>('dismiss');
@@ -391,6 +392,21 @@ export function ChatReportPage({ id }: { id: string }) {
                   {' · '}
                   <Link href={`/chat/rooms/${report.room.id}`} className={link}>
                     {d('openRoom')}
+                  </Link>
+                </dd>
+              </div>
+            )}
+            {report.post && (
+              <div className="contents">
+                <dt className="font-semibold">
+                  {c(report.post.comment ? 'reportComment' : 'reportPost')}
+                </dt>
+                <dd dir="auto">
+                  <Link
+                    href={`/communities/${report.post.communitySlug}/${report.post.id}`}
+                    className={link}
+                  >
+                    {report.post.title}
                   </Link>
                 </dd>
               </div>

@@ -6,7 +6,6 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame } from '@/features/auth/require-sign-in';
-import { RoomPicture, useRoomText } from '@/features/chat/rooms-list';
 import { useEventTime } from '@/features/events/shared';
 import { useLocalName } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
@@ -23,7 +22,6 @@ import {
 type Schemas = components['schemas'];
 type NewsItem = Schemas['PublicNewsListDto']['items'][number];
 type EventItem = Schemas['PublicEventListDto']['items'][number];
-type Room = Schemas['RoomListDto']['items'][number];
 
 const link = 'font-semibold text-primary underline underline-offset-4';
 /** How many of each the section's front page shows; the full lists are a link away. */
@@ -74,7 +72,7 @@ export function BackToSection({ organisation }: { organisation: Organisation }) 
   );
 }
 
-/** An organisation's section: who it is, the reader's membership, its news, events and rooms. */
+/** An organisation's section: who it is, the reader's membership, its news and events. (Its rooms closed in M25.) */
 export function OrganisationPage({ slug }: { slug: string }) {
   return (
     <WithOrganisation slug={slug}>
@@ -116,11 +114,6 @@ function Section({ organisation }: { organisation: Organisation }) {
         />
         <NewsPanel organisation={organisation} />
         <EventsPanel organisation={organisation} />
-        <RoomsPanel
-          organisation={organisation}
-          loading={memberships === undefined}
-          member={membership?.status === 'ACTIVE'}
-        />
       </div>
     </PageFrame>
   );
@@ -318,61 +311,6 @@ function EventsPanel({ organisation }: { organisation: Organisation }) {
           {t('all', { name: name(organisation) })}
         </Link>
       </p>
-    </Panel>
-  );
-}
-
-/** The organisation's rooms are its members' (the API decides); others are told so. */
-function RoomsPanel({
-  organisation,
-  loading,
-  member,
-}: {
-  organisation: Organisation;
-  loading: boolean;
-  member: boolean;
-}) {
-  const all = useTranslations();
-  const t = useTranslations('organisations.section.rooms');
-  const text = useRoomText();
-  const { api, call } = useAuth();
-  const [items, setItems] = useState<Room[]>();
-
-  useEffect(() => {
-    if (!member) return;
-    let active = true;
-    call(() =>
-      api.GET('/api/v1/chat/rooms', { params: { query: { organisation: organisation.id } } }),
-    )
-      .then((result) => active && setItems(result.items))
-      .catch(() => active && setItems([]));
-    return () => {
-      active = false;
-    };
-  }, [api, call, member, organisation.id]);
-
-  return (
-    <Panel id="organisation-rooms" title={t('title')}>
-      {(loading || (member && !items)) && <p role="status">{all('membership.common.loading')}</p>}
-      {!loading && !member && <p className="text-text-muted">{t('membersOnly')}</p>}
-      {member && items?.length === 0 && <p className="text-text-muted">{t('empty')}</p>}
-      {member && items && items.length > 0 && (
-        <ul className="flex flex-col gap-3">
-          {items.map((room) => (
-            <li key={room.id} className="flex items-center gap-3">
-              <RoomPicture room={room} name={text.name(room)} />
-              <div className="min-w-0">
-                <Link href={`/chat/rooms/${room.id}`} className={`${link} break-words`} dir="auto">
-                  {text.name(room)}
-                </Link>
-                <p className="text-sm text-text-muted">
-                  {t('members', { count: room.memberCount })}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
     </Panel>
   );
 }

@@ -2,7 +2,7 @@
   "nav": "Organisations",
   "list": {
     "title": "Organisations",
-    "intro": "Organisations that have a section here. Each one runs its own membership, news, events and rooms.",
+    "intro": "Organisations that have a section here. Each one runs its own membership, news and events.",
     "empty": "No organisation has a section yet.",
     "open": "Open the section of {name}"
   },

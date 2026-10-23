@@ -4,7 +4,7 @@ import { DEMO_ORGANISATION, expectSignedIn, signIn } from './helpers';
 
 /**
  * M16 (docs/plans/M16-independent-platform.md §4.3): an organisation has a section of its own on
- * the site: who it is, the reader's membership and card, its news, events and rooms. The lists
+ * the site: who it is, the reader's membership and card, its news and events (its rooms closed in M25). The lists
  * of the whole platform say whose each item is. The demo member comes from the seed and is
  * fictional.
  */
@@ -23,7 +23,7 @@ async function expectAccessible(page: Page) {
   ).toEqual([]);
 }
 
-test('a visitor reaches the organisation’s section; its rooms and membership stay closed', async ({
+test('a visitor reaches the organisation’s section; its membership stays closed', async ({
   page,
 }) => {
   await page.goto('/en');
@@ -33,9 +33,6 @@ test('a visitor reaches the organisation’s section; its rooms and membership s
   await expect(page.getByRole('heading', { name: NAME, level: 1 })).toBeVisible();
   await expect(page.getByTestId('organisation-membership')).toContainText(
     'Sign in to see your membership here, or to apply.',
-  );
-  await expect(page.getByTestId('organisation-rooms')).toContainText(
-    'The rooms are open to the organisation’s members.',
   );
   await expectAccessible(page);
 
@@ -66,12 +63,11 @@ test('a visitor reaches the organisation’s section; its rooms and membership s
   ).toBeVisible();
 });
 
-test('a member sees their membership, card and rooms in the section', async ({ page }) => {
+test('a member sees their membership and card in the section', async ({ page }) => {
   await signIn(page, 'en', MEMBER, DEMO_PASSWORD);
   await expectSignedIn(page, MEMBER);
   await page.goto(`/en${SECTION}`);
   await expect(page.getByTestId('organisation-membership-state')).toContainText('Active');
-  await expect(page.getByTestId('organisation-rooms').getByRole('link').first()).toBeVisible();
   await expectAccessible(page);
 
   // The card carries the organisation's name.

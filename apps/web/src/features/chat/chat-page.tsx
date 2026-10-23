@@ -18,7 +18,6 @@ import { GroupView } from './group-view';
 import { Invitations, NewGroupDialog, useInvitationCount } from './invitations';
 import { ActivityMark, useActivity } from './message-parts';
 import { RoomView } from './room-view';
-import { BrowseRooms, RoomList } from './rooms-list';
 
 /**
  * The Chat section (M11): the reader's conversations on one side and the open conversation
@@ -32,14 +31,13 @@ export function ChatPage({ conversationId }: { conversationId?: string }) {
   );
 }
 
-/** The Rooms side of the Chat section (M12): the reader's rooms, one room, or all the rooms. */
-export function RoomsPage({ roomId, browse }: { roomId?: string; browse?: boolean }) {
+/**
+ * One chat room (M12). Rooms closed in M25 (communities replace them): every room is archived,
+ * and this page is left for staff, who can still read one.
+ */
+export function RoomsPage({ roomId }: { roomId: string }) {
   return (
-    <RequireSignIn>
-      {(me) => (
-        <Chat me={me} open={browse ? { kind: 'browse' } : { kind: 'room', id: roomId ?? null }} />
-      )}
-    </RequireSignIn>
+    <RequireSignIn>{(me) => <Chat me={me} open={{ kind: 'room', id: roomId }} />}</RequireSignIn>
   );
 }
 
@@ -55,13 +53,12 @@ export function InvitationsPage() {
   return <RequireSignIn>{(me) => <Chat me={me} open={{ kind: 'invitations' }} />}</RequireSignIn>;
 }
 
-type Open =
-  { kind: 'private' | 'room' | 'group'; id: string | null } | { kind: 'browse' | 'invitations' };
+type Open = { kind: 'private' | 'room' | 'group'; id: string | null } | { kind: 'invitations' };
 
 function Chat({ me, open }: { me: Me; open: Open }) {
   const t = useTranslations('chat');
   const r = useTranslations('rooms');
-  const rooms = open.kind === 'room' || open.kind === 'browse';
+  const rooms = open.kind === 'room';
   const openId = 'id' in open ? open.id : null;
   /** On a phone the list and what is open are a screen each. */
   const showsMain = !('id' in open) || openId !== null;
@@ -79,18 +76,6 @@ function Chat({ me, open }: { me: Me; open: Open }) {
     }, []),
   );
 
-  const tab = (href: string, current: boolean, text: string) => (
-    <Link
-      href={href}
-      aria-current={current ? 'true' : undefined}
-      className={`flex-1 rounded-md px-3 py-1.5 text-center text-sm font-semibold ${
-        current ? 'bg-brand-50 text-brand-900' : 'text-text-muted hover:text-text'
-      }`}
-    >
-      {text}
-    </Link>
-  );
-
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
       <div className="grid gap-4 md:grid-cols-[20rem_minmax(0,1fr)]">
@@ -98,23 +83,13 @@ function Chat({ me, open }: { me: Me; open: Open }) {
           aria-label={rooms ? r('list.title') : t('list.title')}
           className={`${showsMain ? 'hidden md:flex' : 'flex'} h-[75dvh] min-h-[28rem] min-w-0 flex-col rounded-lg border border-border bg-surface`}
         >
-          <nav aria-label={r('tabs.label')} className="flex gap-1 border-b border-border p-2">
-            {tab('/chat', !rooms, r('tabs.private'))}
-            {tab('/chat/rooms', rooms, r('tabs.rooms'))}
-          </nav>
-          {rooms ? (
-            <RoomList current={openId} subscribe={subscribe} />
-          ) : (
-            <ConversationList current={openId} subscribe={subscribe} />
-          )}
+          <ConversationList current={openId} subscribe={subscribe} />
         </aside>
         <section
           aria-label={rooms ? r('tabs.rooms') : t('conversation.details')}
           className={`${showsMain ? 'flex' : 'hidden md:flex'} h-[75dvh] min-h-[28rem] min-w-0 flex-col rounded-lg border border-border bg-surface`}
         >
-          {open.kind === 'browse' ? (
-            <BrowseRooms />
-          ) : open.kind === 'invitations' ? (
+          {open.kind === 'invitations' ? (
             <Invitations subscribe={subscribe} />
           ) : open.kind === 'group' && open.id ? (
             <GroupView key={open.id} id={open.id} me={me} subscribe={subscribe} />

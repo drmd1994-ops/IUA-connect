@@ -70,12 +70,7 @@ export function ChatRoomsPage() {
         <p className="mt-2 text-text-muted">{t('intro')}</p>
       </div>
       <div className="flex flex-wrap items-center gap-4">
-        <Link
-          href="/admin/chat/rooms/new"
-          className="inline-flex rounded-md bg-primary px-5 py-2.5 font-semibold text-on-primary hover:bg-primary-hover"
-        >
-          {t('new')}
-        </Link>
+        {/* No new rooms: communities replaced them (M25). Existing ones are archived. */}
         {me?.platformPermissions.includes('chat.rooms.manage') && (
           <Link href="/admin/chat/rooms/settings" className={link}>
             {t('settings')}

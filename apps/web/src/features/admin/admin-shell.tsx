@@ -23,6 +23,7 @@ const ADMIN_PERMISSIONS = [
   'positions.manage',
   'positions.review',
   'positions.post.department',
+  'communities.manage',
   'users.read',
   'audit.read',
   'settings.manage',
@@ -50,6 +51,8 @@ export const ADMIN_SECTIONS = [
   { href: '/admin/broadcasts', key: 'broadcasts', permission: 'broadcasts.create' },
   { href: '/admin/chat/reports', key: 'chatReports', permission: 'chat.moderate' },
   { href: '/admin/chat/rooms', key: 'chatRooms', permission: 'chat.rooms.manage' },
+  // M25: communities, which replace chat rooms.
+  { href: '/admin/communities', key: 'communities', permission: 'communities.manage' },
   // M28: staff who write or review positions, and department directors.
   {
     href: '/admin/positions',
