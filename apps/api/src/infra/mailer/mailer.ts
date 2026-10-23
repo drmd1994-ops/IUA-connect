@@ -33,6 +33,15 @@ export interface EmailTemplates {
   educationPublished: { title: string; link: string };
   // The question bank (M23): a reviewer dealt with the reader's report; "reason" is their answer.
   examReportHandled: { title: string; reason: string; link: string };
+  // Positions (M28), to the position's writer.
+  positionSentBack: { title: string; reason: string; link: string };
+  positionPublished: { title: string; link: string };
+  // Mentorship (M28). name is the other person's.
+  mentorshipRequested: { name: string; link: string };
+  mentorshipAccepted: { name: string; link: string };
+  mentorshipDeclined: { name: string; link: string };
+  mentorshipExpired: { name: string; link: string };
+  mentorshipEnded: { name: string; link: string };
   // Events (M5), to people registered for the event. "when" is formatted for the recipient.
   eventRegistered: { title: string; when: string; link: string };
   eventWaitlisted: { title: string; link: string };

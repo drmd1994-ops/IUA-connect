@@ -79,6 +79,11 @@ export function GuestHome() {
           onPress={() => router.push('/calculators')}
         />
         <Button
+          label={t('careers.nav')}
+          variant="secondary"
+          onPress={() => router.push('/positions')}
+        />
+        <Button
           label={t('search.page.title')}
           variant="secondary"
           onPress={() => router.push('/search')}

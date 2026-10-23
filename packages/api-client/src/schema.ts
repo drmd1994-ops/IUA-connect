@@ -3940,6 +3940,262 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/positions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/positions/saved": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsController_saved"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/positions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/positions/{id}/saved": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["PositionsController_save"];
+        post?: never;
+        delete: operations["PositionsController_unsave"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/positions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsAdminController_list"];
+        put?: never;
+        post: operations["PositionsAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/positions/scope": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsAdminController_scope"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/positions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsAdminController_get"];
+        put: operations["PositionsAdminController_update"];
+        post?: never;
+        delete: operations["PositionsAdminController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/positions/{id}/transitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PositionsAdminController_transition"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/positions/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PositionsAdminController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/mentors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MentorshipController_mentors"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MentorshipController_settings"];
+        put: operations["MentorshipController_saveSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MentorshipController_list"];
+        put?: never;
+        post: operations["MentorshipController_ask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/requests/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MentorshipController_accept"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/requests/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MentorshipController_decline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/requests/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MentorshipController_withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mentorship/requests/{id}/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MentorshipController_end"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -6608,7 +6864,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -6629,7 +6885,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -6638,7 +6894,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "ROOMS" | "MENTORSHIP" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
                 app: boolean;
                 email: boolean;
             }[];
@@ -6647,7 +6903,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -7980,7 +8236,7 @@ export interface components {
                 scope: string;
                 /** @enum {string} */
                 level: "platform" | "organisation" | "either";
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "audit.read" | "settings.manage")[];
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "positions.manage" | "positions.review" | "positions.post.department" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -8285,6 +8541,503 @@ export interface components {
             email: string;
             /** @enum {string} */
             locale?: "he" | "en";
+        };
+        PositionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "JOB" | "FELLOWSHIP" | "RESEARCH";
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                place: {
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                        cityHe: string;
+                        cityEn: string;
+                    } | null;
+                    department: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                    institutionName: string | null;
+                    city: string | null;
+                    country: string;
+                };
+                /** @enum {string} */
+                audience: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                }[];
+                closesOn: string;
+                titleHe: string | null;
+                titleEn: string | null;
+                publishedAt: string | null;
+                saved: boolean;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+            countries: string[];
+        };
+        SavedPositionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "JOB" | "FELLOWSHIP" | "RESEARCH";
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                place: {
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                        cityHe: string;
+                        cityEn: string;
+                    } | null;
+                    department: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                    institutionName: string | null;
+                    city: string | null;
+                    country: string;
+                };
+                /** @enum {string} */
+                audience: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                }[];
+                closesOn: string;
+                titleHe: string | null;
+                titleEn: string | null;
+                publishedAt: string | null;
+                saved: boolean;
+            }[];
+        };
+        PositionDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "JOB" | "FELLOWSHIP" | "RESEARCH";
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            place: {
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    cityHe: string;
+                    cityEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                institutionName: string | null;
+                city: string | null;
+                country: string;
+            };
+            /** @enum {string} */
+            audience: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+            subspecialties: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+            closesOn: string;
+            translations: {
+                he?: {
+                    title: string;
+                    body: string;
+                };
+                en?: {
+                    title: string;
+                    body: string;
+                };
+            };
+            applyUrl: string | null;
+            applyEmail: string | null;
+            publishedAt: string | null;
+            closed: boolean;
+            saved: boolean;
+        };
+        AdminPositionListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "JOB" | "FELLOWSHIP" | "RESEARCH";
+                organisation: {
+                    /** Format: uuid */
+                    id: string;
+                    slug: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                place: {
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                        cityHe: string;
+                        cityEn: string;
+                    } | null;
+                    department: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                    institutionName: string | null;
+                    city: string | null;
+                    country: string;
+                };
+                /** @enum {string} */
+                audience: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                }[];
+                closesOn: string;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                titleHe: string | null;
+                titleEn: string | null;
+                submittedBy: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        PositionScopeDto: {
+            platform: boolean;
+            organisations: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+            departments: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                };
+            }[];
+            review: boolean;
+        };
+        PositionInputDto: {
+            organisationId?: string | null;
+            /** @enum {string} */
+            kind: "JOB" | "FELLOWSHIP" | "RESEARCH";
+            /** @default null */
+            hospitalId: string | null;
+            /** @default null */
+            departmentId: string | null;
+            /** @default null */
+            institutionName: string | null;
+            /** @default null */
+            city: string | null;
+            /** @default IL */
+            country: string;
+            /**
+             * @default ANYONE
+             * @enum {string}
+             */
+            audience: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+            /** @default [] */
+            subspecialtyIds: string[];
+            /** @default null */
+            applyUrl: string | null;
+            /** @default null */
+            applyEmail: string | null;
+            closesOn: string;
+            translations: {
+                he?: {
+                    title: string;
+                    /** @default  */
+                    body: string;
+                };
+                en?: {
+                    title: string;
+                    /** @default  */
+                    body: string;
+                };
+            };
+        };
+        AdminPositionDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "JOB" | "FELLOWSHIP" | "RESEARCH";
+            organisation: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                nameHe: string;
+                nameEn: string;
+            } | null;
+            place: {
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    cityHe: string;
+                    cityEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                institutionName: string | null;
+                city: string | null;
+                country: string;
+            };
+            /** @enum {string} */
+            audience: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+            subspecialties: {
+                /** Format: uuid */
+                id: string;
+                key: string;
+                nameHe: string;
+                nameEn: string;
+            }[];
+            closesOn: string;
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+            translations: {
+                he?: {
+                    title: string;
+                    body: string;
+                };
+                en?: {
+                    title: string;
+                    body: string;
+                };
+            };
+            applyUrl: string | null;
+            applyEmail: string | null;
+            authorUserId: string | null;
+            submittedBy: string | null;
+            reviewedBy: string | null;
+            publishedAt: string | null;
+            archivedAt: string | null;
+            canWrite: boolean;
+            canReview: boolean;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        PositionTransitionDto: {
+            /** @enum {string} */
+            action: "SUBMIT" | "SEND_BACK" | "PUBLISH" | "TAKE_BACK" | "ARCHIVE";
+            comment?: string;
+        };
+        PositionHistoryDto: {
+            items: {
+                action: string;
+                fromStatus: ("DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED") | null;
+                /** @enum {string} */
+                toStatus: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                actorUserId: string | null;
+                comment: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        MentorListDto: {
+            items: {
+                person: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                    department: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                };
+                subspecialties: {
+                    /** Format: uuid */
+                    id: string;
+                    key: string;
+                    nameHe: string;
+                    nameEn: string;
+                }[];
+                academicInterests: string;
+                careerInterests: string;
+                availability: string;
+                languages: string[];
+                taking: boolean;
+                mine: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    state: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED" | "ENDED";
+                } | null;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        MentorSettingsDto: {
+            eligible: boolean;
+            settings: {
+                open: boolean;
+                subspecialtyIds: string[];
+                academicInterests: string;
+                careerInterests: string;
+                availability: string;
+                languages: string[];
+                capacity: number;
+            } | null;
+            active: number;
+        };
+        MentorSettingsInputDto: {
+            open: boolean;
+            subspecialtyIds: string[];
+            academicInterests: string;
+            careerInterests: string;
+            availability: string;
+            languages: string[];
+            capacity: number;
+        };
+        MentorshipListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                role: "mentor" | "mentee";
+                other: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                    hospital: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                    department: {
+                        /** Format: uuid */
+                        id: string;
+                        nameHe: string;
+                        nameEn: string;
+                    } | null;
+                };
+                /** @enum {string} */
+                state: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED" | "ENDED";
+                message: string;
+                /** Format: date-time */
+                createdAt: string;
+                answeredAt: string | null;
+                closedAt: string | null;
+                conversationId: string | null;
+            }[];
+        };
+        MentorshipRequestInputDto: {
+            /** Format: uuid */
+            mentorId: string;
+            message: string;
+        };
+        MentorshipDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            role: "mentor" | "mentee";
+            other: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+                department: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+            };
+            /** @enum {string} */
+            state: "PENDING" | "ACCEPTED" | "DECLINED" | "WITHDRAWN" | "EXPIRED" | "ENDED";
+            message: string;
+            /** Format: date-time */
+            createdAt: string;
+            answeredAt: string | null;
+            closedAt: string | null;
+            conversationId: string | null;
         };
     };
     responses: never;
@@ -15198,6 +15951,486 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    PositionsController_list: {
+        parameters: {
+            query?: {
+                kind?: "JOB" | "FELLOWSHIP" | "RESEARCH";
+                subspecialty?: string;
+                hospital?: string;
+                country?: string;
+                audience?: "ANYONE" | "SPECIALISTS" | "RESIDENTS" | "STUDENTS";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PositionListDto"];
+                };
+            };
+        };
+    };
+    PositionsController_saved: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedPositionListDto"];
+                };
+            };
+        };
+    };
+    PositionsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PositionDto"];
+                };
+            };
+        };
+    };
+    PositionsController_save: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PositionsController_unsave: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PositionsAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPositionListDto"];
+                };
+            };
+        };
+    };
+    PositionsAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PositionInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPositionDto"];
+                };
+            };
+        };
+    };
+    PositionsAdminController_scope: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PositionScopeDto"];
+                };
+            };
+        };
+    };
+    PositionsAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPositionDto"];
+                };
+            };
+        };
+    };
+    PositionsAdminController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description The version you edited: "<n>" */
+                "If-Match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PositionInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPositionDto"];
+                };
+            };
+        };
+    };
+    PositionsAdminController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PositionsAdminController_transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PositionTransitionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminPositionDto"];
+                };
+            };
+        };
+    };
+    PositionsAdminController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PositionHistoryDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_mentors: {
+        parameters: {
+            query?: {
+                subspecialty?: string;
+                hospital?: string;
+                language?: string;
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorListDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_settings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorSettingsDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_saveSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorSettingsInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorSettingsDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorshipListDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_ask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorshipRequestInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorshipDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_accept: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorshipDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_decline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorshipDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_withdraw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorshipDto"];
+                };
+            };
+        };
+    };
+    MentorshipController_end: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorshipDto"];
+                };
             };
         };
     };

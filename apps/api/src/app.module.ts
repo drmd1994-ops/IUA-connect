@@ -28,9 +28,11 @@ import { GuidelinesModule } from './modules/guidelines';
 import { HealthModule } from './modules/health';
 import { InstitutionsModule } from './modules/institutions';
 import { MembershipModule } from './modules/membership';
+import { MentorshipModule } from './modules/mentorship';
 import { NewsModule } from './modules/news';
 import { NotificationsModule } from './modules/notifications';
 import { OrganisationsModule } from './modules/organisations';
+import { PositionsModule } from './modules/positions';
 import { ProfilesModule } from './modules/profiles';
 import { SearchModule } from './modules/search';
 import { VerificationModule } from './modules/verification';
@@ -82,6 +84,8 @@ export class AppModule {
         ChatModule,
         AdminModule,
         VerificationModule,
+        PositionsModule,
+        MentorshipModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

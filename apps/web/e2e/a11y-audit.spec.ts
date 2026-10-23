@@ -57,6 +57,11 @@ const MEMBER_PAGES = [
   '/education/exam',
   '/education/exam/mock',
   '/search?q=demo',
+  '/positions',
+  '/positions/saved',
+  '/mentorship',
+  '/mentorship/requests',
+  '/mentorship/settings',
 ];
 
 test('axe: every page a signed-in member sees, in both languages', async ({ browser }) => {
@@ -106,6 +111,8 @@ const ADMIN_PAGES: { path: string; openFirst?: string }[] = [
   { path: '/admin/users/roles' },
   { path: '/admin/audit' },
   { path: '/admin/demo-outbox' },
+  { path: '/admin/positions', openFirst: 'admin-positions' },
+  { path: '/admin/positions/new' },
   { path: '/admin/settings' },
 ];
 

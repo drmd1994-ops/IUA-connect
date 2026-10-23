@@ -24,6 +24,20 @@ export function appRoute(link: string | null): string | null {
     const kind = thread[1] === 'groups' ? 'group' : thread[1] === 'rooms' ? 'room' : 'direct';
     return `/thread/${kind}/${thread[2]}`;
   }
+  // Jobs and mentorship (M28): the app has the same addresses.
+  if (
+    [
+      '/positions',
+      '/positions/saved',
+      '/mentorship',
+      '/mentorship/requests',
+      '/mentorship/settings',
+    ].includes(path)
+  ) {
+    return path;
+  }
+  const position = /^\/positions\/([^/]+)$/.exec(path);
+  if (position) return `/positions/${position[1]}`;
   const news = /^\/news\/([^/]+)$/.exec(path);
   if (news) return `/news/${news[1]}`;
   const event = /^\/events\/([^/]+)(?:\/check-in)?$/.exec(path);

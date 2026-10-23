@@ -209,6 +209,23 @@
     "chatLastReportReason": "לפחות סיבת דיווח אחת חייבת להישאר פעילה.",
     "chatReportNoRoom": "הדיווח הזה אינו על חדר.",
     "verifiedOnly": "האפשרות הזו מיועדת לרופאים ולסטודנטים לרפואה מאומתים.",
-    "invitationLimit": "שלחת היום את מספר ההזמנות המרבי. אפשר לנסות שוב מחר."
+    "invitationLimit": "שלחת היום את מספר ההזמנות המרבי. אפשר לנסות שוב מחר.",
+    "positionChanged": "מישהו שינה את המשרה בינתיים. נא לטעון אותה מחדש ולנסות שוב.",
+    "positionNotEditable": "אפשר לערוך רק טיוטה. יש להחזיר אותה קודם לטיוטה.",
+    "positionNotDeletable": "אפשר למחוק רק טיוטה שמעולם לא פורסמה.",
+    "positionActionNotAllowed": "אין לך הרשאה לשלב הזה.",
+    "positionTransitionNotAllowed": "השלב הזה אינו אפשרי במצב הנוכחי של המשרה.",
+    "positionTitleRequired": "יש לתת למשרה כותרת לפני השליחה לבדיקה.",
+    "notYourDepartment": "אפשר לפרסם משרות רק עבור המחלקה שבניהולך.",
+    "mentorOnlySpecialists": "רק מומחים/ות מאומתים/ות יכולים/ות להציע חונכות.",
+    "mentorNameRequired": "יש להוסיף קודם שם פרטי ושם משפחה לפרופיל. הצד השני רואה מי את/ה.",
+    "mentorUnavailable": "החונך/ת אינו/ה זמין/ה.",
+    "mentorFull": "החונך/ת אינו/ה מקבל/ת חניכים כרגע.",
+    "mentorshipTooManyWaiting": "כבר יש לך 3 בקשות שממתינות לתשובה. יש לחכות לאחת מהן, או לבטל אחת.",
+    "mentorshipAskedRecently": "החונך/ת דחה/תה את בקשתך לפני פחות מ־30 יום.",
+    "mentorshipAlreadyOpen": "כבר יש לך בקשה או חונכות עם החונך/ת הזה/זו.",
+    "mentorshipNotWaiting": "הבקשה כבר נענתה או נסגרה.",
+    "mentorshipNotActive": "החונכות הזו אינה פעילה.",
+    "mentorshipActionNotAllowed": "רק הצד השני יכול לבצע את הפעולה הזו."
   }
 }

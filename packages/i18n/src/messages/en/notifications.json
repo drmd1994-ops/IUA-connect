@@ -23,7 +23,9 @@
     "GUIDELINES": "Guidelines",
     "WORK": "Your work",
     "MESSAGES": "Private messages",
-    "ROOMS": "Chat rooms"
+    "ROOMS": "Chat rooms",
+    "POSITIONS": "New positions",
+    "MENTORSHIP": "Mentorship"
   },
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
@@ -34,7 +36,9 @@
     "EDUCATION": "An education item was published.",
     "GUIDELINES": "A guideline was added or got a new version.",
     "MESSAGES": "Chat messages from other members. In the app: the number on the Chat link. By email: at most one message a day saying that unread messages are waiting, without their text.",
-    "ROOMS": "In a chat room you joined: someone mentioned you, someone replied to you, or a moderator posted an announcement. By email it joins the one-a-day message about unread chat messages."
+    "ROOMS": "In a chat room you joined: someone mentioned you, someone replied to you, or a moderator posted an announcement. By email it joins the one-a-day message about unread chat messages.",
+    "POSITIONS": "A job, fellowship or research post was published.",
+    "MENTORSHIP": "A request to be your mentee, and the answer to a request you sent."
   },
   "items": {
     "eventRegistered": "You are registered for “{title}”.",
@@ -58,6 +62,14 @@
     "educationSentBack": "“{title}” was sent back to you for changes.",
     "educationPublished": "“{title}” was published.",
     "examReportHandled": "Your report on “{title}” was dealt with.",
+    "positionSentBack": "The position “{title}” was sent back to you for changes.",
+    "positionPublished": "The position “{title}” was published.",
+    "contentPosition": "New position: {title}",
+    "mentorshipRequested": "{name} asked you to be their mentor.",
+    "mentorshipAccepted": "{name} accepted your mentorship request.",
+    "mentorshipDeclined": "{name} can’t take your mentorship request now.",
+    "mentorshipExpired": "Your mentorship request to {name} was closed after 30 days without an answer.",
+    "mentorshipEnded": "{name} ended your mentorship.",
     "contentNews": "News: {title}",
     "contentEvent": "New event: {title}",
     "contentEducation": "New in education: {title}",

@@ -260,3 +260,13 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`platform_invitations`**: who invited, a keyed hash of the address, when, and when an account was made with it.
 - **`file_purpose`** gained `VERIFICATION`.
 - Three migrations (`20261014090000` to `20261014090200`), additions and one backfill.
+
+## 11. Jobs, fellowships and mentorship (M28)
+
+- **`positions`**: a job, fellowship or research post (`kind`), its review state (`DRAFT`, `IN_REVIEW`, `PUBLISHED`, `ARCHIVED`), the owner (`organisation_id`, empty for the platform's own and for a department director's), the place (a hospital and department from the list, or `institution_name` with `city` and `country`), who it is for (`audience`), how to apply (`apply_url`, `apply_email`), `closes_on`, and who wrote, submitted and reviewed it. Check constraints: one place, never both; a department belongs to its hospital; at least one way to apply; a two-letter country code.
+- **`position_translations`**, **`position_subspecialties`**, **`position_history`** (append-only, like `news_history`).
+- **`saved_positions`**: a person's saved positions, theirs alone.
+- **`mentor_profiles`** and **`mentor_subspecialties`**: a verified specialist's offer to mentor: listed or not (`open`), interests, time, languages, and how many mentees at once (`capacity`, 1 to 10).
+- **`mentorships`**: a request and the mentorship it becomes (`PENDING`, `ACCEPTED`, `DECLINED`, `WITHDRAWN`, `EXPIRED`, `ENDED`), with the message and, once accepted, the private conversation. One open request or mentorship per pair (a partial unique index); a person can't ask themselves.
+- **`notification_kind`** gained `POSITIONS` and `MENTORSHIP`, in a migration of their own.
+- Two migrations (`20261023090000`, `20261023161839`), additions only.

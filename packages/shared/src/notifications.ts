@@ -26,6 +26,10 @@ export const NOTIFICATION_KINDS = [
   'MESSAGES',
   /** Chat rooms: someone mentioned you or replied to you, or an announcement in your room. */
   'ROOMS',
+  /** A job, fellowship or research post was published (M28). */
+  'POSITIONS',
+  /** Mentorship (M28): a request to you, and the answer to yours. */
+  'MENTORSHIP',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -49,6 +53,8 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   WORK: { app: true, email: true, locked: true },
   MESSAGES: { app: true, email: true, locked: false },
   ROOMS: { app: true, email: false, locked: false },
+  POSITIONS: { app: true, email: false, locked: false },
+  MENTORSHIP: { app: true, email: true, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -58,10 +64,12 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   'ASSOCIATION',
   'MESSAGES',
   'ROOMS',
+  'MENTORSHIP',
   'NEWS',
   'NEW_EVENTS',
   'EDUCATION',
   'GUIDELINES',
+  'POSITIONS',
 ] as const satisfies readonly NotificationKind[];
 
 /** The kinds about newly published content; their emails arrive as one daily summary. */
@@ -70,6 +78,7 @@ export const CONTENT_NOTIFICATION_KINDS = [
   'NEW_EVENTS',
   'EDUCATION',
   'GUIDELINES',
+  'POSITIONS',
 ] as const satisfies readonly NotificationKind[];
 
 export interface StoredNotificationSwitch {

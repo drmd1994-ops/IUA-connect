@@ -68,6 +68,13 @@ const PAGES = [
   '/calculators',
   '/calculators/ipss',
   '/calculators/egfr',
+  // M28 (the signed-in and filled views are checked in careers.spec.ts)
+  '/positions',
+  '/positions/saved',
+  '/mentorship',
+  '/mentorship/requests',
+  '/mentorship/settings',
+  '/admin/positions',
 ];
 
 for (const locale of ['he', 'en'] as const) {

@@ -35,6 +35,8 @@ const ORGANISATION_PERMISSIONS = [
   'broadcasts.approve',
   'chat.moderate',
   'chat.rooms.manage',
+  'positions.manage',
+  'positions.review',
 ] as const satisfies readonly PermissionKey[];
 
 export const ROLES = {
@@ -63,6 +65,8 @@ export const ROLES = {
       'broadcasts.approve',
       'chat.moderate',
       'chat.rooms.manage',
+      'positions.manage',
+      'positions.review',
       'audit.read',
     ],
     requiresMfa: true,
@@ -100,7 +104,7 @@ export const ROLES = {
     level: 'platform',
   },
   DEPARTMENT_DIRECTOR: {
-    permissions: ['membership.approve.department'],
+    permissions: ['membership.approve.department', 'positions.post.department'],
     requiresMfa: true,
     scope: 'DEPARTMENT',
     level: 'platform',

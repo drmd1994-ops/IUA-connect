@@ -11,6 +11,14 @@ import {
 } from '@/features/account';
 import { Directory, GuidelineView, GuidelinesList, MemberPage, Search } from '@/features/browse';
 import { CalculatorList, CalculatorScreen } from '@/features/calculators';
+import {
+  MentorSettingsScreen,
+  MentorsScreen,
+  MentorshipRequestsScreen,
+  PositionScreen,
+  PositionsScreen,
+  SavedPositionsScreen,
+} from '@/features/careers';
 import { MembershipCard } from '@/features/card';
 import { EducationItem, EducationList, ExamPractice, ExamResults } from '@/features/education';
 import { EventList, EventPage, MySchedule } from '@/features/events';
@@ -95,6 +103,13 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['IPSS', <CalculatorScreen key="s" id="ipss" />],
   ['eGFR', <CalculatorScreen key="s" id="egfr" />],
   ['R.E.N.A.L.', <CalculatorScreen key="s" id="renal" />, true],
+  ['positions', <PositionsScreen key="s" />],
+  ['positions, for a visitor', <PositionsScreen key="s" />, true],
+  ['a position', <PositionScreen key="s" id="p-1" />],
+  ['saved positions', <SavedPositionsScreen key="s" />],
+  ['mentors', <MentorsScreen key="s" />],
+  ['my mentorships', <MentorshipRequestsScreen key="s" />],
+  ['mentor settings', <MentorSettingsScreen key="s" />],
 ];
 
 describe.each(['en', 'he'] as const)('every screen, in %s', (locale) => {

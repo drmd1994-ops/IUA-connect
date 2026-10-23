@@ -15,6 +15,7 @@
     "broadcasts": "Messages",
     "chatReports": "Chat reports",
     "chatRooms": "Chat rooms",
+    "positions": "Positions",
     "users": "Accounts",
     "audit": "Audit log",
     "demoOutbox": "Demo emails",

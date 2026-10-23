@@ -142,5 +142,37 @@
     "intro": "You are not signed in. News, events, guidelines and the open part of the education library can be read without an account.",
     "linkOpensSite": "Open the link in the email on this phone to finish in the app, or on a computer to finish on the website.",
     "afterVerify": "After your address is verified, sign in here and apply for membership under “Me” → “My application”."
+  },
+  "countries": {
+    "IL": "Israel",
+    "US": "United States",
+    "CA": "Canada",
+    "GB": "United Kingdom",
+    "IE": "Ireland",
+    "FR": "France",
+    "DE": "Germany",
+    "NL": "Netherlands",
+    "BE": "Belgium",
+    "CH": "Switzerland",
+    "AT": "Austria",
+    "IT": "Italy",
+    "ES": "Spain",
+    "PT": "Portugal",
+    "SE": "Sweden",
+    "NO": "Norway",
+    "DK": "Denmark",
+    "FI": "Finland",
+    "PL": "Poland",
+    "CZ": "Czechia",
+    "GR": "Greece",
+    "AU": "Australia",
+    "NZ": "New Zealand",
+    "SG": "Singapore",
+    "JP": "Japan",
+    "KR": "South Korea"
+  },
+  "careers": {
+    "open": "Jobs and mentoring",
+    "links": "More in jobs and mentoring"
   }
 }

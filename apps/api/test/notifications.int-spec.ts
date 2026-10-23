@@ -110,10 +110,12 @@ describe('notifications and preferences (integration)', () => {
       { kind: 'ASSOCIATION', app: true, email: true, locked: false },
       { kind: 'MESSAGES', app: true, email: true, locked: false },
       { kind: 'ROOMS', app: true, email: false, locked: false },
+      { kind: 'MENTORSHIP', app: true, email: true, locked: false },
       { kind: 'NEWS', app: true, email: false, locked: false },
       { kind: 'NEW_EVENTS', app: true, email: false, locked: false },
       { kind: 'EDUCATION', app: true, email: false, locked: false },
       { kind: 'GUIDELINES', app: true, email: false, locked: false },
+      { kind: 'POSITIONS', app: true, email: false, locked: false },
     ]);
     expect(await list(p.token)).toMatchObject({ items: [], total: 0, unread: 0 });
   });

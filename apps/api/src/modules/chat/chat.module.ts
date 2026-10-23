@@ -15,6 +15,7 @@ import { ChatSettingsService } from './chat-settings.service';
 import { ChatStream } from './chat-stream';
 import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
+import { DirectConversations } from './direct-conversations';
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
 import { InvitationsService } from './invitations.service';
@@ -25,7 +26,8 @@ import { RoomsService } from './rooms.service';
 
 /**
  * Chat between members: private conversations (M11), rooms the association opens (M12), and
- * groups members make, invitations, activity and files in messages (M13).
+ * groups members make, invitations, activity and files in messages (M13). Other features open a
+ * private conversation between two people who agreed to it through DirectConversations (M28).
  */
 @Module({
   imports: [AccessModule, AuthModule, FilesModule, NotificationsModule, ProfilesModule],
@@ -53,6 +55,8 @@ import { RoomsService } from './rooms.service';
     ActivityService,
     ChatAccess,
     ChatStream,
+    DirectConversations,
   ],
+  exports: [DirectConversations],
 })
 export class ChatModule {}

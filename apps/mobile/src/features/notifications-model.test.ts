@@ -18,6 +18,14 @@ describe('where a notice leads', () => {
     expect(appRoute('/account/security')).toBe('/security');
   });
 
+  it('opens positions and mentorship inside the app (M28)', () => {
+    expect(appRoute('/positions/p1')).toBe('/positions/p1');
+    expect(appRoute('/positions/saved')).toBe('/positions/saved');
+    expect(appRoute('/mentorship')).toBe('/mentorship');
+    expect(appRoute('/mentorship/requests')).toBe('/mentorship/requests');
+    expect(appRoute('/admin/positions/p1')).toBeNull();
+  });
+
   it('leads nowhere for what the app does not have', () => {
     expect(appRoute(null)).toBeNull();
     expect(appRoute('/admin/news')).toBeNull();
