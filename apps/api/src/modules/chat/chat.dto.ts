@@ -289,13 +289,18 @@ export class ReportInputDto extends createZodDto(
       userId: z.uuid().optional(),
       /** The room being reported as such (M12). */
       roomId: z.uuid().optional(),
+      /** A post, or a comment, in a community (M25); its writer is the person reported. */
+      postId: z.uuid().optional(),
+      commentId: z.uuid().optional(),
       categoryId: z.uuid(),
       description: z.string().trim().max(2000).optional(),
     })
     .refine(
       (input) =>
-        [input.messageId, input.userId, input.roomId].filter((id) => id !== undefined).length === 1,
-      { message: 'name one thing: a message, a person or a room' },
+        [input.messageId, input.userId, input.roomId, input.postId, input.commentId].filter(
+          (id) => id !== undefined,
+        ).length === 1,
+      { message: 'name one thing: a message, a person, a room, a post or a comment' },
     ),
 ) {}
 
@@ -338,6 +343,16 @@ const reportSummary = z.strictObject({
   room: z.strictObject({ id: z.uuid(), nameHe: z.string(), nameEn: nullableString() }).nullable(),
   /** About a room as such (M12). */
   aboutRoom: z.boolean(),
+  /** The community post the report is about, or the post of the reported comment (M25). */
+  post: z
+    .strictObject({
+      id: z.uuid(),
+      communitySlug: z.string(),
+      title: z.string(),
+      /** About a comment on it, not the post itself. */
+      comment: z.boolean(),
+    })
+    .nullable(),
   createdAt: z.iso.datetime(),
   reviewedAt: z.iso.datetime().nullable(),
 });

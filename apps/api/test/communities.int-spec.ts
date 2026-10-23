@@ -248,6 +248,66 @@ describe('communities (integration)', () => {
     expect(rows).toHaveLength(1);
   });
 
+  it('takes a report about a comment to the staff queue, where it can be removed', async () => {
+    const writer = await person();
+    const reporter = await person();
+    const post = (await write(writer).expect(201)).body;
+    const said = (await comment(writer, post.id, { body: 'Rude words here.' }).expect(201)).body
+      .comments[0];
+    const categories = await h
+      .http()
+      .get('/api/v1/chat/report-categories')
+      .set(as(reporter))
+      .expect(200);
+    const report = await h
+      .http()
+      .post('/api/v1/chat/reports')
+      .set(as(reporter))
+      .send({ commentId: said.id, categoryId: categories.body.items[0].id })
+      .expect(201);
+    const seen = await h
+      .http()
+      .get(`/api/v1/admin/chat/reports/${report.body.id}`)
+      .set(as(admin))
+      .expect(200);
+    expect(seen.body).toMatchObject({
+      aboutMessage: false,
+      reported: { id: writer.id },
+      post: { id: post.id, communitySlug: community.slug, comment: true },
+    });
+    expect(seen.body.messages[0].body).toBe('Rude words here.');
+    await h
+      .http()
+      .post(`/api/v1/admin/chat/reports/${report.body.id}/resolve`)
+      .set(as(admin))
+      .send({ decision: 'deleteMessage', reason: 'Not respectful' })
+      .expect(200);
+    const after = await h.http().get(`/api/v1/posts/${post.id}`).set(as(reporter)).expect(200);
+    expect(after.body.comments[0]).toMatchObject({
+      removed: 'moderator',
+      removedReason: 'Not respectful',
+    });
+  });
+
+  it('finds posts by their text and their comments, for verified people only', async () => {
+    const writer = await person();
+    const word = `zebrafish${run}`;
+    const other = `quokka${run}`;
+    const post = (await write(writer, { body: `About ${word} models.` }).expect(201)).body;
+    await comment(writer, post.id, { body: `And ${other} too.` }).expect(201);
+    const search = (who: Person, q: string) =>
+      h.http().get('/api/v1/search').query({ q, types: 'posts' }).set(as(who)).expect(200);
+    const byText = await search(writer, word);
+    expect(byText.body.groups[0].items[0]).toMatchObject({
+      id: post.id,
+      link: `/communities/${community.slug}/${post.id}`,
+    });
+    const byComment = await search(writer, other);
+    expect(byComment.body.groups[0].items.map((i: { id: string }) => i.id)).toEqual([post.id]);
+    const unverified = await person(false);
+    expect((await search(unverified, word)).body.groups).toEqual([]);
+  });
+
   it('doesn’t tell someone about a person they blocked', async () => {
     const writer = await person();
     const follower = await person();

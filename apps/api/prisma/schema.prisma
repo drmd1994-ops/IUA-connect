@@ -2938,26 +2938,28 @@ enum PostKind {
 
 /// A post in a community: a question or a discussion, with its comments.
 model Post {
-  id              String    @id @db.Uuid
-  communityId     String    @map("community_id") @db.Uuid
+  id              String                   @id @db.Uuid
+  communityId     String                   @map("community_id") @db.Uuid
   /// Empty once the writer's account is gone.
-  authorId        String?   @map("author_id") @db.Uuid
-  kind            PostKind  @default(DISCUSSION)
-  title           String    @db.VarChar(200)
-  body            String    @db.VarChar(10000)
+  authorId        String?                  @map("author_id") @db.Uuid
+  kind            PostKind                 @default(DISCUSSION)
+  title           String                   @db.VarChar(200)
+  body            String                   @db.VarChar(10000)
   /// A question's comment its writer marked as the answer.
-  answerCommentId String?   @unique @map("answer_comment_id") @db.Uuid
-  editedAt        DateTime? @map("edited_at") @db.Timestamptz(6)
+  answerCommentId String?                  @unique @map("answer_comment_id") @db.Uuid
+  editedAt        DateTime?                @map("edited_at") @db.Timestamptz(6)
   /// Locked by a moderator: no more comments.
-  lockedAt        DateTime? @map("locked_at") @db.Timestamptz(6)
+  lockedAt        DateTime?                @map("locked_at") @db.Timestamptz(6)
   /// Removed by a moderator (a marker stays) or deleted by its writer; the text is cleared.
-  removedAt       DateTime? @map("removed_at") @db.Timestamptz(6)
-  removedBy       String?   @map("removed_by") @db.Uuid
-  removedReason   String?   @map("removed_reason") @db.VarChar(1000)
+  removedAt       DateTime?                @map("removed_at") @db.Timestamptz(6)
+  removedBy       String?                  @map("removed_by") @db.Uuid
+  removedReason   String?                  @map("removed_reason") @db.VarChar(1000)
   /// The newest comment's time, or the post's own: "latest activity" sorts by it.
-  activityAt      DateTime  @default(now()) @map("activity_at") @db.Timestamptz(6)
-  commentCount    Int       @default(0) @map("comment_count")
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  activityAt      DateTime                 @default(now()) @map("activity_at") @db.Timestamptz(6)
+  commentCount    Int                      @default(0) @map("comment_count")
+  /// Maintained by a trigger from the title and the text (Hebrew-normalised), for search.
+  searchVector    Unsupported("tsvector")? @map("search_vector")
+  createdAt       DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
 
   community Community      @relation(fields: [communityId], references: [id], onDelete: Cascade)
   author    User?          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
@@ -2972,6 +2974,7 @@ model Post {
   @@index([communityId, createdAt(sort: Desc)])
   @@index([communityId, activityAt(sort: Desc)])
   @@index([authorId])
+  @@index([searchVector], map: "posts_search_idx", type: Gin)
   @@map("posts")
 }
 
@@ -2992,16 +2995,18 @@ model PostFile {
 
 /// A comment on a post; a reply has the comment it answers (one level only).
 model PostComment {
-  id            String    @id @db.Uuid
-  postId        String    @map("post_id") @db.Uuid
-  parentId      String?   @map("parent_id") @db.Uuid
-  authorId      String?   @map("author_id") @db.Uuid
-  body          String    @db.VarChar(4000)
-  editedAt      DateTime? @map("edited_at") @db.Timestamptz(6)
-  removedAt     DateTime? @map("removed_at") @db.Timestamptz(6)
-  removedBy     String?   @map("removed_by") @db.Uuid
-  removedReason String?   @map("removed_reason") @db.VarChar(1000)
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  id            String                   @id @db.Uuid
+  postId        String                   @map("post_id") @db.Uuid
+  parentId      String?                  @map("parent_id") @db.Uuid
+  authorId      String?                  @map("author_id") @db.Uuid
+  body          String                   @db.VarChar(4000)
+  editedAt      DateTime?                @map("edited_at") @db.Timestamptz(6)
+  removedAt     DateTime?                @map("removed_at") @db.Timestamptz(6)
+  removedBy     String?                  @map("removed_by") @db.Uuid
+  removedReason String?                  @map("removed_reason") @db.VarChar(1000)
+  /// Maintained by a trigger from the text (Hebrew-normalised), for search.
+  searchVector  Unsupported("tsvector")? @map("search_vector")
+  createdAt     DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
 
   post      Post              @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
   parent    PostComment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
@@ -3014,6 +3019,7 @@ model PostComment {
   @@index([postId, createdAt])
   @@index([parentId])
   @@index([authorId])
+  @@index([searchVector], map: "post_comments_search_idx", type: Gin)
   @@map("post_comments")
 }
 
