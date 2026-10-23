@@ -1,6 +1,6 @@
 # M28: Jobs, fellowships and mentorship
 
-**Status: proposed on 2026-10-07; checked against the code and rewritten on 2026-10-23 (§0b). Not approved. Nothing of it is built.**
+**Status: approved by the owner on 2026-10-23 with the answers in §10. Proposed on 2026-10-07; checked against the code and rewritten on 2026-10-23 (§0b).**
 
 Track: Phase 2. Size: M to L (the app and the hosted demo are now part of every milestone). Needs first: nothing technical; the owner's answers in §9.
 
@@ -43,6 +43,7 @@ Hospitals, departments and organisations post jobs, fellowships and research pos
   - how to apply: a link or an email address, outside the platform;
   - a closing date.
 - **Posting:** platform staff, an organisation's staff for their organisation, and a department director for their own department. Every position is reviewed by someone else before it shows (§9 question 1).
+- **Who sees them:** everyone, visitors included (§10, answer 4). Saving a position needs a signed-in account.
 - **Search:** by kind, subspecialty, institution, city or country, and who it is for. Results are sorted by closing date, nearest first.
 - **Saving positions** to a person's own list.
 - **A notice for new positions:** a new switch in the notification settings, "New positions", for the app and for email. Off by default for email.
@@ -73,6 +74,7 @@ Hospitals, departments and organisations post jobs, fellowships and research pos
 ## 3. Rules
 
 - **A mentor is listed only by their own choice,** and can leave at any time. Leaving ends nothing that is already accepted.
+- **The mentor list is seen by verified people only,** since only they may ask (§10, answer 3). Visitors see positions, not mentors.
 - **A declined request is not explained,** and nobody else learns of it. Who asked whom is seen only by the two people.
 - **Requests:**
   - A mentee has at most 3 requests waiting at a time, and cannot write to the same mentor again for 30 days after a decline.
@@ -157,4 +159,11 @@ My recommendation for each is the first answer.
 
 ## 10. Owner answers
 
-None yet.
+Given on 2026-10-23, when the owner said "build M28" and answered the questions:
+
+1. **Posting:** platform staff, an organisation's staff for their organisation, and department directors for their own department, each position reviewed by a second person before it shows.
+2. **Abroad:** yes; an institution abroad is named as text, with its city and country.
+3. **Mentors:** verified specialists may mentor; any verified person may ask.
+4. **Who sees positions:** everyone, visitors included (not my recommendation, which was verified people only). The site and the app show them without signing in; saving one needs an account.
+5. **Demo data:** about 12 fictional positions at hospitals from the list, each marked "Sample position, not a real offer", and 6 fictional mentors among the demo people.
+6. **The numbers:** kept: 3 waiting requests per mentee, 30 days before asking the same mentor again after a decline, 30 days before an unanswered request closes.
