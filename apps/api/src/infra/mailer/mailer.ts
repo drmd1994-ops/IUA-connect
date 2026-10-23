@@ -31,6 +31,8 @@ export interface EmailTemplates {
   // Education (M6), to the item's or question's author.
   educationSentBack: { title: string; reason: string; link: string };
   educationPublished: { title: string; link: string };
+  // The question bank (M23): a reviewer dealt with the reader's report; "reason" is their answer.
+  examReportHandled: { title: string; reason: string; link: string };
   // Events (M5), to people registered for the event. "when" is formatted for the recipient.
   eventRegistered: { title: string; when: string; link: string };
   eventWaitlisted: { title: string; link: string };

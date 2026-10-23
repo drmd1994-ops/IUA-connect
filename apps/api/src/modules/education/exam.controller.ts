@@ -19,6 +19,7 @@ import {
   ApiHeader,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiProduces,
   ApiTags,
 } from '@nestjs/swagger';
 import { type Response } from 'express';
@@ -40,6 +41,9 @@ import {
   AdminExamQuestionListQueryDto,
   AnswerInputDto,
   AnswerResultDto,
+  ExamBookmarkListDto,
+  ExamImportInputDto,
+  ExamImportResultDto,
   ExamQuestionInputDto,
   ExamResultsDto,
   ExamResultsQueryDto,
@@ -47,6 +51,7 @@ import {
   NextQuestionQueryDto,
 } from './exam.dto';
 import { ExamAdminService } from './exam-admin.service';
+import { importTemplate } from './exam-import';
 import { ExamPracticeService } from './exam-practice.service';
 
 /**
@@ -76,6 +81,28 @@ export class ExamAdminController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<AdminExamQuestionDto> {
     return withEtag(res, await this.questions.create(body, principalOf(req), meta));
+  }
+
+  /** The import spreadsheet's empty template (CSV, UTF-8 with a byte-order mark for Excel). */
+  @Get('import-template')
+  @ApiProduces('text/csv')
+  @ApiOkResponse({ schema: { type: 'string' } })
+  template(@Res({ passthrough: true }) res: Response): string {
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="exam-questions-template.csv"');
+    return importTemplate();
+  }
+
+  /** Makes a draft of every question in the spreadsheet, or refuses the file whole. */
+  @Post('import')
+  @HttpCode(200)
+  @ApiOkResponse({ type: ExamImportResultDto })
+  import(
+    @Req() req: RequestWithPrincipal,
+    @Body() body: ExamImportInputDto,
+    @Meta() meta: RequestMeta,
+  ): Promise<ExamImportResultDto> {
+    return this.questions.import(body.csv, principalOf(req), meta);
   }
 
   @Get(':id')
@@ -192,5 +219,43 @@ export class ExamResultsController {
     @Query() query: ExamResultsQueryDto,
   ): Promise<ExamResultsDto> {
     return this.practice.results(principalOf(req), query.locale);
+  }
+}
+
+/** The signed-in person's bookmarked questions (M23). Nobody else can read them. */
+@ApiTags('me')
+@ApiBearerAuth()
+@Controller('me/exam-bookmarks')
+@Authenticated()
+export class ExamBookmarksController {
+  constructor(private readonly practice: ExamPracticeService) {}
+
+  @Get()
+  @ApiOkResponse({ type: ExamBookmarkListDto })
+  list(
+    @Req() req: RequestWithPrincipal,
+    @Query() query: ExamResultsQueryDto,
+  ): Promise<ExamBookmarkListDto> {
+    return this.practice.bookmarks(principalOf(req), query.locale);
+  }
+
+  @Put(':questionId')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  add(
+    @Req() req: RequestWithPrincipal,
+    @Param('questionId', new ParseUUIDPipe()) questionId: string,
+  ): Promise<void> {
+    return this.practice.bookmark(principalOf(req), questionId);
+  }
+
+  @Delete(':questionId')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  remove(
+    @Req() req: RequestWithPrincipal,
+    @Param('questionId', new ParseUUIDPipe()) questionId: string,
+  ): Promise<void> {
+    return this.practice.unbookmark(principalOf(req), questionId);
   }
 }

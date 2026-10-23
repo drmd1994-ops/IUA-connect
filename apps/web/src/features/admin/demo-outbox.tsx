@@ -111,7 +111,7 @@ export function DemoOutboxPage() {
         (list.items.length === 0 ? (
           <p className="text-text-muted">{o('empty')}</p>
         ) : (
-          <div className="overflow-x-auto rounded-md border border-border">
+          <div className="relative overflow-x-auto rounded-md border border-border">
             <table className="w-full text-sm" data-testid="demo-outbox-table">
               <thead className="bg-surface-muted">
                 <tr>

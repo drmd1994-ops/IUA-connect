@@ -60,3 +60,78 @@ export function score(answers: readonly AnswerRecord[]): {
     percent: answered === 0 ? null : Math.round((correct / answered) * 100),
   };
 }
+
+export interface QuestionReference {
+  title: string;
+  url?: string;
+}
+
+/** The references stored on a question (JSON), as shown. Anything malformed is left out. */
+export function referencesOf(value: unknown): QuestionReference[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item: unknown) => {
+    if (!item || typeof item !== 'object') return [];
+    const { title, url } = item as Record<string, unknown>;
+    if (typeof title !== 'string' || !title) return [];
+    return [typeof url === 'string' && url ? { title, url } : { title }];
+  });
+}
+
+/** "Reviewed by … on …", from the columns the publish step fills; null before it is published. */
+export function reviewerView(row: {
+  reviewerNameHe: string | null;
+  reviewerNameEn: string | null;
+  reviewedAt: Date | null;
+}): { nameHe: string | null; nameEn: string | null; at: string } | null {
+  if (!row.reviewedAt) return null;
+  return {
+    nameHe: row.reviewerNameHe,
+    nameEn: row.reviewerNameEn,
+    at: row.reviewedAt.toISOString(),
+  };
+}
+
+/** Practice leaves out a question the person answered right within this many days (M23 §2). */
+export const RIGHT_RECENTLY_DAYS = 30;
+
+/**
+ * "The ones I got wrong": the questions whose latest answer was wrong. Answering one right later
+ * takes it off the list.
+ */
+export function wrongNow(
+  answers: readonly { questionId: string; correct: boolean; at: Date }[],
+): string[] {
+  const latest = new Map<string, { correct: boolean; at: Date }>();
+  for (const answer of answers) {
+    const seen = latest.get(answer.questionId);
+    if (!seen || answer.at > seen.at) latest.set(answer.questionId, answer);
+  }
+  return [...latest].filter(([, answer]) => !answer.correct).map(([questionId]) => questionId);
+}
+
+/** Staff see no number about a question until at least this many people answered it (M23). */
+export const STATISTICS_FROM = 5;
+
+/**
+ * How people answered a question, from first answers (one per person). Below STATISTICS_FROM
+ * people every number is withheld, so nobody's answer can be worked out.
+ */
+export function questionStatistics(
+  firstAnswers: readonly { position: number; correct: boolean }[],
+  optionPositions: readonly number[],
+): {
+  answered: number | null;
+  percentCorrect: number | null;
+  options: { position: number; chosen: number | null }[];
+} {
+  const enough = firstAnswers.length >= STATISTICS_FROM;
+  const correct = firstAnswers.filter((answer) => answer.correct).length;
+  return {
+    answered: enough ? firstAnswers.length : null,
+    percentCorrect: enough ? Math.round((correct / firstAnswers.length) * 100) : null,
+    options: optionPositions.map((position) => ({
+      position,
+      chosen: enough ? firstAnswers.filter((answer) => answer.position === position).length : null,
+    })),
+  };
+}

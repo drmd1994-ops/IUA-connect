@@ -1,0 +1,524 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "תינוק עם אשך טמיר חד־צדדי שאינו יורד עד גיל 6 חודשים. מתי מומלץ לבצע קיבוע אשך (אורכידופקסיה)?",
+      "summary": "אשך שלא ירד עד גיל 6 חודשים כמעט לא יירד מעצמו. מומלץ לנתח בין גיל 6 ל־12 חודשים, ולכל המאוחר עד גיל 18 חודשים, כדי לשמור על הפוריות ולהפחית את הסיכון לגידול, ולאפשר בדיקה עצמית בעתיד."
+    },
+    "en": {
+      "stem": "An infant has a unilateral undescended testis that has not come down by 6 months. When is orchidopexy recommended?",
+      "summary": "A testis that has not descended by 6 months will hardly ever come down by itself. Surgery is recommended between 6 and 12 months of age, and by 18 months at the latest, to protect fertility, lower the risk of tumour and allow self-examination later."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בין 6 ל־12 חודשים, ולכל המאוחר עד 18 חודשים",
+          "explanation": "נכון. ניתוח מוקדם מיטיב עם התפתחות האשך."
+        },
+        "en": {
+          "text": "Between 6 and 12 months, and by 18 months at the latest",
+          "explanation": "Right. Early surgery benefits testicular development."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רק לפני הכניסה לבית הספר",
+          "explanation": "שגוי. המתנה עד גיל זה פוגעת בפוריות."
+        },
+        "en": {
+          "text": "Only before starting school",
+          "explanation": "Wrong. Waiting until then harms fertility."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "בגיל ההתבגרות", "explanation": "שגוי. בגיל זה הנזק לאשך כבר נגרם." },
+        "en": {
+          "text": "At puberty",
+          "explanation": "Wrong. By then the damage to the testis has been done."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מיד בלידה",
+          "explanation": "שגוי. בחודשים הראשונים האשך עוד יכול לרדת מעצמו."
+        },
+        "en": {
+          "text": "Right after birth",
+          "explanation": "Wrong. In the first months the testis may still descend by itself."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "לפעוט אשך שאינו נמוש בצד אחד. מהי הבדיקה הנכונה לאיתור האשך?",
+      "summary": "באשך שאינו נמוש, אולטרסאונד או MRI לפני הניתוח אינם משנים את הטיפול ואינם מומלצים. בדיקה בהרדמה ולפרוסקופיה אבחנתית מאתרות את האשך (בבטן, בתעלה או היעדרו) ומאפשרות טיפול באותה פעולה."
+    },
+    "en": {
+      "stem": "A toddler has a non-palpable testis on one side. What is the right test to find the testis?",
+      "summary": "For a non-palpable testis, ultrasound or MRI before surgery does not change management and is not recommended. Examination under anaesthesia and diagnostic laparoscopy find the testis (in the abdomen, in the canal, or absent) and allow treatment in the same procedure."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בדיקה בהרדמה ולפרוסקופיה אבחנתית",
+          "explanation": "נכון. זו הדרך המדויקת והיא מאפשרת טיפול מיידי."
+        },
+        "en": {
+          "text": "Examination under anaesthesia and diagnostic laparoscopy",
+          "explanation": "Right. It is accurate and allows treatment at once."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אולטרסאונד של המפשעה והבטן",
+          "explanation": "שגוי. אולטרסאונד מפספס אשכים בבטן ואינו משנה את הטיפול."
+        },
+        "en": {
+          "text": "Ultrasound of the groin and abdomen",
+          "explanation": "Wrong. Ultrasound misses abdominal testes and does not change management."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "CT של הבטן", "explanation": "שגוי. CT חושף את הילד לקרינה בלי תועלת." },
+        "en": {
+          "text": "Abdominal CT",
+          "explanation": "Wrong. CT exposes the child to radiation without benefit."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מעקב עד גיל ההתבגרות",
+          "explanation": "שגוי. אין להמתין; יש לאתר ולטפל מוקדם."
+        },
+        "en": {
+          "text": "Follow-up until puberty",
+          "explanation": "Wrong. Do not wait; find and treat early."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "מהי הסיבה השכיחה ביותר לחסימה מולדת של דרכי השתן התחתונות בבנים?",
+      "summary": "מסתמי שופכה אחוריים הם הסיבה השכיחה ביותר לחסימה מולדת של דרכי השתן התחתונות בבנים. בהיריון רואים הידרונפרוזיס דו־צדדי ושלפוחית מעובה; האבחנה מאושרת ב־VCUG, והטיפול הוא כריתה אנדוסקופית של המסתמים ומעקב ממושך אחרי תפקוד הכליות והשלפוחית."
+    },
+    "en": {
+      "stem": "What is the most common cause of congenital lower urinary tract obstruction in boys?",
+      "summary": "Posterior urethral valves are the most common cause of congenital lower urinary tract obstruction in boys. Pregnancy scans show bilateral hydronephrosis and a thick-walled bladder; VCUG confirms the diagnosis, and treatment is endoscopic valve ablation with long follow-up of kidney and bladder function."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "מסתמי שופכה אחוריים", "explanation": "נכון. זו הסיבה השכיחה ביותר." },
+        "en": {
+          "text": "Posterior urethral valves",
+          "explanation": "Right. This is the most common cause."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היצרות בקצה השופכה (meatal stenosis)",
+          "explanation": "שגוי. היצרות כזו נרכשת לרוב, ואינה גורמת לחסימה מולדת קשה."
+        },
+        "en": {
+          "text": "Meatal stenosis",
+          "explanation": "Wrong. It is usually acquired and does not cause severe congenital obstruction."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חסימה במעבר בין האגן לשופכן",
+          "explanation": "שגוי. זו חסימה של דרכי השתן העליונות, לא התחתונות."
+        },
+        "en": {
+          "text": "Pelvi-ureteric junction obstruction",
+          "explanation": "Wrong. That obstructs the upper tract, not the lower."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פימוזיס",
+          "explanation": "שגוי. פימוזיס אינו גורם לחסימה מולדת של דרכי השתן."
+        },
+        "en": {
+          "text": "Phimosis",
+          "explanation": "Wrong. Phimosis does not cause congenital urinary obstruction."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "לתינוק יש היפוספדיאס. מדוע אין לבצע ברית מילה לפני הניתוח לתיקון?",
+      "summary": "בתיקון היפוספדיאס משתמשים לעיתים קרובות בעורלה כרקמה לשחזור השופכה או לכיסוי. לכן דוחים את ברית המילה עד להחלטה של האורולוג. הניתוח מבוצע לרוב בגיל 6 עד 18 חודשים."
+    },
+    "en": {
+      "stem": "A baby has hypospadias. Why should circumcision not be done before the repair?",
+      "summary": "Hypospadias repair often uses the foreskin as tissue to rebuild the urethra or for coverage. Circumcision is therefore deferred until the urologist decides. The repair is usually done between 6 and 18 months of age."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "העורלה עשויה לשמש רקמה לתיקון",
+          "explanation": "נכון. שימור העורלה חשוב לשחזור."
+        },
+        "en": {
+          "text": "The foreskin may be needed as tissue for the repair",
+          "explanation": "Right. Keeping the foreskin matters for the reconstruction."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ברית מילה מעלה את הסיכון לזיהום בכליות",
+          "explanation": "שגוי. זו אינה הסיבה לדחייה."
+        },
+        "en": {
+          "text": "Circumcision raises the risk of kidney infection",
+          "explanation": "Wrong. That is not why it is deferred."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ברית מילה תמיד מתקנת את ההיפוספדיאס",
+          "explanation": "שגוי. ברית מילה אינה מתקנת את מיקום פתח השופכה."
+        },
+        "en": {
+          "text": "Circumcision always corrects the hypospadias",
+          "explanation": "Wrong. Circumcision does not correct the position of the urethral opening."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין כל מגבלה, אפשר לבצע ברית מילה כרגיל",
+          "explanation": "שגוי. ברית מילה מוקדמת עלולה לפגוע בתיקון."
+        },
+        "en": {
+          "text": "There is no limit; circumcision can be done as usual",
+          "explanation": "Wrong. Early circumcision may compromise the repair."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "SIOP Renal Tumour Study Group (UMBRELLA protocol)" }],
+    "he": {
+      "stem": "מהו גידול הכליה השכיח ביותר בילדים?",
+      "summary": "נפרובלסטומה (גידול וילמס) היא גידול הכליה השכיח ביותר בילדים, לרוב מתחת לגיל 5. הוא מתגלה בדרך כלל כגוש בבטן שהורים מוצאים. הטיפול משלב כימותרפיה וניתוח, והסיכוי לריפוי גבוה."
+    },
+    "en": {
+      "stem": "What is the most common kidney tumour in children?",
+      "summary": "Nephroblastoma (Wilms tumour) is the most common kidney tumour in children, usually under 5 years old. It is typically found as an abdominal mass noticed by the parents. Treatment combines chemotherapy and surgery, and the chance of cure is high."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "נפרובלסטומה (גידול וילמס)",
+          "explanation": "נכון. זהו גידול הכליה השכיח ביותר בילדות."
+        },
+        "en": {
+          "text": "Nephroblastoma (Wilms tumour)",
+          "explanation": "Right. It is the most common childhood kidney tumour."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קרצינומה של תאי הכליה",
+          "explanation": "שגוי. גידול זה שכיח במבוגרים, נדיר בילדים."
+        },
+        "en": {
+          "text": "Renal cell carcinoma",
+          "explanation": "Wrong. It is common in adults and rare in children."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "נוירובלסטומה",
+          "explanation": "שגוי. נוירובלסטומה מקורה בדרך כלל ביותרת הכליה, לא בכליה."
+        },
+        "en": {
+          "text": "Neuroblastoma",
+          "explanation": "Wrong. Neuroblastoma usually arises in the adrenal gland, not the kidney."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנגיומיוליפומה",
+          "explanation": "שגוי. גידול שפיר זה קשור לטרשת גבשושית, ואינו השכיח בילדים."
+        },
+        "en": {
+          "text": "Angiomyolipoma",
+          "explanation": "Wrong. This benign tumour is linked to tuberous sclerosis and is not the most common in children."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "לתינוק עם הידרונפרוזיס בצד שמאל בשל חשד לחסימה במעבר אגן־שופכן. מה מצדיק ניתוח פיילופלסטיקה?",
+      "summary": "ברוב התינוקות עם הידרונפרוזיס על רקע חסימה במעבר אגן־שופכן, המצב משתפר במעקב. מיפוי כליות (MAG3) מעריך את הניקוז ואת התפקוד היחסי. ניתוח מוצדק כשהתפקוד היחסי נמוך מ־40%, יורד במעקב, או כשיש תסמינים או הרחבה מחמירה."
+    },
+    "en": {
+      "stem": "A baby has left hydronephrosis from suspected pelvi-ureteric junction obstruction. What justifies pyeloplasty?",
+      "summary": "In most babies with hydronephrosis from pelvi-ureteric junction obstruction, the condition improves on follow-up. A MAG3 renogram assesses drainage and split function. Surgery is justified when split function is below 40%, falls on follow-up, or when there are symptoms or worsening dilation."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "תפקוד יחסי של הכליה מתחת ל־40% או ירידה בתפקוד במעקב",
+          "explanation": "נכון. אלה הוריות מקובלות לניתוח."
+        },
+        "en": {
+          "text": "A split function below 40%, or falling function on follow-up",
+          "explanation": "Right. These are accepted indications for surgery."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כל הידרונפרוזיס שנראה באולטרסאונד",
+          "explanation": "שגוי. רוב המקרים משתפרים בלי ניתוח."
+        },
+        "en": {
+          "text": "Any hydronephrosis seen on ultrasound",
+          "explanation": "Wrong. Most cases improve without surgery."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הורים שמעדיפים ניתוח",
+          "explanation": "שגוי. ההחלטה מבוססת על נתונים קליניים, אם כי ההורים שותפים לה."
+        },
+        "en": {
+          "text": "Parents who prefer surgery",
+          "explanation": "Wrong. The decision rests on clinical data, though parents share it."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קוטר אגן של 10 מ״מ בבדיקה אחת",
+          "explanation": "שגוי. מדידה בודדת אינה מספיקה כהוריה לניתוח."
+        },
+        "en": {
+          "text": "A pelvic diameter of 10 mm on one scan",
+          "explanation": "Wrong. One measurement is not enough to indicate surgery."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      { "title": "EAU Guidelines on Paediatric Urology" },
+      { "title": "International Children's Continence Society (ICCS) recommendations" }
+    ],
+    "he": {
+      "stem": "ילד בן 8 עם הרטבת לילה חד־סימפטומטית מתחיל טיפול בדסמופרסין. מה חשוב להנחות את המשפחה?",
+      "summary": "דסמופרסין מפחית את ייצור השתן בלילה. כדי למנוע היפונתרמיה והרעלת מים, יש להגביל שתייה משעה לפני המנה ועד הבוקר. הטיפול הראשון האחר הוא שעון מעורר להרטבה; שניהם יעילים."
+    },
+    "en": {
+      "stem": "An 8-year-old with monosymptomatic nocturnal enuresis starts desmopressin. What must the family be told?",
+      "summary": "Desmopressin reduces urine production at night. To prevent hyponatraemia and water intoxication, fluids are limited from an hour before the dose until morning. The other first-line treatment is an enuresis alarm; both are effective."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "להגביל שתייה משעה לפני המנה ועד הבוקר",
+          "explanation": "נכון. כך נמנעת היפונתרמיה."
+        },
+        "en": {
+          "text": "Limit fluids from an hour before the dose until morning",
+          "explanation": "Right. This prevents hyponatraemia."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "להגביר שתייה בערב",
+          "explanation": "שגוי. שתייה מרובה עם דסמופרסין מסוכנת."
+        },
+        "en": {
+          "text": "Drink more in the evening",
+          "explanation": "Wrong. Drinking a lot with desmopressin is dangerous."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "לתת את התרופה בבוקר",
+          "explanation": "שגוי. התרופה ניתנת לפני השינה, כשהמטרה היא הלילה."
+        },
+        "en": {
+          "text": "Give the drug in the morning",
+          "explanation": "Wrong. It is given at bedtime, since the aim is the night."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "להעיר את הילד כל שעה בלילה",
+          "explanation": "שגוי. העירות תכופות אינן חלק מהטיפול ופוגעות בשינה."
+        },
+        "en": {
+          "text": "Wake the child every hour at night",
+          "explanation": "Wrong. Frequent waking is not part of treatment and disrupts sleep."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "בסקירת היריון נמצא הידרונפרוזיס חד־צדדי בעובר. מתי מומלץ לבצע את האולטרסאונד הראשון אחרי הלידה (כשאין סימני חסימה של דרכי השתן התחתונות)?",
+      "summary": "בימים הראשונים אחרי הלידה התינוק מיובש יחסית וזרימת השתן נמוכה, ולכן אולטרסאונד מוקדם עלול להמעיט בהרחבה. כשאין חשד לחסימה תחתונה, מבצעים את הבדיקה הראשונה אחרי 48 שעות מהלידה. בחשד למסתמי שופכה אחוריים בודקים מיד."
+    },
+    "en": {
+      "stem": "A pregnancy scan shows unilateral hydronephrosis in the fetus. When should the first ultrasound after birth be done (with no sign of lower tract obstruction)?",
+      "summary": "In the first days after birth the baby is relatively dehydrated and urine flow is low, so an early ultrasound may underestimate dilation. Without suspected lower tract obstruction, the first scan is done after 48 hours of life. If posterior urethral valves are suspected, the scan is done at once."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אחרי 48 שעות מהלידה",
+          "explanation": "נכון. בדיקה מוקדמת יותר עלולה להטעות."
+        },
+        "en": {
+          "text": "After 48 hours of life",
+          "explanation": "Right. An earlier scan may mislead."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בשעות הראשונות אחרי הלידה",
+          "explanation": "שגוי. ההרחבה עלולה להיראות קטנה מכפי שהיא."
+        },
+        "en": {
+          "text": "In the first hours after birth",
+          "explanation": "Wrong. Dilation may look smaller than it is."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רק בגיל שנה",
+          "explanation": "שגוי. עיכוב כזה עלול להחמיץ חסימה משמעותית."
+        },
+        "en": {
+          "text": "Only at one year of age",
+          "explanation": "Wrong. Such a delay may miss significant obstruction."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין צורך באולטרסאונד אחרי הלידה",
+          "explanation": "שגוי. כל הידרונפרוזיס עוברי מחייב מעקב אחרי הלידה."
+        },
+        "en": {
+          "text": "No ultrasound is needed after birth",
+          "explanation": "Wrong. Any fetal hydronephrosis needs postnatal follow-up."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Paediatric Urology" }],
+    "he": {
+      "stem": "לילד בן 3 עורלה שאינה נסוגה, בלי תסמינים, בלי זיהומים ובלי צלקת. מהי הגישה הנכונה?",
+      "summary": "בילדים צעירים, עורלה צמודה שאינה נסוגה היא לרוב פיזיולוגית ונפתחת עם הזמן. אין צורך בטיפול כשאין תסמינים. כשיש תסמינים או צורך, משחה של סטרואיד מקומי לכמה שבועות יעילה ברוב המקרים; ניתוח שמור למקרים עמידים או לפימוזיס על רקע צלקת."
+    },
+    "en": {
+      "stem": "A 3-year-old boy has a non-retractable foreskin, with no symptoms, no infections and no scarring. What is the right approach?",
+      "summary": "In young children, a non-retractable foreskin is usually physiological and loosens with time. No treatment is needed without symptoms. When there are symptoms or a need, a topical steroid cream for a few weeks works in most cases; surgery is kept for refractory cases or scarred (pathological) phimosis."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "הרגעה ומעקב; זה מצב פיזיולוגי",
+          "explanation": "נכון. בגיל זה אין צורך בטיפול כשאין תסמינים."
+        },
+        "en": {
+          "text": "Reassurance and follow-up; it is physiological",
+          "explanation": "Right. At this age no treatment is needed without symptoms."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "משיכה בכוח של העורלה במרפאה",
+          "explanation": "שגוי. משיכה בכוח גורמת לסדקים ולצלקת."
+        },
+        "en": {
+          "text": "Forceful retraction in clinic",
+          "explanation": "Wrong. Forceful retraction causes tears and scarring."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "ברית מילה דחופה", "explanation": "שגוי. אין הוריה דחופה במצב פיזיולוגי." },
+        "en": {
+          "text": "Urgent circumcision",
+          "explanation": "Wrong. There is no urgent indication in a physiological state."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה מונעת",
+          "explanation": "שגוי. אין זיהום ואין צורך באנטיביוטיקה."
+        },
+        "en": {
+          "text": "Preventive antibiotics",
+          "explanation": "Wrong. There is no infection and no need for antibiotics."
+        }
+      }
+    ]
+  }
+]

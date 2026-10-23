@@ -29,6 +29,7 @@ import { seedDemoEducation } from './demo-education';
 import { seedDemoEvents } from './demo-events';
 import { seedDemoGroups } from './demo-groups';
 import { seedDemoNotifications } from './demo-notifications';
+import { seedStarterQuestions } from './demo-question-bank';
 import { seedDemoPortal } from './demo-portal';
 import { seedDemoVerification } from './demo-verification';
 import { seedDemoRooms } from './demo-rooms';
@@ -58,6 +59,9 @@ const LAYERS: SeedLayer[] = [
       await seedDemoVerification(prisma);
     },
   },
+  // The question bank's starter set, waiting for review (M23). Its own layer, so the hosted demo
+  // can add it to a database seeded before M23 (SEED_LAYERS=question-bank).
+  { name: 'question-bank', milestone: 'M23', run: seedStarterQuestions },
 ];
 
 async function main(): Promise<void> {

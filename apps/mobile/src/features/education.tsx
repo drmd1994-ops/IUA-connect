@@ -20,6 +20,7 @@ import {
   stateAfterNext,
 } from './exam-model';
 import { useFileUrl } from './files';
+import { AnswerSources, BookmarkButton, ReportQuestion } from './question-bank';
 import { useLocalName, useSubspecialties } from './reference';
 import { useGuest } from './visitor';
 
@@ -30,6 +31,10 @@ type Detail = Schemas['PublicEducationDto'];
 type Question = NonNullable<Schemas['NextQuestionDto']['question']>;
 type Result = Schemas['AnswerResultDto'];
 type Results = Schemas['ExamResultsDto'];
+type Progress = Schemas['ExamProgressDto'];
+type Bookmarks = Schemas['ExamBookmarkListDto']['items'];
+type Reports = Schemas['MyExamReportListDto']['items'];
+type PracticeSet = 'all' | 'bookmarks' | 'wrong';
 type Level = NonNullable<Item['level']>;
 
 const PAGE_SIZE = 10;
@@ -45,6 +50,7 @@ const TYPES: Item['type'][] = [
   'COURSE',
 ];
 const LEVELS: Level[] = ['STUDENT', 'RESIDENT', 'FELLOW', 'SPECIALIST', 'EXPERT'];
+const SETS: PracticeSet[] = ['all', 'bookmarks', 'wrong'];
 const open = (url: string) => void Linking.openURL(url).catch(() => undefined);
 
 /** The filters the library and exam practice share: by level and by subspecialty. */
@@ -365,7 +371,9 @@ export function EducationItem({ slug }: { slug: string }) {
 
 /**
  * Exam practice: one multiple-choice question; after the reader answers, the right answer, why
- * each option is right or wrong, and a short summary of the topic.
+ * each option is right or wrong, and a short summary of the topic. A signed-in reader (M23) also
+ * practises their bookmarks or the ones they got wrong, bookmarks a question, and reports one;
+ * questions they answered right in the last 30 days are left out.
  */
 export function ExamPractice() {
   const { guest } = useGuest();
@@ -377,6 +385,8 @@ export function ExamPractice() {
   const { request } = useSession();
   const [subspecialty, setSubspecialty] = useState('');
   const [level, setLevel] = useState<Level | ''>('');
+  const [practiceSet, setPracticeSet] = useState<PracticeSet>('all');
+  const [leftOut, setLeftOut] = useState(0);
   /** Questions already asked in this visit; a change of filters starts again. */
   const [seen, setSeen] = useState<string[]>([]);
   const [question, setQuestion] = useState<Question | null>(null);
@@ -395,12 +405,14 @@ export function ExamPractice() {
       locale,
       ...(subspecialty ? { subspecialty } : {}),
       ...(level ? { level } : {}),
+      ...(!guest && practiceSet !== 'all' ? { set: practiceSet } : {}),
       ...(ask.exclude ? { exclude: ask.exclude } : {}),
     });
-    request<{ question: Question | null }>(`/api/v1/exam-questions/next?${query.toString()}`)
+    request<Schemas['NextQuestionDto']>(`/api/v1/exam-questions/next?${query.toString()}`)
       .then((next) => {
         if (!active) return;
         setQuestion(next.question);
+        setLeftOut(next.leftOutRecentlyRight);
         setChosen(null);
         setResult(null);
         setError(null);
@@ -410,7 +422,7 @@ export function ExamPractice() {
     return () => {
       active = false;
     };
-  }, [request, locale, subspecialty, level, ask]);
+  }, [request, locale, subspecialty, level, practiceSet, guest, ask]);
 
   function restart(change: () => void) {
     change();
@@ -452,7 +464,14 @@ export function ExamPractice() {
       {guest ? (
         <Notice>{e('signInNote')}</Notice>
       ) : (
-        <Button label={e('results')} variant="link" onPress={() => router.push('/exam-results')} />
+        <>
+          <Button label={e('mockLink')} variant="link" onPress={() => router.push('/mock-exam')} />
+          <Button
+            label={e('progressLink')}
+            variant="link"
+            onPress={() => router.push('/exam-results')}
+          />
+        </>
       )}
       <LevelAndSubspecialty
         level={level}
@@ -466,6 +485,17 @@ export function ExamPractice() {
           allSubspecialties: e('allSubspecialties'),
         }}
       />
+      {!guest && (
+        <Choices<PracticeSet>
+          label={e('set')}
+          value={practiceSet}
+          onChange={(value) => restart(() => setPracticeSet(value))}
+          options={SETS.map((value) => ({ value, label: e(`sets.${value}`) }))}
+        />
+      )}
+      {!guest && practiceSet === 'all' && leftOut > 0 && (
+        <Body muted>{e('leftOut', { count: leftOut })}</Body>
+      )}
       {visit.answered > 0 && (
         <Text style={styles.meta} accessibilityLiveRegion="polite">
           {e('score', visit)}
@@ -473,7 +503,9 @@ export function ExamPractice() {
       )}
       {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
       {state === 'loading' && error === null && <Body muted>{m('loading')}</Body>}
-      {state === 'none' && <Body muted>{e('none')}</Body>}
+      {state === 'none' && (
+        <Body muted>{practiceSet === 'all' ? e('none') : e(`noneIn.${practiceSet}`)}</Body>
+      )}
       {state === 'done' && (
         <>
           <Notice tone="success">{e('noMore')}</Notice>
@@ -483,8 +515,18 @@ export function ExamPractice() {
 
       {question && (state === 'asking' || state === 'answered') && (
         <Card>
-          <Heading>{e('question')}</Heading>
+          <Heading>
+            {question.difficulty
+              ? `${e('question')} · ${e(`difficulty.${question.difficulty}`)}`
+              : e('question')}
+          </Heading>
           <Text style={styles.stem}>{question.stem}</Text>
+          {!guest && (
+            <BookmarkButton
+              questionId={question.id}
+              initial={result?.bookmarked ?? question.bookmarked}
+            />
+          )}
           {state === 'asking' && (
             <>
               <View
@@ -551,6 +593,7 @@ export function ExamPractice() {
                   <Text style={styles.body}>{result.summary}</Text>
                 </>
               ) : null}
+              <AnswerSources references={result.references} reviewer={result.reviewer} />
               {note && <Body muted>{e(note)}</Body>}
               <Button
                 label={e('next')}
@@ -559,6 +602,7 @@ export function ExamPractice() {
                   setAsk((current) => ({ turn: current.turn + 1, exclude: seen.join(',') }));
                 }}
               />
+              {!guest && <ReportQuestion key={question.id} questionId={question.id} />}
             </>
           )}
         </Card>
@@ -567,7 +611,10 @@ export function ExamPractice() {
   );
 }
 
-/** The reader's own results. Only they see them; the first answer to each question counts. */
+/**
+ * The reader's own results and progress (M6, M23): by topic and by week from first answers, the
+ * weak topics, bookmarks and reports. Only they see them; the first answer to each question counts.
+ */
 export function ExamResults() {
   const all = useTranslations();
   const t = useTranslations('education.results');
@@ -577,17 +624,47 @@ export function ExamResults() {
   const router = useRouter();
   const { request } = useSession();
   const [results, setResults] = useState<Results | null>(null);
+  const [progress, setProgress] = useState<Progress | null>(null);
+  const [bookmarks, setBookmarks] = useState<Bookmarks>([]);
+  const [reports, setReports] = useState<Reports>([]);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
     let active = true;
-    request<Results>(`/api/v1/me/exam-results?locale=${locale}`)
-      .then((result) => active && setResults(result))
+    Promise.all([
+      request<Progress>('/api/v1/me/exam-progress'),
+      request<Results>(`/api/v1/me/exam-results?locale=${locale}`),
+      request<{ items: Bookmarks }>(`/api/v1/me/exam-bookmarks?locale=${locale}`),
+      request<{ items: Reports }>(`/api/v1/me/exam-reports?locale=${locale}`),
+    ])
+      .then(([progressResult, resultsResult, bookmarksResult, reportsResult]) => {
+        if (!active) return;
+        setProgress(progressResult);
+        setResults(resultsResult);
+        setBookmarks(bookmarksResult.items);
+        setReports(reportsResult.items);
+      })
       .catch((caught: unknown) => active && setError(caught));
     return () => {
       active = false;
     };
   }, [request, locale]);
+
+  async function unbookmark(questionId: string) {
+    try {
+      await request(`/api/v1/me/exam-bookmarks/${encodeURIComponent(questionId)}`, {
+        method: 'DELETE',
+      });
+      setBookmarks((current) => current.filter((item) => item.questionId !== questionId));
+    } catch (caught) {
+      setError(caught);
+    }
+  }
+
+  const topicName = (topic: Progress['topics'][number]) =>
+    (locale === 'he' ? topic.nameHe : topic.nameEn) ?? t('noTopic');
+  const weak = progress?.topics.filter((topic) => topic.weak) ?? [];
+  const answeredTopics = progress?.topics.filter((topic) => topic.answered > 0) ?? [];
 
   return (
     <Screen>
@@ -602,6 +679,7 @@ export function ExamResults() {
           <Button label={t('practise')} onPress={() => router.replace('/exam')} />
         </>
       )}
+      <Button label={t('mock')} variant="link" onPress={() => router.push('/mock-exam')} />
       {results && results.answered > 0 && (
         <Notice tone="success">
           {t('summary', {
@@ -611,6 +689,86 @@ export function ExamResults() {
           })}
         </Notice>
       )}
+      {progress && progress.answered > 0 && (
+        <>
+          <Heading>{t('weakTitle')}</Heading>
+          <Body muted>{t('weakRule')}</Body>
+          {weak.length === 0 ? (
+            <Body>{t('noWeak')}</Body>
+          ) : (
+            weak.map((topic) => (
+              <Notice key={topic.key ?? 'none'} tone="warning">
+                {t('weakLine', {
+                  topic: topicName(topic),
+                  correct: topic.correct,
+                  answered: topic.answered,
+                  percent: topic.percent ?? 0,
+                })}
+              </Notice>
+            ))
+          )}
+          <Heading>{t('byTopic')}</Heading>
+          {answeredTopics.map((topic) => (
+            <Text key={topic.key ?? 'none'} style={styles.body}>
+              {t('weakLine', {
+                topic: topicName(topic),
+                correct: topic.correct,
+                answered: topic.answered,
+                percent: topic.percent ?? 0,
+              })}
+            </Text>
+          ))}
+          <Heading>{t('byWeek')}</Heading>
+          {progress.weeks
+            .filter((week) => week.answered > 0)
+            .map((week) => (
+              <Text key={week.start} style={styles.body}>
+                {t('weekLine', {
+                  week: format.dateTime(new Date(`${week.start}T12:00:00Z`), {
+                    dateStyle: 'medium',
+                  }),
+                  correct: week.correct,
+                  answered: week.answered,
+                })}
+              </Text>
+            ))}
+        </>
+      )}
+      {results && (
+        <>
+          <Heading>{t('bookmarks')}</Heading>
+          {bookmarks.length === 0 && <Body muted>{t('noBookmarks')}</Body>}
+          {bookmarks.map((item) => (
+            <Card key={item.questionId}>
+              <Text style={styles.body}>{item.stem}</Text>
+              <Button
+                label={t('removeBookmark')}
+                variant="link"
+                onPress={() => void unbookmark(item.questionId)}
+              />
+            </Card>
+          ))}
+        </>
+      )}
+      {reports.length > 0 && (
+        <>
+          <Heading>{t('reports')}</Heading>
+          {reports.map((report) => (
+            <Card key={report.id}>
+              <Text style={styles.body}>{report.stem}</Text>
+              <Text style={styles.meta}>
+                {`${all(`education.exam.report.reasons.${report.reason}`)} · ${t(
+                  `reportStatus.${report.status}`,
+                )}`}
+              </Text>
+              {report.response ? (
+                <Text style={styles.body}>{t('reportAnswer', { answer: report.response })}</Text>
+              ) : null}
+            </Card>
+          ))}
+        </>
+      )}
+      {results && results.items.length > 0 && <Heading>{t('answeredTitle')}</Heading>}
       {results?.items.map((item) => (
         <Card key={item.questionId}>
           <Text style={styles.body}>{item.stem}</Text>

@@ -1,0 +1,569 @@
+[
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      {
+        "title": "EAU Guidelines on Prostate Cancer"
+      }
+    ],
+    "he": {
+      "stem": "בהשוואה לכריתה פתוחה של הערמונית, מהו היתרון המבוסס ביותר של כריתה רובוטית (RARP)?",
+      "summary": "כריתה רובוטית של הערמונית מלווה באיבוד דם ובצורך בעירוי קטנים יותר ובאשפוז קצר יותר. התוצאות האונקולוגיות והתפקודיות (שליטה בשתן וזקפה) דומות בדרך כלל, ותלויות בעיקר בניסיון המנתח."
+    },
+    "en": {
+      "stem": "Compared with open radical prostatectomy, what is the best-established benefit of robot-assisted prostatectomy (RARP)?",
+      "summary": "Robotic prostatectomy has less blood loss and fewer transfusions, and a shorter hospital stay. Cancer and functional outcomes (continence and erections) are generally similar, and depend mostly on the surgeon's experience."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "פחות איבוד דם ועירויים, ואשפוז קצר יותר",
+          "explanation": "נכון. אלה היתרונות המבוססים ביותר."
+        },
+        "en": {
+          "text": "Less blood loss and fewer transfusions, and a shorter stay",
+          "explanation": "Right. These are the best-established benefits."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שיעורי ריפוי מהסרטן גבוהים בהרבה",
+          "explanation": "שגוי. התוצאות האונקולוגיות דומות."
+        },
+        "en": {
+          "text": "Much higher cancer cure rates",
+          "explanation": "Wrong. Cancer outcomes are similar."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היעדר מוחלט של אי־שליטה בשתן",
+          "explanation": "שגוי. אי־שליטה בשתן אפשרית גם בגישה רובוטית."
+        },
+        "en": {
+          "text": "No incontinence at all",
+          "explanation": "Wrong. Incontinence can follow robotic surgery too."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין צורך בהרדמה כללית",
+          "explanation": "שגוי. הניתוח מבוצע בהרדמה כללית."
+        },
+        "en": {
+          "text": "No need for general anaesthesia",
+          "explanation": "Wrong. The operation is done under general anaesthesia."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      {
+        "title": "EAU Guidelines on Prostate Cancer"
+      }
+    ],
+    "he": {
+      "stem": "בכריתה רובוטית של הערמונית המטופל שוכב בתנוחת טרנדלנבורג תלולה (ראש למטה). איזה סיכון מיוחד קשור לתנוחה זו?",
+      "summary": "טרנדלנבורג תלול עם אוויר בבטן מעלה את הלחץ התוך־עיני והתוך־גולגולתי, ומקשה על האוורור. סיבוך נדיר אך חמור הוא פגיעה איסכמית בעצב הראייה. ניתוח קצר ככל האפשר וזווית מתונה מפחיתים את הסיכון."
+    },
+    "en": {
+      "stem": "In robotic prostatectomy the patient lies in steep Trendelenburg (head down). Which particular risk is linked to this position?",
+      "summary": "Steep Trendelenburg with pneumoperitoneum raises intraocular and intracranial pressure and makes ventilation harder. A rare but serious complication is ischaemic optic neuropathy. Keeping the operation short and the angle moderate lowers the risk."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "עלייה בלחץ התוך־עיני, עם סיכון לפגיעה בעצב הראייה",
+          "explanation": "נכון. זה סיכון מוכר של התנוחה."
+        },
+        "en": {
+          "text": "Raised intraocular pressure, with a risk of optic nerve injury",
+          "explanation": "Right. This is a known risk of the position."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ירידה בלחץ התוך־גולגולתי",
+          "explanation": "שגוי. הלחץ התוך־גולגולתי עולה, לא יורד."
+        },
+        "en": {
+          "text": "A fall in intracranial pressure",
+          "explanation": "Wrong. Intracranial pressure rises, not falls."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פגיעה בעצב הירך בגלל כיפוף הירכיים",
+          "explanation": "שגוי. זה אינו הסיכון הייחודי לטרנדלנבורג."
+        },
+        "en": {
+          "text": "Femoral nerve injury from hip flexion",
+          "explanation": "Wrong. That is not the risk specific to Trendelenburg."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין לתנוחה כל סיכון מיוחד",
+          "explanation": "שגוי. לתנוחה סיכונים מוכרים."
+        },
+        "en": {
+          "text": "The position carries no particular risk",
+          "explanation": "Wrong. The position has known risks."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [
+      {
+        "title": "EAU Guidelines on Renal Cell Carcinoma"
+      }
+    ],
+    "he": {
+      "stem": "מהו טווח הלחץ המקובל של אוויר (CO2) בבטן בניתוח לפרוסקופי או רובוטי במבוגר?",
+      "summary": "בדרך כלל מנפחים את הבטן בפחמן דו־חמצני ללחץ של כ־12 עד 15 ממ״כ. לחץ גבוה יותר פוגע בחזרה הורידית ללב ובתפקוד הכליות והנשימה. במערכות חדשות אפשר לעבוד בלחצים נמוכים יותר."
+    },
+    "en": {
+      "stem": "What is the usual range of CO2 pneumoperitoneum pressure in adult laparoscopic or robotic surgery?",
+      "summary": "The abdomen is usually inflated with carbon dioxide to about 12 to 15 mmHg. Higher pressure impairs venous return to the heart and kidney and lung function. Newer systems allow working at lower pressures."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "כ־12 עד 15 ממ״כ",
+          "explanation": "נכון. זה הטווח המקובל."
+        },
+        "en": {
+          "text": "About 12 to 15 mmHg",
+          "explanation": "Right. This is the usual range."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כ־30 עד 40 ממ״כ",
+          "explanation": "שגוי. לחץ כזה מסוכן ופוגע בזרימת הדם."
+        },
+        "en": {
+          "text": "About 30 to 40 mmHg",
+          "explanation": "Wrong. Such pressure is dangerous and impairs blood flow."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כ־2 עד 4 ממ״כ",
+          "explanation": "שגוי. לחץ כזה אינו יוצר מרחב עבודה מספיק."
+        },
+        "en": {
+          "text": "About 2 to 4 mmHg",
+          "explanation": "Wrong. Such pressure does not create enough working space."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כמה שיותר גבוה, כך טוב יותר",
+          "explanation": "שגוי. לחץ גבוה מגביר סיבוכים."
+        },
+        "en": {
+          "text": "The higher the better",
+          "explanation": "Wrong. High pressure increases complications."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [
+      {
+        "title": "EAU Guidelines on Prostate Cancer"
+      }
+    ],
+    "he": {
+      "stem": "בכריתה של הערמונית עם שימור עצבים, היכן נמצאים צרורות העצבים וכלי הדם שהשימור שלהם חשוב לזקפה?",
+      "summary": "צרורות העצבים וכלי הדם (neurovascular bundles) עוברים בצדדים האחוריים של הערמונית. שימורם, כשהמצב האונקולוגי מאפשר, משפר את הסיכוי לשמור על זקפה. ההחלטה נקבעת לפי היקף הגידול וסיכון לחדירה מחוץ לערמונית."
+    },
+    "en": {
+      "stem": "In nerve-sparing prostatectomy, where are the neurovascular bundles that matter for erections?",
+      "summary": "The neurovascular bundles run along the posterolateral sides of the prostate. Preserving them, when the cancer allows, improves the chance of keeping erections. The decision depends on the tumour's extent and the risk of spread outside the prostate."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בצדדים האחוריים של הערמונית (פוסטרו־לטרלית)",
+          "explanation": "נכון. שם עוברים צרורות העצבים."
+        },
+        "en": {
+          "text": "On the posterolateral sides of the prostate",
+          "explanation": "Right. That is where the bundles run."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בקו האמצע הקדמי, מתחת לעצם הערווה",
+          "explanation": "שגוי. שם נמצאת המקלעת הורידית הגבית, לא צרורות העצבים."
+        },
+        "en": {
+          "text": "In the anterior midline, under the pubic bone",
+          "explanation": "Wrong. The dorsal venous complex lies there, not the bundles."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בתוך כיסי הזרע",
+          "explanation": "שגוי. כיסי הזרע אינם מכילים את צרורות העצבים."
+        },
+        "en": {
+          "text": "Inside the seminal vesicles",
+          "explanation": "Wrong. The seminal vesicles do not contain the bundles."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בצוואר השלפוחית",
+          "explanation": "שגוי. צוואר השלפוחית חשוב לשליטה בשתן, לא לזקפה."
+        },
+        "en": {
+          "text": "At the bladder neck",
+          "explanation": "Wrong. The bladder neck matters for continence, not erections."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      {
+        "title": "EAU Guidelines on Renal Cell Carcinoma"
+      }
+    ],
+    "he": {
+      "stem": "בכריתה חלקית רובוטית של הכליה, עם חסימת עורק הכליה, למה כדאי לכוון את זמן האיסכמיה החמה?",
+      "summary": "בזמן חסימת העורק הכליה אינה מקבלת דם (איסכמיה חמה). מקובל לשאוף לזמן קצר מ־25 דקות בערך, כדי להגן על תפקוד הכליה. בגידולים מורכבים אפשר לשקול קירור, חסימה סלקטיבית או ניתוח בלי חסימה."
+    },
+    "en": {
+      "stem": "In robotic partial nephrectomy with renal artery clamping, what warm ischaemia time should be aimed for?",
+      "summary": "While the artery is clamped, the kidney gets no blood (warm ischaemia). The usual aim is less than about 25 minutes, to protect kidney function. For complex tumours, cooling, selective clamping or an off-clamp approach may be considered."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "פחות מכ־25 דקות",
+          "explanation": "נכון. זה היעד המקובל להגנה על תפקוד הכליה."
+        },
+        "en": {
+          "text": "Less than about 25 minutes",
+          "explanation": "Right. This is the usual target to protect kidney function."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "עד 90 דקות",
+          "explanation": "שגוי. זמן כזה מגביר נזק בלתי הפיך לכליה."
+        },
+        "en": {
+          "text": "Up to 90 minutes",
+          "explanation": "Wrong. Such a time increases irreversible kidney damage."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "זמן האיסכמיה אינו משנה",
+          "explanation": "שגוי. זמן ארוך פוגע בתפקוד הכליה."
+        },
+        "en": {
+          "text": "Ischaemia time does not matter",
+          "explanation": "Wrong. A long time harms kidney function."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בדיוק 60 דקות בכל מקרה",
+          "explanation": "שגוי. אין זמן קבוע, והיעד קצר בהרבה."
+        },
+        "en": {
+          "text": "Exactly 60 minutes in every case",
+          "explanation": "Wrong. There is no fixed time, and the target is much shorter."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      {
+        "title": "Campbell-Walsh-Wein Urology (textbook): management of upper urinary tract obstruction"
+      }
+    ],
+    "he": {
+      "stem": "במבוגר עם חסימה במעבר אגן־שופכן נמצא בניתוח רובוטי כלי דם חוצה (crossing vessel) הלוחץ על המעבר. מהו הניתוח המקובל?",
+      "summary": "בפיילופלסטיקה מסוג Anderson–Hynes כורתים את המקטע החסום, מעבירים את השופכן לפני כלי הדם החוצה ומחברים אותו מחדש לאגן. שיעורי ההצלחה, בגישה פתוחה, לפרוסקופית או רובוטית, גבוהים מ־90%. חיתוך אנדוסקופי פחות מוצלח כשיש כלי דם חוצה."
+    },
+    "en": {
+      "stem": "In an adult with pelvi-ureteric junction obstruction, a crossing vessel compressing the junction is found at robotic surgery. What is the usual operation?",
+      "summary": "In an Anderson–Hynes dismembered pyeloplasty, the obstructed segment is removed, the ureter is moved in front of the crossing vessel and joined again to the pelvis. Success rates, open, laparoscopic or robotic, exceed 90%. Endoscopic incision works less well with a crossing vessel."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "פיילופלסטיקה מסוג Anderson–Hynes עם העברת השופכן לפני כלי הדם",
+          "explanation": "נכון. זה התיקון המקובל."
+        },
+        "en": {
+          "text": "Anderson–Hynes dismembered pyeloplasty with transposition in front of the vessel",
+          "explanation": "Right. This is the usual repair."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קשירה של כלי הדם החוצה",
+          "explanation": "שגוי. כלי הדם מספק חלק מהכליה; קשירתו עלולה לגרום לאיסכמיה."
+        },
+        "en": {
+          "text": "Ligating the crossing vessel",
+          "explanation": "Wrong. The vessel supplies part of the kidney; ligating it may cause ischaemia."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כריתת כליה",
+          "explanation": "שגוי. כשיש תפקוד, מתקנים ולא כורתים."
+        },
+        "en": {
+          "text": "Nephrectomy",
+          "explanation": "Wrong. When the kidney functions, it is repaired, not removed."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תומך שופכן קבוע לכל החיים",
+          "explanation": "שגוי. תומך קבוע אינו פתרון מקובל במטופל שמתאים לניתוח."
+        },
+        "en": {
+          "text": "A lifelong ureteral stent",
+          "explanation": "Wrong. A permanent stent is not a usual solution in a patient fit for surgery."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [
+      {
+        "title": "European Hernia Society guidelines on the closure of abdominal wall incisions"
+      }
+    ],
+    "he": {
+      "stem": "מה מפחית את הסיכון לבקע במקום הכנסת הטרוקר (port-site hernia) אחרי ניתוח לפרוסקופי או רובוטי?",
+      "summary": "בקע במקום הטרוקר שכיח יותר בפתחים של 10 מ״מ ומעלה, ובעיקר בטבור. סגירה של הפאסיה בפתחים אלה מפחיתה את הסיכון. טרוקרים קטנים ופתחים שאינם חותכים (non-bladed) מפחיתים אותו עוד."
+    },
+    "en": {
+      "stem": "What lowers the risk of a port-site hernia after laparoscopic or robotic surgery?",
+      "summary": "Port-site hernias are more common at sites of 10 mm or larger, especially at the umbilicus. Closing the fascia at these sites lowers the risk. Smaller ports and non-bladed trocars lower it further."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "סגירת הפאסיה בפתחים של 10 מ״מ ומעלה",
+          "explanation": "נכון. זה המפתח למניעה."
+        },
+        "en": {
+          "text": "Closing the fascia at ports of 10 mm or larger",
+          "explanation": "Right. This is the key to prevention."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שימוש בלחץ אוויר גבוה יותר",
+          "explanation": "שגוי. לחץ האוויר אינו מונע בקע."
+        },
+        "en": {
+          "text": "Using a higher gas pressure",
+          "explanation": "Wrong. Gas pressure does not prevent hernia."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "השארת כל הפתחים פתוחים לניקוז",
+          "explanation": "שגוי. פתחים פתוחים מגבירים את הסיכון."
+        },
+        "en": {
+          "text": "Leaving all ports open for drainage",
+          "explanation": "Wrong. Open ports raise the risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה מונעת",
+          "explanation": "שגוי. אנטיביוטיקה אינה מונעת בקע."
+        },
+        "en": {
+          "text": "Preventive antibiotics",
+          "explanation": "Wrong. Antibiotics do not prevent hernia."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [
+      {
+        "title": "EAU Guidelines on Renal Cell Carcinoma"
+      }
+    ],
+    "he": {
+      "stem": "בניתוח רובוטי, מיד אחרי תחילת ניפוח הבטן, יש ירידה חדה ב־CO2 בסוף הנשיפה (ETCO2), ירידה בלחץ הדם וסטורציה יורדת. מה החשד הראשון ומה הצעד המיידי?",
+      "summary": "התמונה מחשידה לתסחיף גז (CO2 embolism), סיבוך נדיר וחמור, לרוב בזמן הניפוח או בפגיעה בווריד. הצעדים: להפסיק מיד את הניפוח ולשחרר את האוויר, לאוורר בחמצן 100%, להשכיב על צד שמאל בראש למטה, ולתמוך במחזור הדם; לעיתים שואבים גז דרך צנתר מרכזי."
+    },
+    "en": {
+      "stem": "During robotic surgery, right after insufflation starts, end-tidal CO2 drops sharply, blood pressure falls and oxygen saturation drops. What is the first suspicion and the immediate step?",
+      "summary": "This suggests gas (CO2) embolism, a rare and serious complication, usually during insufflation or with venous injury. Steps: stop insufflation at once and release the gas, ventilate with 100% oxygen, place the patient left side down and head down, and support the circulation; gas is sometimes aspirated through a central line."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "תסחיף גז; להפסיק מיד את הניפוח ולשחרר את האוויר",
+          "explanation": "נכון. הפסקת הניפוח היא הצעד הראשון."
+        },
+        "en": {
+          "text": "Gas embolism; stop insufflation at once and release the gas",
+          "explanation": "Right. Stopping insufflation is the first step."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תגובה אלרגית; לתת אנטיהיסטמין ולהמשיך",
+          "explanation": "שגוי. התמונה אינה מתאימה לאלרגיה, והמשך הניפוח מסוכן."
+        },
+        "en": {
+          "text": "An allergic reaction; give an antihistamine and carry on",
+          "explanation": "Wrong. The picture does not fit allergy, and continuing insufflation is dangerous."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תקלה בחיישן; להתעלם ולהמשיך",
+          "explanation": "שגוי. ירידה בלחץ הדם ובסטורציה מאשרת בעיה אמיתית."
+        },
+        "en": {
+          "text": "A sensor fault; ignore it and carry on",
+          "explanation": "Wrong. Falling pressure and saturation confirm a real problem."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "להעלות את לחץ הניפוח כדי לשפר את שדה הניתוח",
+          "explanation": "שגוי. זה יחמיר את התסחיף."
+        },
+        "en": {
+          "text": "Raise the insufflation pressure to improve the view",
+          "explanation": "Wrong. This would worsen the embolism."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [
+      {
+        "title": "EAU Guidelines on Prostate Cancer"
+      }
+    ],
+    "he": {
+      "stem": "מהו הסיבוך השכיח ביותר של כריתה מורחבת של בלוטות לימפה באגן בזמן כריתה רובוטית של הערמונית?",
+      "summary": "לימפוצלה (הצטברות לימפה) היא הסיבוך השכיח ביותר של כריתת בלוטות לימפה באגן. רוב הלימפוצלות קטנות ואינן גורמות לתסמינים; גדולות עלולות לגרום לכאב, לזיהום, לבצקת ברגל ולפקקת ורידים, ומטופלות בניקוז או בפתיחת חלון לצפק."
+    },
+    "en": {
+      "stem": "What is the most common complication of extended pelvic lymph node dissection during robotic prostatectomy?",
+      "summary": "Lymphocele (a collection of lymph) is the most common complication of pelvic lymph node dissection. Most are small and silent; large ones may cause pain, infection, leg swelling and venous thrombosis, and are treated by drainage or peritoneal fenestration."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "לימפוצלה",
+          "explanation": "נכון. זה הסיבוך השכיח ביותר."
+        },
+        "en": {
+          "text": "Lymphocele",
+          "explanation": "Right. It is the most common complication."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פגיעה בשופכן",
+          "explanation": "שגוי. פגיעה בשופכן אפשרית אך נדירה."
+        },
+        "en": {
+          "text": "Ureteral injury",
+          "explanation": "Wrong. Ureteral injury can happen but is rare."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פגיעה בעצב האובטורטור",
+          "explanation": "שגוי. אפשרית אך נדירה."
+        },
+        "en": {
+          "text": "Obturator nerve injury",
+          "explanation": "Wrong. Possible but rare."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קרע בעורק הכסל",
+          "explanation": "שגוי. זה סיבוך נדיר מאוד."
+        },
+        "en": {
+          "text": "Iliac artery tear",
+          "explanation": "Wrong. This is a very rare complication."
+        }
+      }
+    ]
+  }
+]

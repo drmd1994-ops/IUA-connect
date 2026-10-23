@@ -1,0 +1,524 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "מבוגר בן 40 מגיע עם כאב עז במותן שמקרין למפשעה, וחשד לקוליק כלייתי. מהי בדיקת ההדמיה המועדפת לאישור האבחנה?",
+      "summary": "בחשד לקוליק כלייתי במבוגר, CT ללא חומר ניגוד (במינון קרינה נמוך כשאפשר) הוא הבדיקה המדויקת ביותר: הוא מראה כמעט כל סוגי האבנים, את גודלן ומיקומן, ואבחנות אחרות. אולטרסאונד הוא הבחירה הראשונה בהיריון ובילדים."
+    },
+    "en": {
+      "stem": "A 40-year-old adult presents with severe flank pain radiating to the groin, and renal colic is suspected. What is the preferred imaging test to confirm the diagnosis?",
+      "summary": "For suspected renal colic in an adult, non-contrast CT (at a low dose where possible) is the most accurate test: it shows almost every type of stone, its size and position, and other diagnoses. Ultrasound comes first in pregnancy and in children."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "CT ללא חומר ניגוד",
+          "explanation": "נכון. זו הבדיקה בעלת הרגישות והסגוליות הגבוהות ביותר לאבנים בשופכן."
+        },
+        "en": {
+          "text": "Non-contrast CT",
+          "explanation": "Right. It has the highest sensitivity and specificity for ureteral stones."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "צילום בטן רגיל (KUB)",
+          "explanation": "שגוי. צילום רגיל אינו מראה אבנים שקופות לקרינה, כמו חומצה אורית, ומפספס אבנים קטנות."
+        },
+        "en": {
+          "text": "Plain abdominal X-ray (KUB)",
+          "explanation": "Wrong. A plain film misses radiolucent stones such as uric acid, and small stones."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פיילוגרפיה תוך־ורידית (IVP)",
+          "explanation": "שגוי. IVP הוחלפה ב־CT: היא מדויקת פחות ודורשת חומר ניגוד."
+        },
+        "en": {
+          "text": "Intravenous pyelography (IVP)",
+          "explanation": "Wrong. IVP has been replaced by CT: it is less accurate and needs contrast."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "MRI של הבטן",
+          "explanation": "שגוי. MRI אינו מראה אבנים היטב ואינו בדיקה ראשונה בקוליק כלייתי."
+        },
+        "en": {
+          "text": "Abdominal MRI",
+          "explanation": "Wrong. MRI shows stones poorly and is not a first test for renal colic."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "למטופל יש אבן של 7 מ״מ בשופכן הדיסטלי, הכאב נשלט, אין חום ותפקוד הכליות תקין. איזו תרופה מקובלת לעידוד מעבר האבן?",
+      "summary": "בטיפול להוצאה תרופתית של אבן (MET) נותנים חוסם אלפא, כמו טמסולוסין, לאבנים בשופכן הדיסטלי שגודלן מעל 5 מ״מ, כשאין סיבה להתערבות מיידית. המטופל במעקב, ואם האבן לא עוברת או מופיעים סיבוכים, מתערבים."
+    },
+    "en": {
+      "stem": "A patient has a 7 mm distal ureteral stone, the pain is controlled, there is no fever and kidney function is normal. Which drug is used to help the stone pass?",
+      "summary": "In medical expulsive therapy (MET), an alpha-blocker such as tamsulosin is given for distal ureteral stones larger than 5 mm when there is no reason for immediate intervention. The patient is followed, and intervention follows if the stone does not pass or complications appear."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "חוסם אלפא (טמסולוסין)",
+          "explanation": "נכון. חוסמי אלפא מרפים את שריר השופכן הדיסטלי ומעלים את שיעור מעבר האבנים הגדולות מ־5 מ״מ."
+        },
+        "en": {
+          "text": "An alpha-blocker (tamsulosin)",
+          "explanation": "Right. Alpha-blockers relax the distal ureteral muscle and raise the passage rate of stones larger than 5 mm."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מעכב 5־אלפא רדוקטאז",
+          "explanation": "שגוי. תרופות אלה מקטינות את הערמונית במשך חודשים ואינן מסייעות במעבר אבנים."
+        },
+        "en": {
+          "text": "A 5-alpha reductase inhibitor",
+          "explanation": "Wrong. These shrink the prostate over months and do not help stones pass."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תיאזיד",
+          "explanation": "שגוי. תיאזיד מפחית הפרשת סידן בשתן ומשמש למניעת אבנים, לא להוצאת אבן קיימת."
+        },
+        "en": {
+          "text": "A thiazide",
+          "explanation": "Wrong. A thiazide lowers urinary calcium and is used to prevent stones, not to pass one."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה מונעת",
+          "explanation": "שגוי. בלי סימני זיהום אין הוריה לאנטיביוטיקה, והיא אינה מקדמת את מעבר האבן."
+        },
+        "en": {
+          "text": "Preventive antibiotics",
+          "explanation": "Wrong. Without signs of infection antibiotics are not indicated, and they do not help the stone pass."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [
+      { "title": "EAU Guidelines on Urolithiasis" },
+      { "title": "EAU Guidelines on Urological Infections" }
+    ],
+    "he": {
+      "stem": "למטופלת חום של 38.9 מעלות, צמרמורות ואבן חוסמת של 8 מ״מ בשופכן העליון עם הידרונפרוזיס. מהו הצעד הנכון?",
+      "summary": "כליה חסומה ומזוהמת היא מצב חירום אורולוגי. מנקזים מיד את הכליה, בתומך שופכן (סטנט) או בנפרוסטומיה מלעורית, נותנים אנטיביוטיקה ולוקחים תרביות. את האבן מטפלים רק אחרי שהזיהום חלף."
+    },
+    "en": {
+      "stem": "A patient has a fever of 38.9 °C, rigors, and an obstructing 8 mm upper ureteral stone with hydronephrosis. What is the right step?",
+      "summary": "An obstructed, infected kidney is a urological emergency. The kidney is drained at once, by a ureteral stent or a percutaneous nephrostomy, with antibiotics and cultures. The stone is treated only after the infection has resolved."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "ניקוז דחוף של הכליה (סטנט או נפרוסטומיה) ואנטיביוטיקה; טיפול באבן בהמשך",
+          "explanation": "נכון. הניקוז מציל חיים ואת הכליה; הטיפול הסופי באבן נדחה."
+        },
+        "en": {
+          "text": "Urgent drainage of the kidney (stent or nephrostomy) and antibiotics; treat the stone later",
+          "explanation": "Right. Drainage saves the patient and the kidney; definitive stone treatment is deferred."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יוריטרוסקופיה דחופה וריסוק האבן בלייזר",
+          "explanation": "שגוי. ריסוק בשתן מזוהם תחת לחץ מעלה את הסיכון לאלח דם; קודם מנקזים."
+        },
+        "en": {
+          "text": "Urgent ureteroscopy and laser lithotripsy",
+          "explanation": "Wrong. Fragmenting a stone in infected urine under pressure raises the risk of sepsis; drain first."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ריסוק בגלי הלם (SWL)",
+          "explanation": "שגוי. SWL אסור בזיהום פעיל עם חסימה."
+        },
+        "en": {
+          "text": "Shock wave lithotripsy (SWL)",
+          "explanation": "Wrong. SWL is contraindicated with active infection and obstruction."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חוסם אלפא ואנטיביוטיקה דרך הפה, ומעקב בבית",
+          "explanation": "שגוי. טיפול תרופתי לבדו אינו מספיק בכליה חסומה ומזוהמת."
+        },
+        "en": {
+          "text": "An alpha-blocker and oral antibiotics, with follow-up at home",
+          "explanation": "Wrong. Drugs alone are not enough for an obstructed, infected kidney."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "למטופל אבן של 2.5 ס״מ באגן הכליה. מהו הטיפול הראשון המומלץ?",
+      "summary": "לאבן כליה גדולה מ־2 ס״מ, ניתוח מלעורי (PCNL) הוא הטיפול הראשון: הוא משיג את שיעור הניקוי הגבוה ביותר בפעולה אחת. יוריטרוסקופיה גמישה ו־SWL הן חלופות כשלא ניתן לבצע PCNL, לרוב עם צורך ביותר מטיפול אחד."
+    },
+    "en": {
+      "stem": "A patient has a 2.5 cm stone in the renal pelvis. What is the recommended first-line treatment?",
+      "summary": "For a kidney stone larger than 2 cm, percutaneous nephrolithotomy (PCNL) is the first-line treatment: it gives the highest stone-free rate in one procedure. Flexible ureteroscopy and SWL are alternatives when PCNL is not possible, often needing more than one session."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "ניתוח מלעורי להוצאת אבן (PCNL)",
+          "explanation": "נכון. זה הטיפול הראשון לאבני כליה מעל 2 ס״מ."
+        },
+        "en": {
+          "text": "Percutaneous nephrolithotomy (PCNL)",
+          "explanation": "Right. It is first-line for kidney stones over 2 cm."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ריסוק בגלי הלם (SWL)",
+          "explanation": "שגוי. היעילות של SWL יורדת מאוד באבנים גדולות, ולעיתים קרובות נדרשים כמה טיפולים."
+        },
+        "en": {
+          "text": "Shock wave lithotripsy (SWL)",
+          "explanation": "Wrong. SWL works much less well on large stones and often needs several sessions."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "טיפול תרופתי להמסת האבן",
+          "explanation": "שגוי. המסה אפשרית רק באבני חומצה אורית, והרכב האבן כאן אינו ידוע."
+        },
+        "en": {
+          "text": "Drugs to dissolve the stone",
+          "explanation": "Wrong. Dissolution works only for uric acid stones, and this stone's composition is not known."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ניתוח פתוח (פיילוליתוטומיה)",
+          "explanation": "שגוי. ניתוח פתוח שמור למקרים חריגים בלבד."
+        },
+        "en": {
+          "text": "Open surgery (pyelolithotomy)",
+          "explanation": "Wrong. Open surgery is kept for exceptional cases only."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "למטופל צעיר עם ציסטינוריה אבנים חוזרות. לאיזה pH של השתן כדאי לכוון בטיפול המונע?",
+      "summary": "ציסטין מסיס יותר בשתן בסיסי. הטיפול המונע כולל שתייה מרובה (שתן של 3 ליטר ויותר ביום), הבססת השתן לערך pH של 7.5 ומעלה (בדרך כלל באשלגן ציטרט), ואם אין די בכך, תרופה קושרת ציסטין כמו טיופרונין."
+    },
+    "en": {
+      "stem": "A young patient with cystinuria has recurrent stones. What urinary pH should preventive treatment aim for?",
+      "summary": "Cystine dissolves better in alkaline urine. Prevention includes a high fluid intake (3 litres of urine a day or more), alkalinising the urine to pH 7.5 or above (usually with potassium citrate), and, if that is not enough, a cystine-binding drug such as tiopronin."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "7.5 ומעלה", "explanation": "נכון. מסיסות הציסטין עולה בחדות בשתן בסיסי." },
+        "en": {
+          "text": "7.5 or higher",
+          "explanation": "Right. Cystine solubility rises sharply in alkaline urine."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "5.5 עד 6.0", "explanation": "שגוי. בשתן חומצי הציסטין שוקע בקלות." },
+        "en": {
+          "text": "5.5 to 6.0",
+          "explanation": "Wrong. In acidic urine cystine precipitates easily."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "6.5",
+          "explanation": "שגוי. ערך זה מתאים יותר למניעת אבני חומצה אורית, ואינו מספיק לציסטין."
+        },
+        "en": {
+          "text": "6.5",
+          "explanation": "Wrong. This suits uric acid stone prevention better and is not enough for cystine."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין חשיבות ל־pH; רק לנפח השתן",
+          "explanation": "שגוי. גם הנפח וגם ה־pH חשובים במניעת אבני ציסטין."
+        },
+        "en": {
+          "text": "pH does not matter; only urine volume does",
+          "explanation": "Wrong. Both volume and pH matter in preventing cystine stones."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "למטופל עם מחלת קרוהן שעבר כריתה של המעי הדק הסופי יש אבני סידן אוקסלט חוזרות. מהו המנגנון העיקרי?",
+      "summary": "בתת־ספיגה של שומן, חומצות שומן במעי קושרות סידן, ואוקסלט נותר חופשי ונספג במעי הגס (היפראוקסלוריה ממקור מעי). הטיפול כולל שתייה מרובה, דיאטה דלת שומן ואוקסלט, ותוספי סידן עם הארוחות כדי לקשור אוקסלט במעי."
+    },
+    "en": {
+      "stem": "A patient with Crohn's disease who had a resection of the terminal ileum has recurrent calcium oxalate stones. What is the main mechanism?",
+      "summary": "With fat malabsorption, fatty acids in the gut bind calcium, and oxalate is left free to be absorbed in the colon (enteric hyperoxaluria). Treatment includes a high fluid intake, a low-fat, low-oxalate diet, and calcium supplements with meals to bind oxalate in the gut."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "ספיגה מוגברת של אוקסלט במעי הגס בגלל תת־ספיגה של שומן",
+          "explanation": "נכון. הסידן נקשר לשומן, והאוקסלט החופשי נספג."
+        },
+        "en": {
+          "text": "Increased oxalate absorption in the colon because of fat malabsorption",
+          "explanation": "Right. Calcium binds to fat, and free oxalate is absorbed."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ייצור יתר של אוקסלט בכבד",
+          "explanation": "שגוי. זה המנגנון בהיפראוקסלוריה ראשונית, מחלה תורשתית."
+        },
+        "en": {
+          "text": "Overproduction of oxalate by the liver",
+          "explanation": "Wrong. That is the mechanism of primary hyperoxaluria, a hereditary disease."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היפרקלציוריה בגלל עודף ויטמין D",
+          "explanation": "שגוי. בתת־ספיגה הסידן בשתן נוטה דווקא להיות נמוך."
+        },
+        "en": {
+          "text": "Hypercalciuria from excess vitamin D",
+          "explanation": "Wrong. In malabsorption urinary calcium tends to be low."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שתן בסיסי מתמשך",
+          "explanation": "שגוי. אובדן ביקרבונט בשלשולים גורם לשתן חומצי, לא בסיסי."
+        },
+        "en": {
+          "text": "Persistently alkaline urine",
+          "explanation": "Wrong. Bicarbonate loss in diarrhoea makes the urine acidic, not alkaline."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "בבירור מטבולי של מטופל עם אבני סידן נמצאה היפרקלציוריה. איזו תרופה מפחיתה את הפרשת הסידן בשתן?",
+      "summary": "משתנים מקבוצת התיאזידים מגבירים ספיגה חוזרת של סידן בכליה ומפחיתים את הסידן בשתן, ולכן משמשים במניעת אבני סידן עם היפרקלציוריה. משתני לולאה, לעומתם, מגבירים את הפרשת הסידן."
+    },
+    "en": {
+      "stem": "A metabolic work-up of a patient with calcium stones shows hypercalciuria. Which drug lowers urinary calcium excretion?",
+      "summary": "Thiazide diuretics increase calcium reabsorption in the kidney and lower urinary calcium, so they are used to prevent calcium stones with hypercalciuria. Loop diuretics, by contrast, increase calcium excretion."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "תיאזיד (למשל הידרוכלורותיאזיד)",
+          "explanation": "נכון. תיאזידים מפחיתים את הסידן בשתן."
+        },
+        "en": {
+          "text": "A thiazide (for example hydrochlorothiazide)",
+          "explanation": "Right. Thiazides lower urinary calcium."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "פורוסמיד", "explanation": "שגוי. משתן לולאה מגביר את הפרשת הסידן בשתן." },
+        "en": {
+          "text": "Furosemide",
+          "explanation": "Wrong. A loop diuretic increases urinary calcium."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אלופורינול",
+          "explanation": "שגוי. אלופורינול מפחית חומצה אורית, לא סידן."
+        },
+        "en": {
+          "text": "Allopurinol",
+          "explanation": "Wrong. Allopurinol lowers uric acid, not calcium."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תוסף ויטמין D",
+          "explanation": "שגוי. ויטמין D מגביר ספיגת סידן ועלול להעלות את הסידן בשתן."
+        },
+        "en": {
+          "text": "A vitamin D supplement",
+          "explanation": "Wrong. Vitamin D increases calcium absorption and may raise urinary calcium."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "באיסוף שתן של 24 שעות של מטופלת עם אבני סידן אוקסלט נמצא ציטרט נמוך. מהו הטיפול המתאים?",
+      "summary": "ציטרט קושר סידן בשתן ומעכב התגבשות. בהיפוציטרטוריה נותנים אשלגן ציטרט, שמעלה את הציטרט בשתן ואת ה־pH. מקורות לציטרט בתזונה, כמו מיץ לימון, יכולים לעזור אך פחות."
+    },
+    "en": {
+      "stem": "A 24-hour urine collection from a patient with calcium oxalate stones shows low citrate. What is the appropriate treatment?",
+      "summary": "Citrate binds calcium in urine and inhibits crystallisation. For hypocitraturia, potassium citrate is given; it raises urinary citrate and pH. Dietary citrate, such as lemon juice, can help but less."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אשלגן ציטרט",
+          "explanation": "נכון. הוא מעלה את הציטרט בשתן ומפחית הישנות של אבנים."
+        },
+        "en": {
+          "text": "Potassium citrate",
+          "explanation": "Right. It raises urinary citrate and lowers stone recurrence."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הגבלת סידן בתזונה",
+          "explanation": "שגוי. הגבלת סידן מגבירה ספיגת אוקסלט ואינה מטפלת בציטרט הנמוך."
+        },
+        "en": {
+          "text": "Restricting dietary calcium",
+          "explanation": "Wrong. Restricting calcium increases oxalate absorption and does not treat low citrate."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תוסף ויטמין C במינון גבוה",
+          "explanation": "שגוי. ויטמין C במינון גבוה עלול להעלות את האוקסלט בשתן."
+        },
+        "en": {
+          "text": "High-dose vitamin C",
+          "explanation": "Wrong. High-dose vitamin C may raise urinary oxalate."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אמוניום כלוריד להחמצת השתן",
+          "explanation": "שגוי. החמצה מורידה עוד יותר את הציטרט בשתן."
+        },
+        "en": {
+          "text": "Ammonium chloride to acidify the urine",
+          "explanation": "Wrong. Acidification lowers urinary citrate further."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urolithiasis" }],
+    "he": {
+      "stem": "איזה מהבאים הוא הוריית נגד לריסוק אבנים בגלי הלם (SWL)?",
+      "summary": "הוריות נגד ל־SWL כוללות היריון, הפרעת קרישה שלא תוקנה או טיפול נוגד קרישה, זיהום שתן לא מטופל, חסימה דיסטלית לאבן ומפרצת של עורק סמוך. השמנה ומיקום האבן משפיעים על הסיכוי להצלחה, אך אינם הוריות נגד."
+    },
+    "en": {
+      "stem": "Which of the following is a contraindication to shock wave lithotripsy (SWL)?",
+      "summary": "Contraindications to SWL include pregnancy, an uncorrected bleeding disorder or anticoagulation, untreated urinary infection, obstruction distal to the stone and an aneurysm of a nearby artery. Obesity and the stone's position affect the chance of success but are not contraindications."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "היריון", "explanation": "נכון. היריון הוא הוריית נגד ל־SWL." },
+        "en": {
+          "text": "Pregnancy",
+          "explanation": "Right. Pregnancy is a contraindication to SWL."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אבן בקוטב התחתון של הכליה",
+          "explanation": "שגוי. מיקום זה מוריד את שיעור הניקוי, אך אינו אוסר על הטיפול."
+        },
+        "en": {
+          "text": "A stone in the lower pole of the kidney",
+          "explanation": "Wrong. This position lowers the stone-free rate but does not forbid treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "כליה יחידה",
+          "explanation": "שגוי. אפשר לטפל בכליה יחידה ב־SWL, במעקב מתאים."
+        },
+        "en": {
+          "text": "A solitary kidney",
+          "explanation": "Wrong. A solitary kidney can be treated with SWL, with suitable follow-up."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מדד מסת גוף של 30",
+          "explanation": "שגוי. השמנה מקשה על מיקוד גלי ההלם, אך אינה הוריית נגד כשלעצמה."
+        },
+        "en": {
+          "text": "A body mass index of 30",
+          "explanation": "Wrong. Obesity makes focusing harder but is not a contraindication in itself."
+        }
+      }
+    ]
+  }
+]

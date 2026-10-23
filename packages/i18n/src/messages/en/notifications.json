@@ -57,6 +57,7 @@
     "newsPublished": "“{title}” was published.",
     "educationSentBack": "“{title}” was sent back to you for changes.",
     "educationPublished": "“{title}” was published.",
+    "examReportHandled": "Your report on “{title}” was dealt with.",
     "contentNews": "News: {title}",
     "contentEvent": "New event: {title}",
     "contentEducation": "New in education: {title}",

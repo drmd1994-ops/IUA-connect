@@ -1,0 +1,488 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "AUA/SUFU Guideline on Microhematuria" }],
+    "he": {
+      "stem": "מהי ההגדרה המקובלת להמטוריה מיקרוסקופית משמעותית?",
+      "summary": "המטוריה מיקרוסקופית משמעותית מוגדרת כ־3 תאי דם אדומים או יותר בשדה ראייה בהגדלה גבוהה, בבדיקת משקע שתן. סטיק חיובי לבדו אינו מספיק ויש לאשרו במיקרוסקופ. הבירור נקבע לפי גורמי הסיכון של המטופל."
+    },
+    "en": {
+      "stem": "What is the accepted definition of significant microscopic haematuria?",
+      "summary": "Significant microscopic haematuria is 3 or more red blood cells per high-power field on urine sediment microscopy. A positive dipstick alone is not enough and must be confirmed by microscopy. The evaluation depends on the patient's risk factors."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "3 תאי דם אדומים או יותר בשדה ראייה בהגדלה גבוהה",
+          "explanation": "נכון. זו ההגדרה המקובלת."
+        },
+        "en": {
+          "text": "3 or more red blood cells per high-power field",
+          "explanation": "Right. This is the accepted definition."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "סטיק שתן חיובי לדם, בלי מיקרוסקופ",
+          "explanation": "שגוי. יש לאשר במיקרוסקופ."
+        },
+        "en": {
+          "text": "A dipstick positive for blood, without microscopy",
+          "explanation": "Wrong. It must be confirmed by microscopy."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "תא דם אדום אחד בשדה", "explanation": "שגוי. ערך זה נמוך מסף ההגדרה." },
+        "en": {
+          "text": "One red blood cell per field",
+          "explanation": "Wrong. This is below the threshold."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "רק שתן שנראה אדום בעין",
+          "explanation": "שגוי. זו המטוריה נראית לעין, לא מיקרוסקופית."
+        },
+        "en": {
+          "text": "Only urine that looks red",
+          "explanation": "Wrong. That is visible haematuria, not microscopic."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [
+      { "title": "EAU Guidelines on Non-muscle-invasive Bladder Cancer" },
+      { "title": "EAU Guidelines on Upper Urinary Tract Urothelial Carcinoma" }
+    ],
+    "he": {
+      "stem": "גבר בן 63, מעשן, עם המטוריה נראית לעין ללא כאב ובלי זיהום. מהו הבירור המתאים?",
+      "summary": "המטוריה נראית לעין ללא כאב במבוגר, ובמיוחד במעשן, מחשידה לגידול אורותליאלי עד שהוכח אחרת. הבירור כולל ציסטוסקופיה ו־CT אורוגרפיה (הדמיה של דרכי השתן העליונות). ציטולוגיה של השתן יכולה להשלים."
+    },
+    "en": {
+      "stem": "A 63-year-old man who smokes has painless visible haematuria and no infection. What is the appropriate work-up?",
+      "summary": "Painless visible haematuria in an adult, especially a smoker, suggests a urothelial tumour until proven otherwise. The work-up is cystoscopy and CT urography (imaging the upper tract). Urine cytology may complement them."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "ציסטוסקופיה ו־CT אורוגרפיה",
+          "explanation": "נכון. כך נבדקות דרכי השתן התחתונות והעליונות."
+        },
+        "en": {
+          "text": "Cystoscopy and CT urography",
+          "explanation": "Right. This checks both lower and upper tracts."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "תרבית שתן ומעקב",
+          "explanation": "שגוי. בלי זיהום, מעקב בלבד עלול להחמיץ גידול."
+        },
+        "en": {
+          "text": "A urine culture and follow-up",
+          "explanation": "Wrong. Without infection, follow-up alone may miss a tumour."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אולטרסאונד של הכליות בלבד",
+          "explanation": "שגוי. אולטרסאונד לבדו אינו בודק את השלפוחית ואת השופכנים די הצורך."
+        },
+        "en": {
+          "text": "A kidney ultrasound alone",
+          "explanation": "Wrong. Ultrasound alone does not assess the bladder and ureters well enough."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "PSA", "explanation": "שגוי. PSA אינו מברר המטוריה." },
+        "en": { "text": "PSA", "explanation": "Wrong. PSA does not evaluate haematuria." }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Prostate Cancer" }],
+    "he": {
+      "stem": "גבר בן 45 שאביו ואחיו אובחנו בסרטן ערמונית מבקש לדעת על בדיקת PSA. מה נכון?",
+      "summary": "בדיקת PSA מבוצעת אחרי שיחה על היתרונות והחסרונות (קבלת החלטה משותפת). בגברים בסיכון מוגבר, כמו היסטוריה משפחתית, נשאות BRCA2 או מוצא אפריקאי, מקובל להציע בדיקה כבר מגיל 45. בדיקה ראשונה מאפשרת לקבוע את תדירות המעקב לפי הסיכון."
+    },
+    "en": {
+      "stem": "A 45-year-old man whose father and brother had prostate cancer asks about a PSA test. What is true?",
+      "summary": "PSA testing follows a discussion of benefits and harms (shared decision-making). In men at raised risk, such as family history, BRCA2 carriers or men of African descent, testing is usually offered from age 45. A first test sets the follow-up interval by risk."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בגלל הסיכון המשפחתי מקובל להציע לו PSA כבר עכשיו, אחרי שיחה על היתרונות והחסרונות",
+          "explanation": "נכון. היסטוריה משפחתית מקדימה את גיל הבדיקה."
+        },
+        "en": {
+          "text": "Because of the family risk, PSA is usually offered now, after discussing benefits and harms",
+          "explanation": "Right. Family history brings testing forward."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין לבדוק PSA לפני גיל 70",
+          "explanation": "שגוי. זה מאוחר מדי לגבר בסיכון."
+        },
+        "en": {
+          "text": "PSA should not be tested before 70",
+          "explanation": "Wrong. That is too late for a man at risk."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "יש לבצע ביופסיה של הערמונית כבר עכשיו",
+          "explanation": "שגוי. אין ביופסיה בלי חשד בבדיקות."
+        },
+        "en": {
+          "text": "A prostate biopsy should be done now",
+          "explanation": "Wrong. There is no biopsy without a suspicious finding."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היסטוריה משפחתית אינה משנה דבר",
+          "explanation": "שגוי. היא מעלה את הסיכון ומשנה את ההמלצה."
+        },
+        "en": {
+          "text": "Family history changes nothing",
+          "explanation": "Wrong. It raises the risk and changes the advice."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urological Infections" }],
+    "he": {
+      "stem": "אישה בריאה בת 30, לא בהיריון, עם דלקת שלפוחית פשוטה. איזו אנטיביוטיקה מתאימה כטיפול ראשון?",
+      "summary": "בדלקת שלפוחית פשוטה בנשים, הטיפולים הראשונים הם פוספומיצין במנה אחת, ניטרופורנטואין לחמישה ימים או פיבמצילינם, לפי העמידות המקומית. פלואורוקווינולונים אינם מומלצים כאן, בגלל תופעות לוואי ועמידות."
+    },
+    "en": {
+      "stem": "A healthy, non-pregnant 30-year-old woman has uncomplicated cystitis. Which antibiotic is suitable first-line?",
+      "summary": "For uncomplicated cystitis in women, first-line treatments are single-dose fosfomycin, nitrofurantoin for five days or pivmecillinam, depending on local resistance. Fluoroquinolones are not recommended here, because of side effects and resistance."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "פוספומיצין במנה אחת",
+          "explanation": "נכון. זה אחד הטיפולים הראשונים המומלצים."
+        },
+        "en": {
+          "text": "Single-dose fosfomycin",
+          "explanation": "Right. It is one of the recommended first-line treatments."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ציפרופלוקסצין",
+          "explanation": "שגוי. פלואורוקווינולונים אינם מומלצים לדלקת שלפוחית פשוטה."
+        },
+        "en": {
+          "text": "Ciprofloxacin",
+          "explanation": "Wrong. Fluoroquinolones are not recommended for uncomplicated cystitis."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ונקומיצין תוך־ורידי",
+          "explanation": "שגוי. אין הוריה לטיפול תוך־ורידי כזה."
+        },
+        "en": {
+          "text": "Intravenous vancomycin",
+          "explanation": "Wrong. There is no indication for such intravenous treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין לתת אנטיביוטיקה כלל בשום מקרה",
+          "explanation": "שגוי. בדלקת עם תסמינים מקובל לטפל, אם כי טיפול סימפטומטי לבדו הוא אפשרות בחלק מהנשים."
+        },
+        "en": {
+          "text": "Never give antibiotics",
+          "explanation": "Wrong. Symptomatic cystitis is usually treated, though symptom relief alone is an option for some women."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urological Infections" }],
+    "he": {
+      "stem": "גבר בן 55 עם חום, צמרמורות, כאב בחיץ וקושי במתן שתן, וערמונית רגישה מאוד בבדיקה רקטלית. מה נכון?",
+      "summary": "זו דלקת ערמונית חיידקית חריפה. אין לבצע עיסוי ערמונית (סכנה לאלח דם). לוקחים תרבית שתן ודם, נותנים אנטיביוטיקה שחודרת לערמונית לשבועיים עד ארבעה, ומנקזים את השלפוחית אם יש אצירה (לעיתים בצנתר על־ערווה). אם אין שיפור, מחפשים מורסה בערמונית."
+    },
+    "en": {
+      "stem": "A 55-year-old man has fever, rigors, perineal pain and difficulty voiding, with a very tender prostate on rectal examination. What is true?",
+      "summary": "This is acute bacterial prostatitis. Prostatic massage must not be done (risk of sepsis). Urine and blood cultures are taken, an antibiotic that penetrates the prostate is given for two to four weeks, and the bladder is drained if there is retention (sometimes suprapubically). If there is no improvement, a prostatic abscess is sought."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אין לבצע עיסוי ערמונית; נותנים אנטיביוטיקה לשבועיים עד ארבעה",
+          "explanation": "נכון. עיסוי עלול לגרום לאלח דם."
+        },
+        "en": {
+          "text": "No prostatic massage; antibiotics for two to four weeks",
+          "explanation": "Right. Massage may cause sepsis."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "עיסוי ערמונית לקבלת הפרשה לתרבית",
+          "explanation": "שגוי. זה אסור בדלקת חריפה."
+        },
+        "en": {
+          "text": "Prostatic massage to get secretions for culture",
+          "explanation": "Wrong. This is forbidden in acute prostatitis."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה לשלושה ימים בלבד",
+          "explanation": "שגוי. טיפול קצר מדי מוביל להישנות."
+        },
+        "en": {
+          "text": "Antibiotics for three days only",
+          "explanation": "Wrong. Too short a course leads to relapse."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ביופסיה דחופה של הערמונית",
+          "explanation": "שגוי. ביופסיה בזיהום פעיל מסוכנת ואינה מוצדקת."
+        },
+        "en": {
+          "text": "An urgent prostate biopsy",
+          "explanation": "Wrong. Biopsy during active infection is dangerous and unjustified."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Urological Infections" }],
+    "he": {
+      "stem": "גבר בן 24, פעיל מינית, עם כאב ונפיחות באפידידימיס מזה יומיים. מהו הטיפול האמפירי המתאים בזמן ההמתנה לתוצאות?",
+      "summary": "באפידידימיטיס בגבר צעיר פעיל מינית, הגורמים השכיחים הם כלמידיה וגונוריאה. הטיפול האמפירי: צפטריאקסון במנה אחת ודוקסיציקלין לעשרה עד ארבעה עשר יום, עם בדיקה וטיפול לבני הזוג. חשוב לשלול תסביב אשך כשהתמונה אינה ברורה."
+    },
+    "en": {
+      "stem": "A sexually active 24-year-old man has had epididymal pain and swelling for two days. What is the suitable empirical treatment while awaiting results?",
+      "summary": "In a young, sexually active man with epididymitis, the common causes are chlamydia and gonorrhoea. Empirical treatment: a single dose of ceftriaxone and doxycycline for ten to fourteen days, with testing and treatment of partners. Torsion must be ruled out when the picture is unclear."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "צפטריאקסון במנה אחת ודוקסיציקלין",
+          "explanation": "נכון. הטיפול מכסה גונוריאה וכלמידיה."
+        },
+        "en": {
+          "text": "A single dose of ceftriaxone and doxycycline",
+          "explanation": "Right. It covers gonorrhoea and chlamydia."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ניטרופורנטואין",
+          "explanation": "שגוי. ניטרופורנטואין אינו חודר לרקמות ואינו מכסה מחלות מין."
+        },
+        "en": {
+          "text": "Nitrofurantoin",
+          "explanation": "Wrong. Nitrofurantoin does not reach the tissues or cover sexually transmitted infections."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "משככי כאבים בלבד",
+          "explanation": "שגוי. זיהום חיידקי מחייב אנטיביוטיקה."
+        },
+        "en": {
+          "text": "Painkillers only",
+          "explanation": "Wrong. A bacterial infection needs antibiotics."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "כריתת אשך", "explanation": "שגוי. אין כל הוריה לכריתה." },
+        "en": { "text": "Orchiectomy", "explanation": "Wrong. There is no indication for removal." }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Management of Non-neurogenic Male LUTS" }],
+    "he": {
+      "stem": "גבר מילא שאלון IPSS וקיבל ציון 14. איך מסווגת חומרת התסמינים?",
+      "summary": "שאלון IPSS מסכם שבעה סימפטומים, בטווח 0 עד 35: 0 עד 7 קלים, 8 עד 19 בינוניים, 20 עד 35 קשים. יש בו גם שאלה נפרדת על איכות החיים. הציון עוזר להחליט על טיפול ולעקוב אחרי התגובה."
+    },
+    "en": {
+      "stem": "A man completed the IPSS questionnaire and scored 14. How is the severity of his symptoms classed?",
+      "summary": "The IPSS adds up seven symptoms, from 0 to 35: 0 to 7 mild, 8 to 19 moderate, 20 to 35 severe. It also has a separate quality-of-life question. The score helps decide on treatment and follow the response."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "בינוניים", "explanation": "נכון. 8 עד 19 הם תסמינים בינוניים." },
+        "en": { "text": "Moderate", "explanation": "Right. 8 to 19 is moderate." }
+      },
+      {
+        "correct": false,
+        "he": { "text": "קלים", "explanation": "שגוי. קלים הם 0 עד 7." },
+        "en": { "text": "Mild", "explanation": "Wrong. Mild is 0 to 7." }
+      },
+      {
+        "correct": false,
+        "he": { "text": "קשים", "explanation": "שגוי. קשים הם 20 עד 35." },
+        "en": { "text": "Severe", "explanation": "Wrong. Severe is 20 to 35." }
+      },
+      {
+        "correct": false,
+        "he": { "text": "תקינים", "explanation": "שגוי. ציון 14 מעיד על תסמינים." },
+        "en": { "text": "Normal", "explanation": "Wrong. A score of 14 means symptoms." }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Urological Infections" }],
+    "he": {
+      "stem": "למטופל עם צנתר שתן קבוע יש תרבית שתן חיובית, בלי חום ובלי תסמינים. מה הגישה הנכונה?",
+      "summary": "כמעט כל המטופלים עם צנתר קבוע מפתחים בקטריוריה עם הזמן. בלי תסמינים אין לטפל: טיפול אינו מונע זיהום ומעודד עמידות. מטפלים כשיש תסמינים של זיהום, ואז לרוב מחליפים גם את הצנתר."
+    },
+    "en": {
+      "stem": "A patient with a long-term urinary catheter has a positive urine culture, with no fever and no symptoms. What is the right approach?",
+      "summary": "Almost all patients with long-term catheters develop bacteriuria over time. Without symptoms it is not treated: treatment does not prevent infection and promotes resistance. Treatment is given when there are symptoms of infection, usually with a catheter change."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "לא לטפל באנטיביוטיקה",
+          "explanation": "נכון. בקטריוריה בלי תסמינים אינה מטופלת."
+        },
+        "en": {
+          "text": "No antibiotic treatment",
+          "explanation": "Right. Asymptomatic bacteriuria is not treated."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "אנטיביוטיקה לשבוע", "explanation": "שגוי. אין תועלת, ויש נזק של עמידות." },
+        "en": {
+          "text": "A week of antibiotics",
+          "explanation": "Wrong. There is no benefit and there is harm from resistance."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנטיביוטיקה מונעת קבועה",
+          "explanation": "שגוי. מניעה קבועה מעודדת עמידות ואינה מומלצת."
+        },
+        "en": {
+          "text": "Long-term preventive antibiotics",
+          "explanation": "Wrong. Continuous prophylaxis promotes resistance and is not recommended."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אשפוז לטיפול תוך־ורידי",
+          "explanation": "שגוי. אין כאן זיהום שדורש טיפול."
+        },
+        "en": {
+          "text": "Admission for intravenous treatment",
+          "explanation": "Wrong. There is no infection needing treatment."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Testicular Cancer" }],
+    "he": {
+      "stem": "גבר בן 40 עם נפיחות לא כואבת בשק האשכים, שמעבירה אור בבדיקה ואי אפשר למשש בה את האשך. מה הצעד הבא?",
+      "summary": "נפיחות שמעבירה אור מתאימה להידרוצלה. כשאי אפשר למשש את האשך, מבצעים אולטרסאונד כדי לבדוק את האשך עצמו, כי הידרוצלה יכולה להסתיר גידול. הידרוצלה לא סימפטומטית אינה מחייבת ניתוח."
+    },
+    "en": {
+      "stem": "A 40-year-old man has a painless scrotal swelling that transilluminates, and the testis cannot be felt. What is the next step?",
+      "summary": "A swelling that transilluminates fits a hydrocele. When the testis cannot be felt, ultrasound is done to examine the testis itself, because a hydrocele can hide a tumour. An asymptomatic hydrocele does not need surgery."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אולטרסאונד של שק האשכים",
+          "explanation": "נכון. הוא בודק את האשך שמאחורי הנוזל."
+        },
+        "en": {
+          "text": "A scrotal ultrasound",
+          "explanation": "Right. It examines the testis behind the fluid."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שאיבת הנוזל במחט",
+          "explanation": "שגוי. שאיבה בלי בירור עלולה להחמיץ גידול, והנוזל חוזר."
+        },
+        "en": {
+          "text": "Needle aspiration of the fluid",
+          "explanation": "Wrong. Aspiration without imaging may miss a tumour, and the fluid returns."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "ניתוח דחוף", "explanation": "שגוי. הידרוצלה אינה מצב חירום." },
+        "en": { "text": "Urgent surgery", "explanation": "Wrong. A hydrocele is not an emergency." }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אין צורך בבירור",
+          "explanation": "שגוי. כשאי אפשר למשש את האשך, יש לבדוק אותו בהדמיה."
+        },
+        "en": {
+          "text": "No work-up is needed",
+          "explanation": "Wrong. When the testis cannot be felt, it must be imaged."
+        }
+      }
+    ]
+  }
+]

@@ -28,12 +28,16 @@ type Schemas = components['schemas'];
 type List = Schemas['AdminExamQuestionListDto'];
 type Question = Schemas['AdminExamQuestionDto'];
 type History = Schemas['EducationHistoryDto']['items'];
+type Statistics = Schemas['ExamQuestionStatisticsDto'];
+type Difficulty = NonNullable<Question['difficulty']>;
 type Lang = 'he' | 'en';
 
 const PAGE_SIZE = 25;
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 6;
 const LANGS: Lang[] = ['he', 'en'];
+export const DIFFICULTIES: Difficulty[] = ['EASY', 'MEDIUM', 'HARD'];
+const MAX_REFERENCES = 10;
 const link = 'font-semibold text-primary underline underline-offset-4';
 
 /** Every exam question with its state. "Waiting for review" is the reviewers' queue. */
@@ -85,6 +89,16 @@ export function ExamQuestionsPage() {
           </Link>
         </div>
         <p className="mt-2 text-text-muted">{a('questions.draftNote')}</p>
+        <p className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+          <Link href="/admin/education/questions/import" className={link}>
+            {a('questions.importLink')}
+          </Link>
+          {me?.permissions.some((p) => p === 'education.review') && (
+            <Link href="/admin/education/reports" className={link}>
+              {a('questions.reportsLink')}
+            </Link>
+          )}
+        </p>
       </div>
       <form
         role="search"
@@ -175,6 +189,9 @@ interface OptionDraft {
 }
 interface Draft {
   level: EducationLevel | '';
+  difficulty: Difficulty | '';
+  references: { title: string; url: string }[];
+  source: string;
   subspecialtyId: string;
   tier: Tier;
   typeIds: string[];
@@ -194,6 +211,9 @@ function toDraft(question: Question | null): Draft {
   };
   return {
     level: question?.level ?? '',
+    difficulty: question?.difficulty ?? '',
+    references: (question?.references ?? []).map((r) => ({ title: r.title, url: r.url ?? '' })),
+    source: question?.source ?? '',
     subspecialtyId: question?.subspecialtyId ?? '',
     tier: question?.accessTier ?? 'PUBLIC',
     typeIds: question?.typeIds ?? [],
@@ -224,6 +244,13 @@ function toBody(draft: Draft) {
   };
   return {
     level: draft.level || null,
+    difficulty: draft.difficulty || null,
+    references: draft.references
+      .filter((r) => r.title.trim())
+      .map((r) =>
+        r.url.trim() ? { title: r.title.trim(), url: r.url.trim() } : { title: r.title.trim() },
+      ),
+    source: draft.source.trim() || null,
     subspecialtyId: draft.subspecialtyId || null,
     accessTier: platformTier(draft.tier),
     typeIds: draft.tier === 'TYPES' ? draft.typeIds : [],
@@ -375,6 +402,7 @@ function QuestionForm({ initial }: { initial: Question | null }) {
             {t(`education.admin.statuses.${question.status}`)}
           </p>
         )}
+        {question?.reviewer && <ReviewedBy reviewer={question.reviewer} />}
       </div>
       {!editable && <Alert>{e('readOnly')}</Alert>}
       <Alert tone="warning">{e('privacy')}</Alert>
@@ -552,6 +580,16 @@ function QuestionForm({ initial }: { initial: Question | null }) {
                 label: name(s),
               }))}
             />
+            <SelectField
+              label={q('difficulty')}
+              placeholder={q('noDifficulty')}
+              value={draft.difficulty}
+              onChange={(event) => set({ difficulty: event.target.value as Difficulty | '' })}
+              options={DIFFICULTIES.map((value) => ({
+                value,
+                label: t(`education.exam.difficulty.${value}`),
+              }))}
+            />
             <TierFields
               label={e('tier')}
               typesLabel={e('types')}
@@ -561,6 +599,69 @@ function QuestionForm({ initial }: { initial: Question | null }) {
               onChange={(tier, typeIds) => set({ tier, typeIds })}
             />
           </div>
+
+          <fieldset className="flex flex-col gap-4">
+            <legend className="mb-1 text-xl font-semibold">{q('references')}</legend>
+            <p className="text-sm text-text-muted">{q('referencesHint')}</p>
+            {draft.references.map((item, index) => {
+              const number = index + 1;
+              const change = (patch: Partial<{ title: string; url: string }>) =>
+                set({
+                  references: draft.references.map((r, i) =>
+                    i === index ? { ...r, ...patch } : r,
+                  ),
+                });
+              return (
+                <div
+                  key={index}
+                  className="grid gap-3 rounded-md border border-border p-4 sm:grid-cols-[2fr_1fr_auto] sm:items-end"
+                >
+                  <TextField
+                    label={q('referenceTitle', { number })}
+                    value={item.title}
+                    onChange={(event) => change({ title: event.target.value })}
+                    maxLength={300}
+                  />
+                  <TextField
+                    label={q('referenceUrl', { number })}
+                    type="url"
+                    value={item.url}
+                    onChange={(event) => change({ url: event.target.value })}
+                    maxLength={500}
+                  />
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() =>
+                      set({ references: draft.references.filter((_, i) => i !== index) })
+                    }
+                  >
+                    {q('removeReference', { number })}
+                  </Button>
+                </div>
+              );
+            })}
+            {draft.references.length < MAX_REFERENCES && (
+              <div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => set({ references: [...draft.references, { title: '', url: '' }] })}
+                >
+                  {q('addReference')}
+                </Button>
+              </div>
+            )}
+          </fieldset>
+
+          <TextareaField
+            label={q('source')}
+            hint={q('sourceHint')}
+            value={draft.source}
+            onChange={(event) => set({ source: event.target.value })}
+            maxLength={500}
+            rows={2}
+          />
         </fieldset>
 
         {error !== null && <Alert tone="error">{errorMessage(error, t)}</Alert>}
@@ -603,7 +704,87 @@ function QuestionForm({ initial }: { initial: Question | null }) {
           }
         />
       )}
+      {question && <QuestionStatistics id={question.id} version={question.version} />}
       <HistoryList history={history} />
     </div>
+  );
+}
+
+/** "Reviewed by … on …", as readers see it. */
+export function ReviewedBy({
+  reviewer,
+}: {
+  reviewer: { nameHe: string | null; nameEn: string | null; at: string };
+}) {
+  const t = useTranslations();
+  const locale = useLocale();
+  const format = useFormatter();
+  const who =
+    locale === 'he' ? (reviewer.nameHe ?? reviewer.nameEn) : (reviewer.nameEn ?? reviewer.nameHe);
+  const date = format.dateTime(new Date(reviewer.at), { dateStyle: 'long' });
+  return (
+    <p className="mt-2 text-sm text-text-muted" data-testid="reviewed-by">
+      {who
+        ? t('education.exam.reviewedBy', { name: who, date })
+        : t('education.exam.reviewedOn', { date })}
+    </p>
+  );
+}
+
+/**
+ * How readers answered the question: first answers only, no number below five people, never
+ * who (M23 plan §3).
+ */
+function QuestionStatistics({ id, version }: { id: string; version: number }) {
+  const t = useTranslations();
+  const s = (key: string, values?: Record<string, string | number>) =>
+    t(`education.admin.statistics.${key}`, values);
+  const { api, call } = useAuth();
+  const [stats, setStats] = useState<Statistics | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    call(() =>
+      api.GET('/api/v1/admin/exam-questions/{id}/statistics', { params: { path: { id } } }),
+    )
+      .then((result) => active && setStats(result))
+      .catch(() => active && setStats(null));
+    return () => {
+      active = false;
+    };
+  }, [api, call, id, version]);
+
+  if (!stats) return null;
+  return (
+    <section
+      aria-labelledby="question-statistics"
+      className="flex flex-col gap-3"
+      data-testid="question-statistics"
+    >
+      <h2 id="question-statistics" className="text-xl font-semibold">
+        {s('title')}
+      </h2>
+      {stats.answered === null ? (
+        <p className="text-text-muted">{s('tooFew', { count: stats.shownFrom })}</p>
+      ) : (
+        <>
+          <p>{s('summary', { answered: stats.answered, percent: stats.percentCorrect ?? 0 })}</p>
+          <ul className="flex flex-col gap-1">
+            {stats.options.map((option) => (
+              <li key={option.position}>
+                {s('option', { number: option.position, count: option.chosen ?? 0 })}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {stats.openReports > 0 && (
+        <p>
+          <Link href="/admin/education/reports" className={link}>
+            {s('openReports', { count: stats.openReports })}
+          </Link>
+        </p>
+      )}
+    </section>
   );
 }

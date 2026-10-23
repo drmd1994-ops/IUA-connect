@@ -18,9 +18,11 @@ import {
   type AdminExamQuestionDto,
   type AdminExamQuestionListDto,
   type AdminExamQuestionListQueryDto,
+  type ExamImportResultDto,
   type ExamQuestionInputDto,
 } from './exam.dto';
-import { questionProblem } from './exam-rules';
+import { readImport } from './exam-import';
+import { questionProblem, referencesOf, reviewerView } from './exam-rules';
 
 const INCLUDE = {
   translations: true,
@@ -191,6 +193,7 @@ export class ExamAdminService {
       if (problem) throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: problem }]);
     }
     const now = new Date();
+    const reviewer = action === 'PUBLISH' ? await this.reviewerOf(principal.userId, now) : {};
     await this.prisma.$transaction(async (tx) => {
       const { count } = await tx.examQuestion.updateMany({
         where: { id, status: row.status, version: row.version },
@@ -199,7 +202,7 @@ export class ExamAdminService {
           version: { increment: 1 },
           ...(action === 'SUBMIT' ? { submittedBy: principal.userId } : {}),
           ...(action === 'PUBLISH'
-            ? { publishedAt: row.publishedAt ?? now, archivedAt: null }
+            ? { publishedAt: row.publishedAt ?? now, archivedAt: null, ...reviewer }
             : {}),
           ...(action === 'ARCHIVE' ? { archivedAt: now } : {}),
         },
@@ -221,7 +224,70 @@ export class ExamAdminService {
     return this.get(id);
   }
 
+  /**
+   * Makes a draft of every question in the spreadsheet (M23 plan §2), or none: a file with any
+   * bad row is refused whole. Imported questions are public, like any new question, and go
+   * through the same review; nothing is published here.
+   */
+  async import(csv: string, principal: Principal, meta: RequestMeta): Promise<ExamImportResultDto> {
+    const subspecialties = await this.prisma.subspecialty.findMany({
+      where: { active: true },
+      select: { id: true, key: true },
+    });
+    const idOf = new Map(subspecialties.map((row) => [row.key, row.id]));
+    const result = readImport(csv, new Set(idOf.keys()));
+    if (!result.ok) return { imported: 0, problems: result.problems };
+    const ids: string[] = [];
+    await this.prisma.$transaction(
+      async (tx) => {
+        for (const question of result.questions) {
+          const id = uuidv7();
+          ids.push(id);
+          const input: ExamQuestionInputDto = {
+            level: question.level,
+            difficulty: question.difficulty,
+            references: question.references,
+            source: question.source,
+            subspecialtyId: question.topic ? idOf.get(question.topic)! : null,
+            accessTier: 'PUBLIC',
+            typeIds: [],
+            translations: question.translations,
+            options: question.options,
+          };
+          await tx.examQuestion.create({
+            data: { id, status: 'DRAFT', authorUserId: principal.userId, ...columns(input) },
+          });
+          await this.replaceParts(tx, id, input);
+          await this.addHistory(tx, id, 'import', null, 'DRAFT', principal.userId);
+        }
+      },
+      { timeout: 60_000 },
+    );
+    await this.audit.record({
+      action: 'exam_question.import',
+      correlationId: meta.correlationId,
+      actorUserId: principal.userId,
+      actorIp: meta.ip,
+      entityType: 'exam_question',
+      entityId: ids[0]!,
+      changes: { count: ids.length },
+    });
+    return { imported: ids.length, problems: [] };
+  }
+
   // --- Internals ------------------------------------------------------------------------------
+
+  /** The publisher's name as it reads now, kept on the question. */
+  private async reviewerOf(userId: string, at: Date) {
+    const profile = await this.prisma.profile.findUnique({ where: { userId } });
+    const plain = [profile?.firstName, profile?.lastName].filter(Boolean).join(' ') || null;
+    return {
+      reviewedBy: userId,
+      reviewerNameHe: profile?.nameHe || plain,
+      reviewerNameEn: profile?.nameEn || plain,
+      reviewedAt: at,
+    };
+  }
 
   private async row(id: string): Promise<Row> {
     const row = await this.prisma.examQuestion.findUnique({ where: { id }, include: INCLUDE });
@@ -357,6 +423,9 @@ export class ExamAdminService {
 function columns(input: ExamQuestionInputDto) {
   return {
     level: input.level ?? null,
+    difficulty: input.difficulty ?? null,
+    references: input.references,
+    source: input.source?.trim() || null,
     subspecialtyId: input.subspecialtyId ?? null,
     accessTier: input.accessTier,
   };
@@ -388,6 +457,10 @@ function view(row: Row): Omit<AdminExamQuestionDto, 'typeIds'> {
     id: row.id,
     status: row.status,
     level: row.level,
+    difficulty: row.difficulty,
+    references: referencesOf(row.references),
+    source: row.source,
+    reviewer: reviewerView(row),
     subspecialtyId: row.subspecialtyId,
     accessTier: row.accessTier,
     translations: { he: text('he'), en: text('en') },

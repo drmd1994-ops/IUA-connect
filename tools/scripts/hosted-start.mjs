@@ -2,7 +2,8 @@
 //
 //   1. the two database roles and the demo database, as on this computer (db-provision.mjs);
 //   2. the database changes, as the owner role;
-//   3. the demo data, once: only when the database has nobody in it yet;
+//   3. the demo data, once: only when the database has nobody in it yet; later layers that check
+//      for themselves (the question bank's starter set, M23) on every start;
 //   4. the server, as the application role.
 //
 // Refuses to run unless DEMO_HOSTED=true. Never prints a password or a key.
@@ -54,6 +55,8 @@ async function main() {
     pnpm(['--filter', '@medconnect/api', 'db:seed']);
   } else {
     ok('demo data present; not seeded again');
+    step('Adding the question bank starter set if missing');
+    pnpm(['--filter', '@medconnect/api', 'db:seed'], { env: { SEED_LAYERS: 'question-bank' } });
   }
 
   step('Starting the server');

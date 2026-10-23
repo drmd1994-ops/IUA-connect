@@ -94,6 +94,9 @@ model User {
   eventAttendances    EventAttendance[]
   eventReminders      EventReminder[]
   examAnswers         ExamAnswer[]
+  mockExams           MockExam[]
+  examBookmarks       ExamBookmark[]
+  examReports         ExamReport[]
   notifications       Notification[]
   notificationPrefs   NotificationPreference[]
   announcementReads   AnnouncementRead[]
@@ -1561,10 +1564,30 @@ model EducationHistory {
 // right option, why each option is right or wrong, and a short summary of the topic.
 // ---------------------------------------------------------------------------
 
+/// How hard the author judges a question (M23).
+enum ExamDifficulty {
+  EASY
+  MEDIUM
+  HARD
+
+  @@map("exam_difficulty")
+}
+
 model ExamQuestion {
   id             String          @id @db.Uuid
   status         EducationStatus @default(DRAFT)
   level          EducationLevel?
+  difficulty     ExamDifficulty?
+  /// [{ title, url? }]: what the right answer rests on, shown with the explanation (M23).
+  references     Json            @default("[]")
+  /// Where the question comes from, for the reviewer only (M23), e.g. "written new by …".
+  source         String?         @db.VarChar(500)
+  /// Who published it and when, shown to readers as "Reviewed by … on …" (M23). The names are
+  /// kept as they were when it was published.
+  reviewedBy     String?         @map("reviewed_by") @db.Uuid
+  reviewerNameHe String?         @map("reviewer_name_he") @db.VarChar(200)
+  reviewerNameEn String?         @map("reviewer_name_en") @db.VarChar(200)
+  reviewedAt     DateTime?       @map("reviewed_at") @db.Timestamptz(6)
   subspecialtyId String?         @map("subspecialty_id") @db.Uuid
   accessTier     AccessTier      @default(PUBLIC) @map("access_tier")
   authorUserId   String?         @map("author_user_id") @db.Uuid
@@ -1582,6 +1605,9 @@ model ExamQuestion {
   options      ExamOption[]
   history      ExamQuestionHistory[]
   answers      ExamAnswer[]
+  bookmarks    ExamBookmark[]
+  reports      ExamReport[]
+  mockItems    MockExamQuestion[]
 
   @@index([status, level, subspecialtyId])
   @@map("exam_questions")
@@ -1657,14 +1683,114 @@ model ExamAnswer {
   correct    Boolean
   /// True for the first answer of this person to this question: the one that counts.
   counts     Boolean
+  /// The mock exam it was given in (M23); empty for practice.
+  mockExamId String?  @map("mock_exam_id") @db.Uuid
   at         DateTime @default(now()) @db.Timestamptz(6)
 
   user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  mockExam MockExam?    @relation(fields: [mockExamId], references: [id], onDelete: Cascade)
 
   @@index([userId, at(sort: Desc)])
   @@index([questionId])
   @@map("exam_answers")
+}
+
+/// A timed mock exam (M23 plan §2). The server keeps the clock: an answer after endsAt is
+/// refused. Answers wait in mock_exam_questions until the exam ends; then they are written to
+/// exam_answers, marked with the exam. Only its person reads it; deleted with their account.
+model MockExam {
+  id               String          @id @db.Uuid
+  userId           String          @map("user_id") @db.Uuid
+  level            EducationLevel?
+  /// The topics chosen (subspecialty keys); empty for all.
+  subspecialtyKeys String[]        @default([]) @map("subspecialty_keys")
+  startedAt        DateTime        @default(now()) @map("started_at") @db.Timestamptz(6)
+  endsAt           DateTime        @map("ends_at") @db.Timestamptz(6)
+  /// Set when the person finishes or the time is up.
+  finishedAt       DateTime?       @map("finished_at") @db.Timestamptz(6)
+  correct          Int?
+
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions MockExamQuestion[]
+  answers   ExamAnswer[]
+
+  @@index([userId, startedAt(sort: Desc)])
+  @@map("mock_exams")
+}
+
+model MockExamQuestion {
+  examId         String    @map("exam_id") @db.Uuid
+  /// 1 is the first question.
+  position       Int
+  questionId     String    @map("question_id") @db.Uuid
+  /// The option chosen so far; it may change until the exam ends.
+  chosenPosition Int?      @map("chosen_position")
+  answeredAt     DateTime? @map("answered_at") @db.Timestamptz(6)
+
+  exam     MockExam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([examId, position])
+  @@unique([examId, questionId])
+  @@index([questionId])
+  @@map("mock_exam_questions")
+}
+
+/// A question a person keeps to return to (M23). Theirs alone.
+model ExamBookmark {
+  userId     String   @map("user_id") @db.Uuid
+  questionId String   @map("question_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, questionId])
+  @@index([questionId])
+  @@map("exam_bookmarks")
+}
+
+enum ExamReportReason {
+  WRONG_ANSWER
+  UNCLEAR
+  OUTDATED
+  TYPO
+  OTHER
+
+  @@map("exam_report_reason")
+}
+
+enum ExamReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+
+  @@map("exam_report_status")
+}
+
+/// A reader says what is wrong with a question (M23). It goes to the question reviewers' queue,
+/// and the reader is told when it is dealt with. Staff never see who sent it.
+model ExamReport {
+  id         String           @id @db.Uuid
+  questionId String           @map("question_id") @db.Uuid
+  userId     String           @map("user_id") @db.Uuid
+  reason     ExamReportReason
+  text       String           @default("") @db.VarChar(1000)
+  status     ExamReportStatus @default(OPEN)
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  handledAt  DateTime?        @map("handled_at") @db.Timestamptz(6)
+  handledBy  String?          @map("handled_by") @db.Uuid
+  /// What the reviewer tells the reader.
+  response   String?          @db.VarChar(1000)
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([questionId])
+  @@index([userId])
+  @@map("exam_reports")
 }
 
 // ---------------------------------------------------------------------------

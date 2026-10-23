@@ -35,6 +35,10 @@ const PAGES = [
   '/account/exam-results',
   '/admin/education',
   '/admin/education/questions',
+  // M23 (the signed-in and filled views are checked in question-bank.spec.ts)
+  '/education/exam/mock',
+  '/admin/education/questions/import',
+  '/admin/education/reports',
   // M7 (the signed-in and filled views are checked in notifications.spec.ts)
   '/search',
   '/members',

@@ -1,4 +1,11 @@
-import { type QuestionDraft, questionProblem, score } from './exam-rules';
+import {
+  type QuestionDraft,
+  questionProblem,
+  questionStatistics,
+  referencesOf,
+  score,
+  wrongNow,
+} from './exam-rules';
 
 describe('exam question rules', () => {
   const option = (correct = false) => ({ correct, hebrewText: true, hebrewExplanation: true });
@@ -58,6 +65,52 @@ describe('exam question rules', () => {
     it('reaches 100 and 0', () => {
       expect(score([{ questionId: 'a', correct: true, counts: true }]).percent).toBe(100);
       expect(score([{ questionId: 'a', correct: false, counts: true }]).percent).toBe(0);
+    });
+  });
+
+  it('lists a question as wrong while its latest answer is wrong', () => {
+    const at = (minute: number) => new Date(Date.UTC(2026, 9, 23, 10, minute));
+    expect(
+      wrongNow([
+        { questionId: 'a', correct: false, at: at(1) },
+        { questionId: 'a', correct: true, at: at(2) },
+        { questionId: 'b', correct: true, at: at(1) },
+        { questionId: 'b', correct: false, at: at(3) },
+        { questionId: 'c', correct: false, at: at(5) },
+      ]).sort(),
+    ).toEqual(['b', 'c']);
+  });
+
+  it('reads stored references, leaving out anything malformed', () => {
+    expect(
+      referencesOf([
+        { title: 'A', url: 'https://x.test' },
+        { title: 'B' },
+        { url: 'x' },
+        'y',
+        null,
+      ]),
+    ).toEqual([{ title: 'A', url: 'https://x.test' }, { title: 'B' }]);
+    expect(referencesOf(null)).toEqual([]);
+  });
+
+  it('withholds every statistic until five people answered', () => {
+    const four = [1, 1, 2, 3].map((position) => ({ position, correct: position === 1 }));
+    expect(questionStatistics(four, [1, 2, 3, 4])).toEqual({
+      answered: null,
+      percentCorrect: null,
+      options: [1, 2, 3, 4].map((position) => ({ position, chosen: null })),
+    });
+    const five = [...four, { position: 1, correct: true }];
+    expect(questionStatistics(five, [1, 2, 3, 4])).toEqual({
+      answered: 5,
+      percentCorrect: 60,
+      options: [
+        { position: 1, chosen: 3 },
+        { position: 2, chosen: 1 },
+        { position: 3, chosen: 1 },
+        { position: 4, chosen: 0 },
+      ],
     });
   });
 });

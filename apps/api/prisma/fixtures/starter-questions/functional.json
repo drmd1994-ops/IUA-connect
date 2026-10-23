@@ -1,0 +1,521 @@
+[
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "מטופלת עם שלפוחית רגיזה (דחיפות ותכיפות, בלי זיהום). מהו הטיפול הראשון?",
+      "summary": "הטיפול הראשון בשלפוחית רגיזה הוא שמרני: שינוי הרגלי שתייה (כולל קפאין), אימון שלפוחית ותרגול רצפת אגן. אם אין די בכך, מוסיפים תרופה (אנטי־מוסקרינית או אגוניסט β3). טיפולים פולשניים שמורים למקרים עמידים."
+    },
+    "en": {
+      "stem": "A patient has overactive bladder (urgency and frequency, no infection). What is the first treatment?",
+      "summary": "First-line treatment of overactive bladder is conservative: adjusting fluid habits (including caffeine), bladder training and pelvic floor exercises. If that is not enough, a drug is added (an antimuscarinic or a β3 agonist). Invasive treatments are kept for refractory cases."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "שינויי אורח חיים ואימון שלפוחית",
+          "explanation": "נכון. אלה הצעדים הראשונים, לפני תרופות."
+        },
+        "en": {
+          "text": "Lifestyle changes and bladder training",
+          "explanation": "Right. These come first, before drugs."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "הזרקת בוטולינום לשלפוחית",
+          "explanation": "שגוי. בוטולינום שמור למטופלים שלא הגיבו לטיפול שמרני ולתרופות."
+        },
+        "en": {
+          "text": "Bladder botulinum toxin injection",
+          "explanation": "Wrong. Botulinum is kept for patients who failed conservative treatment and drugs."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "ניתוח הגדלת שלפוחית",
+          "explanation": "שגוי. זהו טיפול אחרון, למקרים עמידים מאוד."
+        },
+        "en": {
+          "text": "Bladder augmentation surgery",
+          "explanation": "Wrong. This is a last resort for very refractory cases."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "צנתור עצמי לסירוגין",
+          "explanation": "שגוי. צנתור מתאים לאצירת שתן, לא לשלפוחית רגיזה."
+        },
+        "en": {
+          "text": "Clean intermittent self-catheterisation",
+          "explanation": "Wrong. Catheterisation suits urinary retention, not overactive bladder."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "מהו מנגנון הפעולה של מירבגרון בשלפוחית רגיזה?",
+      "summary": "מירבגרון הוא אגוניסט לקולטן β3 אדרנרגי בשריר השלפוחית, שמרפה אותו בשלב האגירה ומגדיל את הקיבולת. אין לו תופעות לוואי אנטי־כולינרגיות, אך יש לנטר לחץ דם ולהימנע ממנו ביתר לחץ דם לא מאוזן."
+    },
+    "en": {
+      "stem": "What is the mechanism of action of mirabegron in overactive bladder?",
+      "summary": "Mirabegron is an agonist of β3 adrenergic receptors in the bladder muscle, relaxing it during storage and increasing capacity. It has no anticholinergic side effects, but blood pressure should be monitored and it is avoided in uncontrolled hypertension."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אגוניסט לקולטן β3 אדרנרגי",
+          "explanation": "נכון. הוא מרפה את שריר השלפוחית בשלב האגירה."
+        },
+        "en": {
+          "text": "A β3 adrenergic receptor agonist",
+          "explanation": "Right. It relaxes the bladder muscle during storage."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חוסם קולטנים מוסקריניים",
+          "explanation": "שגוי. זה מנגנון הפעולה של אוקסיבוטינין וסוליפנצין."
+        },
+        "en": {
+          "text": "A muscarinic receptor blocker",
+          "explanation": "Wrong. That is how oxybutynin and solifenacin work."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חוסם אלפא 1",
+          "explanation": "שגוי. חוסמי אלפא פועלים בעיקר על צוואר השלפוחית והערמונית."
+        },
+        "en": {
+          "text": "An alpha-1 blocker",
+          "explanation": "Wrong. Alpha-blockers act mainly on the bladder neck and prostate."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אנלוג של וזופרסין",
+          "explanation": "שגוי. זהו דסמופרסין, שמפחית ייצור שתן בלילה."
+        },
+        "en": {
+          "text": "A vasopressin analogue",
+          "explanation": "Wrong. That is desmopressin, which lowers urine production at night."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "אישה בת 82 עם ירידה קוגניטיבית קלה סובלת מדחיפות. איזו תרופה מעוררת את החשש הגדול ביותר להחמרה קוגניטיבית?",
+      "summary": "תרופות אנטי־מוסקריניות עלולות לפגוע בקוגניציה במבוגרים, ואוקסיבוטינין, שחודר היטב למוח, הוא המדאיג ביותר. במבוגרים עם פגיעה קוגניטיבית עדיף לשקול אגוניסט β3, או תרופה אנטי־מוסקרינית שחודרת פחות למוח, ולהעריך את העומס האנטי־כולינרגי הכולל."
+    },
+    "en": {
+      "stem": "An 82-year-old woman with mild cognitive decline has urgency. Which drug raises the greatest concern for cognitive worsening?",
+      "summary": "Antimuscarinic drugs can impair cognition in older adults, and oxybutynin, which enters the brain readily, is the most concerning. In older people with cognitive impairment, a β3 agonist, or an antimuscarinic that enters the brain less, is preferred, and the total anticholinergic burden is assessed."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "אוקסיבוטינין",
+          "explanation": "נכון. הוא חוצה את מחסום הדם־מוח ועלול להחמיר בלבול."
+        },
+        "en": {
+          "text": "Oxybutynin",
+          "explanation": "Right. It crosses the blood–brain barrier and may worsen confusion."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מירבגרון",
+          "explanation": "שגוי. לאגוניסט β3 אין השפעה אנטי־כולינרגית על המוח."
+        },
+        "en": {
+          "text": "Mirabegron",
+          "explanation": "Wrong. A β3 agonist has no anticholinergic effect on the brain."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "טרוספיום",
+          "explanation": "שגוי. טרוספיום כמעט אינו חוצה את מחסום הדם־מוח."
+        },
+        "en": {
+          "text": "Trospium",
+          "explanation": "Wrong. Trospium barely crosses the blood–brain barrier."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "וג׳ברון",
+          "explanation": "שגוי. וג׳ברון הוא אגוניסט β3, בלי השפעה אנטי־כולינרגית."
+        },
+        "en": {
+          "text": "Vibegron",
+          "explanation": "Wrong. Vibegron is a β3 agonist, without anticholinergic effect."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "לפני הזרקת בוטולינום A לשלפוחית בשלפוחית רגיזה עמידה, מה חשוב במיוחד לוודא?",
+      "summary": "אחרי הזרקת בוטולינום לשלפוחית, חלק מהמטופלים מפתחים שארית שתן גדולה או אצירה, ונזקקים לצנתור עצמי לסירוגין זמני. לכן לפני הטיפול מוודאים שהמטופל מסוגל ומוכן לבצע צנתור עצמי, ובודקים שארית אחרי הטיפול."
+    },
+    "en": {
+      "stem": "Before injecting botulinum toxin A into the bladder for refractory overactive bladder, what is especially important to confirm?",
+      "summary": "After bladder botulinum injection, some patients develop a large residual volume or retention and need temporary clean intermittent self-catheterisation. Before treatment, the patient's ability and willingness to self-catheterise are confirmed, and the residual is checked afterwards."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "שהמטופל מסוגל ומוכן לבצע צנתור עצמי אם יידרש",
+          "explanation": "נכון. אצירת שתן היא סיבוך ידוע של הטיפול."
+        },
+        "en": {
+          "text": "That the patient can and will self-catheterise if needed",
+          "explanation": "Right. Urinary retention is a known complication of the treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שהמטופל אינו נוטל חוסם אלפא",
+          "explanation": "שגוי. חוסמי אלפא אינם הוריית נגד לטיפול."
+        },
+        "en": {
+          "text": "That the patient is not taking an alpha-blocker",
+          "explanation": "Wrong. Alpha-blockers are not a contraindication."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שה־PSA תקין",
+          "explanation": "שגוי. PSA אינו קשור לבחירת המטופלים לטיפול זה."
+        },
+        "en": {
+          "text": "That the PSA is normal",
+          "explanation": "Wrong. PSA is unrelated to choosing patients for this treatment."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שבוצע MRI של עמוד השדרה",
+          "explanation": "שגוי. אין צורך בכך בשלפוחית רגיזה לא נוירוגנית."
+        },
+        "en": {
+          "text": "That a spinal MRI was done",
+          "explanation": "Wrong. This is not needed in non-neurogenic overactive bladder."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Non-neurogenic Female LUTS" }],
+    "he": {
+      "stem": "באיזה מצב, מלבד שלפוחית רגיזה עמידה, נוירומודולציה סקרלית היא אפשרות טיפול מקובלת?",
+      "summary": "נוירומודולציה סקרלית (גירוי עצב העצה) מטפלת בשלפוחית רגיזה עמידה, באצירת שתן לא חסימתית (למשל בתסמונת Fowler בנשים צעירות) ובאי־נקיטת צואה. היא אינה מטפלת באצירה הנובעת מחסימה מכנית."
+    },
+    "en": {
+      "stem": "Apart from refractory overactive bladder, in which condition is sacral neuromodulation an accepted treatment option?",
+      "summary": "Sacral neuromodulation treats refractory overactive bladder, non-obstructive urinary retention (for example Fowler's syndrome in young women) and faecal incontinence. It does not treat retention caused by mechanical obstruction."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "אצירת שתן לא חסימתית", "explanation": "נכון. זו הוריה מוכרת לטיפול." },
+        "en": {
+          "text": "Non-obstructive urinary retention",
+          "explanation": "Right. This is a recognised indication."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "אצירת שתן בגלל הגדלה של הערמונית",
+          "explanation": "שגוי. חסימה מכנית מטופלת בהסרת החסימה."
+        },
+        "en": {
+          "text": "Urinary retention from an enlarged prostate",
+          "explanation": "Wrong. Mechanical obstruction is treated by removing the obstruction."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "דליפת שתן במאמץ",
+          "explanation": "שגוי. דליפה במאמץ מטופלת בתרגול רצפת אגן ובניתוח."
+        },
+        "en": {
+          "text": "Stress urinary incontinence",
+          "explanation": "Wrong. Stress incontinence is treated with pelvic floor training and surgery."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "היצרות של השופכה",
+          "explanation": "שגוי. היצרות מטופלת בהרחבה או בניתוח שחזור."
+        },
+        "en": {
+          "text": "Urethral stricture",
+          "explanation": "Wrong. A stricture is treated by dilation or reconstruction."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Neuro-Urology" }],
+    "he": {
+      "stem": "מטופל עם פגיעה בחוט השדרה בגובה T4 מפתח כאב ראש פתאומי, הזעה מעל גובה הפגיעה ולחץ דם 210/110. מהו הצעד הראשון?",
+      "summary": "זהו דיסרפלקסיה אוטונומית, מצב חירום בפגיעות חוט שדרה מעל T6. הגורם השכיח הוא שלפוחית מלאה (או צנתר חסום) או מעי מלא. הצעד הראשון: להושיב את המטופל ולרוקן את השלפוחית; אם לחץ הדם נשאר גבוה, נותנים תרופה מורידת לחץ דם קצרת טווח."
+    },
+    "en": {
+      "stem": "A patient with a spinal cord injury at T4 develops a sudden headache, sweating above the level of injury and a blood pressure of 210/110. What is the first step?",
+      "summary": "This is autonomic dysreflexia, an emergency in spinal cord injuries above T6. The usual trigger is a full bladder (or blocked catheter) or a full bowel. First step: sit the patient up and empty the bladder; if blood pressure stays high, give a short-acting antihypertensive."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "להושיב את המטופל ולרוקן את השלפוחית",
+          "explanation": "נכון. הסרת הגירוי עוצרת את התגובה ברוב המקרים."
+        },
+        "en": {
+          "text": "Sit the patient up and empty the bladder",
+          "explanation": "Right. Removing the trigger stops the reaction in most cases."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "להשכיב את המטופל על הגב עם רגליים מורמות",
+          "explanation": "שגוי. שכיבה מעלה עוד את לחץ הדם בראש; יש להושיב."
+        },
+        "en": {
+          "text": "Lay the patient flat with the legs raised",
+          "explanation": "Wrong. Lying flat raises cerebral pressure further; sit the patient up."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "לבצע CT של הראש לפני כל טיפול",
+          "explanation": "שגוי. קודם מסירים את הגירוי; עיכוב מסוכן."
+        },
+        "en": {
+          "text": "Do a head CT before any treatment",
+          "explanation": "Wrong. The trigger is removed first; delay is dangerous."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "לתת נוזלים תוך־ורידיים",
+          "explanation": "שגוי. נוזלים אינם מטפלים במצב ועלולים להגדיל את נפח השלפוחית."
+        },
+        "en": {
+          "text": "Give intravenous fluids",
+          "explanation": "Wrong. Fluids do not treat the condition and may fill the bladder further."
+        }
+      }
+    ]
+  },
+  {
+    "level": "SPECIALIST",
+    "difficulty": "HARD",
+    "references": [{ "title": "EAU Guidelines on Management of Non-neurogenic Male LUTS" }],
+    "he": {
+      "stem": "ביומן השתנה של גבר בן 70, נפח השתן בלילה הוא 40% מנפח השתן היומי. מהי האבחנה?",
+      "summary": "פוליאוריה לילית מוגדרת כייצור שתן בלילה מעל 33% מהנפח היממתי במבוגרים מעל גיל 65 (ומעל 20% בצעירים). יומן השתנה של שלושה ימים לפחות הוא הכלי לאבחון. הגורמים כוללים אי־ספיקת לב, דום נשימה בשינה, שתייה בערב ותרופות."
+    },
+    "en": {
+      "stem": "A 70-year-old man's frequency–volume chart shows night-time urine volume at 40% of the 24-hour total. What is the diagnosis?",
+      "summary": "Nocturnal polyuria is night-time urine production above 33% of the 24-hour volume in adults over 65 (above 20% in younger people). A frequency–volume chart of at least three days is the tool for diagnosis. Causes include heart failure, sleep apnoea, evening drinking and drugs."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": { "text": "פוליאוריה לילית", "explanation": "נכון. מעל 33% בלילה בגיל זה." },
+        "en": {
+          "text": "Nocturnal polyuria",
+          "explanation": "Right. Above 33% at night at this age."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "קיבולת שלפוחית מופחתת בלילה",
+          "explanation": "שגוי. קיבולת מופחתת מתבטאת בנפחי השתנה קטנים, לא בנפח לילי גדול."
+        },
+        "en": {
+          "text": "Reduced night-time bladder capacity",
+          "explanation": "Wrong. Reduced capacity shows as small voided volumes, not a large night volume."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "פוליאוריה גלובלית",
+          "explanation": "שגוי. פוליאוריה גלובלית היא נפח יממתי גבוה (מעל כ־40 מ״ל לק״ג)."
+        },
+        "en": {
+          "text": "Global polyuria",
+          "explanation": "Wrong. Global polyuria is a high 24-hour volume (above about 40 mL/kg)."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "חסימה בשל הגדלה שפירה של הערמונית",
+          "explanation": "שגוי. יומן השתנה אינו מאבחן חסימה."
+        },
+        "en": {
+          "text": "Obstruction from benign prostatic enlargement",
+          "explanation": "Wrong. A frequency–volume chart does not diagnose obstruction."
+        }
+      }
+    ]
+  },
+  {
+    "level": "STUDENT",
+    "difficulty": "EASY",
+    "references": [{ "title": "EAU Guidelines on Management of Non-neurogenic Male LUTS" }],
+    "he": {
+      "stem": "גבר הנוטל טמסולוסין מתוכנן לניתוח קטרקט. מה חשוב להודיע לרופא העיניים?",
+      "summary": "חוסמי אלפא, ובמיוחד טמסולוסין, קשורים לתסמונת הקשתית הרפויה בניתוח (IFIS), שמקשה על ניתוח הקטרקט. יש לדווח לרופא העיניים על השימוש, גם אם הופסק, כדי שיתכונן. אין הוכחה שהפסקת התרופה לפני הניתוח מונעת את התסמונת."
+    },
+    "en": {
+      "stem": "A man taking tamsulosin is scheduled for cataract surgery. What is important to tell the ophthalmologist?",
+      "summary": "Alpha-blockers, especially tamsulosin, are linked to intraoperative floppy iris syndrome (IFIS), which makes cataract surgery harder. The ophthalmologist should be told about the drug, even if it was stopped, so they can prepare. There is no proof that stopping the drug before surgery prevents the syndrome."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "שהוא נוטל חוסם אלפא, בגלל הסיכון לתסמונת הקשתית הרפויה",
+          "explanation": "נכון. רופא העיניים יכול להתכונן לכך מראש."
+        },
+        "en": {
+          "text": "That he takes an alpha-blocker, because of the risk of floppy iris syndrome",
+          "explanation": "Right. The ophthalmologist can prepare for it."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שהתרופה מעלה את לחץ התוך־עיני",
+          "explanation": "שגוי. זו אינה הבעיה העיקרית של חוסמי אלפא בניתוח עיניים."
+        },
+        "en": {
+          "text": "That the drug raises intraocular pressure",
+          "explanation": "Wrong. That is not the main problem of alpha-blockers in eye surgery."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "שהתרופה מגבירה דימום",
+          "explanation": "שגוי. חוסמי אלפא אינם נוגדי קרישה."
+        },
+        "en": {
+          "text": "That the drug increases bleeding",
+          "explanation": "Wrong. Alpha-blockers are not anticoagulants."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "אין צורך להודיע דבר", "explanation": "שגוי. המידע חשוב לבטיחות הניתוח." },
+        "en": {
+          "text": "Nothing needs to be said",
+          "explanation": "Wrong. The information matters for the safety of the operation."
+        }
+      }
+    ]
+  },
+  {
+    "level": "RESIDENT",
+    "difficulty": "MEDIUM",
+    "references": [{ "title": "EAU Guidelines on Management of Non-neurogenic Male LUTS" }],
+    "he": {
+      "stem": "לגבר עם תסמיני השתנה יש זרימת שתן מרבית (Qmax) של 8 מ״ל לשנייה. איזו בדיקה מבדילה בין חסימה בצוואר השלפוחית לבין חולשה של שריר השלפוחית?",
+      "summary": "זרימה מרבית נמוכה יכולה לנבוע מחסימה או מחולשת שריר השלפוחית (detrusor underactivity), ובדיקת זרימה לבדה אינה מבדילה ביניהן. בדיקת לחץ־זרימה (urodynamics) מודדת את לחץ השלפוחית בזמן ההשתנה: לחץ גבוה עם זרימה נמוכה מעיד על חסימה."
+    },
+    "en": {
+      "stem": "A man with urinary symptoms has a maximum flow rate (Qmax) of 8 mL/s. Which test tells bladder outlet obstruction apart from a weak bladder muscle?",
+      "summary": "A low maximum flow can come from obstruction or from detrusor underactivity, and a flow test alone cannot tell them apart. A pressure–flow study (urodynamics) measures bladder pressure during voiding: high pressure with low flow means obstruction."
+    },
+    "options": [
+      {
+        "correct": true,
+        "he": {
+          "text": "בדיקת לחץ־זרימה (אורודינמיקה)",
+          "explanation": "נכון. רק מדידת הלחץ בזמן ההשתנה מבדילה בין השניים."
+        },
+        "en": {
+          "text": "A pressure–flow study (urodynamics)",
+          "explanation": "Right. Only measuring pressure during voiding separates the two."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "בדיקת זרימה חוזרת",
+          "explanation": "שגוי. גם בדיקה חוזרת לא תמדוד את הלחץ בשלפוחית."
+        },
+        "en": {
+          "text": "A repeat flow test",
+          "explanation": "Wrong. A repeat test still does not measure bladder pressure."
+        }
+      },
+      {
+        "correct": false,
+        "he": {
+          "text": "מדידת PSA",
+          "explanation": "שגוי. PSA קשור לגודל הערמונית ולסרטן, לא לתפקוד השלפוחית."
+        },
+        "en": {
+          "text": "A PSA measurement",
+          "explanation": "Wrong. PSA relates to prostate size and cancer, not bladder function."
+        }
+      },
+      {
+        "correct": false,
+        "he": { "text": "CT של הבטן", "explanation": "שגוי. CT אינו מודד תפקוד השתנה." },
+        "en": {
+          "text": "Abdominal CT",
+          "explanation": "Wrong. CT does not measure voiding function."
+        }
+      }
+    ]
+  }
+]
