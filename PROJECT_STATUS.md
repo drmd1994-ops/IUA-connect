@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-23 (M25 built: communities in place of chat rooms; M28 on the hosted demo, pull request #34)_
+_Last updated: 2026-10-23 (M28 merged; M25 built: communities in place of chat rooms, pull request #35)_
 
 ## Summary
 
@@ -1272,7 +1272,7 @@ Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026
 
 1. Keep the key folder's backup safe; without it a new key means every phone removes the app once.
 
-## M28 Jobs, fellowships and mentorship (built 2026-10-23, pull request #34)
+## M28 Jobs, fellowships and mentorship (merged 2026-10-23, pull request #34)
 
 Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved by the owner on 2026-10-23 ("build M28") with the answers in its §10: staff and department directors post, someone else reviews; positions abroad allowed; verified specialists mentor and any verified person asks; **positions are open to everyone, visitors too** (the owner's choice; my recommendation was verified people only); about 12 sample positions at hospitals from the list, each marked as a sample, and 6 mentors; the limits as written.
 
@@ -1322,7 +1322,7 @@ Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved
 1. Try it on the hosted demo and the phone once deployed ("deploy it").
 2. Read the new Hebrew texts, above all "חונכות" and "השתלמות (פלו)".
 
-## M25 Professional communities, in place of chat rooms (built 2026-10-23)
+## M25 Professional communities, in place of chat rooms (built 2026-10-23, pull request #35)
 
 Plan: `docs/plans/M25-community.md`, checked against the code and approved by the owner on 2026-10-23 ("start M25") with the answers in its §10:
 
@@ -1418,6 +1418,6 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** is built, on the hosted demo, and waits in pull request #34. **M25 (communities, in place of chat rooms)** is built on top of it.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** is built and waits in pull request #35.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
