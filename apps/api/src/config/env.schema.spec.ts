@@ -108,6 +108,18 @@ describe('parseEnv', () => {
     expect(local.WEBAUTHN_ORIGIN).toEqual(['http://localhost:3001']);
   });
 
+  it('accepts the Android app as a passkey origin, from its signing key (M18b)', () => {
+    const print = [...Array(32).keys()].map((byte) => byte.toString(16).padStart(2, '0')).join(':');
+    const env = parseEnv({ ...valid, ANDROID_CERT_SHA256: ` ${print} ` });
+    expect(env.WEBAUTHN_ORIGIN).toEqual([
+      'http://localhost:3001',
+      'android:apk-key-hash:AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8',
+    ]);
+    expect(parseError({ ...valid, ANDROID_CERT_SHA256: 'AB:CD' }).message).toContain(
+      'ANDROID_CERT_SHA256',
+    );
+  });
+
   it('refuses localhost as the passkey relying party in production', () => {
     const problems = parseError({ ...valid, NODE_ENV: 'production' }).problems.join('\n');
     expect(problems).toContain('WEBAUTHN_RP_ID');

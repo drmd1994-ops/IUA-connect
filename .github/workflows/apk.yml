@@ -50,10 +50,47 @@ jobs:
       - name: Make the Android project
         working-directory: apps/mobile
         run: pnpm exec expo prebuild --platform android --no-install
+      # The app's own signing key (M18b): the site names it for passkeys and links. Kept only as
+      # secrets; the file lives outside the project for the build and is removed after it.
+      - name: The signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::Set the secrets ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD and ANDROID_KEY_ALIAS."
+            exit 1
+          fi
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/medconnect.p12"
+      # Java must open it, or the build would fail only at its end, many minutes later.
+      - name: The signing key opens
+        env:
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          keytool -list -storetype pkcs12 -keystore "$RUNNER_TEMP/medconnect.p12" \
+            -storepass:env STORE_PASSWORD -alias "$KEY_ALIAS"
       - name: Build the .apk
         working-directory: apps/mobile/android
+        env:
+          ORG_GRADLE_PROJECT_medconnectStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_medconnectKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
         # One processor kind, the one phones of the last years have; it halves the build.
-        run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
+        run: |
+          ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon \
+            -PmedconnectStoreFile="$RUNNER_TEMP/medconnect.p12"
+      - name: The .apk is signed with the app's key
+        run: |
+          apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          signer=$("$apksigner" verify --print-certs \
+            apps/mobile/android/app/build/outputs/apk/release/app-release.apk | grep 'SHA-256')
+          echo "$signer"
+          expected=$(tr -d ':' <<< "$ANDROID_CERT_SHA256" | tr 'A-F' 'a-f')
+          grep -q "$expected" <<< "$signer" || { echo "::error::Not signed with the app's key."; exit 1; }
+        env:
+          ANDROID_CERT_SHA256: ${{ vars.ANDROID_CERT_SHA256 }}
+      - name: Remove the signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/medconnect.p12"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: med-connect-demo-apk

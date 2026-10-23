@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useTranslations } from 'use-intl';
-import { errorMessage } from '@/errors';
+import { askForPasskey, passkeysSupported } from '@/session/passkey';
+import { type CodeNeeded } from '@/session/session-core';
 import { useSession } from '@/session/session-provider';
 import { Body, Button, Card, Field, Notice, Screen, Title } from '@/ui/kit';
 import { LanguageChoice } from './language-choice';
+import { passkeyMessage } from './passkeys';
 
 /**
- * Signing in: email and password, then the authenticator code when the account has one. The
- * same accounts as the site.
+ * Signing in: a passkey on this phone, or email and password, then the authenticator code or a
+ * passkey when the account has one. The same accounts as the site.
  */
 export function SignIn({
   onForgot,
@@ -25,7 +27,9 @@ export function SignIn({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
-  const [mfaToken, setMfaToken] = useState<string | null>(null);
+  const [second, setSecond] = useState<CodeNeeded | null>(null);
+  const mfaToken = second?.mfaToken ?? null;
+  const withPasskey = passkeysSupported();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
@@ -45,8 +49,9 @@ export function SignIn({
     run(async () => {
       const next = await session.signIn(email.trim(), password);
       setPassword('');
-      if (next) setMfaToken(next.mfaToken);
+      if (next) setSecond(next);
     });
+  const passkey = () => run(() => session.signInWithPasskey(askForPasskey));
   const verify = () =>
     run(async () => {
       if (mfaToken) await session.verifyCode(mfaToken, code.trim());
@@ -70,18 +75,26 @@ export function SignIn({
             returnKeyType="go"
             onSubmitEditing={() => void verify()}
           />
-          {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
+          {error !== null && <Notice tone="error">{passkeyMessage(error, all)}</Notice>}
           <Button
             label={t('verify')}
             pending={pending}
             disabled={code.trim().length < 6}
             onPress={() => void verify()}
           />
+          {withPasskey && second?.methods.includes('passkey') && (
+            <Button
+              label={t('usePasskey')}
+              variant="secondary"
+              disabled={pending}
+              onPress={() => void passkey()}
+            />
+          )}
           <Button
             label={t('back')}
             variant="link"
             onPress={() => {
-              setMfaToken(null);
+              setSecond(null);
               setCode('');
               setError(null);
             }}
@@ -118,7 +131,7 @@ export function SignIn({
           returnKeyType="go"
           onSubmitEditing={() => void submit()}
         />
-        {error !== null && <Notice tone="error">{errorMessage(error, all)}</Notice>}
+        {error !== null && <Notice tone="error">{passkeyMessage(error, all)}</Notice>}
         <Button
           label={t('submit')}
           pending={pending}
@@ -126,7 +139,14 @@ export function SignIn({
           onPress={() => void submit()}
         />
       </Card>
-      <Body muted>{t('passkeyNote')}</Body>
+      {withPasskey && (
+        <Button
+          label={t('passkey')}
+          variant="secondary"
+          disabled={pending}
+          onPress={() => void passkey()}
+        />
+      )}
       <Button label={t('forgot')} variant="link" onPress={onForgot} />
       <Button label={t('join')} variant="link" onPress={onRegister} />
       <Button label={t('guest')} variant="secondary" onPress={onGuest} />

@@ -212,8 +212,11 @@ export class PasskeyRegisterDto extends createZodDto(
 
 export class PasskeyRenameDto extends createZodDto(z.strictObject({ name: passkeyName })) {}
 
+/** A passkey sign-in; the app (M18b) says so, as it does for a password. */
 export class PasskeySignInDto extends createZodDto(
-  z.strictObject({ response: webauthnResponse }),
+  z
+    .strictObject({ response: webauthnResponse, ...appClient })
+    .refine(appFieldsOnlyForApp, APP_FIELDS),
 ) {}
 
 const passkeySummary = z.strictObject({

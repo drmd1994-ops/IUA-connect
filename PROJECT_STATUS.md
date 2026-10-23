@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-23 (M23 merged: the question bank, with 100 starter questions waiting for the owner's review)_
+_Last updated: 2026-10-23 (M18b built and checked on the owner's phone: passkeys in the app, email links that open it; pull request #33)_
 
 ## Summary
 
@@ -1240,6 +1240,38 @@ Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("s
 1. Review the 100 starter questions (Administration → Education → Exam questions, "Waiting for review"), correcting and publishing them one by one.
 2. Read the new Hebrew texts.
 
+## M18b Passkeys in the app, and email links that open it (built 2026-10-23, pull request #33)
+
+Plan: `docs/plans/M18b-app-passkeys-and-links.md`, approved by the owner on 2026-10-23 ("start m18b") with my recommendation for each question (§10): the app gets its own private key, with a backup in the owner's Documents folder; the library react-native-passkey 3.6.2; sign-in and content links open the app, the admin area stays in the browser; Android only.
+
+**Built**
+
+- **The app's own key.** The .apk is no longer signed with Expo's public key. The key is in GitHub's secrets and in the owner's `Documents\Med Connect app key` folder, never in the repository. The Demo APK workflow checks that the key opens, signs with it, and checks the signed .apk against the public fingerprint.
+- **The site vouches for the app:** `/.well-known/assetlinks.json` names the app and its fingerprint, when the site is given both (`ANDROID_PACKAGE`, `ANDROID_CERT_SHA256`); otherwise it answers 404 and the app works as before.
+- **Passkeys in the app:** "Sign in with a passkey", "Use a passkey instead" at the two-step code, adding and removing passkeys under Security, and confirming a protected change with a passkey. The server accepts a passkey from the app only when it carries this key's fingerprint, and then answers the app's tokens instead of cookies. Passkeys made on the site work in the app, as they belong to the site.
+- **Links that open the app:** the 32 site addresses in `apps/mobile/app-links.json` (sign-in emails, news, events, education and the mock exam, guidelines, calculators, members, notices, chat, the account pages) open the matching screen. Email confirmation and password reset have their own screens in the app. An address the app has no screen for opens its home. The admin area stays in the browser.
+- **Texts** in Hebrew and English.
+- `DEPLOYMENT.md` says where the key lives, which settings Railway needs, how to check them, and what to do if the key is lost.
+
+**Verified**
+
+- GitHub's checks on pull request #33, all green: build, browser tests, integration, lint, security, type checks, unit tests, ZAP. New integration tests: the app signs in with a passkey and gets tokens and no cookie, and can refresh them; a passkey from another app's key is refused; a browser sending the app's fields is refused.
+- The app: 174 screen tests (passkey sign-in and the two-step choice, the passkeys card, the email-confirmation and reset screens in both languages) and 91 model tests (where each link leads, passkey errors).
+- **On the hosted demo** (deployed at the owner's word, 2026-10-23): the site serves the app's file with the right fingerprint, Google's Digital Asset Links checker accepts it, the server accepts passkeys from the app, and `pnpm smoke:hosted` passed.
+- The .apk (run 39952676703), signed with the app's key, published as the pre-release `demo-apk-2026-10-23-m18b`.
+- **The owner's phone test, 2026-10-23: works** (install after removing the old app, adding a passkey, signing in with it, an email link opening the app).
+
+**Deviations and findings**
+
+- **The key's password at first did not open in Java:** the password file written on Windows ended with a hidden line-end character. A new password was set, with the key unchanged (same fingerprint), in a format Java reads.
+- **The phone has to remove the old app once,** since it was signed with a different key. Later versions update as usual.
+- **A made-up test origin** looked like a secret to the leak scanner; that one value is allowed in `.gitleaks.toml`.
+- **The app files Expo generates** (`apps/mobile/android/` and `apps/mobile/ios/`) are ignored by git; CI makes them on each build.
+
+**Open for the owner**
+
+1. Keep the key folder's backup safe; without it a new key means every phone removes the app once.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
@@ -1256,6 +1288,6 @@ Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("s
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. M18b (passkeys in the app, email links that open it) follows if the owner agrees.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone on 2026-10-23, and waits in pull request #33.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

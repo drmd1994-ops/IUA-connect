@@ -34,6 +34,7 @@ import {
   WebAuthnOptionsDto,
 } from './auth.dto';
 import { DEVICE_COOKIE, readCookie, setDeviceCookie, setSessionCookies } from './auth.cookies';
+import { appInfo, appTokens } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PasskeysService } from './passkeys.service';
 import { SessionsService } from './sessions.service';
@@ -143,7 +144,10 @@ export class PasskeysController {
     return (await this.passkeys.authenticationOptions()) as unknown as WebAuthnOptionsDto;
   }
 
-  /** Signs in: same response and cookies as /auth/login (session with MFA). */
+  /**
+   * Signs in: same response and cookies as /auth/login (session with MFA). The app (M18b) gets
+   * what a browser keeps in cookies in the answer instead, as from /auth/login.
+   */
   @Post('authentication/verify')
   @Public()
   @RateLimit(RATE_LIMITS.signInPerIp)
@@ -161,6 +165,18 @@ export class PasskeysController {
     if (!check.ok) {
       await this.auth.auditPasskeyFailure(check.reason, null, meta);
       throw new AppException('PASSKEY_INVALID');
+    }
+    if (body.client === 'app') {
+      const outcome = await this.auth.completePasskeySignIn(
+        check.factor.userId,
+        body.deviceToken,
+        meta,
+        appInfo(body),
+      );
+      return {
+        ...appTokens(outcome.tokens),
+        ...(outcome.newDeviceCookie ? { deviceToken: outcome.newDeviceCookie } : {}),
+      };
     }
     const { tokens, newDeviceCookie } = await this.auth.completePasskeySignIn(
       check.factor.userId,

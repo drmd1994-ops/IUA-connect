@@ -23,6 +23,8 @@
     },
     "plugins": [
       "expo-router",
+      "./plugins/with-release-signing",
+      "./plugins/with-app-links",
       "expo-secure-store",
       "expo-localization",
       [

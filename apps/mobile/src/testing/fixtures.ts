@@ -819,6 +819,18 @@ export const everything: Record<string, Answer> = {
     requiredByRole: false,
     canDisable: true,
   } satisfies S['MfaStatusDto'],
+  'POST /api/v1/auth/verify-email': { status: 'ok' },
+  'GET /api/v1/auth/passkeys': {
+    passkeys: [
+      {
+        id: '0199f0aa-0000-7000-8000-00000000a001',
+        name: 'Pixel',
+        createdAt: '2026-10-05T08:00:00.000Z',
+        lastUsedAt: null,
+        synced: true,
+      },
+    ],
+  } satisfies S['PasskeyListDto'],
   'GET /api/v1/auth/sessions': {
     sessions: [
       {

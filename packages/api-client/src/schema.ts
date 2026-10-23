@@ -4192,6 +4192,10 @@ export interface components {
             } & {
                 [key: string]: unknown;
             };
+            /** @enum {string} */
+            client?: "web" | "app";
+            deviceName?: string;
+            deviceToken?: string;
         };
         OrganisationListDto: {
             items: {

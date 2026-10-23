@@ -13343,6 +13343,23 @@
               "clientExtensionResults"
             ],
             "additionalProperties": {}
+          },
+          "client": {
+            "type": "string",
+            "enum": [
+              "web",
+              "app"
+            ]
+          },
+          "deviceName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "deviceToken": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 256
           }
         },
         "required": [

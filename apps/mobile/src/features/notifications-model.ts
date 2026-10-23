@@ -12,20 +12,40 @@ export function appRoute(link: string | null): string | null {
   const path = link.split(/[?#]/)[0] ?? '';
   // Before the items: exam practice lives under "/education" on the site, and is not an item.
   if (path === '/education/exam') return '/exam';
+  if (path === '/education/exam/mock') return '/mock-exam';
+  const mock = /^\/education\/exam\/mock\/([^/]+)$/.exec(path);
+  if (mock) return `/mock-exam/${mock[1]}`;
+  // Chat (M18b): the lists, and a conversation, a group or a room.
+  if (path === '/chat') return '/chat';
+  if (path === '/chat/rooms' || path === '/chat/rooms/browse') return '/chat-rooms';
+  if (path === '/chat/invitations') return '/chat-invitations';
+  const thread = /^\/chat\/(?:(groups|rooms)\/)?([^/]+)$/.exec(path);
+  if (thread) {
+    const kind = thread[1] === 'groups' ? 'group' : thread[1] === 'rooms' ? 'room' : 'direct';
+    return `/thread/${kind}/${thread[2]}`;
+  }
   const news = /^\/news\/([^/]+)$/.exec(path);
   if (news) return `/news/${news[1]}`;
-  const event = /^\/events\/([^/]+)$/.exec(path);
+  const event = /^\/events\/([^/]+)(?:\/check-in)?$/.exec(path);
   if (event) return `/events/${event[1]}`;
-  const item = /^\/(education|guidelines|members)\/([^/]+)$/.exec(path);
+  const item = /^\/(education|guidelines|members|calculators)\/([^/]+)$/.exec(path);
   if (item) return `/${item[1]}/${item[2]}`;
   const message = /^\/account\/notifications\/messages\/([^/]+)$/.exec(path);
   if (message) return `/broadcast/${message[1]}`;
-  if (['/news', '/events', '/education', '/guidelines', '/members'].includes(path)) return path;
+  if (
+    ['/news', '/events', '/education', '/guidelines', '/members', '/calculators'].includes(path)
+  ) {
+    return path;
+  }
   if (path === '/account/exam-results') return '/exam-results';
   if (path === '/account/profile') return '/profile';
   if (path === '/account/membership') return '/membership';
+  if (path === '/account/membership/card') return '/card';
   if (path === '/account/security') return '/security';
   if (path === '/account/schedule') return '/events/schedule';
+  if (path === '/account/notifications') return '/notifications';
+  if (path === '/account/applications') return '/applications';
+  if (path === '/account/verification') return '/verification';
   return null;
 }
 

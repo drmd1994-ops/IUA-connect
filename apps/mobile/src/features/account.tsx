@@ -13,6 +13,8 @@ import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Card, Field, Heading, Notice, Screen, Title, Toggle } from '@/ui/kit';
 import { Choices, Tag } from '@/ui/parts';
 import { PROFILE_LANGUAGES, changedFields, groupSecret, textOrNull, toggle } from './account-model';
+import { askForPasskey, passkeysSupported } from '@/session/passkey';
+import { PasskeysCard, passkeyMessage } from './passkeys';
 import { useFileUrl } from './files';
 import { useHospitals, useLocalName, useSubspecialties } from './reference';
 
@@ -466,19 +468,38 @@ function useProtected() {
       throw caught;
     }
   }, []);
+  const again = useCallback(async () => {
+    const work = waiting;
+    setWaiting(null);
+    await work?.();
+  }, [waiting]);
   const confirm = useCallback(
     async (password: string, code: string) => {
       await request(
         '/api/v1/auth/reauthenticate',
         json('POST', { password, ...(code.trim() ? { code: code.trim() } : {}) }),
       );
-      const work = waiting;
-      setWaiting(null);
-      await work?.();
+      await again();
     },
-    [request, waiting],
+    [request, again],
   );
-  return { run, confirm, asking: waiting !== null, cancel: () => setWaiting(null) };
+  /** Confirms with one of the account's passkeys on this phone instead (M18b). */
+  const confirmWithPasskey = useCallback(async () => {
+    const options = await request<Record<string, unknown>>(
+      '/api/v1/auth/passkeys/authentication/options',
+      json('POST'),
+    );
+    const passkey = await askForPasskey(options);
+    await request('/api/v1/auth/reauthenticate', json('POST', { passkey }));
+    await again();
+  }, [request, again]);
+  return {
+    run,
+    confirm,
+    confirmWithPasskey,
+    asking: waiting !== null,
+    cancel: () => setWaiting(null),
+  };
 }
 
 /** Password, two-step verification and the sessions of the account. */
@@ -545,7 +566,7 @@ export function SecurityScreen() {
       <Title>{s('title')}</Title>
       {mfa?.requiredByRole && !mfa.enabled && <Notice tone="warning">{s('enrollBanner')}</Notice>}
       {error !== null && (
-        <Notice tone="error">{problems(error) ?? errorMessage(error, all)}</Notice>
+        <Notice tone="error">{problems(error) ?? passkeyMessage(error, all)}</Notice>
       )}
       {message && <Notice tone="success">{message}</Notice>}
 
@@ -580,6 +601,14 @@ export function SecurityScreen() {
               })
             }
           />
+          {passkeysSupported() && (
+            <Button
+              label={s('reauthWithPasskey')}
+              variant="secondary"
+              disabled={pending}
+              onPress={() => void act(guard.confirmWithPasskey)}
+            />
+          )}
           <Button label={s('cancel')} variant="link" onPress={guard.cancel} />
         </Card>
       )}
@@ -788,7 +817,7 @@ export function SecurityScreen() {
           )
         )}
       </Card>
-      <Body muted>{m('signIn.passkeyNote')}</Body>
+      <PasskeysCard act={act} pending={pending} version={version} />
     </Screen>
   );
 }
