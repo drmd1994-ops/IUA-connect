@@ -61,6 +61,27 @@ railway up --service web --detach
 
 **Reset the demo data:** delete the `Postgres` service's data and redeploy `api`. The next start finds no users and seeds again. Uploaded files on the `api` disk are left behind, unreferenced. This is done in Railway's dashboard by the owner; nothing in the repository does it, as `pnpm demo:reset` refuses any database not on this computer.
 
+**The app's key, passkeys and links (M18b):**
+
+- **The key.** The app is signed with its own key, not Expo's public one. It was made on 2026-10-23 and lives in three places:
+  - the GitHub secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD` and `ANDROID_KEY_ALIAS`;
+  - a backup in the owner's `Documents\Med Connect app key` folder;
+  - nowhere in the repository.
+- **The fingerprint.** Its public SHA-256 fingerprint is in the repository variable `ANDROID_CERT_SHA256`. The **Demo APK** workflow checks that the key opens, signs with it, and checks the signature against that fingerprint.
+- **Settings on Railway:**
+  - `api`: `ANDROID_CERT_SHA256`, the same fingerprint. The server then accepts passkeys from the app (origin `android:apk-key-hash:…`).
+  - `web`: `ANDROID_PACKAGE` (`test.demo.medconnect`) and `ANDROID_CERT_SHA256`. The site then serves `/.well-known/assetlinks.json`, which lets the app use the site's passkeys and open its links. Without them the file answers 404 and the app works as before, with passwords and the browser.
+- **The links** that open the app are listed in `apps/mobile/app-links.json`. The workflow's `DEMO_WEB_URL` must be the site's https address, because the links are made from it when the app is built.
+- **Check before installing the app:**
+  - `https://<site>/.well-known/assetlinks.json` shows the package and the fingerprint.
+  - Google's checker agrees: `https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://<site>&relation=delegate_permission/common.handle_all_urls`.
+  - Android checks the links once, when the app is installed. If the file was wrong then, reinstall the app after fixing it.
+- **A new key**, if the old one is lost:
+  1. Make the key and put it in the secrets.
+  2. Change `ANDROID_CERT_SHA256` everywhere.
+  3. Phones uninstall the old app once.
+  4. Passkeys stay, because they belong to the site, not to the key.
+
 **The app:** the repository variables `DEMO_API_URL` and `DEMO_WEB_URL` hold the hosted addresses. The **Demo APK** workflow (Actions → Demo APK → Run workflow) builds an .apk that uses them. The tunnel's address was `https://hqvwt07k-4000.euw.devtunnels.ms`; to go back to the tunnel, set `DEMO_API_URL` to it again and rebuild.
 
 ## Build artefacts
