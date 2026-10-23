@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-23 (M23 built: the question bank, with 100 starter questions waiting for the owner's review)_
+_Last updated: 2026-10-23 (M23 merged: the question bank, with 100 starter questions waiting for the owner's review)_
 
 ## Summary
 
@@ -1022,6 +1022,15 @@ Part 1 was merged on 2026-10-13 (pull request #26), after the owner confirmed th
 - The app was not run on a phone or built into an .apk under its new name and identifier; its screens were drawn and checked by the tests only.
 - The migration was not tried on a separate copy with before-and-after counts, as the plan’s test list asks (open since part 1).
 
+**Verified on GitHub and online (2026-10-23)**
+
+- After the owner fixed GitHub's billing, every check passed on pull request #32: lint, types, unit, integration, the browser tests, the security scan and ZAP.
+- The first run's security check found published flaws in Next.js 16.3.8 (two critical: GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr; one high: GHSA-p3m5-59mp-jv5r) and in vite 8.3.0 (GHSA-587h-7wmj-h5pm). Next.js was raised to 16.4.2 and vite to 8.3.4, both older than the 7-day wait.
+- M23 was put on Railway at the owner's word ("deploy it"); `pnpm smoke:hosted` passed, and the mock-exam pages answer. The hosted demo then also runs the fixed Next.js.
+- A new .apk with M23 was built by the Demo APK workflow (run 39932403756) and published as the pre-release `demo-apk-2026-10-23-m23`.
+- Railway's cost on 2026-10-23: $0.70 so far this billing period (19 October to 19 November), estimated $1.35 for the period; no spending limit is set.
+- The demo was given in chat on 2026-10-23, and the owner asked to merge.
+
 **Deviations and findings**
 
 - **The design documents were not rewritten line by line.** Each got a section that says what holds since M16, a note at the top saying how to read the older text, and corrections where a line was plainly wrong (the list of roles, the approval chain). Older sentences that say "the association" remain in them.
@@ -1184,7 +1193,7 @@ Plan: `docs/plans/M18-hosted-demo.md`, approved by the owner on 2026-10-19 with 
 3. A real logo, to replace the temporary icon.
 4. Merging pull request #31.
 
-## M23 The question bank (built 2026-10-23, branch `feat/m23-question-bank`)
+## M23 The question bank (merged 2026-10-23, pull request #32)
 
 Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("start m23") with my recommendation for each question (§10): I draft 100 starter questions and the owner reviews them; the 11 subspecialties are the topics, preparing for the Israeli board exams without claiming to match them; nobody else sees a person's results; the numbers as written; any signed-in person may sit a mock exam.
 
@@ -1213,9 +1222,7 @@ Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("s
 
 **Not verified**
 
-- GitHub's checks: blocked by billing since 2026-10-22.
 - The owner's review of the 100 starter questions, and a Hebrew reader's reading of the new texts.
-- The hosted demo: M23 is not on Railway yet, and a new .apk can't be built while GitHub is blocked.
 
 **Deviations and findings**
 
@@ -1232,8 +1239,6 @@ Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("s
 
 1. Review the 100 starter questions (Administration → Education → Exam questions, "Waiting for review"), correcting and publishing them one by one.
 2. Read the new Hebrew texts.
-3. Fix GitHub's billing so the checks and the app's build can run; then put M23 on Railway and build a new .apk.
-4. The milestone's demo, then merging.
 
 ## Next step
 
@@ -1251,6 +1256,6 @@ Plan: `docs/plans/M23-question-bank.md`, approved by the owner on 2026-10-23 ("s
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** is built on branch `feat/m23-question-bank`; its 100 starter questions wait for the owner's review, and its demo and merge follow. M18b (passkeys in the app, email links that open it) follows if the owner agrees.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. M18b (passkeys in the app, email links that open it) follows if the owner agrees.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
