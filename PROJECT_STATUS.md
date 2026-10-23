@@ -1301,9 +1301,14 @@ Plan: `docs/plans/M28-jobs-mentorship.md`, checked against the code and approved
 - The site: type checks and lint; three browser tests (a position from writing to a visitor, saving in Hebrew, a request accepted and its conversation opened), with accessibility checks on every new page; the new pages added to both accessibility audits.
 - The app: 196 screen tests (22 new: every new screen in both languages, saving, asking, accepting, settings) and 92 rule tests.
 
-**Not verified yet**
+**Verified on GitHub and online (2026-10-23)**
 
-- GitHub's checks on pull request #34, the hosted demo, a new .apk, and the owner's phone test.
+- GitHub's checks on pull request #34, all green. (One integration test that signed four people up at the same moment dropped a connection; it now signs them up one after another.)
+- **On the hosted demo** (deployed at the owner's word): the server lists the 11 published sample positions, in Israel, France, the UK and Canada; `pnpm smoke:hosted` passed.
+
+**Not verified**
+
+- No new .apk: the owner asked not to build one for now, so the app's new screens are not on the phone yet.
 
 **Deviations and findings**
 
