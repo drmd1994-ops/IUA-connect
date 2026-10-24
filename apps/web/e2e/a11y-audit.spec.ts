@@ -66,6 +66,10 @@ const MEMBER_PAGES = [
   '/communities/following',
   '/communities/saved',
   '/communities/andrology',
+  '/research',
+  '/research/mine',
+  '/research/requests',
+  '/research/new',
 ];
 
 test('axe: every page a signed-in member sees, in both languages', async ({ browser }) => {

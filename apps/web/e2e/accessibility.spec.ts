@@ -78,6 +78,11 @@ const PAGES = [
   // M25 (the signed-in and filled views are checked in communities.spec.ts)
   '/communities',
   '/admin/communities',
+  // M27 (the signed-in and filled views are checked in research.spec.ts)
+  '/research',
+  '/research/mine',
+  '/research/requests',
+  '/research/new',
 ];
 
 for (const locale of ['he', 'en'] as const) {

@@ -13,6 +13,7 @@ import { Link } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
 import { useMemberName } from './directory-page';
 import { PersonMark } from '@/features/verification/person-mark';
+import { MemberPublications } from '@/features/research/publications';
 
 type Member = components['schemas']['DirectoryMemberDto'];
 
@@ -154,6 +155,7 @@ function MemberView({ id }: { id: string }) {
             <p className="mt-2 whitespace-pre-line">{member.researchInterests}</p>
           </section>
         )}
+        <MemberPublications userId={member.id} />
       </article>
     </PageFrame>
   );

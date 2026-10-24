@@ -11,6 +11,7 @@ import { TextareaField } from '@/components/ui/textarea-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame, RequireSignIn } from '@/features/auth/require-sign-in';
 import { DirectoryOptIn } from '@/features/directory/directory-opt-in';
+import { PublicationsSection } from '@/features/research/publications';
 import { errorMessage } from '@/lib/api-errors';
 import { PhotoSection } from './photo-section';
 import { useDepartments, useLocalName, useReference } from './reference';
@@ -70,6 +71,7 @@ function ProfileEditor() {
           <PhotoSection initialFileId={profile.photoFileId} />
           <ProfileForm initial={profile} onSaved={setProfile} />
           <DirectoryOptIn />
+          <PublicationsSection />
         </>
       ) : (
         loadError === null && <p role="status">{t('membership.common.loading')}</p>
