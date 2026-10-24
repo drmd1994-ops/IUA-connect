@@ -1,0 +1,21 @@
+{
+  "AccessionNumber": "מספר הזמנה",
+  "ClearFilters": "ניקוי מסננים",
+  "Description": "תיאור",
+  "Empty": "ריק",
+  "Filter list to 100 studies or less to enable sorting": "מיון אפשרי ברשימה של עד 100 בדיקות",
+  "Instances": "תמונות",
+  "Modality": "סוג בדיקה",
+  "MRN": "מספר רשומה",
+  "Next": "הבא",
+  "No studies available": "אין בדיקות",
+  "Number of studies": "מספר הבדיקות",
+  "Page": "עמוד",
+  "PatientName": "שם",
+  "Previous": "הקודם",
+  "Results per page": "תוצאות בעמוד",
+  "Studies": "בדיקות",
+  "StudyDate": "תאריך הבדיקה",
+  "StudyList": "רשימת הבדיקות",
+  "Upload": "העלאה"
+}

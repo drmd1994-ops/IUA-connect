@@ -51,3 +51,6 @@ blob-report/
 # The app's native projects, made by `expo prebuild` (the .apk workflow makes them on GitHub)
 apps/mobile/android/
 apps/mobile/ios/
+
+# The scan viewer's built bundle (M36), fetched or built by apps/viewer
+apps/web/public/viewer/

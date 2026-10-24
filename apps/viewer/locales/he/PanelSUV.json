@@ -1,0 +1,10 @@
+{
+  "Patient Information": "פרטי המטופל/ת",
+  "Patient Sex": "מין",
+  "Weight": "משקל",
+  "Total Dose": "מינון כולל",
+  "Half Life": "זמן מחצית חיים",
+  "Injection Time": "שעת ההזרקה",
+  "Acquisition Time": "שעת הרכישה",
+  "Reload Data": "טעינה מחדש"
+}

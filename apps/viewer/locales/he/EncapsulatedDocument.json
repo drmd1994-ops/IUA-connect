@@ -1,0 +1,8 @@
+{
+  "Loading document...": "המסמך נטען…",
+  "This document type cannot be displayed": "אי אפשר להציג מסמך מהסוג הזה",
+  "Document content does not match its declared type": "תוכן המסמך לא תואם את סוגו",
+  "Unable to retrieve this document": "אי אפשר לטעון את המסמך",
+  "No viewer installed for {{mimeType}}": "אין מציג למסמכים מסוג {{mimeType}}",
+  "Encapsulated document": "מסמך מצורף"
+}

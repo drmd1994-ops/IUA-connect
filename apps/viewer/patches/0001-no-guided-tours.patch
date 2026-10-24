@@ -1,0 +1,232 @@
+diff --git a/platform/core/src/types/AppTypes.ts b/platform/core/src/types/AppTypes.ts
+index 7aad659..37fac9f 100644
+--- a/platform/core/src/types/AppTypes.ts
++++ b/platform/core/src/types/AppTypes.ts
+@@ -35,7 +35,6 @@ import * as PanelModuleTypes from './PanelModule';
+ import * as StudyMetadataTypes from './StudyMetadata';
+ import * as ViewportGridTypes from './ViewportGridType';
+ 
+-import { StepOptions, TourOptions } from 'shepherd.js';
+ 
+ declare global {
+   namespace AppTypes {
+diff --git a/platform/ui-next/src/components/Onboarding/Onboarding.css b/platform/ui-next/src/components/Onboarding/Onboarding.css
+deleted file mode 100644
+index 3cf5198..0000000
+--- a/platform/ui-next/src/components/Onboarding/Onboarding.css
++++ /dev/null
+@@ -1,48 +0,0 @@
+-.shepherd-header {
+-  @apply !bg-popover !w-[100%] !p-0;
+-}
+-
+-.shepherd-title {
+-  @apply !text-highlight !w-[100%] !break-words !text-xl !leading-[1.5];
+-}
+-
+-.shepherd-content {
+-  @apply flex flex-col gap-[8px] p-[12px];
+-}
+-
+-.shepherd-element {
+-  @apply !bg-popover !max-w-[260px];
+-}
+-
+-.shepherd-text {
+-  @apply text-foreground !w-[100%] p-0 text-lg leading-normal;
+-}
+-
+-.shepherd-footer {
+-  @apply !w-[100%] p-0;
+-}
+-
+-.shepherd-button {
+-  @apply !text-foreground !inline-flex !h-[36px] !min-w-[62px] !flex-row !items-center !justify-center !gap-[5px] !whitespace-nowrap !rounded !bg-primary !px-[10px] !text-center !font-sans !text-[14px] !leading-[1.2] !outline-none !transition !duration-300 !ease-in-out focus:!outline-none;
+-}
+-
+-.shepherd-button.shepherd-button-secondary {
+-  @apply !bg-transparent !text-primary;
+-}
+-
+-.shepherd-arrow::before {
+-  @apply !bg-popover !h-[30px] !w-[30px];
+-}
+-
+-.shepherd-element[data-popper-placement^='left'] > .shepherd-arrow {
+-  right: 3px !important;
+-  top: 6px !important;
+-}
+-
+-.shepherd-element[data-popper-placement^='top'] > .shepherd-arrow {
+-  bottom: 2px !important;
+-}
+-
+-.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+-  @apply !opacity-70;
+-}
+diff --git a/platform/ui-next/src/components/Onboarding/Onboarding.tsx b/platform/ui-next/src/components/Onboarding/Onboarding.tsx
+index 82e164c..65fd218 100644
+--- a/platform/ui-next/src/components/Onboarding/Onboarding.tsx
++++ b/platform/ui-next/src/components/Onboarding/Onboarding.tsx
+@@ -1,58 +1,8 @@
+-import { useEffect } from 'react';
+-import Shepherd, { StepOptions, TourOptions } from 'shepherd.js';
+-import { useLocation } from 'react-router';
+-import 'shepherd.js/dist/css/shepherd.css';
+-import './Onboarding.css';
+-
+-import { hasTourBeenShown, markTourAsShown, defaultShowHandler, middleware } from './utilities';
+-
+-const Onboarding = ({
+-  tours = [],
+-}: {
+-  tours?: Array<{
+-    id: string;
+-    route: string;
+-    tourOptions: TourOptions;
+-    steps: StepOptions[];
+-  }>;
+-}) => {
+-  const location = useLocation();
+-
+-  /**
+-   * Show the tour if it hasn't been shown yet based on the current route.
+-   * Constructs a tour instance and adds steps to it based on the matching tour.
+-   */
+-  useEffect(() => {
+-    if (!tours.length) {
+-      return;
+-    }
+-
+-    const matchingTour = tours.find(tour => tour.route === location.pathname);
+-    if (!matchingTour || hasTourBeenShown(matchingTour.id)) {
+-      return;
+-    }
+-
+-    const tourInstance = new Shepherd.Tour({
+-      ...matchingTour.tourOptions,
+-      defaultStepOptions: {
+-        ...matchingTour.tourOptions?.defaultStepOptions,
+-        floatingUIOptions: matchingTour.tourOptions?.defaultStepOptions?.floatingUIOptions || {
+-          middleware,
+-        },
+-        when: {
+-          ...matchingTour.tourOptions?.defaultStepOptions?.when,
+-          show:
+-            matchingTour.tourOptions?.defaultStepOptions?.when?.show ||
+-            (() => defaultShowHandler(Shepherd)),
+-        },
+-      },
+-    });
+-    matchingTour.steps.forEach(step => tourInstance.addStep(step));
+-    tourInstance.start();
+-    markTourAsShown(matchingTour.id);
+-  }, [tours, location.pathname]);
+-
+-  return null;
+-};
++/**
++ * Med Connect: the guided tours are left out of this build. They were drawn by shepherd.js, which
++ * is under the AGPL-3.0; nothing here imports it, so it is not in the bundle. The component stays,
++ * rendering nothing, so everything that places it keeps working.
++ */
++const Onboarding = (_props: { tours?: unknown[] }) => null;
+ 
+ export { Onboarding };
+diff --git a/platform/ui-next/src/components/Onboarding/utilities.ts b/platform/ui-next/src/components/Onboarding/utilities.ts
+deleted file mode 100644
+index 8cb0751..0000000
+--- a/platform/ui-next/src/components/Onboarding/utilities.ts
++++ /dev/null
+@@ -1,91 +0,0 @@
+-import { ShepherdBase } from 'shepherd.js';
+-import { offset, flip, shift, detectOverflow } from '@floating-ui/dom';
+-
+-/**
+- * Retrieves the list of tours that have been shown from localStorage.
+- * @returns {string[]} An array of tour IDs that have been shown.
+- */
+-
+-const getShownTours = () => JSON.parse(localStorage.getItem('shownTours')) || [];
+-
+-/**
+- * Checks if a specific tour has been shown.
+- * @param {string} tourId - The ID of the tour to check.
+- * @returns {boolean} True if the tour has been shown, false otherwise.
+- */
+-const hasTourBeenShown = (tourId: string) => getShownTours().includes(tourId);
+-
+-/**
+- * Marks a specific tour as shown by adding it to localStorage.
+- * @param {string} tourId - The ID of the tour to mark as shown.
+- * @returns {void}
+- */
+-const markTourAsShown = (tourId: string) => {
+-  const shownTours = getShownTours();
+-  if (!shownTours.includes(tourId)) {
+-    shownTours.push(tourId);
+-    localStorage.setItem('shownTours', JSON.stringify(shownTours));
+-  }
+-};
+-
+-/**
+- * Default handler for the 'show' event in Shepherd steps.
+- * Adds a progress indicator to the footer of the current step.
+- *
+- * @param {ShepherdBase} Shepherd - The Shepherd.js instance.
+- * @returns {void}
+- */
+-const defaultShowHandler = (Shepherd: ShepherdBase) => {
+-  const currentStep = Shepherd.activeTour?.getCurrentStep();
+-  if (currentStep) {
+-    const progress = document.createElement('span');
+-    progress.className = 'shepherd-progress text-lg text-muted-foreground';
+-    progress.innerText = `${Shepherd.activeTour?.steps.indexOf(currentStep) + 1}/${Shepherd.activeTour?.steps.length}`;
+-    progress.style.position = 'absolute';
+-    progress.style.left = '13px';
+-    progress.style.bottom = '20px';
+-    progress.style.zIndex = '1';
+-
+-    const footer = currentStep?.getElement()?.querySelector('.shepherd-footer');
+-    footer?.appendChild(progress);
+-  }
+-};
+-
+-/**
+- * Custom middleware for adjusting Shepherd step positioning when overflowing.
+- *
+- * @type {object}
+- * @property {string} name - The name of the middleware.
+- * @property {function} fn - The function that adjusts the position of the step when overflowing.
+- */
+-
+-const customMiddleware = {
+-  name: 'customOverflowMiddleware',
+-  async fn(state) {
+-    const overflow = await detectOverflow(state, {
+-      boundary: document.querySelector('body'),
+-      padding: 24,
+-    });
+-
+-    const xAdjustment =
+-      overflow.left > 0 ? overflow.left : overflow.right > 0 ? -overflow.right : 0;
+-    const yAdjustment =
+-      overflow.top > 0 ? overflow.top : overflow.bottom > 0 ? -overflow.bottom : 0;
+-
+-    return {
+-      x: state.x + xAdjustment,
+-      y: state.y + yAdjustment,
+-    };
+-  },
+-};
+-
+-/**
+- * Default Floating UI middleware for positioning steps in Shepherd.js.
+- * Includes offset, shift, flip, and custom overflow middleware.
+- *
+- * @type {Array<object>}
+- */
+-
+-const middleware = [offset(15), shift(), flip(), customMiddleware];
+-
+-export { hasTourBeenShown, markTourAsShown, middleware, defaultShowHandler };

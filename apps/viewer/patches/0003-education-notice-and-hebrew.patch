@@ -1,0 +1,68 @@
+diff --git a/platform/i18n/src/locales/en-US/index.js b/platform/i18n/src/locales/en-US/index.js
+index 4902e2e..f052595 100644
+--- a/platform/i18n/src/locales/en-US/index.js
++++ b/platform/i18n/src/locales/en-US/index.js
+@@ -1,4 +1,5 @@
+ import AboutModal from './AboutModal.json';
++import InvestigationalUseDialog from './InvestigationalUseDialog.json';
+ import AppearanceModal from './AppearanceModal.json';
+ import Buttons from './Buttons.json';
+ import CineDialog from './CineDialog.json';
+@@ -37,6 +38,7 @@ import EncapsulatedDocument from './EncapsulatedDocument.json';
+ 
+ export default {
+   'en-US': {
++    InvestigationalUseDialog,
+     AboutModal,
+     AppearanceModal,
+     Buttons,
+diff --git a/platform/i18n/src/locales/index.js b/platform/i18n/src/locales/index.js
+index e6ba114..b0f8969 100644
+--- a/platform/i18n/src/locales/index.js
++++ b/platform/i18n/src/locales/index.js
+@@ -10,6 +10,7 @@ import pt_BR from './pt-BR/';
+ import ru from './ru/';
+ import vi from './vi/';
+ import zh from './zh/';
++import he from './he/';
+ import test_lng from './test-LNG/';
+ 
+ export default {
+@@ -25,5 +26,6 @@ export default {
+   ...ru,
+   ...vi,
+   ...zh,
++  ...he,
+   ...test_lng,
+ };
+diff --git a/platform/ui-next/src/components/InvestigationalUseDialog/InvestigationalUseDialog.tsx b/platform/ui-next/src/components/InvestigationalUseDialog/InvestigationalUseDialog.tsx
+index 4680f16..c97f13d 100644
+--- a/platform/ui-next/src/components/InvestigationalUseDialog/InvestigationalUseDialog.tsx
++++ b/platform/ui-next/src/components/InvestigationalUseDialog/InvestigationalUseDialog.tsx
+@@ -69,17 +69,19 @@ const InvestigationalUseDialog = ({
+         <div className="flex items-center gap-4">
+           <Icons.InvestigationalUse className="h-18 w-18" />
+           <div className="flex flex-col">
++            {/* Med Connect: the viewer is for education and discussion, not diagnosis. */}
+             <div className="text-foreground text-[19px]">
+-              OHIF Viewer is{' '}
+-              <span className="text-highlight">{t('for investigational use only')}</span>
++              <span className="text-highlight">{t('Med Connect notice')}</span>
+             </div>
+             <div className="text-foreground text-[13px]">
+-              <span
+-                className="text-primary cursor-pointer"
+-                onClick={() => window.open('https://ohif.org/', '_blank')}
++              <a
++                className="text-primary"
++                href={`${process.env.PUBLIC_URL}THIRD-PARTY-NOTICES.txt`}
++                target="_blank"
++                rel="noopener noreferrer"
+               >
+-                {t('Learn more about OHIF Viewer')}
+-              </span>
++                {t('Open-source notices')}
++              </a>
+             </div>
+           </div>
+         </div>

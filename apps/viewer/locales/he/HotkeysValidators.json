@@ -1,0 +1,6 @@
+{
+  "Field can't be empty": "השדה לא יכול להיות ריק",
+  "Hotkey is already in use": "הקיצור \"{{pressedKeys}}\" כבר משמש את \"{{action}}\".",
+  "It's not possible to define only modifier keys (ctrl, alt and shift) as a shortcut": "קיצור לא יכול להיות רק Ctrl,‏ Alt או Shift",
+  "Shortcut combination is not allowed": "הקיצור {{pressedKeys}} אינו אפשרי"
+}
