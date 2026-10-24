@@ -18,3 +18,5 @@ playwright-report
 test-results
 questions
 *.log
+# The scan viewer is downloaded by the build itself (apps/viewer/fetch.mjs).
+apps/web/public/viewer

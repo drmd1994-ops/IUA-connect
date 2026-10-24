@@ -1,0 +1,47 @@
+name: Viewer bundle
+
+# Builds the scan viewer (OHIF, M36) from apps/viewer and attaches it to a GitHub release, for the
+# site's build to download (apps/viewer/fetch.mjs). It runs when asked for, or when a branch named
+# viewer/... is pushed: after a change to the viewer's sources. The release's name and SHA-256 then
+# go into apps/viewer/bundle.json.
+on:
+  workflow_dispatch:
+  push:
+    branches: ['viewer/**']
+
+# Actions are pinned to full commit SHAs (supply-chain safety); the comment shows the tag.
+permissions:
+  contents: write
+
+concurrency:
+  group: viewer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  viewer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: .node-version
+      - name: Build the viewer
+        run: node apps/viewer/build.mjs "$RUNNER_TEMP/viewer"
+      - name: Attach it to a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          inputs=$(node apps/viewer/fetch.mjs --inputs)
+          release="viewer-${inputs:0:12}"
+          tar -czf viewer.tar.gz -C "$RUNNER_TEMP/viewer" .
+          sha256=$(sha256sum viewer.tar.gz | cut -d' ' -f1)
+          gh release create "$release" viewer.tar.gz --prerelease --target "$GITHUB_SHA" \
+            --title "Scan viewer ${inputs:0:12}" \
+            --notes "The OHIF viewer built for Med Connect (M36) from apps/viewer at $GITHUB_SHA. SHA-256 of viewer.tar.gz: $sha256. Licences of the libraries it ships: THIRD-PARTY-NOTICES.txt inside."
+          {
+            echo '### apps/viewer/bundle.json'
+            echo '```json'
+            printf '{\n  "release": "%s",\n  "sha256": "%s",\n  "inputs": "%s"\n}\n' "$release" "$sha256" "$inputs"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

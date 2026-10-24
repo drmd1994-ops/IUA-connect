@@ -30,7 +30,9 @@
     "openapi:generate": "turbo run build --filter=@medconnect/api && pnpm --filter @medconnect/api openapi:export && pnpm --filter @medconnect/api-client generate",
     "prepare": "husky",
     "hosted:start": "node tools/scripts/hosted-start.mjs",
-    "smoke:hosted": "node tools/scripts/smoke-hosted.mjs"
+    "smoke:hosted": "node tools/scripts/smoke-hosted.mjs",
+    "viewer:build": "node apps/viewer/build.mjs",
+    "viewer:fetch": "node apps/viewer/fetch.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",
