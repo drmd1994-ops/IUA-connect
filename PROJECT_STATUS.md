@@ -1646,6 +1646,8 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 
 GitHub's checks passed on the pull request and on main; merged, deployed to the hosted demo (its checks passed; the viewer and its notices are served) and built into the .apk `demo-apk-2026-10-24-m36` on the owner's word ("Merge it, deploy it and build a new version").
 
+**Fixed after deploying (pull request #43, 2026-10-25):** the library editor listed an item's scans without a way to open them, so the owner could not look at the teaching scans before publishing. Each now has "View the scan", and library reviewers may read an unpublished item's scans. Deployed on the owner's word ("deploy the fix"); the owner opened the scans in the viewer on the hosted demo and confirmed it works.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
