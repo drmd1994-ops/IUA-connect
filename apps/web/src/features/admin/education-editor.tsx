@@ -15,6 +15,7 @@ import {
   type EducationLevel,
   type EducationType,
 } from '@/features/education/education-list';
+import { type Scan, ScanPicker } from '@/features/imaging/scans';
 import { useLocalName, useReference } from '@/features/membership/reference';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
@@ -46,6 +47,7 @@ interface Draft {
   typeIds: string[];
   cover: FileView | null;
   files: FileView[];
+  scans: Scan[];
   references: { title: string; url: string }[];
   text: Record<Lang, Text>;
 }
@@ -74,6 +76,7 @@ function toDraft(item: Item | null): Draft {
     typeIds: item?.typeIds ?? [],
     cover: item?.cover ?? null,
     files: item?.files ?? [],
+    scans: item?.scans ?? [],
     references: item?.references ?? [],
     text: { he: text('he'), en: text('en') },
   };
@@ -102,6 +105,7 @@ function toBody(draft: Draft) {
     typeIds: draft.tier === 'TYPES' ? draft.typeIds : [],
     coverFileId: draft.cover?.id ?? null,
     fileIds: draft.files.map((file) => file.id),
+    scanIds: draft.scans.map((scan) => scan.id),
     references: draft.references.filter((r) => r.title.trim() && r.url.trim()),
     translations: { he: translation('he'), en: translation('en') },
   };
@@ -479,6 +483,13 @@ function EditorForm({ initial }: { initial: Item | null }) {
             </section>
           )}
           {uploading && <p role="status">{e('uploading')}</p>}
+          {draft.type !== 'COURSE' && (
+            <ScanPicker
+              scans={draft.scans}
+              onChange={(scans) => set({ scans })}
+              onError={setError}
+            />
+          )}
 
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-semibold">{e('references')}</h2>

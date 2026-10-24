@@ -8,6 +8,7 @@ import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame } from '@/features/auth/require-sign-in';
 import { StoredImage, formatSize, useFileUrl } from '@/features/content/files';
 import { Markdown } from '@/features/content/markdown';
+import { ScanList } from '@/features/imaging/scans';
 import { useLocalName } from '@/features/membership/reference';
 import { Link } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
@@ -193,6 +194,15 @@ function ItemView({ item }: { item: Item }) {
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {item.scans.length > 0 && (
+        <section aria-labelledby="scans-title" className="flex flex-col gap-3">
+          <h2 id="scans-title" className="text-xl font-semibold">
+            {t('education.item.scans')}
+          </h2>
+          <ScanList scans={item.scans} />
         </section>
       )}
 

@@ -9,6 +9,7 @@ import { TextareaField } from '@/components/ui/textarea-field';
 import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame } from '@/features/auth/require-sign-in';
 import { StoredImage } from '@/features/content/files';
+import { ScanList } from '@/features/imaging/scans';
 import { useLocalName } from '@/features/membership/reference';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
@@ -230,6 +231,14 @@ function View({ id }: { id: string }) {
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+        {item.scans.length > 0 && (
+          <section aria-labelledby="case-scans" className="flex flex-col gap-2">
+            <h2 id="case-scans" className="text-xl font-semibold">
+              {c('scans')}
+            </h2>
+            <ScanList scans={item.scans} />
           </section>
         )}
         <section

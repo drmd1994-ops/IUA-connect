@@ -5140,6 +5140,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/imaging/scans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ScansController_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/imaging/scans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ScansController_get"];
+        put?: never;
+        post?: never;
+        delete: operations["ScansController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/imaging/scans/{id}/viewer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ScansController_viewer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7257,6 +7305,8 @@ export interface components {
             /** @default [] */
             fileIds: string[];
             /** @default [] */
+            scanIds: string[];
+            /** @default [] */
             references: {
                 title: string;
                 /** Format: uri */
@@ -7308,6 +7358,16 @@ export interface components {
                 originalName: string;
                 mimeType: string;
                 sizeBytes: number;
+            }[];
+            scans: {
+                /** Format: uuid */
+                id: string;
+                modalities: string;
+                seriesCount: number;
+                instanceCount: number;
+                sizeBytes: number;
+                /** Format: date-time */
+                createdAt: string;
             }[];
             references: {
                 title: string;
@@ -7418,6 +7478,16 @@ export interface components {
                 originalName: string;
                 mimeType: string;
                 sizeBytes: number;
+            }[];
+            scans: {
+                /** Format: uuid */
+                id: string;
+                modalities: string;
+                seriesCount: number;
+                instanceCount: number;
+                sizeBytes: number;
+                /** Format: date-time */
+                createdAt: string;
             }[];
             references: {
                 title: string;
@@ -10970,6 +11040,8 @@ export interface components {
             fileIds: string[];
             /** @default false */
             picturesConfirmed: boolean;
+            /** @default [] */
+            scanIds: string[];
         };
         CaseDto: {
             /** Format: uuid */
@@ -11006,6 +11078,16 @@ export interface components {
             pathology: string | null;
             management: string | null;
             fileIds: string[];
+            scans: {
+                /** Format: uuid */
+                id: string;
+                modalities: string;
+                seriesCount: number;
+                instanceCount: number;
+                sizeBytes: number;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
             poll: {
                 options: {
                     /** Format: uuid */
@@ -11076,6 +11158,22 @@ export interface components {
                 /** Format: date-time */
                 at: string;
             }[];
+        };
+        ScanDto: {
+            /** Format: uuid */
+            id: string;
+            modalities: string;
+            seriesCount: number;
+            instanceCount: number;
+            sizeBytes: number;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ScanViewerDto: {
+            configUrl: string;
+            studyUid: string;
+            /** Format: date-time */
+            expiresAt: string;
         };
     };
     responses: never;
@@ -20231,6 +20329,94 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CaseHistoryDto"];
+                };
+            };
+        };
+    };
+    ScansController_upload: {
+        parameters: {
+            query: {
+                confirmed: "true";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    files: string[];
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanDto"];
+                };
+            };
+        };
+    };
+    ScansController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanDto"];
+                };
+            };
+        };
+    };
+    ScansController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ScansController_viewer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScanViewerDto"];
                 };
             };
         };

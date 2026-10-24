@@ -12,6 +12,7 @@ import { useAuth } from '@/features/auth/auth-context';
 import { PageFrame } from '@/features/auth/require-sign-in';
 import { PatientCheck, checkTexts, refusedDetails } from '@/features/communities/community-parts';
 import { StoredImage } from '@/features/content/files';
+import { type Scan, ScanPicker } from '@/features/imaging/scans';
 import { useLocalName, useReference } from '@/features/membership/reference';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage, isApiError } from '@/lib/api-errors';
@@ -44,6 +45,7 @@ interface Form {
   options: string[];
   fileIds: string[];
   confirmed: boolean;
+  scans: Scan[];
 }
 
 const EMPTY: Form = {
@@ -61,6 +63,7 @@ const EMPTY: Form = {
   options: ['', '', '', ''],
   fileIds: [],
   confirmed: false,
+  scans: [],
 };
 
 function formOf(item: Case): Form {
@@ -80,6 +83,7 @@ function formOf(item: Case): Form {
     options: [...options, '', '', '', ''].slice(0, 4),
     fileIds: item.fileIds,
     confirmed: item.fileIds.length > 0,
+    scans: item.scans,
   };
 }
 
@@ -102,6 +106,7 @@ function FormPage({ id }: { id?: string }) {
   const [error, setError] = useState<unknown>(null);
   const [pending, setPending] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingScan, setUploadingScan] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -167,6 +172,7 @@ function FormPage({ id }: { id?: string }) {
       pollOptions: options.length >= 2 ? options : [],
       fileIds: form.fileIds,
       picturesConfirmed: form.confirmed,
+      scanIds: form.scans.map((scan) => scan.id),
     };
     try {
       const saved = id
@@ -329,6 +335,12 @@ function FormPage({ id }: { id?: string }) {
             )}
             {uploading && <p role="status">{t('membership.common.loading')}</p>}
           </fieldset>
+          <ScanPicker
+            scans={form.scans}
+            onChange={(scans) => set({ scans })}
+            onError={setError}
+            onBusy={setUploadingScan}
+          />
           <PatientCheck found={found.length > 0 ? found : refused} />
           <div>
             <Button
@@ -337,6 +349,7 @@ function FormPage({ id }: { id?: string }) {
               disabled={
                 found.length > 0 ||
                 uploading ||
+                uploadingScan ||
                 !form.subspecialtyId ||
                 !form.title.trim() ||
                 !form.ageRange ||

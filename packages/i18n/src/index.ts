@@ -6,6 +6,7 @@ import enCommunities from './messages/en/communities.json';
 import enResearch from './messages/en/research.json';
 import enJournalClub from './messages/en/journalClub.json';
 import enCases from './messages/en/cases.json';
+import enImaging from './messages/en/imaging.json';
 import enChat from './messages/en/chat.json';
 import enCommon from './messages/en/common.json';
 import enContent from './messages/en/content.json';
@@ -31,6 +32,7 @@ import heCommunities from './messages/he/communities.json';
 import heResearch from './messages/he/research.json';
 import heJournalClub from './messages/he/journalClub.json';
 import heCases from './messages/he/cases.json';
+import heImaging from './messages/he/imaging.json';
 import heChat from './messages/he/chat.json';
 import heCommon from './messages/he/common.json';
 import heContent from './messages/he/content.json';
@@ -101,6 +103,7 @@ export type Messages = {
   journalClub: typeof heJournalClub;
   /** Case discussions (M26). */
   cases: typeof heCases;
+  imaging: typeof heImaging;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -130,6 +133,7 @@ const MESSAGES: Record<Locale, Messages> = {
     research: heResearch,
     journalClub: heJournalClub,
     cases: heCases,
+    imaging: heImaging,
   },
   en: {
     common: enCommon,
@@ -157,6 +161,7 @@ const MESSAGES: Record<Locale, Messages> = {
     research: enResearch,
     journalClub: enJournalClub,
     cases: enCases,
+    imaging: enImaging,
   },
 };
 
