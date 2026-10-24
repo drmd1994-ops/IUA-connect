@@ -1,3 +1,5 @@
 questions
 .env
 .env.*
+apps/web/public/viewer
+apps/viewer/dist

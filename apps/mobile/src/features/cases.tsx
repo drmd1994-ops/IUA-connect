@@ -11,6 +11,7 @@ import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Card, Field, Heading, Notice, Screen, Title, Toggle } from '@/ui/kit';
 import { Choices, Picture } from '@/ui/parts';
 import { PatientCheck, refused } from './communities';
+import { ScanList } from './imaging';
 import { useLocalName, useSubspecialties } from './reference';
 import { PersonMark } from './verification';
 
@@ -322,6 +323,12 @@ export function CaseScreen({ id }: { id: string }) {
           ))}
         </>
       )}
+      {item.scans.length > 0 && (
+        <>
+          <Heading>{t('scans')}</Heading>
+          <ScanList scans={item.scans} />
+        </>
+      )}
       <Card>
         <Heading>{t('question')}</Heading>
         <Body>{item.question}</Body>
@@ -492,6 +499,8 @@ interface Form {
   options: string[];
   fileIds: string[];
   confirmed: boolean;
+  /** Scans are added on the site; the app keeps the case's as they are. */
+  scanIds: string[];
 }
 
 const EMPTY: Form = {
@@ -509,6 +518,7 @@ const EMPTY: Form = {
   options: ['', '', '', ''],
   fileIds: [],
   confirmed: false,
+  scanIds: [],
 };
 
 /** Presents a new case, or changes the reader's draft or returned one (`id`). */
@@ -546,6 +556,7 @@ export function WriteCaseScreen({ id }: { id?: string }) {
           options: [...options, '', '', '', ''].slice(0, 4),
           fileIds: item.fileIds,
           confirmed: item.fileIds.length > 0,
+          scanIds: item.scans.map((scan) => scan.id),
         });
       })
       .catch((caught: unknown) => active && setError(caught));
@@ -612,6 +623,7 @@ export function WriteCaseScreen({ id }: { id?: string }) {
       pollOptions: options.length >= 2 ? options : [],
       fileIds: form.fileIds,
       picturesConfirmed: form.confirmed,
+      scanIds: form.scanIds,
     };
     try {
       const saved = await request<Case>(

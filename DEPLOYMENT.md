@@ -43,7 +43,7 @@ A demo, not a deployment for real members: fictional data, the demo's stand-ins 
 - **On every start** the server runs `pnpm hosted:start` (`tools/scripts/hosted-start.mjs`):
   1. the two database roles and the database `medconnect`, as `db-provision.mjs` does on this computer;
   2. `prisma migrate deploy`, as the owner role;
-  3. the demo seed, only when the database has no users yet; otherwise only the seed layers that check for themselves: the reference layer (new roles and permissions, such as those of M28), the question bank's starter set (M23), the demo's positions and mentors (M28), its communities (M25, which also archives every chat room), its research projects and publications (M27), its journal club entries (M31), and its made-up cases waiting for review (M26), each added once;
+  3. the demo seed, only when the database has no users yet; otherwise only the seed layers that check for themselves: the reference layer (new roles and permissions, such as those of M28), the question bank's starter set (M23), the demo's positions and mentors (M28), its communities (M25, which also archives every chat room), its research projects and publications (M27), its journal club entries (M31), its made-up cases waiting for review (M26), and its three teaching scans waiting for review (M36, downloaded from the release `demo-scans-v1` and checked by SHA-256), each added once;
   4. the server, as the application role.
 
 **Deploy a new version** (from the repository root, signed in with `railway login`, after the checks are green):
@@ -56,6 +56,8 @@ railway up --service web --detach
 **Then check it:** `pnpm smoke:hosted` (`tools/scripts/smoke-hosted.mjs`): the site, the server, the site reaching the server, a calculator, and sign-in refusing a wrong password. To also sign in as a demo member and open live chat, set `SMOKE_PASSWORD` to the demo password in the shell first; it is read from there only and never printed.
 
 **The demo's emails** (sign-up confirmations, password resets) are under Administration → Demo emails, for platform staff (`users.manage`). Each opening is recorded in the audit log.
+
+**The scan viewer (M36)** is not in the repository: the site's build downloads it (`apps/viewer/fetch.mjs`) from the GitHub release named in `apps/viewer/bundle.json`, and refuses an archive whose SHA-256 differs. After a change to `apps/viewer` (OHIF's version, a patch, the settings, a text), push the change to a branch named `viewer/...` (or run the "Viewer bundle" workflow): it builds the viewer and attaches it to a new release, and its summary shows the new `bundle.json`. Until `bundle.json` is updated, CI refuses to build the site.
 
 `.railwayignore` and `.dockerignore` keep `.env` and local files out of the upload. The site's address for the server is fixed when the site is built (`API_INTERNAL_URL`, a build argument), so deploy the site again if that changes.
 

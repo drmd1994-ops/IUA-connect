@@ -6,6 +6,7 @@ import { PrismaService } from '../../infra/prisma/prisma.service';
 import { VideoProvider } from '../../infra/video/video-provider';
 import { AccessService, type Viewer } from '../access';
 import { FilesService } from '../files';
+import { ImagingService } from '../imaging';
 import {
   type PublicEducationDto,
   type PublicEducationListDto,
@@ -31,11 +32,27 @@ export class EducationPublicService implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly access: AccessService,
     private readonly files: FilesService,
+    private readonly imaging: ImagingService,
     private readonly video: VideoProvider,
   ) {}
 
-  /** An item's cover and files are readable by whoever may read the item. */
+  /**
+   * An item's cover, files and scans are readable by whoever may read the item. Library editors
+   * read an item's scans before it is published, as they read the rest of it.
+   */
   onModuleInit(): void {
+    this.imaging.registerReadRule({
+      canRead: async (place, principal) => {
+        if (!place.educationItemId) return null;
+        if (principal?.permissions.has('education.manage')) return true;
+        const item = await this.prisma.educationItem.findFirst({
+          where: { id: place.educationItemId, status: { in: ['PUBLISHED', 'ARCHIVED'] } },
+          select: { id: true, accessTier: true },
+        });
+        if (!item) return false;
+        return this.access.canSeeItem('education', item, await this.access.viewerOf(principal));
+      },
+    });
     this.files.registerReadRule({
       canRead: async (fileId, principal) => {
         const items = await this.prisma.educationItem.findMany({
@@ -115,6 +132,7 @@ export class EducationPublicService implements OnModuleInit {
         mimeType: file.mimeType,
         sizeBytes: file.sizeBytes,
       })),
+      scans: await this.imaging.listFor({ educationItemId: row.id }),
       references: row.references as PublicEducationDto['references'],
       lessons: row.type === 'COURSE' ? await this.lessons(row.id, viewer, locale) : [],
     };

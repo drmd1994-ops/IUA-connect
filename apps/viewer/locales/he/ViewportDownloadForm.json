@@ -1,0 +1,14 @@
+{
+  "emptyFilenameError": "שם הקובץ לא יכול להיות ריק.",
+  "fileType": "סוג הקובץ",
+  "filename": "שם הקובץ",
+  "formTitle": "יש לבחור מידות, שם קובץ וסוג לתמונה.",
+  "imageHeight": "גובה התמונה (פיקסלים)",
+  "imagePreview": "תצוגה מקדימה",
+  "imageWidth": "רוחב התמונה (פיקסלים)",
+  "keepAspectRatio": "שמירת יחס הממדים",
+  "loadingPreview": "התצוגה המקדימה נטענת…",
+  "minHeightError": "הגובה המזערי הוא 100 פיקסלים.",
+  "minWidthError": "הרוחב המזערי הוא 100 פיקסלים.",
+  "showAnnotations": "הצגת הסימונים"
+}

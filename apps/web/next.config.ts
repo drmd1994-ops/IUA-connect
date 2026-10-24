@@ -31,6 +31,25 @@ const filePathCsp = [
 ].join('; ');
 
 /**
+ * The scan viewer (M36): OHIF, a separate single-page app built into public/viewer
+ * (apps/viewer). It decodes images in workers with WebAssembly and styles itself inline; it reads
+ * only from this origin (its scan links are under /api/v1). Nothing it loads comes from elsewhere.
+ */
+const viewerCsp = [
+  "default-src 'self'",
+  "script-src 'self' 'wasm-unsafe-eval'",
+  "worker-src 'self' blob:",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
+  "connect-src 'self' blob: data:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join('; ');
+
+/**
  * The browser only talks to this origin: /api/v1 is proxied to the API server, so the refresh
  * and CSRF cookies are first-party and CORS stays closed (docs/plans/M1-identity.md §3).
  */
@@ -39,17 +58,28 @@ const apiUrl = process.env.API_INTERNAL_URL ?? 'http://localhost:4000';
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    // Next.js holds a request's body in memory for the proxy (src/proxy.ts), 10 MB by default,
+    // and cuts a larger one off: a scan (M36) is up to 200 MB, a chat video up to 100 MB.
+    proxyClientMaxBodySize: '210mb',
+  },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
       {
-        source: '/:path((?!api/|_next/|_vercel/).*\\..*)',
+        source: '/:path((?!api/|_next/|_vercel/|viewer/).*\\..*)',
         headers: [{ key: 'Content-Security-Policy', value: filePathCsp }],
       },
+      { source: '/viewer/:path*', headers: [{ key: 'Content-Security-Policy', value: viewerCsp }] },
     ];
   },
   async rewrites() {
-    return [{ source: '/api/v1/:path*', destination: `${apiUrl}/api/v1/:path*` }];
+    // After the public files (so the viewer's own files are served as they are) and before the
+    // site's pages: the viewer's addresses (/viewer/viewer/…) are its one page.
+    return [
+      { source: '/api/v1/:path*', destination: `${apiUrl}/api/v1/:path*` },
+      { source: '/viewer/:path*', destination: '/viewer/index.html' },
+    ];
   },
 };
 

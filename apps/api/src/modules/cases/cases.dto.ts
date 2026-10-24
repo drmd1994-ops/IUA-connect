@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableString } from '../../common/dto/nullable-string';
+import { MAX_SCANS, scanSchema } from '../imaging';
 
 export const AGE_RANGES = [
   'UNDER_18',
@@ -63,6 +64,8 @@ export class CaseInputDto extends createZodDto(
       fileIds: z.array(z.uuid()).max(MAX_PICTURES).default([]),
       /** The author confirms the pictures show no name, number, date or face. */
       picturesConfirmed: z.boolean().default(false),
+      /** Scans uploaded for this case (M36), in order; each confirmed on upload. */
+      scanIds: z.array(z.uuid()).max(MAX_SCANS).default([]),
     })
     .refine((body) => body.pollOptions.length !== 1, {
       message: 'A poll has 2 to 4 options',
@@ -133,6 +136,8 @@ export class CaseDto extends createZodDto(
     pathology: nullableString(),
     management: nullableString(),
     fileIds: z.array(z.uuid()),
+    /** De-identified scans, opened in the viewer (M36). */
+    scans: z.array(scanSchema),
     poll: pollSchema.nullable(),
     discussion: z.strictObject({ communitySlug: z.string(), postId: z.uuid() }).nullable(),
     /** The case of the week now. */

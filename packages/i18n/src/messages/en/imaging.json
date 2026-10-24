@@ -1,0 +1,21 @@
+{
+  "scans": {
+    "title": "Scans (optional, up to 3)",
+    "hint": "DICOM files of one scan (CT, MRI, ultrasound, X-ray), up to 200 MB. Choose the files or the scan’s folder. The patient’s name, numbers, dates and hospital are removed from the files on upload.",
+    "confirm": "I confirm nothing on these scans’ images shows a name, number, date or face.",
+    "addFiles": "Add a scan: choose files",
+    "addFolder": "Add a scan: choose a folder",
+    "noDicom": "None of the chosen files is a DICOM scan.",
+    "uploading": "Uploading and removing the patient’s details…",
+    "remove": "Remove scan {number}",
+    "summary": "{modalities}: {series, plural, one {# series} other {# series}}, {images, plural, one {# image} other {# images}}",
+    "view": "View the scan",
+    "viewNumber": "View scan {number}",
+    "notice": "For education and discussion only. Not for diagnosis or patient care."
+  },
+  "viewer": {
+    "title": "Scan viewer",
+    "opening": "Opening the viewer…",
+    "failed": "The scan can’t be opened. It may have been removed, or you may not have access to it."
+  }
+}

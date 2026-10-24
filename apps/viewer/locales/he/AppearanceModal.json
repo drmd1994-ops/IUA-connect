@@ -1,0 +1,12 @@
+{
+  "Appearance": "מראה",
+  "Theme": "ערכת צבעים",
+  "Default Theme": "ברירת מחדל: כחול OHIF",
+  "Custom": "מותאם אישית",
+  "Custom Theme": "ערכת צבעים מותאמת",
+  "Hide": "הסתרה",
+  "Apply": "החלה",
+  "Clear": "ניקוי",
+  "No valid theme tokens found": "לא נמצאו הגדרות צבע תקינות. השורות צריכות להיראות כך: --primary: 220 90% 60%",
+  "Paste your custom theme color tokens here": "יש להדביק כאן את הגדרות הצבע"
+}

@@ -42,6 +42,7 @@
     "openAt": "Open on {host}",
     "pending": "The recording isn’t available yet.",
     "files": "Files",
+    "scans": "Scans",
     "references": "References",
     "lessons": "Lessons",
     "noLessons": "This course has no lessons yet.",

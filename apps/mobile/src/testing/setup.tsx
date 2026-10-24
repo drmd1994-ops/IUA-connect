@@ -72,6 +72,20 @@ jest.mock('expo-image', () => {
   return { Image: (props: object) => React.createElement(View, props) };
 });
 
+// The scan viewer's web view (M36): drawn as a box that shows the address it was given.
+jest.mock('react-native-webview', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    WebView: (props: { source: { uri: string }; accessibilityLabel?: string }) =>
+      React.createElement(View, {
+        testID: 'web-view',
+        accessibilityLabel: props.accessibilityLabel,
+        accessibilityHint: props.source.uri,
+      }),
+  };
+});
+
 jest.mock('expo/fetch', () => ({ fetch: jest.fn(() => new Promise(() => undefined)) }));
 jest.mock('expo-clipboard', () => ({ setStringAsync: jest.fn(async () => true) }));
 jest.mock('expo-sharing', () => ({ shareAsync: jest.fn(async () => undefined) }));
