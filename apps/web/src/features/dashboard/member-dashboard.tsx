@@ -38,9 +38,6 @@ function useLoaded<T>(load: () => Promise<T>, deps: unknown[]): T | null | undef
   return value;
 }
 
-/** Later features, shown so they are known to be planned, and never mistaken for working. */
-const LATER = ['createCase'] as const;
-
 /**
  * The home page of a signed-in person (M8 plan §2.6): their membership, new notices, upcoming
  * events, the newest news and education they may read, and quick actions.
@@ -301,6 +298,8 @@ export function MemberDashboard() {
           </p>
         </Section>
 
+        {me?.verified && <CaseOfTheWeek />}
+
         <Section id="home-actions" title={h('actions.title')}>
           <ul className="grid gap-2 sm:grid-cols-2">
             {(
@@ -314,6 +313,8 @@ export function MemberDashboard() {
                 ['askCommunity', '/communities'],
                 // M27: research projects.
                 ['postResearch', '/research'],
+                // M26: case discussions; the last of the later features.
+                ['createCase', '/cases/new'],
               ] as const
             ).map(([key, href]) => (
               <li key={key}>
@@ -326,23 +327,32 @@ export function MemberDashboard() {
               </li>
             ))}
           </ul>
-          <h3 className="mt-2 text-sm font-semibold text-text-muted">{h('actions.laterTitle')}</h3>
-          {/* Deliberately not links or buttons: these features are not built (spec §60). */}
-          <ul className="grid gap-2 sm:grid-cols-2" data-testid="coming-soon-actions">
-            {LATER.map((key) => (
-              <li
-                key={key}
-                aria-disabled="true"
-                className="flex items-center justify-between gap-2 rounded-md border border-dashed border-border px-4 py-3 text-text-muted"
-              >
-                <span>{h(`actions.${key}`)}</span>
-                <span className={`${badge} bg-surface-muted`}>{h('actions.comingSoon')}</span>
-              </li>
-            ))}
-          </ul>
         </Section>
       </div>
     </div>
+  );
+}
+
+/** The case of the week (M26), for verified people, when moderators chose one. */
+function CaseOfTheWeek() {
+  const t = useTranslations('cases');
+  const { api, call } = useAuth();
+  const week = useLoaded(
+    async () =>
+      (await call(() => api.GET('/api/v1/cases', { params: { query: { page: 1 } } }))).week,
+    [api, call],
+  );
+  if (!week) return null;
+  return (
+    <Section id="home-case" title={t('list.week')}>
+      <p className="text-lg font-semibold" dir="auto">
+        <Link href={`/cases/${week.id}`} className={link}>
+          {week.title}
+        </Link>
+      </p>
+      <p dir="auto">{week.question}</p>
+      <p className="text-sm text-text-muted">{t('note')}</p>
+    </Section>
   );
 }
 
