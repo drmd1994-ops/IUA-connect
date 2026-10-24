@@ -58,6 +58,11 @@ const apiUrl = process.env.API_INTERNAL_URL ?? 'http://localhost:4000';
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    // Next.js holds a request's body in memory for the proxy (src/proxy.ts), 10 MB by default,
+    // and cuts a larger one off: a scan (M36) is up to 200 MB, a chat video up to 100 MB.
+    proxyClientMaxBodySize: '210mb',
+  },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
