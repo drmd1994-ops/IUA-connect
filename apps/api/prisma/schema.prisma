@@ -141,6 +141,7 @@ model User {
   cases                   ClinicalCase[]           @relation("CaseAuthor")
   caseVotes               CaseVote[]               @relation("CaseVoter")
   caseReports             CaseReport[]             @relation("CaseReporter")
+  scans                   Scan[]                   @relation("ScanOwner")
 
   @@map("users")
 }
@@ -1526,6 +1527,7 @@ model EducationItem {
   /// For a course: its lessons. For any other item: the courses it is a lesson of.
   lessons      CourseItem[]           @relation("CourseLessons")
   inCourses    CourseItem[]           @relation("LessonOf")
+  scans        Scan[]
 
   @@index([status, publishedAt(sort: Desc)])
   @@index([type, level, subspecialtyId])
@@ -3436,6 +3438,7 @@ model ClinicalCase {
   votes        CaseVote[]
   reports      CaseReport[]
   steps        CaseHistory[]
+  scans        Scan[]
 
   @@index([status, publishedAt(sort: Desc)])
   @@index([subspecialtyId, status])
@@ -3518,4 +3521,67 @@ model CaseHistory {
 
   @@index([caseId, at])
   @@map("case_history")
+}
+
+// --- M36: Medical imaging --------------------------------------------------------------------
+
+/// A de-identified scan (one study), attached to a case or a library item. Unattached ones are
+/// their uploader's alone and are removed after a day.
+model Scan {
+  id              String    @id @db.Uuid
+  ownerUserId     String?   @map("owner_user_id") @db.Uuid
+  caseId          String?   @map("case_id") @db.Uuid
+  educationItemId String?   @map("education_item_id") @db.Uuid
+  position        Int       @default(0)
+  /// A new identifier, made on upload (the original is never stored).
+  studyUid        String    @unique @map("study_uid") @db.VarChar(64)
+  /// The kinds of images, such as "CT" or "MR".
+  modalities      String    @db.VarChar(64)
+  instanceCount   Int       @map("instance_count")
+  sizeBytes       Int       @map("size_bytes")
+  attachedAt      DateTime? @map("attached_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  owner         User?          @relation("ScanOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  case          ClinicalCase?  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  educationItem EducationItem? @relation(fields: [educationItemId], references: [id], onDelete: Cascade)
+  series        ScanSeries[]
+
+  @@index([caseId])
+  @@index([educationItemId])
+  @@index([attachedAt, createdAt])
+  @@map("scans")
+}
+
+model ScanSeries {
+  id            String @id @db.Uuid
+  scanId        String @map("scan_id") @db.Uuid
+  seriesUid     String @unique @map("series_uid") @db.VarChar(64)
+  modality      String @db.VarChar(16)
+  number        Int?
+  instanceCount Int    @map("instance_count")
+
+  scan      Scan           @relation(fields: [scanId], references: [id], onDelete: Cascade)
+  instances ScanInstance[]
+
+  @@index([scanId])
+  @@map("scan_series")
+}
+
+/// One image file of a series; stored outside the web root, like any upload.
+model ScanInstance {
+  id             String @id @db.Uuid
+  seriesId       String @map("series_id") @db.Uuid
+  sopInstanceUid String @unique @map("sop_instance_uid") @db.VarChar(64)
+  sopClassUid    String @map("sop_class_uid") @db.VarChar(64)
+  number         Int?
+  storageKey     String @map("storage_key") @db.VarChar(200)
+  sizeBytes      Int    @map("size_bytes")
+  /// Its attributes as DICOM JSON, without the binary ones: what the viewer reads first.
+  metadata       Json
+
+  series ScanSeries @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+
+  @@index([seriesId, number])
+  @@map("scan_instances")
 }

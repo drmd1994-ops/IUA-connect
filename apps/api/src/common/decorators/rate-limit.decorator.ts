@@ -13,6 +13,11 @@ export interface RateLimitRule {
    * person, counted by the route itself once it knows who is asking (hitUserLimit).
    */
   by: 'ip' | 'account' | 'user';
+  /**
+   * Counted instead of the global per-IP limit on this route: a scan viewer fetches hundreds of
+   * images in a minute, through a link that is itself the permission (M36).
+   */
+  replacesGlobal?: boolean;
 }
 
 /** Route-specific limits, applied in addition to the global per-IP limit (API_DESIGN.md §5). */
@@ -51,4 +56,13 @@ export const RATE_LIMITS = {
     by: 'user',
   },
   chatUploadsPerUser: { name: 'chat-uploads-user', limit: 30, windowSec: 600, by: 'user' },
+  // Scans (M36 plan §4): a viewer reads a study image by image.
+  scanImagesPerIp: {
+    name: 'scan-images-ip',
+    limit: 3000,
+    windowSec: 60,
+    by: 'ip',
+    replacesGlobal: true,
+  },
+  scanUploadsPerUser: { name: 'scan-uploads-user', limit: 10, windowSec: 3600, by: 'user' },
 } as const satisfies Record<string, RateLimitRule>;

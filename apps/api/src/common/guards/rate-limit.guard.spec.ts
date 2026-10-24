@@ -24,6 +24,12 @@ class FixtureController {
   open() {
     return { ok: true };
   }
+
+  @Get('images')
+  @RateLimit(RATE_LIMITS.scanImagesPerIp)
+  images() {
+    return { ok: true };
+  }
 }
 
 @Module({ controllers: [FixtureController] })
@@ -71,6 +77,14 @@ describe('rate limiting', () => {
   it('applies the global per-IP limit to every route', async () => {
     for (let i = 0; i < 300; i++) await request(app.getHttpServer()).get('/api/v1/fixture/open');
     await request(app.getHttpServer()).get('/api/v1/fixture/open').expect(429);
+  });
+
+  it('counts a scan viewer’s images by their own, higher limit instead of the global one', async () => {
+    for (let i = 0; i < 301; i++) {
+      await request(app.getHttpServer()).get('/api/v1/fixture/images').expect(200);
+    }
+    // They did not use up the global limit either.
+    await request(app.getHttpServer()).get('/api/v1/fixture/open').expect(200);
   });
 });
 

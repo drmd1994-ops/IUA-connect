@@ -13,6 +13,7 @@ import { VideoProvider } from '../../infra/video/video-provider';
 import { AccessService } from '../access';
 import { AuditService } from '../audit';
 import { FilesService } from '../files';
+import { ImagingService } from '../imaging';
 import { parseIfMatch, sanitizeMarkdown, slugify, uniqueSlug } from '../news';
 import {
   type AdminEducationDto,
@@ -56,6 +57,7 @@ export class EducationAdminService {
     private readonly prisma: PrismaService,
     private readonly access: AccessService,
     private readonly files: FilesService,
+    private readonly imaging: ImagingService,
     private readonly audit: AuditService,
     private readonly notifier: Notifier,
     private readonly announcer: ContentAnnouncer,
@@ -100,7 +102,11 @@ export class EducationAdminService {
 
   async get(id: string): Promise<AdminEducationDto> {
     const row = await this.row(id);
-    return { ...view(row), typeIds: await this.access.allowedTypes('education', id) };
+    const [typeIds, scans] = await Promise.all([
+      this.access.allowedTypes('education', id),
+      this.imaging.listFor({ educationItemId: id }),
+    ]);
+    return { ...view(row), typeIds, scans };
   }
 
   async history(id: string): Promise<EducationHistoryDto> {
@@ -134,6 +140,7 @@ export class EducationAdminService {
       Boolean(await this.prisma.educationItem.findUnique({ where: { slug: candidate } })),
     );
     const id = uuidv7();
+    const scanIds = await this.imaging.checkAttachable(principal.userId, input.scanIds, {});
     await this.prisma.$transaction(async (tx) => {
       await tx.educationItem.create({
         data: {
@@ -146,6 +153,7 @@ export class EducationAdminService {
         },
       });
       await this.replaceParts(tx, id, input);
+      await this.imaging.attach(tx, { educationItemId: id }, scanIds);
       await this.addHistory(tx, id, 'create', null, 'DRAFT', principal.userId);
     });
     await this.attach(input);
@@ -180,7 +188,10 @@ export class EducationAdminService {
       }
       slug = input.slug;
     }
-    await this.prisma.$transaction(async (tx) => {
+    const scanIds = await this.imaging.checkAttachable(principal.userId, input.scanIds, {
+      educationItemId: id,
+    });
+    const droppedScans = await this.prisma.$transaction(async (tx) => {
       const { count } = await tx.educationItem.updateMany({
         where: { id, version: row.version, status: row.status },
         data: { ...columns(input), slug, version: { increment: 1 } },
@@ -193,7 +204,9 @@ export class EducationAdminService {
         // A reviewer corrected it: kept in the item's history.
         await this.addHistory(tx, id, 'correct', 'IN_REVIEW', 'IN_REVIEW', principal.userId);
       }
+      return this.imaging.attach(tx, { educationItemId: id }, scanIds);
     });
+    await this.imaging.deleteMany(droppedScans);
     await this.attach(input);
     await this.record('education.update', id, principal.userId, meta);
     return this.get(id);
@@ -205,6 +218,7 @@ export class EducationAdminService {
     if (row.status !== 'DRAFT' || row.publishedAt) {
       throw new AppException('BUSINESS_RULE_VIOLATION', [{ code: 'educationNotDeletable' }]);
     }
+    await this.imaging.deleteFor({ educationItemId: id });
     await this.prisma.$transaction(async (tx) => {
       await this.access.setRules(tx, 'education', id, 'PUBLIC', []);
       await tx.educationItem.delete({ where: { id } });
@@ -508,7 +522,7 @@ function fileView(file: Row['files'][number]['file']) {
   };
 }
 
-function view(row: Row): Omit<AdminEducationDto, 'typeIds'> {
+function view(row: Row): Omit<AdminEducationDto, 'typeIds' | 'scans'> {
   const text = (locale: Lang) => {
     const t = row.translations.find((item) => item.locale === locale);
     return t ? { title: t.title, description: t.description, author: t.author } : undefined;

@@ -1,6 +1,7 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
+import { MAX_SCANS, scanSchema } from '../imaging';
 import { MAX_BODY_LENGTH, SLUG_PATTERN } from '../news';
 import { EDUCATION_ACTIONS } from './education-workflow';
 
@@ -63,6 +64,8 @@ export class EducationInputDto extends createZodDto(
       coverFileId: z.uuid().nullable().optional(),
       /** Documents and presentations: the files; other types: optional attachments. */
       fileIds: z.array(z.uuid()).max(20).default([]),
+      /** De-identified scans (M36), in order. */
+      scanIds: z.array(z.uuid()).max(MAX_SCANS).default([]),
       references: z.array(reference).max(20).default([]),
       translations: z
         .strictObject({ he: translationInput.optional(), en: translationInput.optional() })
@@ -111,6 +114,7 @@ export class AdminEducationDto extends createZodDto(
     typeIds: z.array(z.uuid()),
     cover: fileView.nullable(),
     files: z.array(fileView),
+    scans: z.array(scanSchema),
     references: z.array(reference),
     translations: z.strictObject({
       he: translationView.optional(),
@@ -236,6 +240,8 @@ export class PublicEducationDto extends createZodDto(
     externalUrl: nullableString(),
     videoStatus: z.enum(VIDEO_STATUSES),
     files: z.array(fileView),
+    /** De-identified scans, opened in the viewer (M36). */
+    scans: z.array(scanSchema),
     references: z.array(z.strictObject({ title: z.string(), url: z.string() })),
     /**
      * For a course: its published lessons, in order. A lesson the reader may not see is listed

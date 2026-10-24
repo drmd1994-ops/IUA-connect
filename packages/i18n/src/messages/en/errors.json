@@ -275,6 +275,13 @@
     "caseStepNotAllowed": "This step isn’t possible for the case as it is now.",
     "caseOwnReview": "Another moderator reviews your own case.",
     "caseNoteRequired": "Please give the reason. The author sees it.",
-    "caseNoCommunity": "This subspecialty has no open community for the discussion."
+    "caseNoCommunity": "This subspecialty has no open community for the discussion.",
+    "scanNotDicom": "One of the files isn’t a readable DICOM scan.",
+    "scanNoImage": "One of the files has no image in it, such as a report. Send the image files only.",
+    "scanBurnedIn": "One of the files says it has text written on the image itself, which can identify the patient. It can’t be added.",
+    "scanManyStudies": "These files come from more than one scan. Send one scan at a time.",
+    "scanTooLarge": "The scan is too large. A scan can be up to 200 MB and 2,000 files.",
+    "scansTooMany": "Up to 3 scans can be added.",
+    "unknownScan": "One of the scans isn’t available."
   }
 }

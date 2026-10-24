@@ -13,6 +13,7 @@ import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
 import { refusePatientDetails } from '../community';
 import { type FileView, FilesService } from '../files';
+import { ImagingService } from '../imaging';
 import { Notifier } from '../notifications';
 import {
   type CaseDto,
@@ -83,12 +84,24 @@ export class CasesService implements OnModuleInit {
     @Inject(APP_CONFIG) private readonly env: Env,
     private readonly prisma: PrismaService,
     private readonly files: FilesService,
+    private readonly imaging: ImagingService,
     private readonly audit: AuditService,
     private readonly notifier: Notifier,
   ) {}
 
-  /** A case's pictures are for whoever may read the case, and nobody else. */
+  /** A case's pictures and scans are for whoever may read the case, and nobody else. */
   onModuleInit(): void {
+    this.imaging.registerReadRule({
+      canRead: async (place, principal) => {
+        if (!place.caseId) return null;
+        if (!principal) return false;
+        const row = await this.prisma.clinicalCase.findUnique({
+          where: { id: place.caseId },
+          select: { authorId: true, status: true, subspecialtyId: true },
+        });
+        return row ? this.mayRead(principal, row) : false;
+      },
+    });
     this.files.registerReadRule({
       canRead: async (fileId, principal) => {
         const used = await this.prisma.caseFile.findUnique({
@@ -152,7 +165,7 @@ export class CasesService implements OnModuleInit {
     const reviewing = await this.reviewing(principal);
     const canReview = covers(reviewing, row.subspecialtyId);
     const mine = row.authorId === principal.userId;
-    const [poll, reports, week] = await Promise.all([
+    const [poll, reports, week, scans] = await Promise.all([
       this.poll(row, principal.userId),
       canReview
         ? this.prisma.caseReport.findMany({
@@ -166,6 +179,7 @@ export class CasesService implements OnModuleInit {
         orderBy: { weekAt: 'desc' },
         select: { id: true },
       }),
+      this.imaging.listFor({ caseId: id }),
     ]);
     return {
       ...summary(row),
@@ -176,6 +190,7 @@ export class CasesService implements OnModuleInit {
       pathology: row.pathology,
       management: row.management,
       fileIds: row.files.map((f) => f.fileId),
+      scans,
       poll,
       discussion:
         row.status === 'PUBLISHED' && row.post && !row.post.removedAt
@@ -203,12 +218,14 @@ export class CasesService implements OnModuleInit {
     }
     await this.check(input);
     const fileIds = await this.checkFiles(principal, input.fileIds, null);
+    const scanIds = await this.imaging.checkAttachable(principal.userId, input.scanIds, {});
     const id = uuidv7();
     await this.prisma.$transaction(async (tx) => {
       await tx.clinicalCase.create({
         data: { id, authorId: principal.userId, ...fields(input) },
       });
       await this.writeParts(tx, id, input, fileIds);
+      await this.imaging.attach(tx, { caseId: id }, scanIds);
       await addHistory(tx, id, 'create', null, 'DRAFT', principal.userId);
     });
     for (const fileId of fileIds) await this.files.markAttached(fileId);
@@ -228,8 +245,11 @@ export class CasesService implements OnModuleInit {
     }
     await this.check(input);
     const fileIds = await this.checkFiles(principal, input.fileIds, id);
+    const scanIds = await this.imaging.checkAttachable(principal.userId, input.scanIds, {
+      caseId: id,
+    });
     const before = row.files.map((f) => f.fileId);
-    await this.prisma.$transaction(async (tx) => {
+    const droppedScans = await this.prisma.$transaction(async (tx) => {
       const { count } = await tx.clinicalCase.updateMany({
         where: { id, status: row.status },
         data: fields(input),
@@ -238,11 +258,13 @@ export class CasesService implements OnModuleInit {
       await tx.caseFile.deleteMany({ where: { caseId: id } });
       await tx.casePollOption.deleteMany({ where: { caseId: id } });
       await this.writeParts(tx, id, input, fileIds);
+      return this.imaging.attach(tx, { caseId: id }, scanIds);
     });
     for (const fileId of fileIds) await this.files.markAttached(fileId);
-    // Pictures taken out of the case are deleted.
+    // Pictures and scans taken out of the case are deleted.
     for (const fileId of before.filter((f) => !fileIds.includes(f)))
       await this.files.remove(fileId);
+    await this.imaging.deleteMany(droppedScans);
     await this.record('cases.update', id, principal, meta);
     return this.get(principal, id);
   }
@@ -266,9 +288,13 @@ export class CasesService implements OnModuleInit {
     return this.get(principal, id);
   }
 
-  /** The author deletes their case, with its pictures; its discussion post is taken down too. */
+  /**
+   * The author deletes their case, with its pictures and scans; its discussion post is taken down
+   * too.
+   */
   async remove(principal: Principal, id: string, meta: RequestMeta): Promise<void> {
     const row = await this.own(principal, id);
+    await this.imaging.deleteFor({ caseId: id });
     await this.prisma.$transaction(async (tx) => {
       if (row.postId) {
         await tx.post.updateMany({

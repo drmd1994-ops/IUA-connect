@@ -43,11 +43,11 @@ export class RateLimitGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
     const route = `${context.getClass().name}.${context.getHandler().name}`;
-    const rules = [
-      RATE_LIMITS.global as RateLimitRule,
-      ...(this.reflector.get<RateLimitRule[] | undefined>(RATE_LIMIT_KEY, context.getHandler()) ??
-        []),
-    ];
+    const own =
+      this.reflector.get<RateLimitRule[] | undefined>(RATE_LIMIT_KEY, context.getHandler()) ?? [];
+    const rules = own.some((r) => r.replacesGlobal)
+      ? own
+      : [RATE_LIMITS.global as RateLimitRule, ...own];
 
     for (const rule of rules) {
       // Per-person limits are counted by the route, after authentication.

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AccessModule } from '../access';
 import { AuthModule } from '../auth';
 import { FilesModule } from '../files';
+import { ImagingModule } from '../imaging';
 import { NotificationsModule } from '../notifications';
 import { EducationAdminController, EducationPublicController } from './education.controller';
 import { EducationAdminService } from './education-admin.service';
@@ -27,7 +28,7 @@ import { MockExamService } from './mock-exam.service';
 
 /** Education: the library, courses, the review workflow and the exam question demo (M6). */
 @Module({
-  imports: [AccessModule, AuthModule, FilesModule, NotificationsModule],
+  imports: [AccessModule, AuthModule, FilesModule, ImagingModule, NotificationsModule],
   controllers: [
     EducationAdminController,
     EducationPublicController,
