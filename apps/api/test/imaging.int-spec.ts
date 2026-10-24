@@ -3,7 +3,9 @@ import {
   type Harness,
   bearer,
   createVerifiedUser,
+  grantRole,
   signIn,
+  signInWithMfa,
   startHarness,
   verifyPhysician,
 } from './auth-harness';
@@ -201,5 +203,39 @@ describe('medical imaging (integration)', () => {
     await h.http().delete(`/api/v1/imaging/scans/${scan.id}`).set(as(other)).expect(404);
     await h.http().delete(`/api/v1/imaging/scans/${scan.id}`).set(as(author)).expect(204);
     await h.http().get(`/api/v1/imaging/scans/${scan.id}`).set(as(author)).expect(404);
+  });
+
+  it('in a library item, the editors read it before publishing, and readers after', async () => {
+    const signedIn = await signInWithMfa(h, 'scan-editor', (email) =>
+      grantRole(h, email, 'CONTENT_EDITOR', 'platform'),
+    );
+    const editor: Person = { id: signedIn.userId, accessToken: signedIn.accessToken };
+    const reader = await person();
+    const scan = (await upload(editor, [sampleScan({ study: study() })]).expect(201)).body as Scan;
+    const item = await h
+      .http()
+      .post('/api/v1/admin/education')
+      .set(as(editor))
+      .send({
+        type: 'CASE',
+        accessTier: 'VERIFIED',
+        scanIds: [scan.id],
+        translations: { he: { title: `סריקה ללימוד ${run}-${++n}`, description: 'בדוי.' } },
+      })
+      .expect(201);
+    expect(item.body.scans).toEqual([expect.objectContaining({ id: scan.id })]);
+    expect(await viewerStatus(editor, scan.id)).toBe(200);
+    expect(await viewerStatus(reader, scan.id)).toBe(404);
+    await h.db.query(
+      `UPDATE education_items SET status = 'PUBLISHED', published_at = now() WHERE id = $1`,
+      [item.body.id],
+    );
+    expect(await viewerStatus(reader, scan.id)).toBe(200);
+    const page = await h
+      .http()
+      .get(`/api/v1/education/${item.body.slug}`)
+      .set(as(reader))
+      .expect(200);
+    expect(page.body.scans).toEqual([expect.objectContaining({ id: scan.id })]);
   });
 });

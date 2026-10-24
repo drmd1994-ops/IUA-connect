@@ -1,6 +1,6 @@
 # M36: Medical imaging
 
-**Status: approved by the owner on 2026-10-24 (§10); built the same day on branch `feat/m36-medical-imaging` (PROJECT_STATUS.md, M36), apart from the demo scans (step 7), which wait for the owner's approval of each.** First proposed the same day at the owner's request ("open a new milestone called medical imaging") and rewritten against the owner's answers.
+**Status: approved by the owner on 2026-10-24 (§10); built the same day on branch `feat/m36-medical-imaging` (PROJECT_STATUS.md, M36), including the demo scans (step 7), which the owner chose ("All 3") and which wait in the library for the owner's review.** First proposed the same day at the owner's request ("open a new milestone called medical imaging") and rewritten against the owner's answers.
 
 Track: Phase 3. Size: XL (the full viewer, on the site and inside the app). Needs first: M26 (cases), whose pictures it extends; M6 (library). M20's legal review before any real scan is uploaded.
 

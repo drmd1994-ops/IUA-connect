@@ -34,6 +34,7 @@ import { seedDemoCommunities } from './demo-communities';
 import { seedDemoResearch } from './demo-research';
 import { seedDemoJournalClub } from './demo-journal-club';
 import { seedDemoCases } from './demo-cases';
+import { seedDemoImaging } from './demo-imaging';
 import { seedDemoChat } from './demo-chat';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
@@ -83,6 +84,8 @@ const LAYERS: SeedLayer[] = [
   { name: 'journal-club', milestone: 'M31', run: seedDemoJournalClub },
   // Case discussions (M26): made-up cases, waiting for review; nothing shows until approved.
   { name: 'cases', milestone: 'M26', run: seedDemoCases },
+  // Three public teaching scans (M36) as library items, waiting for the owner's review.
+  { name: 'imaging', milestone: 'M36', run: seedDemoImaging },
 ];
 
 async function main(): Promise<void> {

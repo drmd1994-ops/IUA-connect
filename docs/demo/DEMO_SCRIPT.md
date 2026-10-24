@@ -248,7 +248,7 @@ Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, a
 
 ### 16. Medical imaging (3 minutes, optional; added in M36)
 
-As `member.resident@demo.test`. **Before a demo:** until the owner approves public demo scans, use a scan's DICOM files you are allowed to show and that identify nobody (the test files in `apps/web/e2e/fixtures` are tiny made-up shapes).
+As `member.resident@demo.test`. **Before a demo:** publish the three teaching scans waiting in the library's review queue (they are medical content, for the owner's review). To show an upload, use DICOM files you are allowed to show and that identify nobody, or the tiny made-up files in `apps/web/e2e/fixtures`; or skip to the library's teaching scans.
 
 | Do                                                                                              | The audience sees                                                              | Say                                                                                                               |
 | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |

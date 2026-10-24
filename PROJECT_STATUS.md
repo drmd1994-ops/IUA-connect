@@ -1605,17 +1605,20 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 - **How it is built and shipped:** a GitHub workflow ("Viewer bundle") builds it and attaches it to a release; the site's build downloads that archive, checks its SHA-256, and refuses to build in CI if the viewer's sources changed since.
 - **The site:** a scan picker in the case form and the library editor (choose the files or the scan's folder; only DICOM files are sent; the confirmation first); "View the scan" on a case and a library item, opening the viewer in a new tab.
 - **The app:** a case's and a library item's scans, each opening the viewer in a screen of the app. Scans are added on the site. The app keeps a case's scans when it edits the case.
+- **Demo scans (plan step 7), chosen by the owner ("All 3"):** three public, de-identified teaching scans of The Cancer Imaging Archive, one series each: a kidney-tumour CT (C4KC-KiTS, CC BY 3.0, 117 images), a bladder CT (TCGA-BLCA, CC BY 3.0, 120 images) and a prostate MRI (Prostate-MRI-US-Biopsy, CC BY 4.0, 88 images). They are library items **waiting for the owner's review**, each with its source, licence and the required citation. The files are in the GitHub release `demo-scans-v1` (with their licence files and citations), downloaded by the new seed layer `imaging` (also on the hosted demo's start), checked by SHA-256, and cleaned like any upload.
 
 **Verified (on this computer)**
 
-- Server: 7 unit tests for the removal of details and the signed link, and one for the viewer's own rate limit (488 unit tests in all). 5 integration tests:
+- Server: 7 unit tests for the removal of details and the signed link, and one for the viewer's own rate limit (488 unit tests in all). 6 integration tests:
   - a scan with a planted name, ID number, dates and hospital is uploaded; none of them is in any stored file or in what the viewer reads; a changed link or another study opens nothing;
   - refusals: no confirmation, not a scan, two studies, burned-in text, unverified uploader; nothing stored;
   - a scan is its uploader's until attached; in a case it follows the case's readers; someone else can't take it; deleting the case deletes it;
   - the uploader removes an unattached scan, nobody else can.
 
+  - in a library item, the editors read the scan before publishing, and readers only after.
+
   The cases and library integration tests pass with the change.
-- The viewer: built on this computer and on GitHub; opened with a made-up test scan, in English and Hebrew, with the opening notice (screenshots checked).
+- The viewer: built on this computer and on GitHub; opened with a made-up test scan, in English and Hebrew, with the opening notice, and with each of the three demo scans after their upload (screenshots checked; nothing is written on their images).
 - The site: type checks, lint, and a browser test (a resident adds a made-up scan to a case, saves it, and opens it in the viewer), with accessibility checks.
 - The app: 3 screen tests and 2 rule tests (260 screen tests, 97 rule tests in all).
 
@@ -1633,10 +1636,13 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 - **The viewer's layout stays left to right in Hebrew;** each piece of Hebrew text takes its own direction. A few labels OHIF writes into its code (such as "Patient") stay in English.
 - **Burned-in text on the image itself** can't be found by removing fields; it is the uploader's confirmation, and a file that declares it is refused.
 - **The viewer is large** (35 MB to download, 129 MB unpacked), loaded only on its own page.
+- **Found while adding the demo scans: the site cut off any upload over 10 MB** (Next.js holds a request's body in memory for its proxy, 10 MB by default). The limit is now 210 MB. It also affected chat videos (up to 100 MB) sent from the site.
+- **A library dcmjs lists, adm-zip, had three high advisories;** dcmjs never loads it, and it is moved to the fixed version (0.6.1) by an override.
+- **The Cancer Imaging Archive's data usage policy** applies to the demo scans: no attempt to identify the people in them.
 
 **Open for the owner**
 
-1. **Demo scans (plan step 7):** I will propose two or three public, de-identified teaching scans relevant to urology, each with its source and licence, for your approval before adding them.
+1. **Review the three teaching scans** in the library's review queue (as `admin@demo.test`), and publish them if they are fit.
 2. Read the Hebrew texts, including the viewer's.
 3. Say when to merge it, deploy it and build a new .apk.
 

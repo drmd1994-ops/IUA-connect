@@ -60,7 +60,8 @@ async function main() {
     step('Adding what newer versions brought, if missing');
     pnpm(['--filter', '@medconnect/api', 'db:seed'], {
       env: {
-        SEED_LAYERS: 'reference,question-bank,careers,communities,research,journal-club,cases',
+        SEED_LAYERS:
+          'reference,question-bank,careers,communities,research,journal-club,cases,imaging',
       },
     });
   }
