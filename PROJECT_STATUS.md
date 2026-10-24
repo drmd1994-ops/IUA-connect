@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M27 merged and on the hosted demo; M31 built)_
+_Last updated: 2026-10-24 (M27 merged, on the hosted demo and in a new .apk; M31 built, in pull request #37)_
 
 ## Summary
 
@@ -1457,6 +1457,7 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
   - **the research browser test** typed into the header's search box before the research page was drawn on GitHub's slower machine; it now waits for the page.
 - Merged the same day at the owner's word ("merge it, deploy it and build a new version").
 - **On the hosted demo:** the server and site deployed; the start ran the migrations and the seed layers without an error (it stops the start otherwise), the research routes answer (asking for sign-in), the research page loads, and `pnpm smoke:hosted` passed. The research pages show only when signed in, so the owner's look is the check of their content.
+- **A new .apk** with M27 (run 40079400881), published as the pre-release `demo-apk-2026-10-24-m27`; it updates the earlier demo app without uninstalling.
 
 **Not verified**
 
@@ -1473,7 +1474,7 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 1. Read the new Hebrew texts, above all "אישור ועדת הלסינקי" for ethics approval and the project's words ("מחפשים", "חוקר/ת ראשי/ת").
 2. **On or after 2026-10-29:** update body-parser (2.4.0) and multer (2.5.0), and remove their two accepted advisories from `pnpm-workspace.yaml` and `SECURITY.md`. GitHub's security check found them on 2026-10-24, with zod and undici (updated the same day) and zod 3 in Expo's developer tool (no fix exists; accepted by the owner).
 
-## M31 The journal club (built 2026-10-24, waiting for its pull request)
+## M31 The journal club (built 2026-10-24, pull request #37)
 
 Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved by the owner on 2026-10-24 ("start M31") with the recommended answers in its §10:
 
@@ -1532,6 +1533,6 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo. **M31 (the journal club)** is built (2026-10-24).
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** is built (2026-10-24), in pull request #37.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
