@@ -1464,7 +1464,8 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 **Open for the owner**
 
 1. Read the new Hebrew texts, above all "אישור ועדת הלסינקי" for ethics approval and the project's words ("מחפשים", "חוקר/ת ראשי/ת").
-2. Say when to merge it, deploy it and build a new .apk.
+2. Merge, deploy and a new .apk: asked for on 2026-10-24 ("merge it, deploy it and build a new version").
+3. **On or after 2026-10-29:** update body-parser (2.4.0) and multer (2.5.0), and remove their two accepted advisories from `pnpm-workspace.yaml` and `SECURITY.md`. GitHub's security check found them on 2026-10-24, with zod and undici (updated the same day) and zod 3 in Expo's developer tool (no fix exists; accepted by the owner).
 
 ## Next step
 
