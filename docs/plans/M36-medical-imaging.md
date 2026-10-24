@@ -1,6 +1,6 @@
 # M36: Medical imaging
 
-**Status: proposed on 2026-10-24 at the owner's request ("open a new milestone called medical imaging"); rewritten the same day against the owner's answers (§10). Not approved. Nothing of it is built.** Code starts only after the owner approves this plan and the libraries in §5.
+**Status: approved by the owner on 2026-10-24 (§10). Building on branch `feat/m36-medical-imaging`.** First proposed the same day at the owner's request ("open a new milestone called medical imaging") and rewritten against the owner's answers.
 
 Track: Phase 3. Size: XL (the full viewer, on the site and inside the app). Needs first: M26 (cases), whose pictures it extends; M6 (library). M20's legal review before any real scan is uploaded.
 
@@ -9,7 +9,8 @@ Track: Phase 3. Size: XL (the full viewer, on the site and inside the app). Need
 - **The OHIF Viewer** (github.com/OHIF/Viewers, commit d5b8f56 of 2026-10-23) was cloned to `Desktop\OHIF Viewer`, outside this repository, for reading only. Nothing of it was installed or run.
 - **OHIF's own licence is MIT** (Open Health Imaging Foundation, 2018), the same in all 24 of its packages. MIT allows use, change, copying, distribution and sale, in a free or paid, closed or open product, without paying or asking. It requires the copyright notice and licence text to stay with every copy. It gives no warranty.
 - **Its 162 direct outside libraries** (looked up on the npm registry): 141 MIT, 9 ISC, 6 Apache-2.0, and one each of MIT-0, CC0, BlueOak, BSD-3 and Apache-2.0 with the LLVM exception. All of these allow the same use as MIT, some with a notice. **One is different: shepherd.js 15.3.0 is under the AGPL-3.0.** It draws OHIF's guided tours ("onboarding"). The AGPL would oblige us to publish the source of the whole product to its users. Its authors sell a commercial licence instead. **This plan proposes to build OHIF without the tours and without shepherd.js** (§4), and a test that fails the build if any AGPL or GPL library is in it.
-- **Not yet checked:** the libraries those libraries pull in (several hundred). They are checked with a full install in a separate folder, before the owner approves the library (§7 step 1).
+- **Every library the viewer ships, checked (step 1, 2026-10-24):** OHIF's lock file lists exactly what it installs. Following only what the viewer ships (not the tools that build it, nor its documentation site) gives **1,086 libraries.** Their licences were looked up on the npm registry, without installing or running anything: 884 MIT, 56 ISC, and the rest Apache-2.0, BSD, BlueOak, CC0, 0BSD, Boost, Python-2.0, CC-BY-4.0 (a browser-support table, used only when building) and two whose files say MIT and Apache-2.0. **All allow our use, with a notice. The only exception is shepherd.js (AGPL-3.0),** used in three files, all for the tours; it is removed.
+- **The version used:** OHIF **3.13.13**, the latest stable release (16 Oct 2026). It is older than the project's 7-day rule for new releases. The `DesktopOHIF Viewer` copy is a newer beta and is only for reading.
 - **The licence is not the approval for patient care.** OHIF has been the basis of FDA-cleared viewers; that clearance belongs to those products. A viewer offered for diagnosis would likely be a medical device (the Ministry of Health's AMAR register in Israel; the MDR in Europe). This viewer is **for education and discussion only**, said on every screen, as cases say "for education, not advice about a patient".
 
 ## 1. Goal
@@ -48,7 +49,7 @@ A physician can look at a de-identified scan (CT, MRI, ultrasound, X-ray) in a c
 - **Data:** a scan record (study, series, number of images, size, where stored) linked to a case or a library item.
 - **Server:** upload of a scan (a folder of DICOM files or a zip), de-identification, storage outside the web root, and the standard DICOMweb read paths the viewer needs (study, series and image lists, and the images), behind the access check.
 - **Site:** "View the scan" on a case and on a library item opens the viewer.
-- **App:** the same buttons open the viewer in an app screen. The app passes the member's sign-in to the viewer by a short-lived, one-time code, never by putting the session in the address.
+- **App:** the same buttons open the viewer in an app screen. The viewer reads the scan through a signed link to that one scan, valid for two hours and only for reading it (`scan-link.ts`), which the app asks for with its own sign-in. The person's session never goes into the viewer or into an address. (First written as a one-time sign-in code; the signed link, the pattern files already use, does the same with less: it opens one scan, not the account.)
 - **Licence check in CI:** the build fails if an AGPL or GPL library appears in the viewer.
 
 ## 5. New libraries, services and costs (each needs the owner's approval)
@@ -91,13 +92,13 @@ A physician can look at a de-identified scan (CT, MRI, ultrasound, X-ray) in a c
 
 ## 9. Questions for the owner
 
-1. **Approve this plan?**
-2. **Approve the libraries in §5** (OHIF without shepherd.js, react-native-webview, dcmjs), subject to the full licence check of step 1?
-3. **The size limit per scan:** 200 MB?
+All answered (§10).
 
 ## 10. Owner answers
 
-2026-10-24:
+2026-10-24, approval: **"I approve the plan of M36"**; the libraries of §5: **yes**, subject to the full licence check (done, §0); the size limit of 200 MB per scan: **yes**.
+
+2026-10-24, the five questions:
 
 1. Where scans appear: **both**, cases and library items.
 2. **The full OHIF viewer.**
