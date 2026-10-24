@@ -117,6 +117,7 @@ describe('notifications and preferences (integration)', () => {
       { kind: 'EDUCATION', app: true, email: false, locked: false },
       { kind: 'GUIDELINES', app: true, email: false, locked: false },
       { kind: 'POSITIONS', app: true, email: false, locked: false },
+      { kind: 'JOURNAL_CLUB', app: true, email: false, locked: false },
     ]);
     expect(await list(p.token)).toMatchObject({ items: [], total: 0, unread: 0 });
   });

@@ -388,6 +388,7 @@ describe('notices about new content (integration)', () => {
         'EDUCATION',
         'GUIDELINES',
         'POSITIONS',
+        'JOURNAL_CLUB',
       ]);
       const now = await preferences(p.token);
       expect(now.NEWS).toMatchObject({ app: true, email: false });
