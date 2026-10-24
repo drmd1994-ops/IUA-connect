@@ -56,6 +56,10 @@ export function appRoute(link: string | null): string | null {
   if (path === '/journal-club') return path;
   const entry = /^\/journal-club\/([^/]+)$/.exec(path);
   if (entry) return `/journal-club/${entry[1]}`;
+  // Cases (M26): the list, my cases and a case. Reviewing is on the site.
+  if (['/cases', '/cases/mine', '/cases/new'].includes(path)) return path;
+  const clinicalCase = /^\/cases\/([^/]+)$/.exec(path);
+  if (clinicalCase && clinicalCase[1] !== 'review') return `/cases/${clinicalCase[1]}`;
   const position = /^\/positions\/([^/]+)$/.exec(path);
   if (position) return `/positions/${position[1]}`;
   const news = /^\/news\/([^/]+)$/.exec(path);

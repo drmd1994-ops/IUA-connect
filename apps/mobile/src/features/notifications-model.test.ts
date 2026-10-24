@@ -42,6 +42,13 @@ describe('where a notice leads', () => {
     expect(appRoute('/admin/journal-club/jc-1')).toBeNull();
   });
 
+  it('opens cases inside the app, but not the review queue (M26)', () => {
+    expect(appRoute('/cases')).toBe('/cases');
+    expect(appRoute('/cases/mine')).toBe('/cases/mine');
+    expect(appRoute('/cases/c-1')).toBe('/cases/c-1');
+    expect(appRoute('/cases/review')).toBeNull();
+  });
+
   it('leads nowhere for what the app does not have', () => {
     expect(appRoute(null)).toBeNull();
     expect(appRoute('/admin/news')).toBeNull();

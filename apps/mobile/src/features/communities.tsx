@@ -301,7 +301,7 @@ export function CommunityScreen({ slug }: { slug: string }) {
 }
 
 /** What the check found, and the standing note. */
-function PatientCheck({ found }: { found: readonly PatientDetail[] }) {
+export function PatientCheck({ found }: { found: readonly PatientDetail[] }) {
   const t = useTranslations('communities.write');
   return (
     <>
@@ -328,7 +328,7 @@ const DETAIL_CODES: Record<string, PatientDetail['kind']> = {
 };
 
 /** The server's refusal as the same list, when the text got past the phone's check. */
-function refused(error: unknown): PatientDetail[] {
+export function refused(error: unknown): PatientDetail[] {
   if (!(error instanceof ApiError)) return [];
   return error.details.flatMap((d) =>
     DETAIL_CODES[d.code] ? [{ kind: DETAIL_CODES[d.code]!, text: d.value ?? '' }] : [],
