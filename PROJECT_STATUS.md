@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M28 and M25 merged and on the hosted demo, new .apk; M27 started)_
+_Last updated: 2026-10-24 (M28 and M25 merged and on the hosted demo, new .apk; M27 built, waiting for its pull request)_
 
 ## Summary
 
@@ -1408,6 +1408,64 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 1. Look at the communities on the hosted demo once deployed ("deploy it"), and read the new Hebrew texts.
 2. Decide whether organisations should get communities of their own, now that their rooms are closed.
 
+## M27 Research projects and publications (built 2026-10-24, waiting for its pull request)
+
+Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-10-24 ("start M27") with all the recommended answers in its §10:
+
+- any verified physician lists a project, and students ask to join;
+- only verified people see projects;
+- PubMed and ORCID are used;
+- accepting someone adds them to the project's chat group;
+- the demo has 6 fictional projects and fictional publications, with no real PubMed IDs or DOIs.
+
+**Built**
+
+- **Research projects:** a verified physician lists a study that seeks collaborators. It has a title and description (checked for patient details, as in communities), the study type, the status, the ethics approval as the lead declares it, funding, contact, what it looks for (centres, co-investigators, a statistician, residents, students), subspecialties, and whether it takes requests. The lead edits it or ends it.
+- **Asking to join:** a verified person asks with a message. The lead accepts or declines (without a reason) and the asker can withdraw. Accepting adds them to the project's chat group, which opens with the project. Asking shares the name, the student or resident mark, the hospital and the message.
+- **Limits** as in the plan:
+  - 5 open projects per lead;
+  - 5 waiting requests per person;
+  - 30 days before asking the same project again after a decline;
+  - a request unanswered in 30 days closes by itself (a daily job);
+  - a project not saved for a year is marked "may be out of date", and its lead is asked once.
+- **Finding projects:** search by words, subspecialty, study type, what it looks for and status; the lead's own projects.
+- **Publications on a profile:** typed in, filled from PubMed by a PubMed ID or a DOI, or chosen from the person's ORCID record. Nothing is saved until the person saves it, and works already saved are marked. Each says where it came from. The person orders and hides their own. They show on the member's directory page when the person shows their research interests there.
+- **The member directory** also finds people by their research interests (with the same visibility as before).
+- **Notices:** a new kind, "Research", with its switch. A request to your project, and the answer to yours (accepted, declined, closed), in the app and by email; a lead is asked once about a year-old project.
+- **The site:**
+  - Research in the main menu (projects, a project, my projects, requests, listing a project);
+  - publications on the profile page and on a member's page;
+  - the member's home: "Post research" is now a link, no longer "Coming soon".
+- **The app:** the same, with "Research" on the home screen and "My publications" from the profile. Email links to research open in the app.
+- **Demo data** (its own seed layer, which the hosted demo adds on its next start):
+  - 6 sample projects by the demo's fictional people, each with its group;
+  - a resident's request waiting on the simulator study, and a student accepted into the survey;
+  - 4 hand-typed fictional publications.
+- **Texts** in Hebrew and English.
+
+**Verified (on this computer)**
+
+- Server: unit tests for the rules and for reading PubMed's and ORCID's answers (469 unit tests in all). 7 integration tests for research and publications. The whole suite: 631 integration tests, after teaching the notifications test the new kind.
+- **The outside services, once each, live:** a PubMed ID and a DOI each filled in the right paper from PubMed, and ORCID's public example record listed its 6 works. Only those public identifiers were sent.
+- The site: type checks and lint. Three browser tests: a physician lists a project, a resident finds it and asks, the lead accepts, the resident reaches the group, and the project is ended; the list and a project in Hebrew; a publication typed into a profile and removed. All have accessibility checks, and the new pages are in both accessibility audits. The dashboard test now expects one "Coming soon".
+- The app: 233 screen tests (every new screen in both languages; searching, asking to join, listing a project, accepting, typing a publication in, filling it from PubMed, the ORCID list, a member's publications) and 93 rule tests (with the research links).
+
+**Not verified**
+
+- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
+- The owner's look at the research pages and the Hebrew texts.
+
+**Deviations and findings**
+
+- **The plan promised stand-ins for PubMed and ORCID in development.** The tests replace the network call instead, and development calls the real services. They are free, need no account, and get only the identifier typed.
+- **The demo's medical student** (`applicant.student`) is not verified on this computer, because its database was seeded before M17 verified students. A new database (as on GitHub) verifies her. The hosted demo may be the same as this computer: there, the accepted student in the survey project can't open the research pages until verified. The browser test uses the resident instead.
+- **The local server stopped once,** when its file watcher tried to stop a process that had already ended during a reload. It was not low memory, so I restarted it.
+
+**Open for the owner**
+
+1. Read the new Hebrew texts, above all "אישור ועדת הלסינקי" for ethics approval and the project's words ("מחפשים", "חוקר/ת ראשי/ת").
+2. Say when to merge it, deploy it and build a new .apk.
+
 ## Next step
 
 **The MVP (M0 to M9) is complete.** M9 was merged on 2026-10-03 (pull request #11).
@@ -1424,6 +1482,6 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** started on 2026-10-24.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** is built (2026-10-24) and waits for its pull request.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

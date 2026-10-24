@@ -282,3 +282,12 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`notification_kind`** gained `COMMUNITIES`, in a migration of its own.
 - **Chat rooms closed:** the migration archives every room (`conversations.archived_at`); nothing is deleted.
 - Three migrations (`20261023190000` to `20261023190200`), additions and the archiving.
+
+## 13. Research projects and publications (M27)
+
+- **`research_projects`**: a study that seeks collaborators, listed by a verified physician (`lead_id`): title and description (checked for patient details), `study_type`, `status`, the ethics approval as the lead declares it (`ethics`), funding, contact, what it looks for (`needs`, an array), whether it takes requests (`open`), `ended_at`, and its chat group (`group_id`, unique, a group conversation). `confirmed_at` is when the lead last saved it, and `stale_asked_at` when they were asked once whether it is still current, a year later.
+- **`research_project_subspecialties`**.
+- **`research_requests`**: asking to join a project (`PENDING`, `ACCEPTED`, `DECLINED`, `WITHDRAWN`, `EXPIRED`), with the message. One open or accepted request per person and project (a partial unique index).
+- **`publications`**: a person's own publications: title, authors, journal, year (a check: 1900 to 2100), DOI, PubMed ID, link, topics, where it came from (`source`: typed in, PubMed or ORCID), `hidden`, and the person's order (`position`).
+- **`notification_kind`** gained `RESEARCH`, in a migration of its own.
+- Two migrations (`20261024090000`, `20261024090100`), additions only.

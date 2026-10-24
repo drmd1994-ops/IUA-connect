@@ -39,7 +39,7 @@ function useLoaded<T>(load: () => Promise<T>, deps: unknown[]): T | null | undef
 }
 
 /** Later features, shown so they are known to be planned, and never mistaken for working. */
-const LATER = ['createCase', 'postResearch'] as const;
+const LATER = ['createCase'] as const;
 
 /**
  * The home page of a signed-in person (M8 plan §2.6): their membership, new notices, upcoming
@@ -312,6 +312,8 @@ export function MemberDashboard() {
                 ['openCalculator', '/calculators'],
                 // M25: communities.
                 ['askCommunity', '/communities'],
+                // M27: research projects.
+                ['postResearch', '/research'],
               ] as const
             ).map(([key, href]) => (
               <li key={key}>
