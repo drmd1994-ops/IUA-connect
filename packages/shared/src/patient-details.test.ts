@@ -27,6 +27,22 @@ describe('the patient-details check (M25)', () => {
     expect(kinds('שם המטופל: משה לוי')).toEqual(['patientName']);
   });
 
+  it('finds a name after a title, in English and Hebrew (M26)', () => {
+    expect(kinds('Mr Cohen presented with pain')).toEqual(['patientName']);
+    expect(kinds('We saw Mrs. Levi in clinic')).toEqual(['patientName']);
+    expect(kinds('מר כהן הגיע עם כאב')).toEqual(['patientName']);
+    expect(kinds('נבדקה גב׳ לוי במרפאה')).toEqual(['patientName']);
+    expect(kinds("גב' לוי")).toEqual(['patientName']);
+    expect(kinds('הגברת לוי התקבלה')).toEqual(['patientName']);
+  });
+
+  it('lets the back, a bitter taste, the gallbladder and MRI through', () => {
+    expect(kinds('כאב גב תחתון כבר שבוע')).toEqual([]);
+    expect(kinds('מתלונן על טעם מר בפה')).toEqual([]);
+    expect(kinds('אבנים בכיס המרה')).toEqual([]);
+    expect(kinds('MRI of the pelvis, then mr. scan reviewed')).toEqual([]);
+  });
+
   it('says where, in the order found, once for each stretch of text', () => {
     expect(findPatientDetails('MRN 123456782, born 01.02.1970')).toEqual([
       { kind: 'recordNumber', text: 'MRN 123456782' },

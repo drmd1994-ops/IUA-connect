@@ -112,6 +112,7 @@ describe('notifications and preferences (integration)', () => {
       { kind: 'COMMUNITIES', app: true, email: false, locked: false },
       { kind: 'MENTORSHIP', app: true, email: true, locked: false },
       { kind: 'RESEARCH', app: true, email: true, locked: false },
+      { kind: 'CASES', app: true, email: true, locked: false },
       { kind: 'NEWS', app: true, email: false, locked: false },
       { kind: 'NEW_EVENTS', app: true, email: false, locked: false },
       { kind: 'EDUCATION', app: true, email: false, locked: false },

@@ -263,6 +263,18 @@
     "journalClubMonthInvalid": "Please choose the month.",
     "journalClubAuthorUnknown": "No verified person has this email address.",
     "journalClubNoCommunity": "This subspecialty has no open community for the discussion.",
-    "journalClubPollClosed": "This entry’s poll is closed."
+    "journalClubPollClosed": "This entry’s poll is closed.",
+    "casesTooMany": "You already have 10 cases open. Send or delete one first.",
+    "caseNotEditable": "Only a draft or a returned case can be changed.",
+    "caseChanged": "This case changed meanwhile. Open it again.",
+    "casePictureType": "Only JPEG or PNG pictures can be added to a case.",
+    "casePollClosed": "This case’s poll is closed.",
+    "caseOptionUnknown": "This answer isn’t one of the poll’s options.",
+    "caseOwnReport": "You can’t report your own case.",
+    "caseNotReviewer": "You don’t review cases of this subspecialty.",
+    "caseStepNotAllowed": "This step isn’t possible for the case as it is now.",
+    "caseOwnReview": "Another moderator reviews your own case.",
+    "caseNoteRequired": "Please give the reason. The author sees it.",
+    "caseNoCommunity": "This subspecialty has no open community for the discussion."
   }
 }

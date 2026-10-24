@@ -39,6 +39,11 @@ export interface EmailTemplates {
   // The journal club (M31), to the one who submitted the entry.
   journalClubSentBack: { title: string; reason: string; link: string };
   journalClubPublished: { title: string; link: string };
+  // Case discussions (M26): to the author, and to the reviewers of its subspecialty.
+  caseApproved: { title: string; link: string };
+  caseReturned: { title: string; reason: string; link: string };
+  caseWaiting: { title: string; link: string };
+  caseReported: { title: string; link: string };
   // Mentorship (M28). name is the other person's.
   mentorshipRequested: { name: string; link: string };
   mentorshipAccepted: { name: string; link: string };

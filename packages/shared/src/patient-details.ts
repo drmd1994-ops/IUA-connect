@@ -16,7 +16,7 @@ export const PATIENT_DETAIL_KINDS = [
   'date',
   /** A hospital record or case number, after its label. */
   'recordNumber',
-  /** A patient's name, after its label ("patient name", "שם המטופל"). */
+  /** A patient's name, after its label ("patient name", "שם המטופל") or a title ("Mrs", "גב׳"; M26). */
   'patientName',
   /** An email address. */
   'email',
@@ -54,6 +54,13 @@ const RECORD =
   /(?:MRN|record\s*(?:no\.?|number|#)|case\s*(?:no\.?|number|#)|מס(?:פר|['׳])\s*(?:תיק|רשומה|מקרה)|ת\.?ז\.?|תעודת\s*זהות)\s*[:#-]?\s*\d{4,}/giu;
 const NAME =
   /(?:patient(?:'s)?\s+name|name\s+of\s+the\s+patient|שם\s+(?:ה)?(?:מטופל|מטופלת|חולה|חולָה))\s*[:-]?\s*[\p{L}'׳-]{2,}(?:\s+[\p{L}'׳-]{2,})?/giu;
+// A name after a title (M26): "Mr Cohen", "Mrs. Levi", "מר כהן", "גב׳ לוי", "גברת לוי". In English the
+// title and the name start with a capital. In Hebrew "גב" alone is the back, so only "גב׳" counts,
+// and "טעם מר" (a bitter taste) is a symptom, not a title.
+const TITLE_NAME_EN = /\b(?:Mr|Mrs|Ms|Miss)\.?\s+\p{Lu}[\p{L}'-]+/gu;
+const TITLE_NAME_HE =
+  /(?<![\p{L}\p{N}])(?:ה?(?:מר|גברת)|גב['׳])\s+[\p{L}'׳-]{2,}(?:\s+[\p{L}'׳-]{2,})?/gu;
+const NOT_A_TITLE = /טעם\s+$/u;
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 
 /** What in the text looks like a patient's details, in the order found; empty when nothing. */
@@ -70,6 +77,12 @@ export function findPatientDetails(text: string): PatientDetail[] {
   add('date', DATE_YMD);
   add('recordNumber', RECORD);
   add('patientName', NAME);
+  add('patientName', TITLE_NAME_EN);
+  for (const match of text.matchAll(TITLE_NAME_HE)) {
+    const at = match.index ?? 0;
+    if (NOT_A_TITLE.test(text.slice(Math.max(0, at - 10), at))) continue;
+    found.push({ at, detail: { kind: 'patientName', text: match[0] } });
+  }
   add('email', EMAIL);
   found.sort((a, b) => a.at - b.at);
   // One finding per stretch of text: a record number's digits are not also an ID number.

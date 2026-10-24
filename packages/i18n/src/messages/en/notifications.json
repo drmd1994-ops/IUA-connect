@@ -28,7 +28,8 @@
     "MENTORSHIP": "Mentorship",
     "COMMUNITIES": "Communities",
     "RESEARCH": "Research",
-    "JOURNAL_CLUB": "Journal club"
+    "JOURNAL_CLUB": "Journal club",
+    "CASES": "Cases"
   },
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
@@ -44,7 +45,8 @@
     "MENTORSHIP": "A request to be your mentee, and the answer to a request you sent.",
     "COMMUNITIES": "A comment on your post or a reply to your comment, a mention, and new posts in the communities and posts you follow. By email: comments, replies and mentions only.",
     "RESEARCH": "A request to join your project, and the answer to yours.",
-    "JOURNAL_CLUB": "A new journal club entry was published."
+    "JOURNAL_CLUB": "A new journal club entry was published.",
+    "CASES": "Your case was approved or returned; for moderators, a case waits for review or was reported."
   },
   "items": {
     "eventRegistered": "You are registered for “{title}”.",
@@ -101,7 +103,11 @@
     "researchStale": "Is your project “{title}” still current?",
     "journalClubSentBack": "The journal club entry “{title}” was sent back to you for changes.",
     "journalClubPublished": "The journal club entry “{title}” was published.",
-    "contentJournalClub": "Journal club: {title}"
+    "contentJournalClub": "Journal club: {title}",
+    "caseApproved": "Your case “{title}” was approved.",
+    "caseReturned": "Your case “{title}” was returned to you.",
+    "caseWaiting": "The case “{title}” waits for your review.",
+    "caseReported": "The case “{title}” was reported and is hidden."
   },
   "preferences": {
     "title": "Notification preferences",

@@ -320,5 +320,30 @@
     "heading": "Published",
     "body": "The entry about “{title}” is published, and its discussion is open in the community.",
     "action": "Open the entry"
+  },
+  "caseApproved": {
+    "subject": "Your case is published",
+    "heading": "Approved",
+    "body": "A moderator approved your case “{title}”. Its discussion is open in the community.",
+    "action": "Open the case"
+  },
+  "caseReturned": {
+    "subject": "Your case was returned to you",
+    "heading": "Returned to you",
+    "body": "A moderator returned your case “{title}”.",
+    "reason": "Their reason: {reason}",
+    "action": "Open the case"
+  },
+  "caseWaiting": {
+    "subject": "A case waits for your review",
+    "heading": "A case to review",
+    "body": "The case “{title}” waits for review in a community you moderate.",
+    "action": "Open the review queue"
+  },
+  "caseReported": {
+    "subject": "A case was reported",
+    "heading": "A case was reported",
+    "body": "The case “{title}” was reported and is hidden until a moderator looks at it.",
+    "action": "Open the review queue"
   }
 }

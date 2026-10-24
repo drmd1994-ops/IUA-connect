@@ -58,7 +58,7 @@ A member presents a made-up or (later, after the legal review) de-identified cas
 **Data:**
 
 - `cases`: the fixed fields, the author, the subspecialty, the state (`DRAFT`, `IN_REVIEW`, `RETURNED`, `PUBLISHED`, `HIDDEN`, `REMOVED`), who reviewed it and why, its discussion post, and whether it is the case of the week.
-- `case_files` (pictures, with a new file purpose `CASE` and its own read rule), `case_poll_options`, `case_votes` (one per person, totals only), `case_history`, and reports in chat's existing queue (`chat_reports` gains `case_id`).
+- `case_files` (pictures, with a new file purpose `CASE` and its own read rule), `case_poll_options`, `case_votes` (one per person, totals only), `case_history`, and `case_reports`: reports on a case go to the cases review queue (owner answer §10.6).
 - `notification_kind` gains `CASES`: your case was approved or returned, and (for moderators) a case waits for review.
 
 **Server:** a `cases` module; the review queue; the case of the week; the read rule for pictures; the patient-details check extended with titles.
@@ -107,6 +107,7 @@ A member presents a made-up or (later, after the legal review) de-identified cas
 3. **The author's name is shown** to readers.
 4. **The discussion is a post in the subspecialty's community,** opened on approval.
 5. **Demo data: 3 made-up cases, text only, waiting for the owner's review;** nothing shows until approved.
+6. **Reports on a case go to the cases review queue** (asked 2026-10-24 while building), for the same community moderators who review cases, instead of chat's reports queue.
 
 ## 11. Risks
 

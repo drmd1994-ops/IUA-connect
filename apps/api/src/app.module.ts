@@ -37,6 +37,7 @@ import { PositionsModule } from './modules/positions';
 import { PublicationsModule } from './modules/publications';
 import { ResearchModule } from './modules/research';
 import { JournalClubModule } from './modules/journal-club';
+import { CasesModule } from './modules/cases';
 import { ProfilesModule } from './modules/profiles';
 import { SearchModule } from './modules/search';
 import { VerificationModule } from './modules/verification';
@@ -94,6 +95,7 @@ export class AppModule {
         ResearchModule,
         PublicationsModule,
         JournalClubModule,
+        CasesModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };
