@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M28 and M25 merged and on the hosted demo, new .apk; M27 built, waiting for its pull request)_
+_Last updated: 2026-10-24 (M28 and M25 merged and on the hosted demo, new .apk; M27 built, in pull request #36)_
 
 ## Summary
 
@@ -1408,7 +1408,7 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 1. Look at the communities on the hosted demo once deployed ("deploy it"), and read the new Hebrew texts.
 2. Decide whether organisations should get communities of their own, now that their rooms are closed.
 
-## M27 Research projects and publications (built 2026-10-24, waiting for its pull request)
+## M27 Research projects and publications (built 2026-10-24, pull request #36)
 
 Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-10-24 ("start M27") with all the recommended answers in its §10:
 
@@ -1482,6 +1482,6 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** is built (2026-10-24) and waits for its pull request.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** is built (2026-10-24), in pull request #36.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
