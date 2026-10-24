@@ -80,6 +80,33 @@ const publication: S['PublicationDto'] = {
   hidden: false,
 };
 
+/** A fictional journal club entry about a made-up article (M31). */
+const journalEntrySummary: S['JournalClubListDto']['items'][number] = {
+  id: 'jc-1',
+  month: '2026-10',
+  locale: 'en',
+  articleTitle: 'A made-up study of simulator practice',
+  articleAuthors: 'Fictional authors',
+  journal: 'Sample Journal',
+  year: 2026,
+  doi: '10.0000/sample.3',
+  pmid: null,
+  subspecialty,
+  excerpt: 'Residents who practised first scored higher at their first session.',
+  archived: false,
+};
+const journalEntry: S['JournalClubEntryDto'] = {
+  ...journalEntrySummary,
+  summary: 'Residents who practised first scored higher at their first session. A sample.',
+  summaryAuthor: { id: 'u-rana', firstName: 'Rana', lastName: 'Haddad', mark: null, hospital },
+  commentary: 'The gap closed after five sessions.',
+  commentaryAuthor: { id: 'u-lead', firstName: 'Yonatan', lastName: 'Barak', mark: null, hospital },
+  keyPoints: ['A made-up study about training only'],
+  publishedAt: '2026-10-18T10:00:00.000Z',
+  poll: { open: true, mine: null, totals: null },
+  discussion: { communitySlug: 'andrology', postId: 'po-1' },
+};
+
 /** A fictional position at the sample hospital (M28). */
 const positionSummary: S['PositionListDto']['items'][number] = {
   id: 'p-1',
@@ -996,6 +1023,23 @@ export const everything: Record<string, Answer> = {
     banned: null,
     archived: false,
   } satisfies S['CommunityDto'],
+  // The journal club (M31).
+  'GET /api/v1/journal-club': {
+    items: [
+      journalEntrySummary,
+      { ...journalEntrySummary, id: 'jc-2', month: '2026-09', archived: true },
+    ],
+    current: journalEntrySummary,
+    page: 1,
+    pageSize: 12,
+    total: 2,
+  } satisfies S['JournalClubListDto'],
+  'GET /api/v1/journal-club/*': journalEntry,
+  'PUT /api/v1/journal-club/*': {
+    open: true,
+    mine: 'YES',
+    totals: { YES: 3, PERHAPS: 1, NO: 0, total: 4 },
+  } satisfies S['JournalClubPollDto'],
   // Research projects and publications (M27).
   'GET /api/v1/research/projects': {
     items: [{ ...projectSummary, excerpt: 'How long people wait for a first visit.' }],
