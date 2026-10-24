@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M27 merged, on the hosted demo and in a new .apk; M31 built, in pull request #37)_
+_Last updated: 2026-10-24 (M27 and M31 merged, on the hosted demo and in a new .apk)_
 
 ## Summary
 
@@ -1474,7 +1474,7 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 1. Read the new Hebrew texts, above all "אישור ועדת הלסינקי" for ethics approval and the project's words ("מחפשים", "חוקר/ת ראשי/ת").
 2. **On or after 2026-10-29:** update body-parser (2.4.0) and multer (2.5.0), and remove their two accepted advisories from `pnpm-workspace.yaml` and `SECURITY.md`. GitHub's security check found them on 2026-10-24, with zod and undici (updated the same day) and zod 3 in Expo's developer tool (no fix exists; accepted by the owner).
 
-## M31 The journal club (built 2026-10-24, pull request #37)
+## M31 The journal club (merged 2026-10-24, pull request #37)
 
 Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved by the owner on 2026-10-24 ("start M31") with the recommended answers in its §10:
 
@@ -1500,9 +1500,14 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 - The site: type checks and lint. Three browser tests (an editor writes and submits, another publishes and closes it; a member reads this month's entry, answers the poll and reaches the discussion; the pages in Hebrew), with accessibility checks; the new pages are in both accessibility audits; the notification settings tests still pass.
 - The app: 241 screen tests (the new screens in both languages; the poll; the discussion) and 94 rule tests (with the journal club's links).
 
+**Verified on GitHub and online (2026-10-24)**
+
+- GitHub's checks on pull request #37, all green on the first run. Merged the same day at the owner's word ("merge it, deploy it and build a new version").
+- **On the hosted demo:** the server and site deployed; the start ran the migrations and the seed layers (now with the journal club's) without an error, the journal club's routes answer (asking for sign-in), its pages load, and `pnpm smoke:hosted` passed. The entries show only when signed in, so the owner's look is the check of their content.
+- **A new .apk** with M31 (run 40083243666), published as the pre-release `demo-apk-2026-10-24-m31`; it updates the earlier demo app without uninstalling.
+
 **Not verified**
 
-- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
 - The owner's look at the journal club and its Hebrew texts.
 
 **Deviations and findings**
@@ -1515,7 +1520,6 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 **Open for the owner**
 
 1. Read the Hebrew texts, above all the name "מועדון עיתונות" (or "ג׳ורנל קלאב"?) and October's sample summary and commentary.
-2. Say when to merge it, deploy it and build a new .apk.
 
 ## Next step
 
@@ -1533,6 +1537,6 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** is built (2026-10-24), in pull request #37.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
