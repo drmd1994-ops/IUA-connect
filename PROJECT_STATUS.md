@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M27 and M31 merged, on the hosted demo and in a new .apk; M26 built)_
+_Last updated: 2026-10-24 (M27, M31 and M26 merged, on the hosted demo and in new .apks; M36 medical imaging built)_
 
 ## Summary
 
@@ -1521,7 +1521,7 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 
 1. Read the Hebrew texts, above all the name "מועדון עיתונות" (or "ג׳ורנל קלאב"?) and October's sample summary and commentary.
 
-## M26 Case discussions and the case of the week (built 2026-10-24, waiting for its pull request)
+## M26 Case discussions and the case of the week (merged 2026-10-24, pull request #39; on the hosted demo and in the .apk of the same day)
 
 Plan: `docs/plans/M26-case-discussions.md`, rewritten against the code and approved by the owner on 2026-10-24 ("start m 26") with the recommended answers in its §10:
 
@@ -1567,8 +1567,9 @@ Plan: `docs/plans/M26-case-discussions.md`, rewritten against the code and appro
 
 **Not verified**
 
-- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
 - The owner's review of the three demo cases, and of the Hebrew texts.
+
+GitHub's checks passed on the pull request and on main; merged, deployed to the hosted demo (its checks passed) and built into the .apk `demo-apk-2026-10-24-m26` on the owner's word ("merge it, deploy it and build a new version").
 
 **Deviations and findings**
 
@@ -1582,6 +1583,61 @@ Plan: `docs/plans/M26-case-discussions.md`, rewritten against the code and appro
 
 1. Review and approve the three made-up cases (as `admin@demo.test` or a moderator, **מקרים → בדיקה**), and choose a case of the week.
 2. Read the Hebrew texts.
+
+## M36 Medical imaging (built 2026-10-24, waiting for its pull request)
+
+Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026-10-24 ("open a new milestone called medical imaging"), with the OHIF Viewer cloned to `DesktopOHIF Viewer` and its licence read. The owner answered its questions (scans in cases and library items; the full OHIF viewer; in the app as part of it; public demo scans, each approved; every verified physician uploads) and approved the plan, its libraries and a 200 MB limit per scan.
+
+**A demo feature, for education only:** real scans wait for the legal review (M20). The viewer is not for diagnosis, and says so on opening.
+
+**The licences**
+
+- OHIF is MIT. Every library it ships (1,106, looked up from its lock file) allows our use with a notice, **except shepherd.js (AGPL-3.0)**, which only draws the guided tours. The tours are left out, so it is never imported; the build fails if its code is found in the bundle or if any shipped library is GPL-family.
+- The shipped libraries' licences go with the viewer (`/viewer/THIRD-PARTY-NOTICES.txt`, linked from its opening notice).
+- New libraries, approved: OHIF Viewer 3.13.13, dcmjs 0.52.2 (server), react-native-webview 13.16.1 (app). All MIT.
+
+**Built**
+
+- **Removing a patient's details, on the server, before anything is stored:** a scan file keeps only an allow-list of what the image needs. Names, numbers, dates, the institution, free text, the device's private fields and overlays go. Its identifiers are replaced by new ones. A file that isn't a scan, has no image, says text is burned in, or belongs to another study refuses the whole upload. Up to 200 MB and 2,000 files a scan, 3 scans a case or library item.
+- **Who sees a scan:** until attached, its uploader only; in a case, whoever may read the case (so not before it is approved); in a library item, whoever may read the item, and its editors. Scans are deleted with their case or item, and unattached ones after a day.
+- **The viewer reads a scan through a signed link to that one scan,** valid two hours and only for reading, over the standard DICOMweb paths. No sign-in goes into the viewer. It has its own rate limit (a viewer reads a study image by image).
+- **The full OHIF viewer under `/viewer` on the site,** OHIF 3.13.13 with three small changes (`apps/viewer/patches`): no tours; only this site's scan links; the opening notice "For education and discussion only. Not for diagnosis or patient care." It has a Hebrew translation of all its texts (written for this milestone; the layout stays left to right). Its own security policy: no inline script, nothing from another origin.
+- **How it is built and shipped:** a GitHub workflow ("Viewer bundle") builds it and attaches it to a release; the site's build downloads that archive, checks its SHA-256, and refuses to build in CI if the viewer's sources changed since.
+- **The site:** a scan picker in the case form and the library editor (choose the files or the scan's folder; only DICOM files are sent; the confirmation first); "View the scan" on a case and a library item, opening the viewer in a new tab.
+- **The app:** a case's and a library item's scans, each opening the viewer in a screen of the app. Scans are added on the site. The app keeps a case's scans when it edits the case.
+
+**Verified (on this computer)**
+
+- Server: 7 unit tests for the removal of details and the signed link, and one for the viewer's own rate limit (488 unit tests in all). 5 integration tests:
+  - a scan with a planted name, ID number, dates and hospital is uploaded; none of them is in any stored file or in what the viewer reads; a changed link or another study opens nothing;
+  - refusals: no confirmation, not a scan, two studies, burned-in text, unverified uploader; nothing stored;
+  - a scan is its uploader's until attached; in a case it follows the case's readers; someone else can't take it; deleting the case deletes it;
+  - the uploader removes an unattached scan, nobody else can.
+
+  The cases and library integration tests pass with the change.
+- The viewer: built on this computer and on GitHub; opened with a made-up test scan, in English and Hebrew, with the opening notice (screenshots checked).
+- The site: type checks, lint, and a browser test (a resident adds a made-up scan to a case, saves it, and opens it in the viewer), with accessibility checks.
+- The app: 3 screen tests and 2 rule tests (260 screen tests, 97 rule tests in all).
+
+**Not verified**
+
+- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
+- The viewer inside the app on a real phone (the screen tests draw it without a phone).
+- The library editor's scan picker in a browser test: the local sign-in limit stopped the library tests on this computer after many runs; GitHub's run decides.
+
+**Deviations and findings**
+
+- **The app opens the viewer with the signed link to the one scan,** not with a one-time sign-in code as the plan first said: the session never reaches the viewer, and the link opens only that scan.
+- **Uploading is on the site only.** Choosing a scan's files on a phone is unusual, and would need another library.
+- **The viewer needs a sign-in,** also for a public library item's scan.
+- **The viewer's layout stays left to right in Hebrew;** each piece of Hebrew text takes its own direction. A few labels OHIF writes into its code (such as "Patient") stay in English.
+- **Burned-in text on the image itself** can't be found by removing fields; it is the uploader's confirmation, and a file that declares it is refused.
+- **The viewer is large** (35 MB to download, 129 MB unpacked), loaded only on its own page.
+
+**Open for the owner**
+
+1. **Demo scans (plan step 7):** I will propose two or three public, de-identified teaching scans relevant to urology, each with its source and licence, for your approval before adding them.
+2. Read the Hebrew texts, including the viewer's.
 3. Say when to merge it, deploy it and build a new .apk.
 
 ## Next step
@@ -1600,6 +1656,6 @@ Plan: `docs/plans/M26-case-discussions.md`, rewritten against the code and appro
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk. **M26 (case discussions)** is built (2026-10-24), as a demo feature.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk. **M26 (case discussions)** was merged on 2026-10-24 (pull request #39) and is on the hosted demo, with a new .apk. **M36 (medical imaging)** is built (2026-10-24), as a demo feature.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

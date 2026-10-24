@@ -246,6 +246,16 @@ Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, a
 | Second window: **מקרים → בדיקה**, open it, **אישור**.                                                  | The case is published, and its discussion opens in the Andrology community.                            | "The community's moderators review cases of their subspecialty. A writer never approves their own." |
 | First window: open the case, answer the poll, then **לדיון בקהילה**.                                   | The totals; the discussion post.                                                                       | "The poll is anonymous. A report hides a case at once, until a moderator looks at it."              |
 
+### 16. Medical imaging (3 minutes, optional; added in M36)
+
+As `member.resident@demo.test`. **Before a demo:** until the owner approves public demo scans, use a scan's DICOM files you are allowed to show and that identify nobody (the test files in `apps/web/e2e/fixtures` are tiny made-up shapes).
+
+| Do                                                                                              | The audience sees                                                              | Say                                                                                                               |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| **מקרים → הצגת מקרה**, fill the case; under **סריקות**, tick the confirmation, choose a folder. | "מעלים ומוחקים את פרטי המטופל/ת…", then the scan: its kind, series and images. | "The patient's name, numbers, dates and hospital are removed on the server, before anything is stored."           |
+| Save, open the case, **צפייה בסריקה**.                                                          | The full OHIF viewer in a new tab, in Hebrew, with "ללימוד ולדיון בלבד".       | "A professional viewer: scroll, window, measure. For teaching and discussion, never for diagnosis."               |
+| Scroll, change the window, measure a length.                                                    | The tools at work.                                                             | "Nobody sees the scan before the case is approved. The link the viewer uses opens only this scan, for two hours." |
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).

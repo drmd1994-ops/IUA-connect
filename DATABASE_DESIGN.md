@@ -309,3 +309,10 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`case_history`**: every step, append-only.
 - **`notification_kind`** gained `CASES`, and **`file_purpose`** gained `CASE`, in a migration of their own.
 - Two migrations (`20261024150000`, `20261024150100`), additions only.
+
+## 16. Medical imaging (M36)
+
+- **`scans`** (`Scan`): one de-identified study: its uploader, the case or library item it is attached to (never both, by a check), its place among them, a **new** study identifier (the original is never stored), the kinds of images, the number of images and their size, and when it was attached. Unattached scans are removed after a day; a scan goes with its case or item.
+- **`scan_series`**: its series, each with a new identifier, the kind of images, its number and how many images it has.
+- **`scan_instances`**: one image file each: a new identifier, the kind of DICOM object, its number, where its cleaned file is stored, its size, and its attributes as DICOM JSON without binary values (what the viewer reads first).
+- One migration (`20261024180000`), additions only. The image files are stored like any upload, outside the web root.

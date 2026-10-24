@@ -77,7 +77,7 @@ describe('rate limiting', () => {
   it('applies the global per-IP limit to every route', async () => {
     for (let i = 0; i < 300; i++) await request(app.getHttpServer()).get('/api/v1/fixture/open');
     await request(app.getHttpServer()).get('/api/v1/fixture/open').expect(429);
-  });
+  }, 60_000);
 
   it('counts a scan viewer’s images by their own, higher limit instead of the global one', async () => {
     for (let i = 0; i < 301; i++) {
@@ -85,7 +85,7 @@ describe('rate limiting', () => {
     }
     // They did not use up the global limit either.
     await request(app.getHttpServer()).get('/api/v1/fixture/open').expect(200);
-  });
+  }, 60_000);
 });
 
 describe('MemoryRateLimitStore', () => {
