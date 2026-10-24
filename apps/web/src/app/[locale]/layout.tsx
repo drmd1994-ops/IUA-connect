@@ -68,6 +68,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     careers,
     communities,
     research,
+    journalClub,
   } = getMessages(locale);
 
   return (
@@ -102,6 +103,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             careers,
             communities,
             research,
+            journalClub,
           }}
         >
           <AuthProvider>

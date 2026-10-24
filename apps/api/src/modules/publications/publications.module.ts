@@ -9,5 +9,7 @@ import { PublicationsService } from './publications.service';
   imports: [ProfilesModule],
   controllers: [PublicationsController],
   providers: [PublicationsService, PubMedSource, OrcidSource],
+  // The journal club (M31) fills its articles the same way, through the same queue.
+  exports: [PubMedSource],
 })
 export class PublicationsModule {}

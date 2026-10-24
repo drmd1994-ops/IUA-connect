@@ -1,0 +1,102 @@
+{
+  "nav": "Journal club",
+  "discussion": {
+    "title": "Journal club: {title}",
+    "intro": "This month’s journal club entry. Discuss it here.",
+    "link": "The entry, with the commentary and the poll: {link}"
+  },
+  "list": {
+    "title": "Journal club",
+    "intro": "An article each month, with a member’s summary and an expert’s commentary. Read the article itself at the publisher; discuss it in the community.",
+    "verifiedOnly": "The journal club is open to people whose account has been verified as a physician or a medical student.",
+    "verifyLink": "Ask to be verified",
+    "current": "This month",
+    "archive": "Earlier entries",
+    "subspecialty": "Subspecialty",
+    "allSubspecialties": "All subspecialties",
+    "year": "Year",
+    "allYears": "All years",
+    "empty": "No entries yet.",
+    "archived": "Closed"
+  },
+  "entry": {
+    "back": "All entries",
+    "notFound": "This entry isn’t available.",
+    "article": "The article",
+    "readArticle": "Read the article at the publisher",
+    "onPubmed": "On PubMed",
+    "notCopied": "The article itself is not copied here: read it at the publisher.",
+    "summary": "Summary",
+    "summaryBy": "Summary by {name}",
+    "commentary": "Expert commentary",
+    "commentaryBy": "Commentary by {name}",
+    "keyPoints": "Key points",
+    "poll": "Would this change your practice?",
+    "pollNote": "Anonymous: only the totals are shown, after you answer. It is members’ opinion, not a guideline.",
+    "pollClosed": "The poll is closed.",
+    "answers": {
+      "YES": "Yes",
+      "PERHAPS": "Perhaps",
+      "NO": "No"
+    },
+    "yourAnswer": "Your answer: {answer}. You can change it.",
+    "totals": "{count, plural, one {# answer} other {# answers}}",
+    "share": "{answer}: {percent}%",
+    "discussion": "Discussion",
+    "openDiscussion": "Discuss it in the community",
+    "noDiscussion": "The discussion isn’t available."
+  },
+  "admin": {
+    "title": "Journal club",
+    "intro": "Write an entry and submit it; another editor publishes it. Publishing opens its discussion in the subspecialty’s community.",
+    "new": "New entry",
+    "empty": "No entries.",
+    "status": "Status",
+    "allStatuses": "All",
+    "statuses": {
+      "DRAFT": "Draft",
+      "IN_REVIEW": "Waiting for review",
+      "PUBLISHED": "Published",
+      "ARCHIVED": "Closed"
+    },
+    "newTitle": "New journal club entry",
+    "editTitle": "Journal club entry",
+    "fill": "Fill in from PubMed",
+    "fillLabel": "PubMed ID or DOI",
+    "fillHint": "Only this is sent to PubMed.",
+    "find": "Find",
+    "subspecialty": "Subspecialty",
+    "chooseSubspecialty": "Choose a subspecialty",
+    "month": "Month",
+    "locale": "Language of the summary and commentary",
+    "locales": {
+      "he": "Hebrew",
+      "en": "English"
+    },
+    "articleTitle": "Article title",
+    "articleAuthors": "Article authors",
+    "journal": "Journal",
+    "year": "Year",
+    "doi": "DOI",
+    "pmid": "PubMed ID",
+    "summary": "Summary",
+    "summaryHint": "In the writer’s own words. Not the article’s abstract. No patient details.",
+    "summaryAuthorEmail": "Summary written by (their email address)",
+    "commentary": "Expert commentary (optional)",
+    "commentaryAuthorEmail": "Commentary written by (their email address)",
+    "keyPoints": "Key points (one per line, up to 5)",
+    "save": "Save",
+    "saved": "Saved.",
+    "actions": {
+      "SUBMIT": "Submit for review",
+      "SEND_BACK": "Send back",
+      "PUBLISH": "Publish",
+      "TAKE_BACK": "Take back to change",
+      "ARCHIVE": "Close"
+    },
+    "sendBackComment": "What needs changing",
+    "ownSubmission": "You submitted it: another editor publishes it.",
+    "history": "History",
+    "view": "Open it as members see it"
+  }
+}

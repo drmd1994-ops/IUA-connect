@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M28 and M25 merged and on the hosted demo, new .apk; M27 built, in pull request #36)_
+_Last updated: 2026-10-24 (M27 merged, on the hosted demo and in a new .apk; M31 built, in pull request #37)_
 
 ## Summary
 
@@ -1408,7 +1408,7 @@ Plan: `docs/plans/M25-community.md`, checked against the code and approved by th
 1. Look at the communities on the hosted demo once deployed ("deploy it"), and read the new Hebrew texts.
 2. Decide whether organisations should get communities of their own, now that their rooms are closed.
 
-## M27 Research projects and publications (built 2026-10-24, pull request #36)
+## M27 Research projects and publications (merged 2026-10-24, pull request #36)
 
 Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-10-24 ("start M27") with all the recommended answers in its §10:
 
@@ -1450,9 +1450,17 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 - The site: type checks and lint. Three browser tests: a physician lists a project, a resident finds it and asks, the lead accepts, the resident reaches the group, and the project is ended; the list and a project in Hebrew; a publication typed into a profile and removed. All have accessibility checks, and the new pages are in both accessibility audits. The dashboard test now expects one "Coming soon".
 - The app: 233 screen tests (every new screen in both languages; searching, asking to join, listing a project, accepting, typing a publication in, filling it from PubMed, the ORCID list, a member's publications) and 93 rule tests (with the research links).
 
+**Verified on GitHub and online (2026-10-24)**
+
+- GitHub's checks on pull request #36, all green after two fixes:
+  - **the security check** found new warnings about four libraries the project already used (none added in M27). zod and undici were updated; the body-parser and multer fixes were younger than the 7-day rule, and zod 3 in Expo's developer tool has no fix: those three are accepted by the owner, the first two until 2026-10-29 (see Open for the owner);
+  - **the research browser test** typed into the header's search box before the research page was drawn on GitHub's slower machine; it now waits for the page.
+- Merged the same day at the owner's word ("merge it, deploy it and build a new version").
+- **On the hosted demo:** the server and site deployed; the start ran the migrations and the seed layers without an error (it stops the start otherwise), the research routes answer (asking for sign-in), the research page loads, and `pnpm smoke:hosted` passed. The research pages show only when signed in, so the owner's look is the check of their content.
+- **A new .apk** with M27 (run 40079400881), published as the pre-release `demo-apk-2026-10-24-m27`; it updates the earlier demo app without uninstalling.
+
 **Not verified**
 
-- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
 - The owner's look at the research pages and the Hebrew texts.
 
 **Deviations and findings**
@@ -1464,8 +1472,50 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 **Open for the owner**
 
 1. Read the new Hebrew texts, above all "אישור ועדת הלסינקי" for ethics approval and the project's words ("מחפשים", "חוקר/ת ראשי/ת").
-2. Merge, deploy and a new .apk: asked for on 2026-10-24 ("merge it, deploy it and build a new version").
-3. **On or after 2026-10-29:** update body-parser (2.4.0) and multer (2.5.0), and remove their two accepted advisories from `pnpm-workspace.yaml` and `SECURITY.md`. GitHub's security check found them on 2026-10-24, with zod and undici (updated the same day) and zod 3 in Expo's developer tool (no fix exists; accepted by the owner).
+2. **On or after 2026-10-29:** update body-parser (2.4.0) and multer (2.5.0), and remove their two accepted advisories from `pnpm-workspace.yaml` and `SECURITY.md`. GitHub's security check found them on 2026-10-24, with zod and undici (updated the same day) and zod 3 in Expo's developer tool (no fix exists; accepted by the owner).
+
+## M31 The journal club (built 2026-10-24, pull request #37)
+
+Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved by the owner on 2026-10-24 ("start M31") with the recommended answers in its §10:
+
+- editors write and another editor publishes;
+- verified people only;
+- the discussion is a post in the subspecialty's community;
+- the demo has 3 made-up articles.
+
+**Built**
+
+- **An entry:** an article (filled from PubMed by PubMed ID or DOI, or typed in), linked to the publisher and to PubMed, never copied. It has a subspecialty, a month, the language of its texts, a summary and an expert's commentary each with its named author (a verified person, chosen by email address), and up to 5 key points. The patient-details check runs on the texts.
+- **Writing and review:** content editors and platform admins work on every subspecialty; a subspecialty admin on their own. An editor writes and submits; another publishes (never the one who submitted). Sending back needs a comment. A published entry is taken back to change it, or closed. Every step goes into the entry's history and the audit log; the writer is told when it is sent back or published.
+- **Publishing** opens the entry's discussion: a post in its subspecialty's community, under the summary's author, with moderation, reports and following as on any post. Publishing again after a change keeps the same post. A new entry is announced to verified people (a new notice kind, "Journal club", with its switch; by email in the daily summary).
+- **The poll** "Would this change your practice?" (yes, perhaps, no): one answer each, changeable while the entry is published; totals only, shown after answering or once closed. Nobody, staff included, sees who answered what.
+- **The site:** Journal club in the main menu (this month's entry first, then the archive by subspecialty and year), an entry page, and Administration → Journal club.
+- **The app:** the list and an entry with its poll and the way to its discussion; email links open in the app. Writing and publishing stay on the site.
+- **Demo data** (its own seed layer, added to the hosted demo's start): October's entry in Hebrew, published, with its discussion and a few answers; September's in English, closed; November's waiting for review, to show publishing. All three are about made-up articles, on training only.
+- **Texts** in Hebrew and English.
+
+**Verified (on this computer)**
+
+- Server: 6 unit tests for the review rules and the poll, 475 unit tests in all. 5 integration tests: one writes and another publishes, with the discussion post, the notice and the history; the poll's anonymity and its closing; verified people only and the archive; a subspecialty admin's own subspecialty; the patient-details check and unknown authors. The whole suite: 636 integration tests, after teaching two older tests the new notice kind.
+- The site: type checks and lint. Three browser tests (an editor writes and submits, another publishes and closes it; a member reads this month's entry, answers the poll and reaches the discussion; the pages in Hebrew), with accessibility checks; the new pages are in both accessibility audits; the notification settings tests still pass.
+- The app: 241 screen tests (the new screens in both languages; the poll; the discussion) and 94 rule tests (with the journal club's links).
+
+**Not verified**
+
+- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
+- The owner's look at the journal club and its Hebrew texts.
+
+**Deviations and findings**
+
+- **Permissions:** the plan named `journalclub.write` and `journalclub.publish`. Since editors both write and publish (owner answer §10.1), they are `journalclub.manage` (every subspecialty) and `journalclub.subspecialty` (a subspecialty admin's own).
+- **No version check on editing:** two editors changing the same draft at once: the later save wins. Moving it between states is protected.
+- **A verified account is needed to read entries,** so a staff account that isn't verified can publish an entry but not open its member page.
+- **The local server stopped once more** when its file watcher crashed on a branch switch; not low memory, so I restarted it.
+
+**Open for the owner**
+
+1. Read the Hebrew texts, above all the name "מועדון עיתונות" (or "ג׳ורנל קלאב"?) and October's sample summary and commentary.
+2. Say when to merge it, deploy it and build a new .apk.
 
 ## Next step
 
@@ -1483,6 +1533,6 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** is built (2026-10-24), in pull request #36.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** is built (2026-10-24), in pull request #37.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

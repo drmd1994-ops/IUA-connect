@@ -70,6 +70,7 @@ const MEMBER_PAGES = [
   '/research/mine',
   '/research/requests',
   '/research/new',
+  '/journal-club',
 ];
 
 test('axe: every page a signed-in member sees, in both languages', async ({ browser }) => {

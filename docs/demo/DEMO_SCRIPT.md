@@ -222,6 +222,18 @@ Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, a
 | **קבלה**, then open the project → **לפתיחת הקבוצה של הפרויקט**.                      | The project's group, in Chat.                                                                | "Accepting adds them to the project's group."                                                                    |
 | First window: **הפרופיל שלי → פרסומים → מילוי מ־PubMed**, and type a real PubMed ID. | The title, authors, journal and year, filled in; nothing saved until **שמירה**.              | "Only the number is sent to PubMed. ORCID works the same way. Here we cancel: the demo keeps to made-up papers." |
 
+### 14. Journal club (3 minutes, optional; added in M31)
+
+Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, and in a private window `admin@demo.test`. The articles are made up and say so; the texts talk about training only.
+
+| Do                                                                                              | The audience sees                                                                                    | Say                                                                                                |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| First window: **מועדון עיתונות**.                                                               | October's entry first, in Hebrew; September's below it, closed.                                      | "An article each month, chosen and summarised by members, with an expert's commentary."            |
+| Open October's entry.                                                                           | The article's details and a link to the publisher; the summary and commentary, each with its author. | "The article itself is never copied here. Everyone sees who wrote the summary and the commentary." |
+| Under **האם זה ישנה את הפרקטיקה שלך?** press **אולי**.                                          | The totals appear, as percentages.                                                                   | "Anonymous: only the totals, and only after answering. It is members' opinion, not a guideline."   |
+| **לדיון בקהילה**.                                                                               | The entry's discussion post in the Robotic surgery community, with two comments.                     | "The discussion lives in the community, with its moderators and reports."                          |
+| Second window: **ניהול → מועדון עיתונות** → the November entry, waiting for review → **פרסום**. | The entry is published, and its discussion opens in the Pediatric urology community.                 | "One editor writes, another publishes. The writer can't publish their own."                        |
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).

@@ -52,6 +52,10 @@ export function appRoute(link: string | null): string | null {
   }
   const project = /^\/research\/([^/]+)$/.exec(path);
   if (project) return `/research/${project[1]}`;
+  // The journal club (M31): the list and an entry.
+  if (path === '/journal-club') return path;
+  const entry = /^\/journal-club\/([^/]+)$/.exec(path);
+  if (entry) return `/journal-club/${entry[1]}`;
   const position = /^\/positions\/([^/]+)$/.exec(path);
   if (position) return `/positions/${position[1]}`;
   const news = /^\/news\/([^/]+)$/.exec(path);

@@ -37,6 +37,8 @@ export const NOTIFICATION_KINDS = [
   'COMMUNITIES',
   /** Research (M27): a request to join your project, and the answer to yours. */
   'RESEARCH',
+  /** Journal club (M31): a new entry was published. */
+  'JOURNAL_CLUB',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -64,6 +66,7 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   MENTORSHIP: { app: true, email: true, locked: false },
   COMMUNITIES: { app: true, email: false, locked: false },
   RESEARCH: { app: true, email: true, locked: false },
+  JOURNAL_CLUB: { app: true, email: false, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -81,6 +84,7 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   'EDUCATION',
   'GUIDELINES',
   'POSITIONS',
+  'JOURNAL_CLUB',
 ] as const satisfies readonly NotificationKind[];
 
 /** The kinds about newly published content; their emails arrive as one daily summary. */
@@ -90,6 +94,7 @@ export const CONTENT_NOTIFICATION_KINDS = [
   'EDUCATION',
   'GUIDELINES',
   'POSITIONS',
+  'JOURNAL_CLUB',
 ] as const satisfies readonly NotificationKind[];
 
 export interface StoredNotificationSwitch {

@@ -291,3 +291,11 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`publications`**: a person's own publications: title, authors, journal, year (a check: 1900 to 2100), DOI, PubMed ID, link, topics, where it came from (`source`: typed in, PubMed or ORCID), `hidden`, and the person's order (`position`).
 - **`notification_kind`** gained `RESEARCH`, in a migration of its own.
 - Two migrations (`20261024090000`, `20261024090100`), additions only.
+
+## 14. Journal club (M31)
+
+- **`journal_club_entries`**: an article presented to members: its details and links (title, authors, journal, year, DOI, PubMed ID), never its text; the subspecialty, the month (its first day, by a check constraint), the language of the texts (`he` or `en`, by a check), the summary and the expert's commentary with their authors (`summary_author_id`, `commentary_author_id`), key points, the review state (`DRAFT`, `IN_REVIEW`, `PUBLISHED`, `ARCHIVED`), who wrote, submitted and published it, and its discussion post in the subspecialty's community (`post_id`, unique).
+- **`journal_club_votes`**: one answer per person and entry ("Would this change your practice?": `YES`, `PERHAPS`, `NO`), changeable. Only totals are ever shown; nobody, staff included, sees who answered what.
+- **`journal_club_history`**: every review step, append-only (like `news_history`).
+- **`notification_kind`** gained `JOURNAL_CLUB`, in a migration of its own; it is a kind of new content, so its emails go in the daily summary.
+- Two migrations (`20261024120000`, `20261024120100`), additions only.

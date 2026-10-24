@@ -59,7 +59,7 @@ async function main() {
     // milestone brought, once (M23 questions, M28 positions and mentors, M25 communities, M27 research).
     step('Adding what newer versions brought, if missing');
     pnpm(['--filter', '@medconnect/api', 'db:seed'], {
-      env: { SEED_LAYERS: 'reference,question-bank,careers,communities,research' },
+      env: { SEED_LAYERS: 'reference,question-bank,careers,communities,research,journal-club' },
     });
   }
 

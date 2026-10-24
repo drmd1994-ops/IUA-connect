@@ -24,6 +24,8 @@ const ADMIN_PERMISSIONS = [
   'positions.review',
   'positions.post.department',
   'communities.manage',
+  'journalclub.manage',
+  'journalclub.subspecialty',
   'users.read',
   'audit.read',
   'settings.manage',
@@ -58,6 +60,12 @@ export const ADMIN_SECTIONS = [
     href: '/admin/positions',
     key: 'positions',
     permission: ['positions.manage', 'positions.review', 'positions.post.department'],
+  },
+  // M31: editors of the journal club, and subspecialty admins for their own.
+  {
+    href: '/admin/journal-club',
+    key: 'journalClub',
+    permission: ['journalclub.manage', 'journalclub.subspecialty'],
   },
   { href: '/admin/users', key: 'users', permission: 'users.read' },
   { href: '/admin/audit', key: 'audit', permission: 'audit.read' },

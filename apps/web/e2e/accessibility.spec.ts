@@ -83,6 +83,9 @@ const PAGES = [
   '/research/mine',
   '/research/requests',
   '/research/new',
+  // M31 (the signed-in and filled views are checked in journal-club.spec.ts)
+  '/journal-club',
+  '/admin/journal-club',
 ];
 
 for (const locale of ['he', 'en'] as const) {

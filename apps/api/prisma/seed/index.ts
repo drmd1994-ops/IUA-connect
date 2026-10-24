@@ -14,6 +14,7 @@
  *   4. careers:  fictional positions, mentors and mentorship requests (M28)
  *   5. communities: posts and comments, moderators; every chat room archived (M25)
  *   6. research: fictional projects with their groups, requests, publications (M27)
+ *   7. journal-club: entries about made-up articles, their discussions and answers (M31)
  * The sample imported from a real organisation's website (M4) is no longer a layer: nothing of a
  * real organisation is in the demo (M16). `seedImport` and the importer stay in the repository,
  * unused, and `pnpm import:remove` takes an earlier sample out of a database.
@@ -30,6 +31,7 @@ import { seedDemo } from './demo';
 import { seedDemoCareers } from './demo-careers';
 import { seedDemoCommunities } from './demo-communities';
 import { seedDemoResearch } from './demo-research';
+import { seedDemoJournalClub } from './demo-journal-club';
 import { seedDemoChat } from './demo-chat';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
@@ -75,6 +77,8 @@ const LAYERS: SeedLayer[] = [
   { name: 'communities', milestone: 'M25', run: seedDemoCommunities },
   // Research projects and publications (M27).
   { name: 'research', milestone: 'M27', run: seedDemoResearch },
+  // The journal club (M31), after the communities its discussions go into.
+  { name: 'journal-club', milestone: 'M31', run: seedDemoJournalClub },
 ];
 
 async function main(): Promise<void> {

@@ -36,6 +36,12 @@ describe('where a notice leads', () => {
     expect(appRoute('/research/rp-1/edit')).toBeNull();
   });
 
+  it('opens the journal club inside the app (M31)', () => {
+    expect(appRoute('/journal-club')).toBe('/journal-club');
+    expect(appRoute('/journal-club/jc-1')).toBe('/journal-club/jc-1');
+    expect(appRoute('/admin/journal-club/jc-1')).toBeNull();
+  });
+
   it('leads nowhere for what the app does not have', () => {
     expect(appRoute(null)).toBeNull();
     expect(appRoute('/admin/news')).toBeNull();

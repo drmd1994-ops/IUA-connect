@@ -149,6 +149,11 @@ function MemberHome() {
           onPress={() => router.push('/research')}
         />
         <Button
+          label={all('journalClub.nav')}
+          variant="secondary"
+          onPress={() => router.push('/journal-club')}
+        />
+        <Button
           label={all('directory.nav')}
           variant="secondary"
           onPress={() => router.push('/members')}

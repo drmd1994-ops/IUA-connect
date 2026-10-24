@@ -75,66 +75,69 @@ model User {
   createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  roles                UserRole[]               @relation("UserRoles")
-  rolesGranted         UserRole[]               @relation("RolesGrantedBy")
-  sessions             Session[]
-  devices              Device[]
-  mfaFactors           MfaFactor[]
-  recoveryCodes        RecoveryCode[]
-  authTokens           AuthToken[]
-  profile              Profile?
-  memberships          Membership[]
-  applications         VerificationRequest[]
-  physicianChecks      PhysicianVerification[]
-  invitationsSent      PlatformInvitation[]     @relation("InvitationsSent")
-  files                StoredFile[]
-  newsAuthored         News[]
-  eventRegistrations   EventRegistration[]
-  scheduleItems        ScheduleItem[]
-  eventAttendances     EventAttendance[]
-  eventReminders       EventReminder[]
-  examAnswers          ExamAnswer[]
-  mockExams            MockExam[]
-  examBookmarks        ExamBookmark[]
-  examReports          ExamReport[]
-  notifications        Notification[]
-  notificationPrefs    NotificationPreference[]
-  announcementReads    AnnouncementRead[]
-  notificationState    NotificationState?
-  broadcastDeliveries  BroadcastDelivery[]
-  consents             Consent[]
-  conversationsLow     Conversation[]           @relation("ConversationUserLow")
-  conversationsHigh    Conversation[]           @relation("ConversationUserHigh")
-  conversationMembers  ConversationMember[]
-  messages             Message[]
-  messageHides         MessageHide[]
-  chatInvitations      ConversationInvitation[] @relation("ChatInvited")
-  chatInvitationsMade  ConversationInvitation[] @relation("ChatInviter")
-  chatBlocksMade       ChatBlock[]              @relation("ChatBlocker")
-  chatBlocksReceived   ChatBlock[]              @relation("ChatBlocked")
-  chatPreference       ChatPreference?
-  chatReportsMade      ChatReport[]             @relation("ChatReporter")
-  chatReportsReceived  ChatReport[]             @relation("ChatReported")
-  chatSuspensions      ChatSuspension[]
-  messageReactions     MessageReaction[]
-  conversationBans     ConversationBan[]
-  positionsWritten     Position[]               @relation("PositionsWritten")
-  savedPositions       SavedPosition[]
-  mentorProfile        MentorProfile?
-  mentorshipsMentor    Mentorship[]             @relation("MentorshipsAsMentor")
-  mentorshipsMentee    Mentorship[]             @relation("MentorshipsAsMentee")
-  communitiesModerated CommunityModerator[]     @relation("CommunityModerator")
-  communityBans        CommunityBan[]           @relation("CommunityBanned")
-  communityFollows     CommunityFollow[]        @relation("CommunityFollower")
-  posts                Post[]                   @relation("PostAuthor")
-  postComments         PostComment[]            @relation("CommentAuthor")
-  postReactions        PostReaction[]           @relation("PostReactor")
-  commentReactions     CommentReaction[]        @relation("CommentReactor")
-  postBookmarks        PostBookmark[]           @relation("PostBookmarker")
-  postFollows          PostFollow[]             @relation("PostFollower")
-  researchProjects     ResearchProject[]        @relation("ProjectLead")
-  researchRequests     ResearchRequest[]        @relation("ResearchRequester")
-  publications         Publication[]            @relation("PublicationOwner")
+  roles                   UserRole[]               @relation("UserRoles")
+  rolesGranted            UserRole[]               @relation("RolesGrantedBy")
+  sessions                Session[]
+  devices                 Device[]
+  mfaFactors              MfaFactor[]
+  recoveryCodes           RecoveryCode[]
+  authTokens              AuthToken[]
+  profile                 Profile?
+  memberships             Membership[]
+  applications            VerificationRequest[]
+  physicianChecks         PhysicianVerification[]
+  invitationsSent         PlatformInvitation[]     @relation("InvitationsSent")
+  files                   StoredFile[]
+  newsAuthored            News[]
+  eventRegistrations      EventRegistration[]
+  scheduleItems           ScheduleItem[]
+  eventAttendances        EventAttendance[]
+  eventReminders          EventReminder[]
+  examAnswers             ExamAnswer[]
+  mockExams               MockExam[]
+  examBookmarks           ExamBookmark[]
+  examReports             ExamReport[]
+  notifications           Notification[]
+  notificationPrefs       NotificationPreference[]
+  announcementReads       AnnouncementRead[]
+  notificationState       NotificationState?
+  broadcastDeliveries     BroadcastDelivery[]
+  consents                Consent[]
+  conversationsLow        Conversation[]           @relation("ConversationUserLow")
+  conversationsHigh       Conversation[]           @relation("ConversationUserHigh")
+  conversationMembers     ConversationMember[]
+  messages                Message[]
+  messageHides            MessageHide[]
+  chatInvitations         ConversationInvitation[] @relation("ChatInvited")
+  chatInvitationsMade     ConversationInvitation[] @relation("ChatInviter")
+  chatBlocksMade          ChatBlock[]              @relation("ChatBlocker")
+  chatBlocksReceived      ChatBlock[]              @relation("ChatBlocked")
+  chatPreference          ChatPreference?
+  chatReportsMade         ChatReport[]             @relation("ChatReporter")
+  chatReportsReceived     ChatReport[]             @relation("ChatReported")
+  chatSuspensions         ChatSuspension[]
+  messageReactions        MessageReaction[]
+  conversationBans        ConversationBan[]
+  positionsWritten        Position[]               @relation("PositionsWritten")
+  savedPositions          SavedPosition[]
+  mentorProfile           MentorProfile?
+  mentorshipsMentor       Mentorship[]             @relation("MentorshipsAsMentor")
+  mentorshipsMentee       Mentorship[]             @relation("MentorshipsAsMentee")
+  communitiesModerated    CommunityModerator[]     @relation("CommunityModerator")
+  communityBans           CommunityBan[]           @relation("CommunityBanned")
+  communityFollows        CommunityFollow[]        @relation("CommunityFollower")
+  posts                   Post[]                   @relation("PostAuthor")
+  postComments            PostComment[]            @relation("CommentAuthor")
+  postReactions           PostReaction[]           @relation("PostReactor")
+  commentReactions        CommentReaction[]        @relation("CommentReactor")
+  postBookmarks           PostBookmark[]           @relation("PostBookmarker")
+  postFollows             PostFollow[]             @relation("PostFollower")
+  researchProjects        ResearchProject[]        @relation("ProjectLead")
+  researchRequests        ResearchRequest[]        @relation("ResearchRequester")
+  publications            Publication[]            @relation("PublicationOwner")
+  journalClubSummaries    JournalClubEntry[]       @relation("JournalClubSummaryAuthor")
+  journalClubCommentaries JournalClubEntry[]       @relation("JournalClubCommentaryAuthor")
+  journalClubVotes        JournalClubVote[]        @relation("JournalClubVoter")
 
   @@map("users")
 }
@@ -433,6 +436,7 @@ model Subspecialty {
   positions        PositionSubspecialty[]
   community        Community?
   researchProjects ResearchProjectSubspecialty[]
+  journalClub      JournalClubEntry[]
   mentors          MentorSubspecialty[]
 
   @@map("subspecialties")
@@ -1846,6 +1850,8 @@ enum NotificationKind {
   COMMUNITIES
   /// Research (M27): a request to join your project, and the answer to yours.
   RESEARCH
+  /// Journal club (M31): a new entry was published.
+  JOURNAL_CLUB
 
   @@map("notification_kind")
 }
@@ -2968,15 +2974,16 @@ model Post {
   searchVector    Unsupported("tsvector")? @map("search_vector")
   createdAt       DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  community Community      @relation(fields: [communityId], references: [id], onDelete: Cascade)
-  author    User?          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
-  answer    PostComment?   @relation("PostAnswer", fields: [answerCommentId], references: [id], onDelete: SetNull)
-  comments  PostComment[]  @relation("PostComments")
-  files     PostFile[]
-  reactions PostReaction[]
-  bookmarks PostBookmark[]
-  follows   PostFollow[]
-  reports   ChatReport[]
+  community        Community         @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  author           User?             @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  answer           PostComment?      @relation("PostAnswer", fields: [answerCommentId], references: [id], onDelete: SetNull)
+  comments         PostComment[]     @relation("PostComments")
+  files            PostFile[]
+  reactions        PostReaction[]
+  bookmarks        PostBookmark[]
+  follows          PostFollow[]
+  reports          ChatReport[]
+  journalClubEntry JournalClubEntry?
 
   @@index([communityId, createdAt(sort: Desc)])
   @@index([communityId, activityAt(sort: Desc)])
@@ -3246,4 +3253,100 @@ model Publication {
 
   @@index([userId, position])
   @@map("publications")
+}
+
+// --- Journal club (M31) -------------------------------------------------------------------------
+
+/// DRAFT → IN_REVIEW → PUBLISHED → ARCHIVED (M31 plan §3): an editor writes, another publishes.
+enum JournalClubStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+
+  @@map("journal_club_status")
+}
+
+/// "Would this change your practice?" (M31 plan §3).
+enum JournalClubAnswer {
+  YES
+  PERHAPS
+  NO
+
+  @@map("journal_club_answer")
+}
+
+/// An article presented to members (M31): its details and links (never its text), a summary
+/// and an expert's commentary by named members, and, once published, its discussion post in the
+/// subspecialty's community. Verified people see published and archived entries.
+model JournalClubEntry {
+  id                 String            @id @db.Uuid
+  subspecialtyId     String            @map("subspecialty_id") @db.Uuid
+  /// The month it belongs to: its first day.
+  month              DateTime          @db.Date
+  /// The language the summary and commentary are written in: "he" or "en".
+  locale             String            @db.VarChar(2)
+  articleTitle       String            @map("article_title") @db.VarChar(500)
+  articleAuthors     String            @default("") @map("article_authors") @db.VarChar(2000)
+  journal            String?           @db.VarChar(300)
+  year               Int?
+  doi                String?           @db.VarChar(200)
+  pmid               String?           @db.VarChar(12)
+  summary            String            @db.VarChar(5000)
+  summaryAuthorId    String?           @map("summary_author_id") @db.Uuid
+  commentary         String?           @db.VarChar(5000)
+  commentaryAuthorId String?           @map("commentary_author_id") @db.Uuid
+  keyPoints          String[]          @default([]) @map("key_points")
+  status             JournalClubStatus @default(DRAFT)
+  createdBy          String?           @map("created_by") @db.Uuid
+  submittedBy        String?           @map("submitted_by") @db.Uuid
+  publishedBy        String?           @map("published_by") @db.Uuid
+  publishedAt        DateTime?         @map("published_at") @db.Timestamptz(6)
+  /// Its discussion in the subspecialty's community, opened when first published.
+  postId             String?           @unique @map("post_id") @db.Uuid
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subspecialty     Subspecialty         @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  summaryAuthor    User?                @relation("JournalClubSummaryAuthor", fields: [summaryAuthorId], references: [id], onDelete: SetNull)
+  commentaryAuthor User?                @relation("JournalClubCommentaryAuthor", fields: [commentaryAuthorId], references: [id], onDelete: SetNull)
+  post             Post?                @relation(fields: [postId], references: [id], onDelete: SetNull)
+  votes            JournalClubVote[]
+  history          JournalClubHistory[]
+
+  @@index([status, month(sort: Desc)])
+  @@index([subspecialtyId, month(sort: Desc)])
+  @@map("journal_club_entries")
+}
+
+/// One person's answer to an entry's poll, changeable. Only totals are ever shown: nobody,
+/// staff included, sees who answered what.
+model JournalClubVote {
+  entryId   String            @map("entry_id") @db.Uuid
+  userId    String            @map("user_id") @db.Uuid
+  answer    JournalClubAnswer
+  updatedAt DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  entry JournalClubEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  user  User             @relation("JournalClubVoter", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([entryId, userId])
+  @@map("journal_club_votes")
+}
+
+/// Every step of an entry's review, append-only (like `news_history`).
+model JournalClubHistory {
+  id          String             @id @db.Uuid
+  entryId     String             @map("entry_id") @db.Uuid
+  action      String             @db.VarChar(40)
+  fromStatus  JournalClubStatus? @map("from_status")
+  toStatus    JournalClubStatus  @map("to_status")
+  actorUserId String?            @map("actor_user_id") @db.Uuid
+  comment     String?            @db.VarChar(1000)
+  at          DateTime           @default(now()) @db.Timestamptz(6)
+
+  entry JournalClubEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@index([entryId, at])
+  @@map("journal_club_history")
 }
