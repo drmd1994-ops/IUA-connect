@@ -68,6 +68,7 @@ export const ROLES = {
       'positions.manage',
       'positions.review',
       'communities.manage',
+      'journalclub.manage',
       'audit.read',
     ],
     requiresMfa: true,
@@ -83,7 +84,7 @@ export const ROLES = {
   },
   /** Writes news, for the platform or for an organisation; on the platform, education too. */
   CONTENT_EDITOR: {
-    permissions: ['news.create', 'education.manage', 'files.upload'],
+    permissions: ['news.create', 'education.manage', 'journalclub.manage', 'files.upload'],
     requiresMfa: true,
     scope: 'NONE',
     level: 'either',
@@ -112,8 +113,9 @@ export const ROLES = {
   },
   // Permissions for these roles arrive with their Phase 2 features.
   RESEARCH_ADMIN: { permissions: [], requiresMfa: true, scope: 'NONE', level: 'platform' },
+  /** Writes and publishes journal club entries for the subspecialties they are appointed to. */
   SUBSPECIALTY_ADMIN: {
-    permissions: [],
+    permissions: ['journalclub.subspecialty'],
     requiresMfa: true,
     scope: 'SUBSPECIALTY',
     level: 'platform',

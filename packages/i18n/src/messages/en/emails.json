@@ -307,5 +307,18 @@
     "heading": "Is it still current?",
     "body": "Your project “{title}” has not been updated for a year. Open it and save it to say it is still current, or end it.",
     "action": "Open the project"
+  },
+  "journalClubSentBack": {
+    "subject": "Your journal club entry needs changes",
+    "heading": "Sent back for changes",
+    "body": "The entry about “{title}” was sent back to you.",
+    "reason": "Their comment: {reason}",
+    "action": "Open the entry"
+  },
+  "journalClubPublished": {
+    "subject": "Your journal club entry is published",
+    "heading": "Published",
+    "body": "The entry about “{title}” is published, and its discussion is open in the community.",
+    "action": "Open the entry"
   }
 }

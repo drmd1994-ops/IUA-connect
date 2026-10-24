@@ -254,6 +254,15 @@
     "publicationIdInvalid": "יש לבדוק: מזהה PubMed הוא ספרות בלבד, ו־DOI מתחיל ב־״10.״.",
     "publicationNotFound": "לא נמצא פרסום עם המזהה הזה.",
     "publicationSourceDown": "השירות לא ענה. אפשר לנסות שוב מאוחר יותר, או להקליד את הפרטים.",
-    "publicationsNoOrcid": "יש להוסיף קודם את מזהה ה־ORCID לפרופיל."
+    "publicationsNoOrcid": "יש להוסיף קודם את מזהה ה־ORCID לפרופיל.",
+    "journalClubNotAllowed": "אינך עורך/ת רשומות מועדון עיתונות לתת־ההתמחות הזו.",
+    "journalClubTransitionNotAllowed": "הצעד הזה אינו אפשרי לרשומה במצבה הנוכחי.",
+    "journalClubNotDraft": "אפשר לשנות רק טיוטה. יש להחזיר אותה קודם.",
+    "journalClubChanged": "מישהו אחר שינה את הרשומה. יש לפתוח אותה שוב.",
+    "journalClubSubspecialtyNotYours": "אפשר לכתוב רשומות רק לתתי־ההתמחות שמונית אליהן.",
+    "journalClubMonthInvalid": "יש לבחור את החודש.",
+    "journalClubAuthorUnknown": "אין אדם מאומת עם כתובת הדוא״ל הזו.",
+    "journalClubNoCommunity": "אין לתת־ההתמחות הזו קהילה פתוחה לדיון.",
+    "journalClubPollClosed": "הסקר של הרשומה הזו סגור."
   }
 }

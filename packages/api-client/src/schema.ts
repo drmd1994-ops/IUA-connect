@@ -4836,6 +4836,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/journal-club": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["JournalClubController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/journal-club/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["JournalClubController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/journal-club/{id}/vote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["JournalClubController_vote"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/journal-club": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["JournalClubAdminController_list"];
+        put?: never;
+        post: operations["JournalClubAdminController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/journal-club/scope": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["JournalClubAdminController_scope"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/journal-club/lookup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["JournalClubAdminController_lookup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/journal-club/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["JournalClubAdminController_get"];
+        put: operations["JournalClubAdminController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/journal-club/{id}/transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["JournalClubAdminController_transition"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/journal-club/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["JournalClubAdminController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7505,7 +7649,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH" | "JOURNAL_CLUB";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -7526,7 +7670,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS" | "JOURNAL_CLUB";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -7535,7 +7679,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS" | "JOURNAL_CLUB";
                 app: boolean;
                 email: boolean;
             }[];
@@ -7544,7 +7688,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH" | "JOURNAL_CLUB")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -8895,7 +9039,7 @@ export interface components {
                 scope: string;
                 /** @enum {string} */
                 level: "platform" | "organisation" | "either";
-                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "positions.manage" | "positions.review" | "positions.post.department" | "communities.manage" | "audit.read" | "settings.manage")[];
+                permissions: ("users.read" | "users.manage" | "roles.manage" | "organisations.manage" | "organisations.access" | "membership.read" | "membership.manage" | "membership.approve.department" | "membership.approve.final" | "physicians.verify" | "institutions.manage" | "news.create" | "news.review" | "news.publish" | "events.manage" | "education.manage" | "education.review" | "guidelines.manage" | "files.upload" | "broadcasts.create" | "broadcasts.approve" | "chat.moderate" | "chat.rooms.manage" | "positions.manage" | "positions.review" | "positions.post.department" | "communities.manage" | "journalclub.manage" | "journalclub.subspecialty" | "audit.read" | "settings.manage")[];
                 holders: number;
             }[];
         };
@@ -10249,6 +10393,265 @@ export interface components {
                 pmid: string | null;
                 url: string | null;
                 saved: boolean;
+            }[];
+        };
+        JournalClubListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                month: string;
+                /** @enum {string} */
+                locale: "he" | "en";
+                articleTitle: string;
+                articleAuthors: string;
+                journal: string | null;
+                year: number | null;
+                doi: string | null;
+                pmid: string | null;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                excerpt: string;
+                archived: boolean;
+            }[];
+            current: {
+                /** Format: uuid */
+                id: string;
+                month: string;
+                /** @enum {string} */
+                locale: "he" | "en";
+                articleTitle: string;
+                articleAuthors: string;
+                journal: string | null;
+                year: number | null;
+                doi: string | null;
+                pmid: string | null;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                excerpt: string;
+                archived: boolean;
+            } | null;
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        JournalClubEntryDto: {
+            /** Format: uuid */
+            id: string;
+            month: string;
+            /** @enum {string} */
+            locale: "he" | "en";
+            articleTitle: string;
+            articleAuthors: string;
+            journal: string | null;
+            year: number | null;
+            doi: string | null;
+            pmid: string | null;
+            subspecialty: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            };
+            excerpt: string;
+            archived: boolean;
+            summary: string;
+            summaryAuthor: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+            } | null;
+            commentary: string | null;
+            commentaryAuthor: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+                hospital: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                } | null;
+            } | null;
+            keyPoints: string[];
+            publishedAt: string | null;
+            poll: {
+                open: boolean;
+                mine: ("YES" | "PERHAPS" | "NO") | null;
+                totals: {
+                    YES: number;
+                    PERHAPS: number;
+                    NO: number;
+                    total: number;
+                } | null;
+            };
+            discussion: {
+                communitySlug: string;
+                /** Format: uuid */
+                postId: string;
+            } | null;
+        };
+        JournalClubVoteDto: {
+            /** @enum {string} */
+            answer: "YES" | "PERHAPS" | "NO";
+        };
+        JournalClubPollDto: {
+            open: boolean;
+            mine: ("YES" | "PERHAPS" | "NO") | null;
+            totals: {
+                YES: number;
+                PERHAPS: number;
+                NO: number;
+                total: number;
+            } | null;
+        };
+        JournalClubAdminListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                month: string;
+                articleTitle: string;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        JournalClubScopeDto: {
+            all: boolean;
+            subspecialtyIds: string[];
+        };
+        JournalClubLookupDto: {
+            pmid?: string;
+            doi?: string;
+        };
+        JournalClubArticleDto: {
+            articleTitle: string;
+            articleAuthors: string;
+            journal: string | null;
+            year: number | null;
+            doi: string | null;
+            pmid: string | null;
+        };
+        JournalClubInputDto: {
+            /** Format: uuid */
+            subspecialtyId: string;
+            month: string;
+            /** @enum {string} */
+            locale: "he" | "en";
+            articleTitle: string;
+            /** @default  */
+            articleAuthors: string;
+            /** @default null */
+            journal: string | null;
+            /** @default null */
+            year: number | null;
+            /** @default null */
+            doi: string | null;
+            /** @default null */
+            pmid: string | null;
+            summary: string;
+            /** Format: email */
+            summaryAuthorEmail: string;
+            /** @default null */
+            commentary: string | null;
+            /** @default null */
+            commentaryAuthorEmail: string | null;
+            /** @default [] */
+            keyPoints: string[];
+        };
+        JournalClubAdminEntryDto: {
+            /** Format: uuid */
+            id: string;
+            subspecialty: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            };
+            month: string;
+            /** @enum {string} */
+            locale: "he" | "en";
+            articleTitle: string;
+            articleAuthors: string;
+            journal: string | null;
+            year: number | null;
+            doi: string | null;
+            pmid: string | null;
+            summary: string;
+            summaryAuthor: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                email: string;
+            } | null;
+            commentary: string | null;
+            commentaryAuthor: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                email: string;
+            } | null;
+            keyPoints: string[];
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+            ownSubmission: boolean;
+            publishedAt: string | null;
+            postId: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        JournalClubTransitionDto: {
+            /** @enum {string} */
+            action: "SUBMIT" | "SEND_BACK" | "PUBLISH" | "TAKE_BACK" | "ARCHIVE";
+            comment?: string;
+        };
+        JournalClubHistoryDto: {
+            items: {
+                action: string;
+                fromStatus: ("DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED") | null;
+                /** @enum {string} */
+                toStatus: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                actor: {
+                    firstName: string;
+                    lastName: string;
+                } | null;
+                comment: string | null;
+                /** Format: date-time */
+                at: string;
             }[];
         };
     };
@@ -18866,6 +19269,254 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicationListDto"];
+                };
+            };
+        };
+    };
+    JournalClubController_list: {
+        parameters: {
+            query?: {
+                subspecialty?: string;
+                year?: number;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubListDto"];
+                };
+            };
+        };
+    };
+    JournalClubController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubEntryDto"];
+                };
+            };
+        };
+    };
+    JournalClubController_vote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalClubVoteDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubPollDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "IN_REVIEW" | "PUBLISHED" | "ARCHIVED";
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubAdminListDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalClubInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubAdminEntryDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_scope: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubScopeDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_lookup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalClubLookupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubArticleDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubAdminEntryDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalClubInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubAdminEntryDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_transition: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JournalClubTransitionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubAdminEntryDto"];
+                };
+            };
+        };
+    };
+    JournalClubAdminController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JournalClubHistoryDto"];
                 };
             };
         };

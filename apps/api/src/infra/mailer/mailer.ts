@@ -36,6 +36,9 @@ export interface EmailTemplates {
   // Positions (M28), to the position's writer.
   positionSentBack: { title: string; reason: string; link: string };
   positionPublished: { title: string; link: string };
+  // The journal club (M31), to the one who submitted the entry.
+  journalClubSentBack: { title: string; reason: string; link: string };
+  journalClubPublished: { title: string; link: string };
   // Mentorship (M28). name is the other person's.
   mentorshipRequested: { name: string; link: string };
   mentorshipAccepted: { name: string; link: string };

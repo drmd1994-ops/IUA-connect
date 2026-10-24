@@ -254,6 +254,15 @@
     "publicationIdInvalid": "Please check it: a PubMed ID is digits only, and a DOI starts with “10.”.",
     "publicationNotFound": "No publication was found with this identifier.",
     "publicationSourceDown": "The service didn’t answer. Try again later, or type the details in.",
-    "publicationsNoOrcid": "Add your ORCID iD to your profile first."
+    "publicationsNoOrcid": "Add your ORCID iD to your profile first.",
+    "journalClubNotAllowed": "You don’t edit journal club entries for this subspecialty.",
+    "journalClubTransitionNotAllowed": "This step isn’t possible for the entry as it is now.",
+    "journalClubNotDraft": "Only a draft can be changed. Take it back first.",
+    "journalClubChanged": "Someone else changed this entry. Open it again.",
+    "journalClubSubspecialtyNotYours": "You write entries only for the subspecialties you are appointed to.",
+    "journalClubMonthInvalid": "Please choose the month.",
+    "journalClubAuthorUnknown": "No verified person has this email address.",
+    "journalClubNoCommunity": "This subspecialty has no open community for the discussion.",
+    "journalClubPollClosed": "This entry’s poll is closed."
   }
 }

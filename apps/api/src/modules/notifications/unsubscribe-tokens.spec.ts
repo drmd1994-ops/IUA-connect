@@ -24,6 +24,7 @@ describe('UnsubscribeTokens', () => {
       'EDUCATION',
       'GUIDELINES',
       'POSITIONS',
+      'JOURNAL_CLUB',
     ]);
   });
 

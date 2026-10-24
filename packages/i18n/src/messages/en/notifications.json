@@ -27,7 +27,8 @@
     "POSITIONS": "New positions",
     "MENTORSHIP": "Mentorship",
     "COMMUNITIES": "Communities",
-    "RESEARCH": "Research"
+    "RESEARCH": "Research",
+    "JOURNAL_CLUB": "Journal club"
   },
   "kindHints": {
     "ACCOUNT": "Decisions about your application and changes to your membership.",
@@ -42,7 +43,8 @@
     "POSITIONS": "A job, fellowship or research post was published.",
     "MENTORSHIP": "A request to be your mentee, and the answer to a request you sent.",
     "COMMUNITIES": "A comment on your post or a reply to your comment, a mention, and new posts in the communities and posts you follow. By email: comments, replies and mentions only.",
-    "RESEARCH": "A request to join your project, and the answer to yours."
+    "RESEARCH": "A request to join your project, and the answer to yours.",
+    "JOURNAL_CLUB": "A new journal club entry was published."
   },
   "items": {
     "eventRegistered": "You are registered for “{title}”.",
@@ -96,7 +98,10 @@
     "researchAccepted": "{name} accepted you into “{title}”.",
     "researchDeclined": "{name} can’t take you into “{title}” now.",
     "researchExpired": "Your request to join “{title}” was closed after 30 days.",
-    "researchStale": "Is your project “{title}” still current?"
+    "researchStale": "Is your project “{title}” still current?",
+    "journalClubSentBack": "The journal club entry “{title}” was sent back to you for changes.",
+    "journalClubPublished": "The journal club entry “{title}” was published.",
+    "contentJournalClub": "Journal club: {title}"
   },
   "preferences": {
     "title": "Notification preferences",

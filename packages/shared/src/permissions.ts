@@ -30,6 +30,8 @@ export const PERMISSIONS = [
   'positions.review',
   'positions.post.department',
   'communities.manage',
+  'journalclub.manage',
+  'journalclub.subspecialty',
   'audit.read',
   'settings.manage',
 ] as const;
@@ -91,6 +93,10 @@ export const PERMISSION_LEVELS = {
   'positions.post.department': 'platform',
   // Communities (M25): opening and closing them, and appointing their moderators.
   'communities.manage': 'platform',
+  // Journal club (M31): writing entries and publishing another's, for every subspecialty, or
+  // for the subspecialties a subspecialty admin is appointed to.
+  'journalclub.manage': 'platform',
+  'journalclub.subspecialty': 'platform',
   'audit.read': 'platform',
   'settings.manage': 'platform',
 } as const satisfies Record<PermissionKey, PermissionLevel>;
