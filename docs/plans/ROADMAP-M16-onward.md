@@ -41,6 +41,7 @@
 | [M33](M33-ai-assistant.md)                | The AI assistant, with its safety rules                                | Phase 3                                                  | XL                    | M20 (legal review must cover it). Content to ground it in: guidelines, education, news, events. A budget for the AI service. |
 | [M34](M34-governance.md)                  | Governance: bodies, meetings, documents and surveys                    | After Phase 3                                            | M                     | The association's bylaws, to model its bodies correctly.                                                                     |
 | [M35](M35-voting.md)                      | Voting and elections                                                   | After Phase 3                                            | XL, and the riskiest  | M34, M20, a legal opinion on electronic voting under the bylaws, and an outside review of the design before any code.        |
+| [M36](M36-medical-imaging.md)             | Medical imaging: a scan viewer for cases and teaching (OHIF)           | Phase 3                                                  | L to XL               | M26. M20's legal review before any real scan. The owner's answers in its §9.                                                 |
 
 Sizes are relative: S is like one chat milestone's smaller half, M like M12, L like M13 or M14, XL larger than anything so far.
 
