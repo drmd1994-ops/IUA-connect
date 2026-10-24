@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: .node-version
+          # OHIF brings its own pnpm (build.mjs); nothing of this repository's is installed here.
+          package-manager-cache: false
       - name: Build the viewer
         run: node apps/viewer/build.mjs "$RUNNER_TEMP/viewer"
       - name: Attach it to a release
