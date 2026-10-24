@@ -234,6 +234,18 @@ Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, a
 | **לדיון בקהילה**.                                                                               | The entry's discussion post in the Robotic surgery community, with two comments.                     | "The discussion lives in the community, with its moderators and reports."                          |
 | Second window: **ניהול → מועדון עיתונות** → the November entry, waiting for review → **פרסום**. | The entry is published, and its discussion opens in the Pediatric urology community.                 | "One editor writes, another publishes. The writer can't publish their own."                        |
 
+### 15. Case discussions (4 minutes, optional; added in M26)
+
+Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, and in a private window `member.full@demo.test` (Noa Bar-Lev, who moderates Andrology), or `admin@demo.test`, who reviews every subspecialty. **Before a demo,** approve the three made-up cases in **מקרים → בדיקה** and make one the case of the week: they are medical content, and wait for the owner's review.
+
+| Do                                                                                                     | The audience sees                                                                                      | Say                                                                                                 |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| First window: **מקרים**.                                                                               | The case of the week first, with the note "למטרות לימוד. לא ייעוץ לגבי מטופל.".                        | "Made-up or fully de-identified cases, for teaching. Every one was reviewed before anyone saw it."  |
+| **הצגת מקרה**: choose Andrology, an age range and sex; in the history type "גב׳ לוי".                  | Before anything is sent: the name, and that it looks like a patient's name; the Save button stays off. | "There is no field for an age, a date or a hospital. And the check stops a name after a title."     |
+| Replace the name with ordinary text, add a question and two poll options; save, then **שליחה לבדיקה**. | "ממתין לבדיקה של מנהל/ת קהילה. אף אחד אחר עדיין לא רואה אותו."                                         | "Nobody else sees it yet."                                                                          |
+| Second window: **מקרים → בדיקה**, open it, **אישור**.                                                  | The case is published, and its discussion opens in the Andrology community.                            | "The community's moderators review cases of their subspecialty. A writer never approves their own." |
+| First window: open the case, answer the poll, then **לדיון בקהילה**.                                   | The totals; the discussion post.                                                                       | "The poll is anonymous. A report hides a case at once, until a moderator looks at it."              |
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).

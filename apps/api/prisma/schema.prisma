@@ -138,6 +138,9 @@ model User {
   journalClubSummaries    JournalClubEntry[]       @relation("JournalClubSummaryAuthor")
   journalClubCommentaries JournalClubEntry[]       @relation("JournalClubCommentaryAuthor")
   journalClubVotes        JournalClubVote[]        @relation("JournalClubVoter")
+  cases                   ClinicalCase[]           @relation("CaseAuthor")
+  caseVotes               CaseVote[]               @relation("CaseVoter")
+  caseReports             CaseReport[]             @relation("CaseReporter")
 
   @@map("users")
 }
@@ -437,6 +440,7 @@ model Subspecialty {
   community        Community?
   researchProjects ResearchProjectSubspecialty[]
   journalClub      JournalClubEntry[]
+  cases            ClinicalCase[]
   mentors          MentorSubspecialty[]
 
   @@map("subspecialties")
@@ -821,6 +825,8 @@ enum FilePurpose {
   /// A student's confirmation from their medical school (M17): its uploader and the platform's
   /// reviewers only, and deleted once it is decided on.
   VERIFICATION
+  /// A picture in a clinical case (M26): readable by whoever can read that case.
+  CASE
 
   @@map("file_purpose")
 }
@@ -871,6 +877,7 @@ model StoredFile {
   verification    PhysicianVerification?
   chatAttachment  MessageAttachment[]    @relation("MessageAttachment")
   postFiles       PostFile[]             @relation("PostFile")
+  caseFile        CaseFile?
 
   @@index([attachedAt, createdAt])
   @@map("files")
@@ -1852,6 +1859,8 @@ enum NotificationKind {
   RESEARCH
   /// Journal club (M31): a new entry was published.
   JOURNAL_CLUB
+  /// Case discussions (M26): your case was approved or returned; a case waits for your review.
+  CASES
 
   @@map("notification_kind")
 }
@@ -2984,6 +2993,7 @@ model Post {
   follows          PostFollow[]
   reports          ChatReport[]
   journalClubEntry JournalClubEntry?
+  clinicalCase     ClinicalCase?
 
   @@index([communityId, createdAt(sort: Desc)])
   @@index([communityId, activityAt(sort: Desc)])
@@ -3349,4 +3359,163 @@ model JournalClubHistory {
 
   @@index([entryId, at])
   @@map("journal_club_history")
+}
+
+// --- Case discussions (M26) -----------------------------------------------------------------------
+
+/// DRAFT → IN_REVIEW → PUBLISHED, or RETURNED to its author with the reason; a report HIDES a
+/// published case until a moderator restores or REMOVES it (M26 plan §4).
+enum CaseStatus {
+  DRAFT
+  IN_REVIEW
+  RETURNED
+  PUBLISHED
+  HIDDEN
+  REMOVED
+
+  @@map("case_status")
+}
+
+/// An age is a range, never an exact age (M26 plan §3).
+enum CaseAgeRange {
+  UNDER_18
+  FROM_18_TO_39
+  FROM_40_TO_64
+  FROM_65_TO_79
+  OVER_80
+
+  @@map("case_age_range")
+}
+
+enum CaseSex {
+  FEMALE
+  MALE
+  NOT_STATED
+
+  @@map("case_sex")
+}
+
+/// A clinical case presented for discussion (M26): a fixed form with no date, place or
+/// institution, checked for patient details, and seen by nobody but its author and the
+/// moderators until a moderator approves it. Approval opens its discussion as a post in the
+/// subspecialty's community.
+model ClinicalCase {
+  id             String       @id @db.Uuid
+  /// Empty once the author's account is gone; the case stays, without the name.
+  authorId       String?      @map("author_id") @db.Uuid
+  subspecialtyId String       @map("subspecialty_id") @db.Uuid
+  title          String       @db.VarChar(200)
+  ageRange       CaseAgeRange @map("age_range")
+  sex            CaseSex
+  history        String       @db.VarChar(5000)
+  examination    String?      @db.VarChar(3000)
+  labs           String?      @db.VarChar(3000)
+  imaging        String?      @db.VarChar(3000)
+  pathology      String?      @db.VarChar(3000)
+  management     String?      @db.VarChar(3000)
+  question       String       @db.VarChar(1000)
+  status         CaseStatus   @default(DRAFT)
+  submittedAt    DateTime?    @map("submitted_at") @db.Timestamptz(6)
+  reviewedBy     String?      @map("reviewed_by") @db.Uuid
+  reviewedAt     DateTime?    @map("reviewed_at") @db.Timestamptz(6)
+  /// Why it was returned to its author, or why a moderator removed it.
+  reviewNote     String?      @map("review_note") @db.VarChar(1000)
+  publishedAt    DateTime?    @map("published_at") @db.Timestamptz(6)
+  /// Its discussion in the subspecialty's community, opened on first approval.
+  postId         String?      @unique @map("post_id") @db.Uuid
+  /// When a moderator made it the case of the week; the latest one is shown.
+  weekAt         DateTime?    @map("week_at") @db.Timestamptz(6)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  author       User?            @relation("CaseAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  subspecialty Subspecialty     @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+  post         Post?            @relation(fields: [postId], references: [id], onDelete: SetNull)
+  files        CaseFile[]
+  options      CasePollOption[]
+  votes        CaseVote[]
+  reports      CaseReport[]
+  steps        CaseHistory[]
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([subspecialtyId, status])
+  @@index([authorId])
+  @@map("cases")
+}
+
+/// A picture of a case (file purpose CASE): readable by whoever can read the case.
+model CaseFile {
+  caseId   String @map("case_id") @db.Uuid
+  fileId   String @unique @map("file_id") @db.Uuid
+  position Int    @default(0)
+
+  case ClinicalCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  file StoredFile   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([caseId, fileId])
+  @@map("case_files")
+}
+
+/// The options of a case's poll, "What would you do?", written by its author.
+model CasePollOption {
+  id       String @id @db.Uuid
+  caseId   String @map("case_id") @db.Uuid
+  position Int
+  text     String @db.VarChar(200)
+
+  case  ClinicalCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  votes CaseVote[]
+
+  @@unique([caseId, position])
+  @@map("case_poll_options")
+}
+
+/// One person's answer to a case's poll, changeable. Only totals are ever shown.
+model CaseVote {
+  caseId    String   @map("case_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  optionId  String   @map("option_id") @db.Uuid
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  case   ClinicalCase   @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  option CasePollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user   User           @relation("CaseVoter", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([caseId, userId])
+  @@map("case_votes")
+}
+
+/// A report on a case (owner answer §10.6): the case is hidden at once, and the report waits in
+/// the cases review queue.
+model CaseReport {
+  id         String    @id @db.Uuid
+  caseId     String    @map("case_id") @db.Uuid
+  reporterId String?   @map("reporter_id") @db.Uuid
+  reason     String    @db.VarChar(1000)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Dealt with by a moderator: the case restored or removed.
+  closedAt   DateTime? @map("closed_at") @db.Timestamptz(6)
+
+  case     ClinicalCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  reporter User?        @relation("CaseReporter", fields: [reporterId], references: [id], onDelete: SetNull)
+
+  @@index([caseId, closedAt])
+  @@map("case_reports")
+}
+
+/// Every step of a case's review, append-only.
+model CaseHistory {
+  id          String      @id @db.Uuid
+  caseId      String      @map("case_id") @db.Uuid
+  action      String      @db.VarChar(40)
+  fromStatus  CaseStatus? @map("from_status")
+  toStatus    CaseStatus  @map("to_status")
+  actorUserId String?     @map("actor_user_id") @db.Uuid
+  note        String?     @db.VarChar(1000)
+  at          DateTime    @default(now()) @db.Timestamptz(6)
+
+  case ClinicalCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, at])
+  @@map("case_history")
 }

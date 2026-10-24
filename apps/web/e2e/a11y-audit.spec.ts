@@ -71,6 +71,9 @@ const MEMBER_PAGES = [
   '/research/requests',
   '/research/new',
   '/journal-club',
+  '/cases',
+  '/cases/mine',
+  '/cases/new',
 ];
 
 test('axe: every page a signed-in member sees, in both languages', async ({ browser }) => {

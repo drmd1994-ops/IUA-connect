@@ -4980,6 +4980,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/cases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CasesController_list"];
+        put?: never;
+        post: operations["CasesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CasesController_mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CasesController_queue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/pictures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CasesController_picture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CasesController_get"];
+        put: operations["CasesController_update"];
+        post?: never;
+        delete: operations["CasesController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CasesController_submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{id}/vote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["CasesController_vote"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CasesController_report"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CasesController_review"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cases/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CasesController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7649,7 +7809,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH" | "JOURNAL_CLUB";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH" | "JOURNAL_CLUB" | "CASES";
                 type: string;
                 params: {
                     [key: string]: string | number;
@@ -7670,7 +7830,7 @@ export interface components {
         NotificationPreferencesDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS" | "JOURNAL_CLUB";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "CASES" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS" | "JOURNAL_CLUB";
                 app: boolean;
                 email: boolean;
                 locked: boolean;
@@ -7679,7 +7839,7 @@ export interface components {
         NotificationPreferencesInputDto: {
             items: {
                 /** @enum {string} */
-                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS" | "JOURNAL_CLUB";
+                kind: "ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "MESSAGES" | "COMMUNITIES" | "MENTORSHIP" | "RESEARCH" | "CASES" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "POSITIONS" | "JOURNAL_CLUB";
                 app: boolean;
                 email: boolean;
             }[];
@@ -7688,7 +7848,7 @@ export interface components {
             token: string;
         };
         UnsubscribeResultDto: {
-            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH" | "JOURNAL_CLUB")[];
+            kinds: ("ACCOUNT" | "MY_EVENTS" | "ASSOCIATION" | "NEWS" | "NEW_EVENTS" | "EDUCATION" | "GUIDELINES" | "WORK" | "MESSAGES" | "ROOMS" | "POSITIONS" | "MENTORSHIP" | "COMMUNITIES" | "RESEARCH" | "JOURNAL_CLUB" | "CASES")[];
         };
         AdminBroadcastListDto: {
             items: {
@@ -10650,6 +10810,269 @@ export interface components {
                     lastName: string;
                 } | null;
                 comment: string | null;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        CaseListDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                ageRange: "UNDER_18" | "FROM_18_TO_39" | "FROM_40_TO_64" | "FROM_65_TO_79" | "OVER_80";
+                /** @enum {string} */
+                sex: "FEMALE" | "MALE" | "NOT_STATED";
+                question: string;
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                } | null;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED";
+                publishedAt: string | null;
+                pictures: number;
+                comments: number;
+            }[];
+            week: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                ageRange: "UNDER_18" | "FROM_18_TO_39" | "FROM_40_TO_64" | "FROM_65_TO_79" | "OVER_80";
+                /** @enum {string} */
+                sex: "FEMALE" | "MALE" | "NOT_STATED";
+                question: string;
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                } | null;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED";
+                publishedAt: string | null;
+                pictures: number;
+                comments: number;
+            } | null;
+            reviewer: boolean;
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        MyCasesDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                ageRange: "UNDER_18" | "FROM_18_TO_39" | "FROM_40_TO_64" | "FROM_65_TO_79" | "OVER_80";
+                /** @enum {string} */
+                sex: "FEMALE" | "MALE" | "NOT_STATED";
+                question: string;
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                } | null;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED";
+                publishedAt: string | null;
+                pictures: number;
+                comments: number;
+                reviewNote: string | null;
+            }[];
+        };
+        CaseQueueDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                subspecialty: {
+                    /** Format: uuid */
+                    id: string;
+                    nameHe: string;
+                    nameEn: string;
+                    key: string;
+                };
+                /** @enum {string} */
+                ageRange: "UNDER_18" | "FROM_18_TO_39" | "FROM_40_TO_64" | "FROM_65_TO_79" | "OVER_80";
+                /** @enum {string} */
+                sex: "FEMALE" | "MALE" | "NOT_STATED";
+                question: string;
+                author: {
+                    /** Format: uuid */
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    mark: ("STUDENT" | "RESIDENT") | null;
+                } | null;
+                /** @enum {string} */
+                status: "DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED";
+                publishedAt: string | null;
+                pictures: number;
+                comments: number;
+                /** Format: date-time */
+                waitingSince: string;
+                openReports: number;
+            }[];
+        };
+        CaseInputDto: {
+            /** Format: uuid */
+            subspecialtyId: string;
+            title: string;
+            /** @enum {string} */
+            ageRange: "UNDER_18" | "FROM_18_TO_39" | "FROM_40_TO_64" | "FROM_65_TO_79" | "OVER_80";
+            /** @enum {string} */
+            sex: "FEMALE" | "MALE" | "NOT_STATED";
+            history: string;
+            /** @default null */
+            examination: string | null;
+            /** @default null */
+            labs: string | null;
+            /** @default null */
+            imaging: string | null;
+            /** @default null */
+            pathology: string | null;
+            /** @default null */
+            management: string | null;
+            question: string;
+            /** @default [] */
+            pollOptions: string[];
+            /** @default [] */
+            fileIds: string[];
+            /** @default false */
+            picturesConfirmed: boolean;
+        };
+        CaseDto: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            subspecialty: {
+                /** Format: uuid */
+                id: string;
+                nameHe: string;
+                nameEn: string;
+                key: string;
+            };
+            /** @enum {string} */
+            ageRange: "UNDER_18" | "FROM_18_TO_39" | "FROM_40_TO_64" | "FROM_65_TO_79" | "OVER_80";
+            /** @enum {string} */
+            sex: "FEMALE" | "MALE" | "NOT_STATED";
+            question: string;
+            author: {
+                /** Format: uuid */
+                id: string;
+                firstName: string;
+                lastName: string;
+                mark: ("STUDENT" | "RESIDENT") | null;
+            } | null;
+            /** @enum {string} */
+            status: "DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED";
+            publishedAt: string | null;
+            pictures: number;
+            comments: number;
+            history: string;
+            examination: string | null;
+            labs: string | null;
+            imaging: string | null;
+            pathology: string | null;
+            management: string | null;
+            fileIds: string[];
+            poll: {
+                options: {
+                    /** Format: uuid */
+                    id: string;
+                    text: string;
+                }[];
+                open: boolean;
+                mine: string | null;
+                totals: {
+                    [key: string]: number;
+                } | null;
+                total: number;
+            } | null;
+            discussion: {
+                communitySlug: string;
+                /** Format: uuid */
+                postId: string;
+            } | null;
+            week: boolean;
+            reviewNote: string | null;
+            mine: boolean;
+            canEdit: boolean;
+            canReview: boolean;
+            reports: {
+                reason: string;
+                /** Format: date-time */
+                createdAt: string;
+            }[];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CaseVoteDto: {
+            /** Format: uuid */
+            optionId: string;
+        };
+        CasePollDto: {
+            options: {
+                /** Format: uuid */
+                id: string;
+                text: string;
+            }[];
+            open: boolean;
+            mine: string | null;
+            totals: {
+                [key: string]: number;
+            } | null;
+            total: number;
+        };
+        CaseReportInputDto: {
+            reason: string;
+        };
+        CaseReviewInputDto: {
+            /** @enum {string} */
+            action: "APPROVE" | "RETURN" | "RESTORE" | "REMOVE" | "TAKE_BACK" | "WEEK";
+            note?: string;
+        };
+        CaseHistoryDto: {
+            items: {
+                action: string;
+                fromStatus: ("DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED") | null;
+                /** @enum {string} */
+                toStatus: "DRAFT" | "IN_REVIEW" | "RETURNED" | "PUBLISHED" | "HIDDEN" | "REMOVED";
+                actor: {
+                    firstName: string;
+                    lastName: string;
+                } | null;
+                note: string | null;
                 /** Format: date-time */
                 at: string;
             }[];
@@ -19517,6 +19940,297 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["JournalClubHistoryDto"];
+                };
+            };
+        };
+    };
+    CasesController_list: {
+        parameters: {
+            query?: {
+                subspecialty?: string;
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseListDto"];
+                };
+            };
+        };
+    };
+    CasesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CaseInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseDto"];
+                };
+            };
+        };
+    };
+    CasesController_mine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyCasesDto"];
+                };
+            };
+        };
+    };
+    CasesController_queue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseQueueDto"];
+                };
+            };
+        };
+    };
+    CasesController_picture: {
+        parameters: {
+            query: {
+                confirmed: "true";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDto"];
+                };
+            };
+        };
+    };
+    CasesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseDto"];
+                };
+            };
+        };
+    };
+    CasesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CaseInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseDto"];
+                };
+            };
+        };
+    };
+    CasesController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CasesController_submit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseDto"];
+                };
+            };
+        };
+    };
+    CasesController_vote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CaseVoteDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CasePollDto"];
+                };
+            };
+        };
+    };
+    CasesController_report: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CaseReportInputDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CasesController_review: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CaseReviewInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseDto"];
+                };
+            };
+        };
+    };
+    CasesController_history: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseHistoryDto"];
                 };
             };
         };

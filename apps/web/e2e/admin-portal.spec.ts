@@ -13,7 +13,7 @@ import {
 /**
  * M8 exit tests (docs/plans/M8-admin-dashboard.md §6): the admin dashboard and its tiles;
  * disabling an account and finding the action in the audit log; giving a role; the site
- * settings; and the member dashboard with its "Coming soon" actions. Plus axe on every new
+ * settings; and the member dashboard with its quick actions. Plus axe on every new
  * page. The demo member comes from the seed and is fictional.
  */
 const DEMO_PASSWORD = 'ilikeIUAconnect11';
@@ -184,7 +184,7 @@ test('a super admin changes the settings; every page shows them', async ({ brows
   }
 });
 
-test('a member lands on their dashboard; later features are shown but can’t be used', async ({
+test('a member lands on their dashboard; every quick action is a working link', async ({
   browser,
 }) => {
   const visitor = await newPage(browser);
@@ -209,13 +209,10 @@ test('a member lands on their dashboard; later features are shown but can’t be
   await expect(dashboard.getByRole('link', { name: 'All news' })).toBeVisible();
   await expectAccessible(member);
 
-  // "Coming soon" actions are labelled, and are neither links nor buttons.
-  const later = dashboard.getByTestId('coming-soon-actions');
-  await expect(later.getByRole('listitem')).toHaveCount(1);
-  await expect(later).toContainText('Create a case');
-  await expect(later.getByText('Coming soon')).toHaveCount(1);
-  await expect(later.getByRole('link')).toHaveCount(0);
-  await expect(later.getByRole('button')).toHaveCount(0);
+  // Every planned action is built now (case discussions came last, in M26): none is “Coming soon”.
+  await expect(dashboard.getByTestId('coming-soon-actions')).toHaveCount(0);
+  await expect(dashboard.getByText('Coming soon')).toHaveCount(0);
+  await expect(dashboard.getByRole('link', { name: 'Create a case' })).toBeVisible();
   // Calculators were built in M30, communities in M25, research in M27.
   await expect(dashboard.getByRole('link', { name: 'Open a calculator' })).toBeVisible();
   await expect(dashboard.getByRole('link', { name: 'Ask the community' })).toBeVisible();

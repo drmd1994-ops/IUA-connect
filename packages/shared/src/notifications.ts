@@ -39,6 +39,8 @@ export const NOTIFICATION_KINDS = [
   'RESEARCH',
   /** Journal club (M31): a new entry was published. */
   'JOURNAL_CLUB',
+  /** Case discussions (M26): your case was approved or returned; a case waits for your review. */
+  'CASES',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
@@ -67,6 +69,7 @@ export const NOTIFICATION_DEFAULTS: Record<NotificationKind, NotificationKindSet
   COMMUNITIES: { app: true, email: false, locked: false },
   RESEARCH: { app: true, email: true, locked: false },
   JOURNAL_CLUB: { app: true, email: false, locked: false },
+  CASES: { app: true, email: true, locked: false },
 };
 
 /** The kinds a person can set, in the order the preferences page lists them. */
@@ -79,6 +82,7 @@ export const NOTIFICATION_PREFERENCE_KINDS = [
   'COMMUNITIES',
   'MENTORSHIP',
   'RESEARCH',
+  'CASES',
   'NEWS',
   'NEW_EVENTS',
   'EDUCATION',

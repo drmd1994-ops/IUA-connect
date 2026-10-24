@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M27 merged, on the hosted demo and in a new .apk; M31 built, in pull request #37)_
+_Last updated: 2026-10-24 (M27 and M31 merged, on the hosted demo and in a new .apk; M26 built)_
 
 ## Summary
 
@@ -1474,7 +1474,7 @@ Plan: `docs/plans/M27-research-publications.md`, approved by the owner on 2026-1
 1. Read the new Hebrew texts, above all "אישור ועדת הלסינקי" for ethics approval and the project's words ("מחפשים", "חוקר/ת ראשי/ת").
 2. **On or after 2026-10-29:** update body-parser (2.4.0) and multer (2.5.0), and remove their two accepted advisories from `pnpm-workspace.yaml` and `SECURITY.md`. GitHub's security check found them on 2026-10-24, with zod and undici (updated the same day) and zod 3 in Expo's developer tool (no fix exists; accepted by the owner).
 
-## M31 The journal club (built 2026-10-24, pull request #37)
+## M31 The journal club (merged 2026-10-24, pull request #37)
 
 Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved by the owner on 2026-10-24 ("start M31") with the recommended answers in its §10:
 
@@ -1500,9 +1500,14 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 - The site: type checks and lint. Three browser tests (an editor writes and submits, another publishes and closes it; a member reads this month's entry, answers the poll and reaches the discussion; the pages in Hebrew), with accessibility checks; the new pages are in both accessibility audits; the notification settings tests still pass.
 - The app: 241 screen tests (the new screens in both languages; the poll; the discussion) and 94 rule tests (with the journal club's links).
 
+**Verified on GitHub and online (2026-10-24)**
+
+- GitHub's checks on pull request #37, all green on the first run. Merged the same day at the owner's word ("merge it, deploy it and build a new version").
+- **On the hosted demo:** the server and site deployed; the start ran the migrations and the seed layers (now with the journal club's) without an error, the journal club's routes answer (asking for sign-in), its pages load, and `pnpm smoke:hosted` passed. The entries show only when signed in, so the owner's look is the check of their content.
+- **A new .apk** with M31 (run 40083243666), published as the pre-release `demo-apk-2026-10-24-m31`; it updates the earlier demo app without uninstalling.
+
 **Not verified**
 
-- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
 - The owner's look at the journal club and its Hebrew texts.
 
 **Deviations and findings**
@@ -1515,7 +1520,69 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 **Open for the owner**
 
 1. Read the Hebrew texts, above all the name "מועדון עיתונות" (or "ג׳ורנל קלאב"?) and October's sample summary and commentary.
-2. Say when to merge it, deploy it and build a new .apk.
+
+## M26 Case discussions and the case of the week (built 2026-10-24, waiting for its pull request)
+
+Plan: `docs/plans/M26-case-discussions.md`, rewritten against the code and approved by the owner on 2026-10-24 ("start m 26") with the recommended answers in its §10:
+
+- pictures allowed, with the author's confirmation and a review;
+- the community's moderators review;
+- the author's name shown;
+- the discussion is a community post;
+- 3 made-up cases waiting for the owner's review;
+- and, asked while building, reports go to the cases review queue.
+
+**A demo feature:** real cases wait for the legal review (M20).
+
+**Built**
+
+- **A case in a fixed form:** title, subspecialty, an age range (never an age), sex, the history, and optional examination, laboratory results, imaging, pathology and what was done; the question to colleagues; an optional poll ("What would you do?", 2 to 4 options). No field for a date, a place or an institution; the author's hospital is not shown either.
+- **The patient-details check** on every field, on the site, in the app and on the server, now also finding **a name after a title** ("Mr", "Mrs", "מר", "גב׳", "גברת"), while "back pain" (גב), "a bitter taste" (טעם מר), the gallbladder (מרה) and "MRI" pass.
+- **Pictures:** JPEG or PNG only, up to 4. They are added only after the author confirms they show no name, number, date or face. They are stripped of their hidden data on upload (a test plants a name in a picture and checks it is gone). They are readable only by those who can read the case. Scan files (DICOM) and documents are refused.
+- **Review before anyone sees it:** the moderators of the subspecialty's community (and the platform's chat moderators) approve a case, or return it with the reason; the author never approves their own. A review queue shows how long each case has waited. Moderators are told when a case waits, and the author when it is approved or returned.
+- **Approval opens the discussion** as a post in the subspecialty's community, under the author.
+- **A report hides a case at once,** and waits in the review queue for a moderator to restore or remove it. Removing it also takes its discussion post down.
+- **The poll:** one answer each, changeable; totals only, after answering.
+- **The case of the week:** a moderator marks one; it shows first in the list and on the member's home.
+- **The author** changes a draft or a returned case, sends it for review, and deletes it with its pictures.
+- **The site:** Cases in the main menu (the list, my cases, presenting a case, a case, the review queue for moderators). On the member's home, the case of the week. "Create a case" is now a link, so no quick action is "Coming soon" any more.
+- **The app:** the list, my cases, a case with its poll, discussion and reporting, and presenting a case with pictures from the photo library. Reviewing stays on the site.
+- **Demo data:** 3 made-up cases, text only (Urolithiasis, Uro-oncology, Pediatric urology), seeded as waiting for review. Nothing shows until approved.
+- **Texts** in Hebrew and English.
+
+**Verified (on this computer)**
+
+- Server: 4 unit tests for the review rules and 2 more for the check's titles (479 unit tests in all). 7 integration tests:
+  - nobody but the author and reviewers sees a case before approval;
+  - return with a reason, change and send again, approve, discussion opened, notices and history;
+  - a moderator can't approve their own case nor review another subspecialty;
+  - the check, with titles in both languages, and ordinary text passing;
+  - pictures: the confirmation, their read rule, their hidden data removed, other files refused;
+  - a report hides a case; restore and remove;
+  - the anonymous poll and the case of the week; verified people only.
+
+  The whole suite: 643 integration tests, after teaching the notification settings test the new kind.
+- The site: type checks and lint. Two browser tests (a resident presents a case, stopped once for an ID number; the Andrology moderator approves it; another member answers the poll and reports it, which hides it; the moderator restores it; the author deletes it; the pages in Hebrew), with accessibility checks; the new pages are in both accessibility audits; the member's home test now finds no "Coming soon".
+- The app: 257 screen tests (the new screens in both languages; the poll; reporting; a case stopped for an ID number) and 95 rule tests.
+
+**Not verified**
+
+- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
+- The owner's review of the three demo cases, and of the Hebrew texts.
+
+**Deviations and findings**
+
+- **Reports** go to the cases review queue, not chat's reports queue as the plan said, so the same community moderators see them (asked and answered while building).
+- **The author's hospital is not shown** on a case, though the owner chose to show the author: with the case, it could point to the patient.
+- **Reviewers are told by notice only if they moderate the community;** the platform's chat moderators see the queue but get no notice.
+- **An email link to the review queue** opens the app's home, since reviewing is on the site.
+- **A server unit test and a browser test each failed once** while the computer was busy, and passed when run again; to be watched on GitHub.
+
+**Open for the owner**
+
+1. Review and approve the three made-up cases (as `admin@demo.test` or a moderator, **מקרים → בדיקה**), and choose a case of the week.
+2. Read the Hebrew texts.
+3. Say when to merge it, deploy it and build a new .apk.
 
 ## Next step
 
@@ -1533,6 +1600,6 @@ Plan: `docs/plans/M31-journal-club.md`, rewritten against the code and approved 
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** is built (2026-10-24), in pull request #37.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk. **M26 (case discussions)** is built (2026-10-24), as a demo feature.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.

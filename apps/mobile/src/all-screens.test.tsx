@@ -33,6 +33,7 @@ import {
   ResearchRequestsScreen,
 } from '@/features/research';
 import { JournalClubEntryScreen, JournalClubScreen } from '@/features/journal-club';
+import { CaseScreen, CasesScreen, MyCasesScreen, WriteCaseScreen } from '@/features/cases';
 import { MembershipCard } from '@/features/card';
 import { EducationItem, EducationList, ExamPractice, ExamResults } from '@/features/education';
 import { EventList, EventPage, MySchedule } from '@/features/events';
@@ -137,6 +138,11 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['my publications', <PublicationsScreen key="s" />],
   ['the journal club', <JournalClubScreen key="s" />],
   ['a journal club entry', <JournalClubEntryScreen key="s" id="jc-1" />],
+  ['cases', <CasesScreen key="s" />],
+  ['my cases', <MyCasesScreen key="s" />],
+  ['a case', <CaseScreen key="s" id="c-1" />],
+  ['presenting a case', <WriteCaseScreen key="s" />],
+  ['editing a case', <WriteCaseScreen key="s" id="c-1" />],
 ];
 
 describe.each(['en', 'he'] as const)('every screen, in %s', (locale) => {

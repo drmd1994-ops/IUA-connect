@@ -263,6 +263,18 @@
     "journalClubMonthInvalid": "יש לבחור את החודש.",
     "journalClubAuthorUnknown": "אין אדם מאומת עם כתובת הדוא״ל הזו.",
     "journalClubNoCommunity": "אין לתת־ההתמחות הזו קהילה פתוחה לדיון.",
-    "journalClubPollClosed": "הסקר של הרשומה הזו סגור."
+    "journalClubPollClosed": "הסקר של הרשומה הזו סגור.",
+    "casesTooMany": "כבר יש לך 10 מקרים פתוחים. יש לשלוח או למחוק אחד קודם.",
+    "caseNotEditable": "אפשר לשנות רק טיוטה או מקרה שהוחזר.",
+    "caseChanged": "המקרה השתנה בינתיים. יש לפתוח אותו שוב.",
+    "casePictureType": "אפשר להוסיף למקרה רק תמונות JPEG או PNG.",
+    "casePollClosed": "הסקר של המקרה הזה סגור.",
+    "caseOptionUnknown": "התשובה הזו אינה אחת מאפשרויות הסקר.",
+    "caseOwnReport": "אי אפשר לדווח על מקרה שלך.",
+    "caseNotReviewer": "אינך בודק/ת מקרים של תת־ההתמחות הזו.",
+    "caseStepNotAllowed": "הצעד הזה אינו אפשרי למקרה במצבו הנוכחי.",
+    "caseOwnReview": "מנהל/ת קהילה אחר/ת בודק/ת את המקרה שלך.",
+    "caseNoteRequired": "יש לכתוב את הסיבה. הכותב/ת רואה אותה.",
+    "caseNoCommunity": "אין לתת־ההתמחות הזו קהילה פתוחה לדיון."
   }
 }

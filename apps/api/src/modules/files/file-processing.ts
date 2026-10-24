@@ -9,7 +9,7 @@ import sharp, { type Sharp } from 'sharp';
  * metadata (EXIF, GPS, comments) and anything hidden after the image data.
  */
 export type Kind = 'IMAGE' | 'DOCUMENT';
-export type Purpose = 'CONTENT' | 'PROFILE_PHOTO' | 'CHAT' | 'VERIFICATION';
+export type Purpose = 'CONTENT' | 'PROFILE_PHOTO' | 'CHAT' | 'VERIFICATION' | 'CASE';
 
 const MB = 1024 * 1024;
 

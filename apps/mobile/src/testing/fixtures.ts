@@ -80,6 +80,49 @@ const publication: S['PublicationDto'] = {
   hidden: false,
 };
 
+/** A fictional case, made up for the tests (M26). */
+const caseSummary: S['CaseListDto']['items'][number] = {
+  id: 'c-1',
+  title: 'A made-up case of flank pain',
+  subspecialty,
+  ageRange: 'FROM_40_TO_64',
+  sex: 'MALE',
+  question: 'Would you treat this conservatively first?',
+  author: { id: 'u-yoav', firstName: 'Yoav', lastName: 'Sela', mark: 'RESIDENT' },
+  status: 'PUBLISHED',
+  publishedAt: '2026-10-20T10:00:00.000Z',
+  pictures: 0,
+  comments: 2,
+};
+const clinicalCase: S['CaseDto'] = {
+  ...caseSummary,
+  history: 'Two days of left flank pain, no fever. A made-up case.',
+  examination: null,
+  labs: null,
+  imaging: 'A made-up finding on imaging.',
+  pathology: null,
+  management: null,
+  fileIds: [],
+  poll: {
+    options: [
+      { id: 'o-1', text: 'Watch and wait' },
+      { id: 'o-2', text: 'Treat now' },
+    ],
+    open: true,
+    mine: null,
+    totals: null,
+    total: 0,
+  },
+  discussion: { communitySlug: 'andrology', postId: 'po-1' },
+  week: true,
+  reviewNote: null,
+  mine: false,
+  canEdit: false,
+  canReview: false,
+  reports: [],
+  createdAt: '2026-10-19T10:00:00.000Z',
+};
+
 /** A fictional journal club entry about a made-up article (M31). */
 const journalEntrySummary: S['JournalClubListDto']['items'][number] = {
   id: 'jc-1',
@@ -1023,6 +1066,34 @@ export const everything: Record<string, Answer> = {
     banned: null,
     archived: false,
   } satisfies S['CommunityDto'],
+  // Case discussions (M26).
+  'GET /api/v1/cases': {
+    items: [caseSummary, { ...caseSummary, id: 'c-2', title: 'Another made-up case' }],
+    week: caseSummary,
+    reviewer: false,
+    page: 1,
+    pageSize: 12,
+    total: 2,
+  } satisfies S['CaseListDto'],
+  'GET /api/v1/cases/mine': {
+    items: [
+      {
+        ...caseSummary,
+        id: 'c-3',
+        title: 'My made-up case',
+        status: 'RETURNED',
+        reviewNote: 'Please remove the exact age.',
+      },
+    ],
+  } satisfies S['MyCasesDto'],
+  'GET /api/v1/cases/*': clinicalCase,
+  'PUT /api/v1/cases/*': {
+    ...clinicalCase.poll!,
+    mine: 'o-1',
+    totals: { 'o-1': 3, 'o-2': 1 },
+    total: 4,
+  } satisfies S['CasePollDto'],
+  'POST /api/v1/cases/*': {},
   // The journal club (M31).
   'GET /api/v1/journal-club': {
     items: [

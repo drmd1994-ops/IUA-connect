@@ -274,8 +274,9 @@ export class FilesService {
     if (file.purpose === 'VERIFICATION') {
       return principal !== null && file.ownerUserId === principal.userId;
     }
-    if (file.purpose === 'CHAT') {
-      // A file of a message is for the people who can read that message, and nobody else:
+    if (file.purpose === 'CHAT' || file.purpose === 'CASE') {
+      // A file of a message (or a picture of a case, M26) is for the people who can read that
+      // message or case, and nobody else:
       // not staff who may upload, and not its sender after they left. Before it is sent, it
       // is its uploader's alone.
       for (const rule of this.rules) {
