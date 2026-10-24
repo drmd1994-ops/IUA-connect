@@ -6,6 +6,7 @@ settings:
 
 overrides:
   mysql2: '>=3.23.1 <4'
+  adm-zip: 0.6.1
   deepmerge-ts: '>=8.0.0 <9'
   multer: '>=2.3.0 <3'
   shell-quote: 1.11.0
@@ -4180,9 +4181,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.5.17:
-    resolution: {integrity: sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==}
-    engines: {node: '>=12.0'}
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
+    engines: {node: '>=14.0'}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -13075,7 +13076,7 @@ snapshots:
 
   acorn@8.18.0: {}
 
-  adm-zip@0.5.17: {}
+  adm-zip@0.6.1: {}
 
   agent-base@6.0.2:
     dependencies:
@@ -13896,7 +13897,7 @@ snapshots:
   dcmjs@0.52.2:
     dependencies:
       '@babel/runtime-corejs3': 7.29.2
-      adm-zip: 0.5.17
+      adm-zip: 0.6.1
       gl-matrix: 3.4.4
       lodash.clonedeep: 4.5.0
       loglevel: 1.9.2
