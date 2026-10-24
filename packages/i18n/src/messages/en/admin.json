@@ -20,7 +20,8 @@
     "users": "Accounts",
     "audit": "Audit log",
     "demoOutbox": "Demo emails",
-    "settings": "Settings"
+    "settings": "Settings",
+    "journalClub": "Journal club"
   },
   "notAllowed": "This area is for staff, in a session with two-step verification.",
   "setUpMfa": "Set up two-step verification",
