@@ -132,6 +132,9 @@ model User {
   commentReactions     CommentReaction[]        @relation("CommentReactor")
   postBookmarks        PostBookmark[]           @relation("PostBookmarker")
   postFollows          PostFollow[]             @relation("PostFollower")
+  researchProjects     ResearchProject[]        @relation("ProjectLead")
+  researchRequests     ResearchRequest[]        @relation("ResearchRequester")
+  publications         Publication[]            @relation("PublicationOwner")
 
   @@map("users")
 }
@@ -423,13 +426,14 @@ model Subspecialty {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  profiles      ProfileSubspecialty[]
-  guidelines    Guideline[]
-  education     EducationItem[]
-  examQuestions ExamQuestion[]
-  positions     PositionSubspecialty[]
-  community     Community?
-  mentors       MentorSubspecialty[]
+  profiles         ProfileSubspecialty[]
+  guidelines       Guideline[]
+  education        EducationItem[]
+  examQuestions    ExamQuestion[]
+  positions        PositionSubspecialty[]
+  community        Community?
+  researchProjects ResearchProjectSubspecialty[]
+  mentors          MentorSubspecialty[]
 
   @@map("subspecialties")
 }
@@ -1840,6 +1844,8 @@ enum NotificationKind {
   /// Communities (M25): a comment on your post or under your comment, a mention, a new post in
   /// a community you follow.
   COMMUNITIES
+  /// Research (M27): a request to join your project, and the answer to yours.
+  RESEARCH
 
   @@map("notification_kind")
 }
@@ -2193,6 +2199,7 @@ model Conversation {
   bans         ConversationBan[]
   invitations  ConversationInvitation[]
   mentorships  Mentorship[]
+  project      ResearchProject?         @relation("ProjectGroup")
   organisation Organisation?            @relation(fields: [organisationId], references: [id], onDelete: Restrict)
 
   @@unique([userLowId, userHighId])
@@ -3078,4 +3085,165 @@ model PostFollow {
   @@id([postId, userId])
   @@index([userId])
   @@map("post_follows")
+}
+
+// ---------------------------------------------------------------------------
+// Research collaboration and publications (M27). docs/plans/M27-research-publications.md.
+// ---------------------------------------------------------------------------
+
+enum StudyType {
+  PROSPECTIVE
+  RETROSPECTIVE
+  TRIAL
+  REGISTRY
+  SURVEY
+  OTHER
+
+  @@map("study_type")
+}
+
+enum ProjectStatus {
+  PLANNING
+  RECRUITING
+  ONGOING
+  COMPLETED
+
+  @@map("project_status")
+}
+
+/// Declared by the lead, and shown as declared, never as verified (M27 plan §3).
+enum EthicsStatus {
+  APPROVED
+  SUBMITTED
+  NOT_YET
+  NOT_NEEDED
+
+  @@map("ethics_status")
+}
+
+/// What a project is looking for.
+enum ProjectNeed {
+  CENTRES
+  CO_INVESTIGATORS
+  STATISTICIAN
+  RESIDENTS
+  STUDENTS
+
+  @@map("project_need")
+}
+
+/// A study that seeks centres or collaborators (M27). Listed by a verified physician (owner
+/// answer §10.1), seen by verified people (§10.2). It holds no data about participants, and its
+/// text goes through the patient-details check.
+model ResearchProject {
+  id           String        @id @db.Uuid
+  leadId       String        @map("lead_id") @db.Uuid
+  title        String        @db.VarChar(200)
+  description  String        @db.VarChar(5000)
+  studyType    StudyType     @map("study_type")
+  status       ProjectStatus @default(PLANNING)
+  ethics       EthicsStatus
+  funding      String?       @db.VarChar(300)
+  /// How to reach the lead, in their words, besides asking to join.
+  contact      String?       @db.VarChar(300)
+  needs        ProjectNeed[] @default([])
+  /// Taking requests to join.
+  open         Boolean       @default(true)
+  /// Ended by its lead: it stays readable, and takes no requests.
+  endedAt      DateTime?     @map("ended_at") @db.Timestamptz(6)
+  /// The project's chat group (owner answer §10.4), opened with the lead in it.
+  groupId      String?       @unique @map("group_id") @db.Uuid
+  /// When the lead last saved it or said it is still current; a year later it is marked.
+  confirmedAt  DateTime      @default(now()) @map("confirmed_at") @db.Timestamptz(6)
+  /// When the lead was asked whether it is still current.
+  staleAskedAt DateTime?     @map("stale_asked_at") @db.Timestamptz(6)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  lead           User                          @relation("ProjectLead", fields: [leadId], references: [id], onDelete: Cascade)
+  group          Conversation?                 @relation("ProjectGroup", fields: [groupId], references: [id], onDelete: SetNull)
+  subspecialties ResearchProjectSubspecialty[]
+  requests       ResearchRequest[]
+
+  @@index([status, updatedAt(sort: Desc)])
+  @@index([leadId])
+  @@map("research_projects")
+}
+
+model ResearchProjectSubspecialty {
+  projectId      String @map("project_id") @db.Uuid
+  subspecialtyId String @map("subspecialty_id") @db.Uuid
+
+  project      ResearchProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  subspecialty Subspecialty    @relation(fields: [subspecialtyId], references: [id], onDelete: Restrict)
+
+  @@id([projectId, subspecialtyId])
+  @@index([subspecialtyId])
+  @@map("research_project_subspecialties")
+}
+
+enum ResearchRequestState {
+  PENDING
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+  EXPIRED
+
+  @@map("research_request_state")
+}
+
+/// A request to join a project. Seen by its two people only; one open per pair (a partial
+/// unique index in the migration).
+model ResearchRequest {
+  id         String               @id @db.Uuid
+  projectId  String               @map("project_id") @db.Uuid
+  userId     String               @map("user_id") @db.Uuid
+  message    String               @db.VarChar(1000)
+  state      ResearchRequestState @default(PENDING)
+  createdAt  DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  answeredAt DateTime?            @map("answered_at") @db.Timestamptz(6)
+  closedAt   DateTime?            @map("closed_at") @db.Timestamptz(6)
+
+  project ResearchProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User            @relation("ResearchRequester", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, state])
+  @@index([userId, state])
+  @@index([state, createdAt])
+  @@map("research_requests")
+}
+
+/// Where a publication's details came from.
+enum PublicationSource {
+  MANUAL
+  PUBMED
+  ORCID
+
+  @@map("publication_source")
+}
+
+/// A publication on a person's profile (M27), saved by the person themselves. It shows with
+/// the visibility of their research interests.
+model Publication {
+  id        String            @id @db.Uuid
+  userId    String            @map("user_id") @db.Uuid
+  title     String            @db.VarChar(500)
+  authors   String            @default("") @db.VarChar(2000)
+  journal   String?           @db.VarChar(300)
+  year      Int?              @db.SmallInt
+  doi       String?           @db.VarChar(200)
+  pmid      String?           @db.VarChar(20)
+  url       String?           @db.VarChar(500)
+  topics    String[]          @default([])
+  source    PublicationSource @default(MANUAL)
+  hidden    Boolean           @default(false)
+  /// The person's own order, from 0.
+  position  Int               @default(0)
+  createdAt DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation("PublicationOwner", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, position])
+  @@map("publications")
 }

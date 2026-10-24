@@ -34,6 +34,8 @@ import { NewsModule } from './modules/news';
 import { NotificationsModule } from './modules/notifications';
 import { OrganisationsModule } from './modules/organisations';
 import { PositionsModule } from './modules/positions';
+import { PublicationsModule } from './modules/publications';
+import { ResearchModule } from './modules/research';
 import { ProfilesModule } from './modules/profiles';
 import { SearchModule } from './modules/search';
 import { VerificationModule } from './modules/verification';
@@ -88,6 +90,8 @@ export class AppModule {
         PositionsModule,
         MentorshipModule,
         CommunityModule,
+        ResearchModule,
+        PublicationsModule,
       ],
       providers: PIPELINE_PROVIDERS,
     };

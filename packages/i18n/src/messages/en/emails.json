@@ -277,5 +277,35 @@
     "heading": "You were mentioned",
     "body": "{name} mentioned you in “{title}”.",
     "action": "Open the post"
+  },
+  "researchRequested": {
+    "subject": "A request to join your project",
+    "heading": "Someone asks to join",
+    "body": "{name} asks to join your project “{title}”. You can accept or decline; if you decline, they are not told why.",
+    "action": "See the request"
+  },
+  "researchAccepted": {
+    "subject": "You were accepted into a project",
+    "heading": "Accepted",
+    "body": "{name} accepted you into the project “{title}”. Its group is open in Chat.",
+    "action": "Open the project"
+  },
+  "researchDeclined": {
+    "subject": "About your request to join a project",
+    "heading": "Not this time",
+    "body": "{name} can’t take you into “{title}” now.",
+    "action": "See other projects"
+  },
+  "researchExpired": {
+    "subject": "Your request to join a project was closed",
+    "heading": "No answer in 30 days",
+    "body": "Your request to join “{title}” was not answered within 30 days, so it was closed.",
+    "action": "See other projects"
+  },
+  "researchStale": {
+    "subject": "Is your project still current?",
+    "heading": "Is it still current?",
+    "body": "Your project “{title}” has not been updated for a year. Open it and save it to say it is still current, or end it.",
+    "action": "Open the project"
   }
 }

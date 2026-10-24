@@ -174,5 +174,10 @@
   "careers": {
     "open": "Jobs and mentoring",
     "links": "More in jobs and mentoring"
+  },
+  "research": {
+    "links": "More in research",
+    "publications": "My publications",
+    "publicationsHint": "Add your publications, and choose their order."
   }
 }

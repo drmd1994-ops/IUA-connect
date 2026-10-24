@@ -3,6 +3,7 @@ import enAuth from './messages/en/auth.json';
 import enCalculators from './messages/en/calculators.json';
 import enCareers from './messages/en/careers.json';
 import enCommunities from './messages/en/communities.json';
+import enResearch from './messages/en/research.json';
 import enChat from './messages/en/chat.json';
 import enCommon from './messages/en/common.json';
 import enContent from './messages/en/content.json';
@@ -25,6 +26,7 @@ import heAuth from './messages/he/auth.json';
 import heCalculators from './messages/he/calculators.json';
 import heCareers from './messages/he/careers.json';
 import heCommunities from './messages/he/communities.json';
+import heResearch from './messages/he/research.json';
 import heChat from './messages/he/chat.json';
 import heCommon from './messages/he/common.json';
 import heContent from './messages/he/content.json';
@@ -89,6 +91,8 @@ export type Messages = {
   careers: typeof heCareers;
   /** Professional communities (M25). */
   communities: typeof heCommunities;
+  /** Research projects and publications (M27). */
+  research: typeof heResearch;
 };
 
 const MESSAGES: Record<Locale, Messages> = {
@@ -115,6 +119,7 @@ const MESSAGES: Record<Locale, Messages> = {
     calculators: heCalculators,
     careers: heCareers,
     communities: heCommunities,
+    research: heResearch,
   },
   en: {
     common: enCommon,
@@ -139,6 +144,7 @@ const MESSAGES: Record<Locale, Messages> = {
     calculators: enCalculators,
     careers: enCareers,
     communities: enCommunities,
+    research: enResearch,
   },
 };
 

@@ -17,6 +17,7 @@ import { askForPasskey, passkeysSupported } from '@/session/passkey';
 import { PasskeysCard, passkeyMessage } from './passkeys';
 import { useFileUrl } from './files';
 import { useHospitals, useLocalName, useSubspecialties } from './reference';
+import { PublicationsCard } from './research';
 
 type Schemas = components['schemas'];
 type Profile = Schemas['ProfileDto'];
@@ -238,6 +239,7 @@ export function ProfileScreen() {
       {done && <Notice tone="success">{t('profile.saved')}</Notice>}
       <Button label={t('common.save')} pending={pending} onPress={() => void save()} />
       <DirectoryCard />
+      <PublicationsCard />
     </Screen>
   );
 }

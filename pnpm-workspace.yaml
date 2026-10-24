@@ -36,6 +36,9 @@ overrides:
   # ts-jest, the server's test runner; nothing of it runs in the product. Remove when ts-jest asks
   # for 4.7.10 or later itself.
   handlebars: '>=4.7.10 <5'
+  # Security fix (GHSA-xjj6-f33q-929c, undici <7.30.1, an error on excessive content encodings) for
+  # tools/importer > cheerio, the unused importer. Remove when cheerio asks for it itself.
+  'undici@>=7.18.0 <7.30.1': 7.30.1
   # Peers that pnpm auto-installs at the newest release, ignoring minimumReleaseAge.
   # Keep these in step with the versions the workspace declares.
   '@types/node': 24.13.6
@@ -65,7 +68,19 @@ trustPolicyExclude:
 #   version published. Reached only through expo > @expo/cli, the developer's command-line tool
 #   for the mobile app, which runs on the developer's computer and in CI. It is not part of the
 #   app that runs on a phone, nor of the API or the site. Accepted by the owner on 2026-10-05.
+# - GHSA-27r3-jxmh-p828 (body-parser <2.4.0) and GHSA-q7qp-rjg7-q26m (multer <2.5.0): requests
+#   that can slow the API down. Fixed versions came out on 2026-10-22, younger than the 7-day
+#   minimumReleaseAge. Accepted by the owner on 2026-10-24 until 2026-10-29, when both are
+#   updated and these two entries removed.
+# - GHSA-mrhx-c7xc-m3w5 (zod <4.6.6, oversized input can exhaust memory): the workspace's own zod
+#   is 4.6.6, but expo > @expo/cli uses zod 3.25.76, and no fixed 3.x exists. @expo/cli is the
+#   developer's command-line tool for the mobile app (on the developer's computer and in CI), not
+#   part of the app on a phone, the API or the site. Accepted by the owner on 2026-10-24; remove
+#   when Expo moves to a fixed zod.
 auditConfig:
   ignoreGhsas:
     - GHSA-vfj7-8cjw-p6xm
     - GHSA-86w9-cpqp-85rv
+    - GHSA-27r3-jxmh-p828
+    - GHSA-q7qp-rjg7-q26m
+    - GHSA-mrhx-c7xc-m3w5

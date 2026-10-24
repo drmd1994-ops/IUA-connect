@@ -46,6 +46,12 @@ export interface EmailTemplates {
   communityComment: { name: string; title: string; link: string };
   communityReply: { name: string; title: string; link: string };
   communityMention: { name: string; title: string; link: string };
+  // Research (M27). name is the other person's; title the project's.
+  researchRequested: { name: string; title: string; link: string };
+  researchAccepted: { name: string; title: string; link: string };
+  researchDeclined: { name: string; title: string; link: string };
+  researchExpired: { name: string; title: string; link: string };
+  researchStale: { name: string; title: string; link: string };
   // Events (M5), to people registered for the event. "when" is formatted for the recipient.
   eventRegistered: { title: string; when: string; link: string };
   eventWaitlisted: { title: string; link: string };

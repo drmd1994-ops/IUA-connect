@@ -29,6 +29,13 @@ describe('where a notice leads', () => {
     expect(appRoute('/communities/andrology/po-1')).toBe('/communities/andrology/po-1');
   });
 
+  it('opens research projects and requests inside the app (M27)', () => {
+    expect(appRoute('/research')).toBe('/research');
+    expect(appRoute('/research/requests')).toBe('/research/requests');
+    expect(appRoute('/research/rp-1')).toBe('/research/rp-1');
+    expect(appRoute('/research/rp-1/edit')).toBeNull();
+  });
+
   it('leads nowhere for what the app does not have', () => {
     expect(appRoute(null)).toBeNull();
     expect(appRoute('/admin/news')).toBeNull();

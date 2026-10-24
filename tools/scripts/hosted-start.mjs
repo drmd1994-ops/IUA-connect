@@ -56,10 +56,10 @@ async function main() {
   } else {
     ok('demo data present; not seeded again');
     // The reference layer brings new roles and permissions; the others add what a later
-    // milestone brought, once (M23 questions, M28 positions and mentors, M25 communities).
+    // milestone brought, once (M23 questions, M28 positions and mentors, M25 communities, M27 research).
     step('Adding what newer versions brought, if missing');
     pnpm(['--filter', '@medconnect/api', 'db:seed'], {
-      env: { SEED_LAYERS: 'reference,question-bank,careers,communities' },
+      env: { SEED_LAYERS: 'reference,question-bank,careers,communities,research' },
     });
   }
 

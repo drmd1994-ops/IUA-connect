@@ -209,6 +209,19 @@ Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, a
 | Second window: on an off-topic comment, **הסרה** with a reason.                                             | "הוסר על ידי מנהל/ת הקהילה" and the reason, in its place.                                            | "Each community has its own moderators; what they remove leaves a note, and the audit log has who and why." |
 | **צ׳אט**.                                                                                                   | Private conversations and groups only.                                                               | "Rooms became communities."                                                                                 |
 
+### 13. Research (3 minutes, optional; added in M27)
+
+Two windows: `member.resident@demo.test` (Yoav Sela, a resident) in the first, and in a private window `mentor.hila@demo.test` (Dr. Hila Shapira, a fictional specialist who leads the paediatric teaching study). Every project and publication in the demo is made up and says so.
+
+| Do                                                                                   | The audience sees                                                                            | Say                                                                                                              |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| First window: **מחקר**.                                                              | Six sample projects, with what each looks for: centres, a statistician, residents, students. | "Studies that look for collaborators. A project holds no data about participants."                               |
+| Filter by **מחפשים: מתמחים**; open the paediatric teaching project.                  | Its type, status, lead and the ethics approval "לפי הצהרת החוקר/ת הראשי/ת".                  | "The ethics approval is shown as the lead declares it. The platform doesn't check it."                           |
+| **בקשה להצטרף**, with a short message.                                               | "הבקשה נשלחה".                                                                               | "Five requests may wait at a time; one not answered in 30 days closes by itself."                                |
+| Second window: **מחקר → בקשות**.                                                     | Yoav's request, with his message.                                                            | "Asking shares a name, the student or resident mark, the hospital and the message, nothing else."                |
+| **קבלה**, then open the project → **לפתיחת הקבוצה של הפרויקט**.                      | The project's group, in Chat.                                                                | "Accepting adds them to the project's group."                                                                    |
+| First window: **הפרופיל שלי → פרסומים → מילוי מ־PubMed**, and type a real PubMed ID. | The title, authors, journal and year, filled in; nothing saved until **שמירה**.              | "Only the number is sent to PubMed. ORCID works the same way. Here we cancel: the demo keeps to made-up papers." |
+
 ## The 5-minute version
 
 1. **Visitor:** home page in Hebrew, switch to English and back; search **בכנס** (step 1, first and last rows).
