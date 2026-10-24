@@ -117,14 +117,30 @@ function nextDay(date: string): string {
 /** The instant a date starts in Israel. */
 export function israelMidnight(date: string): Date {
   const utc = new Date(`${date}T00:00:00.000Z`);
-  // What the clock in Israel shows at that UTC instant tells the offset for that day.
+  // The offset is read again at the first guess: on the days the clocks change, the offset at
+  // midnight UTC is not the one at midnight in Israel.
+  const guess = new Date(utc.getTime() - israelOffsetMinutes(utc) * 60_000);
+  return new Date(utc.getTime() - israelOffsetMinutes(guess) * 60_000);
+}
+
+/** How far Israel's clock is ahead of UTC at an instant, in minutes. */
+function israelOffsetMinutes(instant: Date): number {
   const parts = new Intl.DateTimeFormat('en-GB', {
     timeZone: ISRAEL,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
-  }).formatToParts(utc);
-  const hours = Number(parts.find((part) => part.type === 'hour')!.value);
-  const minutes = Number(parts.find((part) => part.type === 'minute')!.value);
-  return new Date(utc.getTime() - (hours * 60 + minutes) * 60_000);
+  }).formatToParts(instant);
+  const part = (type: string) => Number(parts.find((p) => p.type === type)!.value);
+  const shown = Date.UTC(
+    part('year'),
+    part('month') - 1,
+    part('day'),
+    part('hour'),
+    part('minute'),
+  );
+  return Math.round((shown - instant.getTime()) / 60_000);
 }
