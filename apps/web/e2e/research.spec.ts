@@ -56,10 +56,14 @@ test('a physician lists a project; a resident asks to join and is accepted', asy
 
   const resident = await memberPage(browser, RESIDENT);
   await resident.goto('/en/research');
-  await resident.getByRole('searchbox', { name: 'Search' }).fill(title);
-  await resident.getByRole('button', { name: 'Search', exact: true }).click();
+  // The page's own search, once it is drawn: the header has a search box and button too.
+  const main = resident.locator('#main');
+  await expect(main.getByRole('heading', { name: 'Research projects' })).toBeVisible();
+  await main.getByRole('searchbox', { name: 'Search', exact: true }).fill(title);
+  await main.getByRole('button', { name: 'Search', exact: true }).click();
+  await expect(main.getByTestId('projects-list').getByRole('listitem')).toHaveCount(1);
   await expectAccessible(resident);
-  await resident.getByRole('link', { name: title }).click();
+  await main.getByRole('link', { name: title }).click();
   await resident.getByRole('button', { name: 'Ask to join' }).click();
   await resident
     .getByLabel('Your message to the lead')
