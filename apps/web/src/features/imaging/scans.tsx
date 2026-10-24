@@ -160,13 +160,23 @@ export function ScanPicker({
               className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-3"
             >
               <ScanSummary scan={scan} />
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => onChange(scans.filter((s) => s.id !== scan.id))}
-              >
-                {t('remove', { number: index + 1 })}
-              </Button>
+              <span className="flex flex-wrap items-center gap-3">
+                {/* For the writer and the reviewer to look at it before it is published. */}
+                <Link
+                  href={`/scans/${scan.id}`}
+                  target="_blank"
+                  className="font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  {scans.length > 1 ? t('viewNumber', { number: index + 1 }) : t('view')}
+                </Link>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => onChange(scans.filter((s) => s.id !== scan.id))}
+                >
+                  {t('remove', { number: index + 1 })}
+                </Button>
+              </span>
             </li>
           ))}
         </ul>

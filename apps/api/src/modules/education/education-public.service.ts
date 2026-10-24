@@ -38,13 +38,18 @@ export class EducationPublicService implements OnModuleInit {
 
   /**
    * An item's cover, files and scans are readable by whoever may read the item. Library editors
-   * read an item's scans before it is published, as they read the rest of it.
+   * and reviewers read an item's scans before it is published, as they read the rest of it.
    */
   onModuleInit(): void {
     this.imaging.registerReadRule({
       canRead: async (place, principal) => {
         if (!place.educationItemId) return null;
-        if (principal?.permissions.has('education.manage')) return true;
+        if (
+          principal?.permissions.has('education.manage') ||
+          principal?.permissions.has('education.review')
+        ) {
+          return true;
+        }
         const item = await this.prisma.educationItem.findFirst({
           where: { id: place.educationItemId, status: { in: ['PUBLISHED', 'ARCHIVED'] } },
           select: { id: true, accessTier: true },
