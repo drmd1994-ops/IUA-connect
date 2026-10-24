@@ -299,3 +299,13 @@ Three migrations, additions only, except that two check constraints are replaced
 - **`journal_club_history`**: every review step, append-only (like `news_history`).
 - **`notification_kind`** gained `JOURNAL_CLUB`, in a migration of its own; it is a kind of new content, so its emails go in the daily summary.
 - Two migrations (`20261024120000`, `20261024120100`), additions only.
+
+## 15. Case discussions (M26)
+
+- **`cases`** (`ClinicalCase`): a case in a fixed form: the author, the subspecialty, a title, an age range (`case_age_range`, never an age), sex, the history and optional examination, laboratory results, imaging, pathology and what was done, and the question. No column for a date, a place or an institution. The state (`DRAFT`, `IN_REVIEW`, `RETURNED`, `PUBLISHED`, `HIDDEN`, `REMOVED`), who reviewed it, when and the reason, when it was published, its discussion post (`post_id`, unique), and `week_at` (the latest is the case of the week).
+- **`case_files`**: its pictures, stored files with the new purpose `CASE`, readable only by those who can read the case.
+- **`case_poll_options`** (1 to 4, by a check) and **`case_votes`** (one per person and case, changeable; totals only).
+- **`case_reports`**: a report hides the case; it waits in the cases review queue until closed (owner answer §10.6).
+- **`case_history`**: every step, append-only.
+- **`notification_kind`** gained `CASES`, and **`file_purpose`** gained `CASE`, in a migration of their own.
+- Two migrations (`20261024150000`, `20261024150100`), additions only.
