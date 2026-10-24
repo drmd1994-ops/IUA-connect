@@ -103,6 +103,16 @@ const clinicalCase: S['CaseDto'] = {
   pathology: null,
   management: null,
   fileIds: [],
+  scans: [
+    {
+      id: 'sc-1',
+      modalities: 'CT',
+      seriesCount: 1,
+      instanceCount: 24,
+      sizeBytes: 3_167_856,
+      createdAt: '2026-10-20T09:00:00.000Z',
+    },
+  ],
   poll: {
     options: [
       { id: 'o-1', text: 'Watch and wait' },
@@ -580,6 +590,7 @@ const families: Record<string, Answer> = {
     externalUrl: 'https://www.youtube.com/watch?v=sample',
     videoStatus: 'EXTERNAL',
     files: [],
+    scans: [],
     references: [],
     lessons: [],
   } satisfies S['PublicEducationDto'],
@@ -1087,6 +1098,11 @@ export const everything: Record<string, Answer> = {
     ],
   } satisfies S['MyCasesDto'],
   'GET /api/v1/cases/*': clinicalCase,
+  'GET /api/v1/imaging/scans/*': {
+    configUrl: '/api/v1/imaging/v/sc-1.1792863423.made-up-signature/config.json',
+    studyUid: '2.25.8559573954415404216786523068524279086',
+    expiresAt: '2026-10-24T17:00:00.000Z',
+  } satisfies S['ScanViewerDto'],
   'PUT /api/v1/cases/*': {
     ...clinicalCase.poll!,
     mine: 'o-1',

@@ -20,6 +20,7 @@ import {
   stateAfterNext,
 } from './exam-model';
 import { useFileUrl } from './files';
+import { ScanList } from './imaging';
 import { AnswerSources, BookmarkButton, ReportQuestion } from './question-bank';
 import { useLocalName, useSubspecialties } from './reference';
 import { useGuest } from './visitor';
@@ -349,6 +350,12 @@ export function EducationItem({ slug }: { slug: string }) {
           {item.files.map((file) => (
             <FileLink key={file.id} file={file} />
           ))}
+        </View>
+      )}
+      {item.scans.length > 0 && (
+        <View style={styles.section}>
+          <Heading>{t('education.item.scans')}</Heading>
+          <ScanList scans={item.scans} />
         </View>
       )}
       {item.references.length > 0 && (
