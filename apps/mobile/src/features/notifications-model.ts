@@ -46,6 +46,12 @@ export function appRoute(link: string | null): string | null {
       ? `/communities/${community[1]}/${community[2]}`
       : `/communities/${community[1]}`;
   }
+  // Research (M27): the app has the same addresses.
+  if (['/research', '/research/mine', '/research/requests', '/research/new'].includes(path)) {
+    return path;
+  }
+  const project = /^\/research\/([^/]+)$/.exec(path);
+  if (project) return `/research/${project[1]}`;
   const position = /^\/positions\/([^/]+)$/.exec(path);
   if (position) return `/positions/${position[1]}`;
   const news = /^\/news\/([^/]+)$/.exec(path);

@@ -40,6 +40,46 @@ const organisation = {
 };
 const hospital = { id: 'h-1', nameHe: 'בית חולים לדוגמה', nameEn: 'Sample Hospital' };
 
+/** A fictional research project and publication (M27). */
+const projectSummary: Omit<S['ProjectListDto']['items'][number], 'excerpt'> = {
+  id: 'rp-1',
+  title: 'A sample registry of clinic waiting times',
+  studyType: 'REGISTRY',
+  status: 'RECRUITING',
+  ethics: 'APPROVED',
+  needs: ['CENTRES', 'STATISTICIAN'],
+  subspecialties: [subspecialty],
+  lead: { id: 'u-lead', firstName: 'Yonatan', lastName: 'Barak', mark: null, hospital },
+  open: true,
+  ended: false,
+  stale: false,
+  updatedAt: '2026-10-01T10:00:00.000Z',
+};
+const project: S['ProjectDto'] = {
+  ...projectSummary,
+  description: 'How long people wait for a first visit. A fictional sample project.',
+  funding: null,
+  contact: 'Write through the platform',
+  mine: false,
+  myRequest: null,
+  groupId: null,
+  members: 2,
+  createdAt: '2026-09-01T10:00:00.000Z',
+};
+const publication: S['PublicationDto'] = {
+  id: 'pub-1',
+  title: 'A fictional review of clinic waiting times',
+  authors: 'Fictional authors',
+  journal: 'Sample Journal of Urology',
+  year: 2024,
+  doi: '10.0000/sample.1',
+  pmid: null,
+  url: null,
+  topics: ['health services'],
+  source: 'MANUAL',
+  hidden: false,
+};
+
 /** A fictional position at the sample hospital (M28). */
 const positionSummary: S['PositionListDto']['items'][number] = {
   id: 'p-1',
@@ -956,6 +996,75 @@ export const everything: Record<string, Answer> = {
     banned: null,
     archived: false,
   } satisfies S['CommunityDto'],
+  // Research projects and publications (M27).
+  'GET /api/v1/research/projects': {
+    items: [{ ...projectSummary, excerpt: 'How long people wait for a first visit.' }],
+    page: 1,
+    pageSize: 20,
+    total: 1,
+  } satisfies S['ProjectListDto'],
+  'GET /api/v1/research/projects/*': project,
+  'POST /api/v1/research/projects/*': {},
+  'GET /api/v1/research/requests': {
+    items: [
+      {
+        id: 'rr-1',
+        role: 'lead',
+        project: { id: 'rp-1', title: projectSummary.title },
+        other: {
+          id: 'u-yoav',
+          firstName: 'Yoav',
+          lastName: 'Sela',
+          mark: 'RESIDENT',
+          hospital,
+        },
+        state: 'PENDING',
+        message: 'I would like to take part.',
+        createdAt: '2026-10-20T10:00:00.000Z',
+        answeredAt: null,
+      },
+      {
+        id: 'rr-2',
+        role: 'asker',
+        project: { id: 'rp-2', title: 'Another sample study' },
+        other: projectSummary.lead,
+        state: 'ACCEPTED',
+        message: 'I can help with the analysis.',
+        createdAt: '2026-10-10T10:00:00.000Z',
+        answeredAt: '2026-10-11T10:00:00.000Z',
+      },
+    ],
+  } satisfies S['ResearchRequestListDto'],
+  'POST /api/v1/research/requests/*': {},
+  'GET /api/v1/me/publications': { items: [publication] } satisfies S['PublicationListDto'],
+  'GET /api/v1/me/publications/orcid': {
+    source: 'ORCID',
+    items: [
+      {
+        title: publication.title,
+        authors: publication.authors,
+        journal: publication.journal,
+        year: publication.year,
+        doi: publication.doi,
+        pmid: null,
+        url: null,
+        saved: true,
+      },
+      {
+        title: 'A second sample paper',
+        authors: 'Fictional authors',
+        journal: null,
+        year: 2022,
+        doi: '10.0000/sample.2',
+        pmid: null,
+        url: null,
+        saved: false,
+      },
+    ],
+  } satisfies S['PublicationDraftListDto'],
+  'GET /api/v1/members/u-dana/publications': {
+    items: [publication],
+  } satisfies S['PublicationListDto'],
   'GET /api/v1/communities/andrology/posts': {
     items: [postSummary],
     page: 1,

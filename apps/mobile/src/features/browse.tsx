@@ -13,6 +13,7 @@ import { Choices, Tag } from '@/ui/parts';
 import { useFileUrl } from './files';
 import { appRoute } from './notifications-model';
 import { useHospitals, useLocalName, useSubspecialties } from './reference';
+import { MemberPublications } from './research';
 import { PersonMark } from './verification';
 
 type Schemas = components['schemas'];
@@ -530,6 +531,7 @@ export function MemberPage({ id }: { id: string }) {
           <Body>{member.researchInterests}</Body>
         </>
       )}
+      <MemberPublications userId={member.id} />
       {member.contactEmail && (
         <Button
           label={`${t('contactEmail')}: ${member.contactEmail}`}

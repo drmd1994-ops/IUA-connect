@@ -25,6 +25,13 @@ import {
   PostScreen,
   WritePostScreen,
 } from '@/features/communities';
+import {
+  ProjectFormScreen,
+  ProjectScreen,
+  ProjectsScreen,
+  PublicationsScreen,
+  ResearchRequestsScreen,
+} from '@/features/research';
 import { MembershipCard } from '@/features/card';
 import { EducationItem, EducationList, ExamPractice, ExamResults } from '@/features/education';
 import { EventList, EventPage, MySchedule } from '@/features/events';
@@ -120,6 +127,13 @@ const screens: [name: string, screen: ReactElement, guest?: boolean][] = [
   ['a community', <CommunityScreen key="s" slug="andrology" />],
   ['writing a post', <WritePostScreen key="s" slug="andrology" />],
   ['a post', <PostScreen key="s" id="po-1" />],
+  ['research projects', <ProjectsScreen key="s" />],
+  ['my research projects', <ProjectsScreen key="s" mine />],
+  ['a research project', <ProjectScreen key="s" id="rp-1" />],
+  ['listing a project', <ProjectFormScreen key="s" />],
+  ['editing a project', <ProjectFormScreen key="s" id="rp-1" />],
+  ['research requests', <ResearchRequestsScreen key="s" />],
+  ['my publications', <PublicationsScreen key="s" />],
 ];
 
 describe.each(['en', 'he'] as const)('every screen, in %s', (locale) => {
