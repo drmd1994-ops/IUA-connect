@@ -30,5 +30,8 @@ export function fromIsraelLocal(local: string): Date | null {
     const shown = new Date(`${toIsraelLocal(new Date(guess))}:00.000Z`).getTime();
     guess -= shown - asUtc.getTime();
   }
+  // When summer time ends, the hour from 01:00 happens twice; the first one is meant.
+  const hourEarlier = guess - 3_600_000;
+  if (toIsraelLocal(new Date(hourEarlier)) === local) return new Date(hourEarlier);
   return new Date(guess);
 }

@@ -19,4 +19,18 @@ describe('Israel time', () => {
     expect(fromIsraelLocal('')).toBeNull();
     expect(fromIsraelLocal('tomorrow')).toBeNull();
   });
+
+  it('takes the first of the hour that happens twice when summer time ends', () => {
+    // 25 October 2026: at 02:00 summer time the clock goes back to 01:00.
+    expect(fromIsraelLocal('2026-10-25T01:15')?.toISOString()).toBe('2026-10-24T22:15:00.000Z');
+    expect(fromIsraelLocal('2026-10-25T00:30')?.toISOString()).toBe('2026-10-24T21:30:00.000Z');
+    expect(fromIsraelLocal('2026-10-25T02:30')?.toISOString()).toBe('2026-10-25T00:30:00.000Z');
+  });
+
+  it('round-trips every minute of the night the clocks go back', () => {
+    for (let t = Date.UTC(2026, 9, 24, 20); t < Date.UTC(2026, 9, 25, 2); t += 60_000) {
+      const local = toIsraelLocal(new Date(t));
+      expect(toIsraelLocal(fromIsraelLocal(local)!)).toBe(local);
+    }
+  });
 });
