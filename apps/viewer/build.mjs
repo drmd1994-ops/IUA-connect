@@ -89,6 +89,7 @@ function build() {
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1',
     },
   });
+  fixProbe();
   pnpm(['--filter', '@ohif/app', 'run', 'build:viewer'], {
     env: {
       APP_CONFIG: 'config/medconnect.js',
@@ -175,4 +176,27 @@ function licenceText(dir) {
   if (!existsSync(dir)) return null;
   const file = readdirSync(dir).find((f) => /^(licen[cs]e|copying)(\.|$)/i.test(f));
   return file ? readFileSync(path.join(dir, file), 'utf8').trim() : null;
+}
+
+/**
+ * The point tool ("Probe") showed no value on a stack of images: it read the pixel at the stack's
+ * slice number (say 60) inside the image on screen, which holds that one slice only, so it found
+ * nothing and drew no text. Where the image has one slice, read that slice. Cornerstone's
+ * installed code is changed in place (it is not in OHIF's own source, which the patches change);
+ * the build stops if the line is no longer there, so a new version is looked at again.
+ */
+function fixProbe() {
+  const file = path.join(
+    work,
+    'node_modules/@cornerstonejs/tools/dist/esm/tools/annotation/ProbeTool.js',
+  );
+  const before = 'value = voxelManager?.getAtIJKPoint(ijk);';
+  const after =
+    'value = voxelManager?.getAtIJKPoint(dimensions?.[2] === 1 ? [ijk[0], ijk[1], 0] : ijk);';
+  const code = readFileSync(file, 'utf8');
+  if (code.includes(after)) return;
+  if (code.split(before).length !== 3) {
+    throw new Error('ProbeTool.js changed: look at the Probe value fix in build.mjs again');
+  }
+  writeFileSync(file, code.replaceAll(before, after));
 }
