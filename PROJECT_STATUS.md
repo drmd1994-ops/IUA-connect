@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M27, M31 and M26 merged, on the hosted demo and in new .apks; M36 medical imaging built)_
+_Last updated: 2026-10-24 (M27, M31 and M26 merged, on the hosted demo and in new .apks; M36 medical imaging merged, on the hosted demo and in a new .apk)_
 
 ## Summary
 
@@ -1584,7 +1584,7 @@ GitHub's checks passed on the pull request and on main; merged, deployed to the 
 1. Review and approve the three made-up cases (as `admin@demo.test` or a moderator, **מקרים → בדיקה**), and choose a case of the week.
 2. Read the Hebrew texts.
 
-## M36 Medical imaging (built 2026-10-24, waiting for its pull request)
+## M36 Medical imaging (merged 2026-10-24, pull request #41; on the hosted demo and in the .apk of the same day)
 
 Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026-10-24 ("open a new milestone called medical imaging"), with the OHIF Viewer cloned to `DesktopOHIF Viewer` and its licence read. The owner answered its questions (scans in cases and library items; the full OHIF viewer; in the app as part of it; public demo scans, each approved; every verified physician uploads) and approved the plan, its libraries and a 200 MB limit per scan.
 
@@ -1624,7 +1624,6 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 
 **Not verified**
 
-- GitHub's checks, the hosted demo and a new .apk: they wait for the pull request and the owner's word.
 - The viewer inside the app on a real phone (the screen tests draw it without a phone).
 - The library editor's scan picker in a browser test: the local sign-in limit stopped the library tests on this computer after many runs; GitHub's run decides.
 
@@ -1644,7 +1643,10 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 
 1. **Review the three teaching scans** in the library's review queue (as `admin@demo.test`), and publish them if they are fit.
 2. Read the Hebrew texts, including the viewer's.
-3. Say when to merge it, deploy it and build a new .apk.
+
+GitHub's checks passed on the pull request and on main; merged, deployed to the hosted demo (its checks passed; the viewer and its notices are served) and built into the .apk `demo-apk-2026-10-24-m36` on the owner's word ("Merge it, deploy it and build a new version").
+
+**Fixed after deploying (pull request #43, 2026-10-25):** the library editor listed an item's scans without a way to open them, so the owner could not look at the teaching scans before publishing. Each now has "View the scan", and library reviewers may read an unpublished item's scans. Deployed on the owner's word ("deploy the fix"); the owner opened the scans in the viewer on the hosted demo and confirmed it works.
 
 ## Next step
 
@@ -1662,6 +1664,6 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
-**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk. **M26 (case discussions)** was merged on 2026-10-24 (pull request #39) and is on the hosted demo, with a new .apk. **M36 (medical imaging)** is built (2026-10-24), as a demo feature.
+**M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk. **M26 (case discussions)** was merged on 2026-10-24 (pull request #39) and is on the hosted demo, with a new .apk. **M36 (medical imaging)** was merged on 2026-10-24 (pull request #41) and is on the hosted demo, with a new .apk; its three teaching scans wait for the owner's review.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
