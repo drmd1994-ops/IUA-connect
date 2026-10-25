@@ -1,4 +1,6 @@
-questions
+# Only the private questions/ folder at the root: without the leading slash this also left out
+# the site's exam-questions pages (apps/web/src/app/[locale]/admin/education/questions).
+/questions
 .env
 .env.*
 apps/web/public/viewer
