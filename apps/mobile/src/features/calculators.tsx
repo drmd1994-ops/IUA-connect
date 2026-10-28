@@ -203,7 +203,7 @@ function Form({ calculator }: { calculator: Calculator }) {
           <Button
             label={reference.doi ? `doi:${reference.doi}` : href}
             variant="link"
-            onPress={() => void Linking.openURL(href)}
+            onPress={() => void Linking.openURL(href).catch(() => undefined)}
           />
         )}
         {version && <Body>{t('about.version', { version })}</Body>}
