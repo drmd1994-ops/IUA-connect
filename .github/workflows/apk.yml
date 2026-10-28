@@ -28,12 +28,18 @@ jobs:
       EXPO_PUBLIC_WEB_URL: ${{ vars.DEMO_WEB_URL }}
       EXPO_NO_TELEMETRY: 1
     steps:
-      - name: The server's address is set
+      # Both are needed (without the site's address the scan viewer would open the emulator's
+      # address), and both are https: an Android release refuses plain http anyway.
+      - name: The server's and the site's addresses are set
         run: |
-          if [ -z "$EXPO_PUBLIC_API_URL" ]; then
-            echo "::error::Set the repository variable DEMO_API_URL to the demo server's address."
-            exit 1
-          fi
+          case "$EXPO_PUBLIC_API_URL" in https://*) ;; *)
+            echo "::error::Set the repository variable DEMO_API_URL to the demo server's https address."
+            exit 1;;
+          esac
+          case "$EXPO_PUBLIC_WEB_URL" in https://*) ;; *)
+            echo "::error::Set the repository variable DEMO_WEB_URL to the demo site's https address."
+            exit 1;;
+          esac
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0

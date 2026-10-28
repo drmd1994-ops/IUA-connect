@@ -9,7 +9,7 @@ import { useLocale, useTranslations } from 'use-intl';
 import { WEB_URL } from '@/config';
 import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Notice, Screen, Title } from '@/ui/kit';
-import { isSiteAddress, viewerAddress } from './imaging-model';
+import { isSiteAddress, opensOutside, viewerAddress } from './imaging-model';
 
 type Scan = components['schemas']['ScanDto'];
 type ViewerLink = components['schemas']['ScanViewerDto'];
@@ -91,7 +91,7 @@ export function ScanViewerScreen({ id }: { id: string }) {
         setSupportMultipleWindows={false}
         onShouldStartLoadWithRequest={(request) => {
           if (isSiteAddress(WEB_URL, request.url)) return true;
-          void Linking.openURL(request.url);
+          if (opensOutside(request.url)) void Linking.openURL(request.url).catch(() => undefined);
           return false;
         }}
         onError={() => setFailed(true)}

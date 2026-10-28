@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isSiteAddress, viewerAddress } from './imaging-model';
+import { isSiteAddress, opensOutside, viewerAddress } from './imaging-model';
 
 describe('the scan viewer’s address (M36)', () => {
   const link = { configUrl: '/api/v1/imaging/v/s.1.x/config.json', studyUid: '2.25.1' };
@@ -19,5 +19,13 @@ describe('the scan viewer’s address (M36)', () => {
     expect(isSiteAddress('https://web.example', 'https://web.example/viewer/x')).toBe(true);
     expect(isSiteAddress('https://web.example', 'https://ohif.org/')).toBe(false);
     expect(isSiteAddress('https://web.example', 'not an address')).toBe(false);
+  });
+
+  it('opens only web pages and email outside the app', () => {
+    expect(opensOutside('https://doi.org/10.1/x')).toBe(true);
+    expect(opensOutside('mailto:someone@example.org')).toBe(true);
+    expect(opensOutside('about:blank')).toBe(false);
+    expect(opensOutside('intent://scan#Intent;end')).toBe(false);
+    expect(opensOutside('javascript:alert(1)')).toBe(false);
   });
 });

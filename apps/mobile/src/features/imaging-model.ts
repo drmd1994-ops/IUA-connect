@@ -23,3 +23,12 @@ export function isSiteAddress(webUrl: string, address: string): boolean {
     return false;
   }
 }
+
+/**
+ * Whether an address the viewer tries to go to, outside the site, may open in the phone's
+ * browser: a web page or an email only. Anything else (about:blank, another app's link) is
+ * refused without opening anything.
+ */
+export function opensOutside(address: string): boolean {
+  return /^(https?:\/\/|mailto:)/i.test(address);
+}
