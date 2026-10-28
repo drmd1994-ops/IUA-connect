@@ -25,6 +25,7 @@
       "expo-router",
       "./plugins/with-release-signing",
       "./plugins/with-app-links",
+      "./plugins/with-secure-screen",
       "expo-secure-store",
       "expo-localization",
       [
