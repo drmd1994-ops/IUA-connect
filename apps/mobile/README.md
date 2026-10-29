@@ -50,7 +50,7 @@ The program is Microsoft's dev tunnels (`devtunnel.exe`, kept in `%LOCALAPPDATA%
 
    It prints two addresses, one ending in `-4000…` (the server) and one in `-8081…` (the app's own server). They change each time.
 
-3. Put the first in `apps/mobile/.env` as `EXPO_PUBLIC_API_URL`.
+3. Put the first in `apps/mobile/.env` as `EXPO_PUBLIC_API_URL`, with `EXPO_PUBLIC_USE_RN_FETCH=1` (see `.env.example`: without it, sending a file from the phone fails).
 4. Start the app's own server with the second, in `cmd`:
 
    ```

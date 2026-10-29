@@ -26,6 +26,10 @@ jobs:
       # the code: whoever has the server's address can reach the demo while its tunnel runs.
       EXPO_PUBLIC_API_URL: ${{ vars.DEMO_API_URL }}
       EXPO_PUBLIC_WEB_URL: ${{ vars.DEMO_WEB_URL }}
+      # Requests go through React Native's own fetch, which sends a picked file from the phone's
+      # storage (chat, profile photo, case, verification); Expo's fetch, the default since SDK 57,
+      # refuses such a file before sending it. The chat's live events use Expo's fetch by name.
+      EXPO_PUBLIC_USE_RN_FETCH: 1
       EXPO_NO_TELEMETRY: 1
     steps:
       # Both are needed (without the site's address the scan viewer would open the emulator's
