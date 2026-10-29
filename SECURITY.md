@@ -26,6 +26,7 @@ Please report suspected vulnerabilities privately to the repository owner (GitHu
 - **Accepted audit exceptions (2026-10-24, by the owner):**
   - `GHSA-27r3-jxmh-p828` (body-parser) and `GHSA-q7qp-rjg7-q26m` (multer), accepted until 2026-10-29: updated that day to body-parser 2.4.0 and multer 2.5.0 (overrides), and the exceptions removed.
   - `GHSA-mrhx-c7xc-m3w5` (zod): the project's own zod is updated to 4.6.6. The Expo developer tool uses zod 3, for which no fix exists, and it is not part of the phone app, the API or the site. Remove when Expo moves to a fixed zod.
+  - `GHSA-qr28-fpjm-wq7f` (decode-uri-component, accepted by the owner on 2026-10-29): in the phone app's router (expo-router > query-string 7). A crafted link the person opens can slow the app; nothing is read or changed. The fixed version is an ES module that query-string 7 cannot load. Remove when expo-router uses a fixed version.
   - Fixed the same day: undici 7.30.1 (`GHSA-xjj6-f33q-929c`), pinned for the unused importer tool.
 - Supply chain: pnpm refuses packages published less than 7 days ago, non-registry transitive sources and publisher-trust downgrades.
 
