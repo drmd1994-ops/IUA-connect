@@ -8,6 +8,7 @@
   "businessRule": "This action can't be completed in the current state.",
   "rateLimited": "Too many attempts. Please try again in a few minutes.",
   "internal": "Something went wrong. Please try again.",
+  "reason": "Details: {reason}",
   "serviceUnavailable": "The service is unavailable right now. Please try again later.",
   "auth": {
     "invalidCredentials": "The email or password is incorrect.",
