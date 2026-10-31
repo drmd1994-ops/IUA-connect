@@ -2,7 +2,7 @@ import { ApiError, type components } from '@medconnect/api-client';
 import { colors, semantic } from '@medconnect/ui-tokens';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFormatter, useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
@@ -12,8 +12,10 @@ import { Body, Button, Card, Heading, Notice, Screen, Title, Toggle } from '@/ui
 import { Markdown } from '@/ui/markdown';
 import { Choices, FileLink, Picture, Tag } from '@/ui/parts';
 import { groupByDay, mapUrl, registrationPanel, toggleSession, writeRange } from './events-model';
+import { NowAndNext } from './events-live';
 import { useFileUrl } from './files';
 import { useSaveCalendar } from './scan';
+import { type ReminderSession, askForReminders, syncReminders } from './session-reminders';
 import { useGuest } from './visitor';
 
 type Schemas = components['schemas'];
@@ -239,8 +241,45 @@ function CalendarButton({ label, path, title }: { label: string; path: string; t
 }
 
 /** One event: when and where, its text, registration, and the programme. */
+/** Makes the phone's own reminders match the person's schedule (M32). */
+function flatten(items: Schedule): ReminderSession[] {
+  return items
+    .filter((event) => !event.cancelled && event.status === 'REGISTERED')
+    .flatMap((event) =>
+      event.sessions.map(({ id, title, room, startAt }) => ({ id, title, room, startAt })),
+    );
+}
+
+function useSyncReminders() {
+  const t = useTranslations('events.live');
+  return useCallback(
+    (sessions: readonly ReminderSession[]) =>
+      syncReminders(sessions, {
+        channel: t('reminderChannel'),
+        title: t('reminderTitle'),
+        body: (session) =>
+          session.room ? `${session.title} · ${t('room', { room: session.room })}` : session.title,
+      }),
+    [t],
+  );
+}
+
+/** Once on opening: reminders stay right after the schedule changed elsewhere, on the site. */
+export function ReminderKeeper() {
+  const locale = useLocale();
+  const { request } = useSession();
+  const sync = useSyncReminders();
+  useEffect(() => {
+    request<{ items: Schedule }>(`/api/v1/me/schedule?locale=${locale}`)
+      .then((result) => sync(flatten(result.items)))
+      // A reminder is not worth an error message; the notice in the app still comes.
+      .catch(() => undefined);
+  }, [request, locale, sync]);
+  return null;
+}
+
 export function EventPage({ slug }: { slug: string }) {
-  const { guest } = useGuest();
+  const { guest, conference } = useGuest();
   const all = useTranslations();
   const t = useTranslations();
   const locale = useLocale();
@@ -317,12 +356,22 @@ export function EventPage({ slug }: { slug: string }) {
   return (
     <Screen>
       {back}
+      {(!guest || conference) && (
+        <NowAndNext
+          slug={slug}
+          event={found.event}
+          sessions={found.sessions}
+          chosen={found.registration.sessionIds}
+        />
+      )}
       <EventView event={found.event} />
-      <RegistrationCard
-        event={found.event}
-        registration={found.registration}
-        onChanged={onChanged}
-      />
+      {!conference && (
+        <RegistrationCard
+          event={found.event}
+          registration={found.registration}
+          onChanged={onChanged}
+        />
+      )}
       <Programme
         event={found.event}
         sessions={found.sessions}
@@ -534,6 +583,8 @@ function Programme({
   const t = useTranslations('events.event');
   const router = useRouter();
   const { day, timeRange } = useEventTime();
+  const { guest, conference } = useGuest();
+  const sync = useSyncReminders();
   const { request } = useSession();
   const canChoose = registration.status === 'REGISTERED';
   // The saved choice arrives with the registration (and empties when it is cancelled). When it
@@ -559,6 +610,11 @@ function Programme({
         }),
       );
       setSaved(true);
+      // Now the person can see why the phone asks for permission to remind them.
+      if (await askForReminders().catch(() => false)) {
+        const schedule = await request<{ items: Schedule }>('/api/v1/me/schedule');
+        await sync(flatten(schedule.items));
+      }
     } catch (caught) {
       setError(caught);
     } finally {
@@ -583,6 +639,15 @@ function Programme({
                 {session.room ? ` · ${t('room', { room: session.room })}` : ''}
               </Text>
               <Text style={styles.strong}>{session.title}</Text>
+              {(!guest || conference) && (
+                <Button
+                  label={all('events.live.openSession')}
+                  variant="link"
+                  onPress={() =>
+                    router.push(`/events/session/${encodeURIComponent(event.slug)}/${session.id}`)
+                  }
+                />
+              )}
               {session.description ? <Body>{session.description}</Body> : null}
               {session.speakers.length > 0 && (
                 <View style={styles.list}>

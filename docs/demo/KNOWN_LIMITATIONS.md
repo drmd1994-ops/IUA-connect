@@ -46,6 +46,9 @@ These are in the original specification and are **not** in the demo:
 - **Arabic and Russian.** The site is in Hebrew and English; adding a language is translation work, not a rebuild.
 - **Analytics.** The admin dashboard shows numbers as they are now, with no charts or history.
 
+- **Conference mode (M32) is a demonstration.** Its conference is made up, and its guests have no details. Before a real conference: the organisers' written agreement, a lawyer's answer on what may be collected, and the readiness checklist.
+- **No push notifications.** Reminders come on an Android phone with the app, scheduled on the phone itself, and as a notice inside the app and the site. An iPhone has only the site, so only the notice.
+
 ## 4. Works, with rough edges
 
 **Search**

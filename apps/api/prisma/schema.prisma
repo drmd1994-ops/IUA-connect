@@ -90,6 +90,13 @@ model User {
   files                   StoredFile[]
   newsAuthored            News[]
   eventRegistrations      EventRegistration[]
+  sessionStaff            SessionStaff[]
+  pollVotes               PollVoter[]
+  sessionQuestions        SessionQuestion[]
+  sessionQuestionVotes    SessionQuestionVote[]
+  sessionFeedbackGiven    SessionFeedbackGiven[]
+  sessionReminders        SessionReminder[]
+  conferenceGuest         EventGuest?
   scheduleItems           ScheduleItem[]
   eventAttendances        EventAttendance[]
   eventReminders          EventReminder[]
@@ -1206,6 +1213,12 @@ model Event {
   publishedAt      DateTime?        @map("published_at") @db.Timestamptz(6)
   cancelledAt      DateTime?        @map("cancelled_at") @db.Timestamptz(6)
   cancelReason     String?          @map("cancel_reason") @db.VarChar(1000)
+  /// The conference guest entry (M32): the code on its QR, and when it is open. Empty: closed.
+  guestCode        String?          @map("guest_code") @db.VarChar(64)
+  guestEntryFrom   DateTime?        @map("guest_entry_from") @db.Timestamptz(6)
+  guestEntryUntil  DateTime?        @map("guest_entry_until") @db.Timestamptz(6)
+  /// The number the last guest was given ("Guest 214").
+  guestCount       Int              @default(0) @map("guest_count")
   createdBy        String?          @map("created_by") @db.Uuid
   /// Increases on every change; the ETag for concurrent edits.
   version          Int              @default(1)
@@ -1215,6 +1228,7 @@ model Event {
   category      EventCategory?      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   image         StoredFile?         @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
   translations  EventTranslation[]
+  guests        EventGuest[]
   sessions      EventSession[]
   registrations EventRegistration[]
   attendance    EventAttendance[]
@@ -1243,22 +1257,47 @@ model EventTranslation {
   @@map("event_translations")
 }
 
+/// A person who came in through an event's guest entry (M32): an account with no details, kept
+/// to that event by PermissionGuard, and deleted a set time after it.
+model EventGuest {
+  userId    String   @id @map("user_id") @db.Uuid
+  eventId   String   @map("event_id") @db.Uuid
+  number    Int
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, number])
+  @@map("event_guests")
+}
+
 /// A session of an event: a talk, a workshop, a break. It lies inside the event's time span.
 model EventSession {
-  id        String   @id @db.Uuid
-  eventId   String   @map("event_id") @db.Uuid
-  room      String?  @db.VarChar(200)
-  startAt   DateTime @map("start_at") @db.Timestamptz(6)
-  endAt     DateTime @map("end_at") @db.Timestamptz(6)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id                      String   @id @db.Uuid
+  eventId                 String   @map("event_id") @db.Uuid
+  room                    String?  @db.VarChar(200)
+  startAt                 DateTime @map("start_at") @db.Timestamptz(6)
+  endAt                   DateTime @map("end_at") @db.Timestamptz(6)
+  /// A moderator sees a question before the hall does (M32). On unless the chair turns it off.
+  moderateQuestions       Boolean  @default(true) @map("moderate_questions")
+  /// The chair allows questions without a name in this session (M32).
+  allowAnonymousQuestions Boolean  @default(false) @map("allow_anonymous_questions")
+  createdAt               DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  event        Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  translations EventSessionTranslation[]
-  speakers     SessionSpeaker[]
-  materials    SessionMaterial[]
-  scheduled    ScheduleItem[]
-  attendance   EventAttendance[]
+  event         Event                     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  translations  EventSessionTranslation[]
+  speakers      SessionSpeaker[]
+  materials     SessionMaterial[]
+  scheduled     ScheduleItem[]
+  attendance    EventAttendance[]
+  staff         SessionStaff[]
+  polls         Poll[]
+  questions     SessionQuestion[]
+  feedback      SessionFeedback[]
+  feedbackGiven SessionFeedbackGiven[]
+  reminders     SessionReminder[]
 
   @@index([eventId, startAt])
   @@map("event_sessions")
@@ -1441,6 +1480,165 @@ model EventReminder {
 
   @@id([eventId, userId, kind])
   @@map("event_reminders")
+}
+
+enum SessionStaffRole {
+  CHAIR
+  MODERATOR
+
+  @@map("session_staff_role")
+}
+
+/// Who runs a session's live part (M32): given per session by whoever manages the event.
+model SessionStaff {
+  sessionId String           @map("session_id") @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  role      SessionStaffRole
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, userId, role])
+  @@index([userId])
+  @@map("session_staff")
+}
+
+enum PollStatus {
+  DRAFT
+  OPEN
+  CLOSED
+
+  @@map("poll_status")
+}
+
+/// A live poll of a session (M32).
+model Poll {
+  id        String     @id @db.Uuid
+  sessionId String     @map("session_id") @db.Uuid
+  question  String     @db.VarChar(500)
+  status    PollStatus @default(DRAFT)
+  openedAt  DateTime?  @map("opened_at") @db.Timestamptz(6)
+  closedAt  DateTime?  @map("closed_at") @db.Timestamptz(6)
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  options PollOption[]
+  voters  PollVoter[]
+
+  @@index([sessionId, status])
+  @@map("polls")
+}
+
+/// An answer of a poll. Votes are only a count here: nothing says who chose it (M32 plan §3).
+model PollOption {
+  id        String @id @db.Uuid
+  pollId    String @map("poll_id") @db.Uuid
+  text      String @db.VarChar(200)
+  sortOrder Int    @default(0) @map("sort_order")
+  votes     Int    @default(0)
+
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  @@index([pollId])
+  @@map("poll_options")
+}
+
+/// Who has voted in a poll, and nothing else: no choice and no time (M32 plan §3).
+model PollVoter {
+  pollId String @map("poll_id") @db.Uuid
+  userId String @map("user_id") @db.Uuid
+
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([pollId, userId])
+  @@index([userId])
+  @@map("poll_voters")
+}
+
+enum SessionQuestionStatus {
+  /// Waiting for a moderator; only moderators see it.
+  PENDING
+  VISIBLE
+  ANSWERED
+  HIDDEN
+
+  @@map("session_question_status")
+}
+
+/// A question from the audience (M32). An anonymous one has no author at all.
+model SessionQuestion {
+  id         String                @id @db.Uuid
+  sessionId  String                @map("session_id") @db.Uuid
+  authorId   String?               @map("author_id") @db.Uuid
+  text       String                @db.VarChar(500)
+  status     SessionQuestionStatus
+  upvotes    Int                   @default(0)
+  answeredAt DateTime?             @map("answered_at") @db.Timestamptz(6)
+  createdAt  DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime              @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  session EventSession          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  author  User?                 @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  votes   SessionQuestionVote[]
+
+  @@index([sessionId, status])
+  @@index([authorId])
+  @@map("session_questions")
+}
+
+model SessionQuestionVote {
+  questionId String @map("question_id") @db.Uuid
+  userId     String @map("user_id") @db.Uuid
+
+  question SessionQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, userId])
+  @@index([userId])
+  @@map("session_question_votes")
+}
+
+/// Feedback on a session: no person and no time, and a random id (M32 plan §3).
+model SessionFeedback {
+  id        String  @id @db.Uuid
+  sessionId String  @map("session_id") @db.Uuid
+  rating    Int     @db.SmallInt
+  comment   String? @db.VarChar(1000)
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_feedback")
+}
+
+/// Who has given feedback on a session, without what they gave (M32 plan §3).
+model SessionFeedbackGiven {
+  sessionId String @map("session_id") @db.Uuid
+  userId    String @map("user_id") @db.Uuid
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, userId])
+  @@index([userId])
+  @@map("session_feedback_given")
+}
+
+/// A reminder of a session in someone's schedule was sent, at most once (M32).
+model SessionReminder {
+  sessionId String   @map("session_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  sentAt    DateTime @default(now()) @map("sent_at") @db.Timestamptz(6)
+
+  session EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, userId])
+  @@index([userId])
+  @@map("session_reminders")
 }
 
 // ---------------------------------------------------------------------------

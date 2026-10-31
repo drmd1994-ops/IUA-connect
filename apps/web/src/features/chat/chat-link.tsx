@@ -14,12 +14,12 @@ const REFRESH_MS = 60_000;
  */
 export function ChatLink() {
   const t = useTranslations('chat');
-  const { status, api, call } = useAuth();
+  const { status, me, api, call } = useAuth();
   const [state, setState] = useState<{ enabled: boolean; unread: number }>({
     enabled: false,
     unread: 0,
   });
-  const signedIn = status === 'signedIn';
+  const signedIn = status === 'signedIn' && !me?.guest;
 
   useEffect(() => {
     if (!signedIn) return;

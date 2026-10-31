@@ -320,10 +320,15 @@ export class SessionsService extends PrincipalResolver {
       (await this.prisma.mfaFactor.count({
         where: { userId: user.id, confirmedAt: { not: null } },
       })) > 0;
+    const guest = await this.prisma.eventGuest.findUnique({
+      where: { userId: user.id },
+      select: { eventId: true },
+    });
     return {
       userId: user.id,
       sessionId: session.id,
       mfa,
+      guestEventId: guest?.eventId ?? null,
       roles: profile.roles.filter((role) => role.organisationId === null).map((role) => role.key),
       permissions: effectivePermissions(profile, mfa),
       organisationPermissions: organisationPermissions(profile, mfa),

@@ -57,6 +57,8 @@ railway up --service web --detach
 
 **The demo's emails** (sign-up confirmations, password resets) are under Administration → Demo emails, for platform staff (`users.manage`). Each opening is recorded in the audit log.
 
+**The conference mode's guest entry (M32)** exists only with `DEMO_HOSTED` or outside production: in real production its routes answer that it is closed, whatever the database says. To test a hall, `tools/scripts/load-conference.mjs` (only with the owner's agreement on the hosted demo: it costs a little and slows the demo while it runs).
+
 **The scan viewer (M36)** is not in the repository: the site's build downloads it (`apps/viewer/fetch.mjs`) from the GitHub release named in `apps/viewer/bundle.json`, and refuses an archive whose SHA-256 differs. After a change to `apps/viewer` (OHIF's version, a patch, the settings, a text), push the change to a branch named `viewer/...` (or run the "Viewer bundle" workflow): it builds the viewer and attaches it to a new release, and its summary shows the new `bundle.json`. Until `bundle.json` is updated, CI refuses to build the site.
 
 `.railwayignore` and `.dockerignore` keep `.env` and local files out of the upload. The site's address for the server is fixed when the site is built (`API_INTERNAL_URL`, a build argument), so deploy the site again if that changes.

@@ -76,3 +76,19 @@ describe('email links that open the app (M18b)', () => {
     expect(heard).toBe(2);
   });
 });
+
+describe('the conference guest link', () => {
+  const site = 'https://site.example';
+
+  it('becomes a guest entry, with its event and code', () => {
+    expect(linkTarget(`${site}/he/events/demo-conference/join?code=abc`, site)).toEqual({
+      kind: 'guestEntry',
+      slug: 'demo-conference',
+      code: 'abc',
+    });
+  });
+
+  it('without a code it is only the event', () => {
+    expect(linkTarget(`${site}/en/events/demo-conference/join`, site)?.kind).toBe('screen');
+  });
+});

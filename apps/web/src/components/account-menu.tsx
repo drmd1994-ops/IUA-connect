@@ -53,6 +53,24 @@ export function AccountMenu() {
     );
   }
 
+  // A conference guest (M32) has no account to look after: their number, and a way out.
+  if (me.guest) {
+    return (
+      <div className="flex items-center gap-2 text-sm">
+        <span>{all('events.live.guestName', { number: me.guest.number })}</span>
+        <button
+          type="button"
+          className="rounded-md px-3 py-1.5 font-semibold text-primary hover:bg-brand-50"
+          onClick={() => {
+            void signOut().then(() => router.push('/'));
+          }}
+        >
+          {all('events.guest.leave')}
+        </button>
+      </div>
+    );
+  }
+
   return (
     // Escape closes the menu and returns the focus to its button; moving the focus out of the
     // menu (Tab, or a click elsewhere) closes it too, so it never covers what has the focus.

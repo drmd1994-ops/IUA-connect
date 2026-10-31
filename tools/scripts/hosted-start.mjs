@@ -61,7 +61,7 @@ async function main() {
     pnpm(['--filter', '@medconnect/api', 'db:seed'], {
       env: {
         SEED_LAYERS:
-          'reference,question-bank,careers,communities,research,journal-club,cases,imaging',
+          'reference,question-bank,careers,communities,research,journal-club,cases,imaging,conference',
       },
     });
   }

@@ -38,6 +38,7 @@ import { seedDemoImaging } from './demo-imaging';
 import { seedDemoChat } from './demo-chat';
 import { seedDemoContent } from './demo-content';
 import { seedDemoEducation } from './demo-education';
+import { seedDemoConference } from './demo-conference';
 import { seedDemoEvents } from './demo-events';
 import { seedDemoGroups } from './demo-groups';
 import { seedDemoNotifications } from './demo-notifications';
@@ -84,6 +85,8 @@ const LAYERS: SeedLayer[] = [
   { name: 'journal-club', milestone: 'M31', run: seedDemoJournalClub },
   // Case discussions (M26): made-up cases, waiting for review; nothing shows until approved.
   { name: 'cases', milestone: 'M26', run: seedDemoCases },
+  // The demo's made-up conference (M32), its chair and moderator.
+  { name: 'conference', milestone: 'M32', run: seedDemoConference },
   // Three public teaching scans (M36) as library items, waiting for the owner's review.
   { name: 'imaging', milestone: 'M36', run: seedDemoImaging },
 ];

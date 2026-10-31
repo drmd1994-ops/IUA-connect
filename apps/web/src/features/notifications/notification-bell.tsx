@@ -15,9 +15,9 @@ export const NOTICES_CHANGED = 'iua:notices-changed';
  */
 export function NotificationBell() {
   const t = useTranslations('notifications.bell');
-  const { status, api, call } = useAuth();
+  const { status, me, api, call } = useAuth();
   const [unread, setUnread] = useState(0);
-  const signedIn = status === 'signedIn';
+  const signedIn = status === 'signedIn' && !me?.guest;
 
   useEffect(() => {
     if (!signedIn) return;

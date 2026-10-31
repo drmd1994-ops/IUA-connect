@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-31 (fixes #43 to #50, on the hosted demo and in a new .apk)_
+_Last updated: 2026-11-01 (M32 conference mode built on its branch; not merged, the load test on the hosted demo and the rehearsal are still to come)_
 
 ## Summary
 
@@ -1647,6 +1647,44 @@ Plan: `docs/plans/M36-medical-imaging.md`, opened at the owner's request on 2026
 GitHub's checks passed on the pull request and on main; merged, deployed to the hosted demo (its checks passed; the viewer and its notices are served) and built into the .apk `demo-apk-2026-10-24-m36` on the owner's word ("Merge it, deploy it and build a new version").
 
 **Fixed after deploying (pull request #43, 2026-10-25):** the library editor listed an item's scans without a way to open them, so the owner could not look at the teaching scans before publishing. Each now has "View the scan", and library reviewers may read an unpublished item's scans. Deployed on the owner's word ("deploy the fix"); the owner opened the scans in the viewer on the hosted demo and confirmed it works.
+
+## M32 Conference mode (built on branch `feat/m32-conference-mode`; not merged)
+
+Plan: `docs/plans/M32-conference-mode.md`, approved by the owner on 2026-10-31 with the answers in its §10. For the Israeli urology conference on 30 November 2026, as a **demonstration**: a made-up conference on the hosted demo, with no real person's details. The owner has no contact with the organisers, so neither the conference's name nor the association's appears in the product.
+
+### Delivered
+
+- **Now and Next** first on a running event's page, with "my schedule" above them, on the site and in the app.
+- **Live polls:** the chair opens one, each person votes once, and results show after voting or once it is closed.
+- **Audience questions:** a moderator reads each one first by default; up-votes; answered or hidden. Anonymous ones only where the chair allows, and those keep no author at all.
+- **Anonymous feedback:** a rating and a comment.
+- **Votes and feedback can't be traced to a person:** who took part and what they chose are stored apart with nothing linking them, feedback has a random id and no time, and neither goes to the audit log. An integration test checks the tables themselves.
+- **The chair's screen:** polls, the question settings, the session's attendance code and the feedback; on the site also a big-screen view. Chairs and moderators are given per session in the event's admin page; whoever manages the event may do both.
+- **The guest entry (added to the plan by the owner's answer 6):** a QR code makes a guest for that phone, with a number and no details. A guest is refused everywhere except public pages and what is marked `@GuestAllowed`, by `PermissionGuard`. It exists only on a demo server, only in a time the manager sets, and never in real production. The ordinary sign-in and the demo password are untouched.
+- **"Start the demonstration"** in the admin page of the demo's conference: moves the sessions so one is on now, clears what was left there, and opens the guest entry.
+- **Reminders:** a notice in the app and on the site ten minutes before a session in someone's schedule, and on Android also a reminder scheduled on the phone itself (`expo-notifications`, the owner's answer 4B). The site has no such reminder on an iPhone.
+- **Clean-up:** questions and guests go 30 days after the event; poll results and feedback stay (the owner's answer 7).
+- **For a full hall:** a stream per event that gathers changes (each session tells its readers at most once in two seconds), and phones that ask again at a random moment. The routes a person in the hall needs count up to 6,000 requests a minute from one address, in place of the general 300; a guest's entry up to 600; renewing a session up to 1,000. **The sign-in limits did not change.**
+
+### Verified
+
+- Unit, integration (20 new), app and site tests; a browser test of the whole flow, with accessibility checks.
+- **Load test on this computer, from one address (`tools/scripts/load-conference.mjs`):** 300 people came in within a minute and held the stream, all voted within 20 seconds, and each phone asked again on every change (3,000 reads). Nobody was refused; 95 of 100 votes were answered within 66 ms; the news reached all 300 within 2.1 seconds. **This is not the hosted demo,** which is smaller and farther away.
+
+### Not done yet
+
+- The load test on the hosted demo (plan §6): only with the owner's agreement.
+- The rehearsal with real phones, an Android and an iPhone, on a shared Wi-Fi (plan §6, an exit criterion).
+- The app on a real phone: the reminder on a locked phone, and the guest link opening the app.
+- The owner's reading of the made-up conference's polls and of the Hebrew texts.
+
+### Deviations and findings
+
+- **A permission is not the only way a guest could get in:** every `@Authenticated` route would have been open to a signed-in guest, so the guard denies by default and the routes open to guests are named.
+- **Renewing a session had the sign-in limit of 20 a minute per address** on the app's route, which a hall would pass by itself: access tokens last ten minutes. Renewal now has its own limit, since it presents a long secret and can't be guessed at. The site's route gained the same limit.
+- **`expo-notifications` is pinned to 57.0.21,** the version Expo's own list names. The newest, 57.0.24, is refused by the repository's `trustPolicy: no-downgrade` as a "possible package takeover". The policy was left as it is. Worth looking at again before any update.
+- **`prisma migrate` proposed dropping three database rules** (`*_department_in_hospital`) that only migrations know about. They were removed from this migration by hand.
+- **The security check is failing on main** because of five `node-forge` advisories published on 2026-10-30, in Expo's developer tool only. The fix can be installed from 3 November under the 7-day rule, and comes first (plan §7, step 0).
 
 ## Next step
 

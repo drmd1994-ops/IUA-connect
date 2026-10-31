@@ -41,6 +41,9 @@ export function ScanScreen() {
   const act = useCallback(
     async (scanned: Scanned | null) => {
       if (!scanned) return setOutcome({ kind: 'unknown' });
+      if (scanned.kind === 'event') {
+        return router.replace(`/events/${encodeURIComponent(scanned.slug)}`);
+      }
       if (scanned.kind === 'checkIn') {
         const result = await request<{ recorded: boolean }>(
           `/api/v1/events/${encodeURIComponent(scanned.slug)}/check-in`,
@@ -57,7 +60,7 @@ export function ScanScreen() {
       );
       return setOutcome({ kind: 'card', result });
     },
-    [request],
+    [request, router],
   );
 
   function onScanned(data: string) {

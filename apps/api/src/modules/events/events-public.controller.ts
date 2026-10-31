@@ -3,6 +3,7 @@ import { ApiOkResponse, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { PrincipalResolver, type RequestWithPrincipal } from '../../common/auth/principal';
 import { Public } from '../../common/decorators/access.decorators';
+import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
 import {
   EventCategoryListDto,
   PublicEventDto,
@@ -64,6 +65,7 @@ export class EventsPublicController {
   }
 
   @Get(':slug')
+  @RateLimit(RATE_LIMITS.conferenceHall)
   @ApiOkResponse({ type: PublicEventDto })
   async get(
     @Req() req: RequestWithPrincipal,
@@ -74,6 +76,7 @@ export class EventsPublicController {
   }
 
   @Get(':slug/sessions')
+  @RateLimit(RATE_LIMITS.conferenceHall)
   @ApiOkResponse({ type: PublicSessionListDto })
   async listSessions(
     @Req() req: RequestWithPrincipal,

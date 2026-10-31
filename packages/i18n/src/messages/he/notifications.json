@@ -55,6 +55,7 @@
     "eventCancelled": "האירוע ״{title}״ בוטל.",
     "eventChanged": "המועד או המקום של ״{title}״ השתנו.",
     "eventReminder": "תזכורת: ״{title}״ יתקיים {when}.",
+    "sessionReminder": "מתחיל בקרוב: ״{title}״, {place}.",
     "membershipApplicationReceived": "בקשת החברות שלך התקבלה ({typeName}).",
     "membershipDirectorApproved": "מנהל/ת המחלקה אישר/ה את בקשת החברות שלך ({typeName}). היא ממתינה כעת לאישור הארגון.",
     "membershipApproved": "החברות שלך אושרה ({typeName}).",

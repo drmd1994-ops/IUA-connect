@@ -10,6 +10,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./conference": {
+      "types": "./dist/conference-model.d.ts",
+      "default": "./dist/conference-model.js"
+    },
     "./chat": {
       "types": "./dist/chat-model.d.ts",
       "default": "./dist/chat-model.js"

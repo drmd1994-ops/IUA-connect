@@ -37,3 +37,12 @@ describe('the name of a saved file', () => {
     expect(safeFileName('///', 'ics')).toBe('file.ics');
   });
 });
+
+describe('the conference guest code', () => {
+  it('leads someone signed in to the event', () => {
+    expect(parseScan('https://site.example/he/events/demo-conference/join?code=abc')).toEqual({
+      kind: 'event',
+      slug: 'demo-conference',
+    });
+  });
+});

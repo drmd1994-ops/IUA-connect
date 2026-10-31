@@ -5,7 +5,8 @@ import {
   type RequestWithPrincipal,
   principalOf,
 } from '../../common/auth/principal';
-import { Authenticated } from '../../common/decorators/access.decorators';
+import { Authenticated, GuestAllowed } from '../../common/decorators/access.decorators';
+import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { AppException } from '../../common/errors/app.exception';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { ORGANISATION_REF } from '../organisations';
@@ -25,6 +26,8 @@ export class MeController {
   ) {}
 
   @Get()
+  @GuestAllowed()
+  @RateLimit(RATE_LIMITS.conferenceHall)
   @ApiOkResponse({ type: MeDto })
   async me(@Req() req: RequestWithPrincipal): Promise<MeDto> {
     return this.describe(principalOf(req));
@@ -36,6 +39,15 @@ export class MeController {
     const principal = principalOf(req);
     await this.users.setLocale(principal.userId, body.locale);
     return this.describe(principal);
+  }
+
+  /** A conference guest: the event they came for, and the number they are shown by (M32). */
+  private async guestOf(userId: string) {
+    const guest = await this.prisma.eventGuest.findUnique({
+      where: { userId },
+      select: { number: true, event: { select: { slug: true } } },
+    });
+    return guest ? { number: guest.number, eventSlug: guest.event.slug } : null;
   }
 
   private async describe(principal: Principal): Promise<MeDto> {
@@ -78,6 +90,7 @@ export class MeController {
       mfaEnabled: mfaFactors > 0,
       mfaEnrollmentRequired: principal.mfaEnrollmentRequired,
       session: { id: principal.sessionId, mfa: principal.mfa },
+      guest: principal.guestEventId ? await this.guestOf(user.id) : null,
     };
   }
 }
