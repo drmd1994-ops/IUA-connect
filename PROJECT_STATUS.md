@@ -1,6 +1,6 @@
 # IUA Connect — Project Status
 
-_Last updated: 2026-10-24 (M27, M31 and M26 merged, on the hosted demo and in new .apks; M36 medical imaging merged, on the hosted demo and in a new .apk)_
+_Last updated: 2026-10-31 (fixes #43 to #50, on the hosted demo and in a new .apk)_
 
 ## Summary
 
@@ -1665,5 +1665,7 @@ GitHub's checks passed on the pull request and on main; merged, deployed to the 
 **M30 (clinical calculators)** was merged on 2026-10-19 (pull request #29) and signed by the owner.
 
 **M18 (the hosted demo)** was merged on 2026-10-22 (pull request #31), checked on the owner's phone on 2026-10-20; its week's cost is read around 2026-10-26. **M23 (the question bank)** was merged on 2026-10-23 (pull request #32) and is on the hosted demo; its 100 starter questions wait for the owner's review. **M18b (passkeys in the app, email links that open it)** is built, on the hosted demo, checked on the owner's phone and merged on 2026-10-23 (pull request #33). **M28 (jobs, fellowships and mentorship)** was merged on 2026-10-23 (pull request #34) and is on the hosted demo. **M25 (communities, in place of chat rooms)** was merged on 2026-10-23 (pull request #35) and is on the hosted demo, with a new .apk. **M27 (research and publications)** was merged on 2026-10-24 (pull request #36) and is on the hosted demo, with a new .apk. **M31 (the journal club)** was merged on 2026-10-24 (pull request #37) and is on the hosted demo, with a new .apk. **M26 (case discussions)** was merged on 2026-10-24 (pull request #39) and is on the hosted demo, with a new .apk. **M36 (medical imaging)** was merged on 2026-10-24 (pull request #41) and is on the hosted demo, with a new .apk; its three teaching scans wait for the owner's review.
+
+**Fixes after M36 (pull requests #43 to #50, 2026-10-25 to 2026-10-31):** a library item's scans can be opened while reviewing it (#43); two clock-change bugs, in the audit log's days and in scheduled times (#44); the hosted site was built without its exam-questions pages (#45); the viewer's point tool shows the HU value again (#46); small hardening from a code review of the site and the app, including the owner's decision to block the recent-apps preview and screenshots in the app (#47); sending a picked file from the phone failed before it left, because of the fetch Expo uses by default since SDK 57 (#48); body-parser and multer updated, and decode-uri-component accepted by the owner as an exception in `SECURITY.md` (#49, on the hosted server since 2026-10-30); when the app can only say that something went wrong, it adds what exactly failed (#50). The owner confirmed on 2026-10-30, on the phone with the .apk of that date, that chat attachments work and that the exam problem is gone. Latest .apk: `demo-apk-2026-10-31-error-details`.
 
 **After the pitch,** in the order proposed (each needs its own approved plan): have the server send public pages complete (`docs/demo/PERFORMANCE.md`); the readiness checklist in `DEPLOYMENT.md`, starting with the legal review (O6); then the Phase 2 list in `DEVELOPMENT_ROADMAP.md`.
