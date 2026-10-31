@@ -87,6 +87,15 @@ jest.mock('react-native-webview', () => {
 });
 
 jest.mock('expo/fetch', () => ({ fetch: jest.fn(() => new Promise(() => undefined)) }));
+jest.mock('expo-notifications', () => ({
+  getPermissionsAsync: jest.fn(async () => ({ granted: false })),
+  requestPermissionsAsync: jest.fn(async () => ({ granted: false })),
+  setNotificationChannelAsync: jest.fn(async () => null),
+  cancelAllScheduledNotificationsAsync: jest.fn(async () => undefined),
+  scheduleNotificationAsync: jest.fn(async () => 'id'),
+  AndroidImportance: { HIGH: 4 },
+  SchedulableTriggerInputTypes: { DATE: 'date' },
+}));
 jest.mock('expo-clipboard', () => ({ setStringAsync: jest.fn(async () => true) }));
 jest.mock('expo-sharing', () => ({ shareAsync: jest.fn(async () => undefined) }));
 jest.mock('expo-file-system', () => ({

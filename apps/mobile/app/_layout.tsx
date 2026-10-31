@@ -6,6 +6,9 @@ import { useTranslations } from 'use-intl';
 import { ChatEventsProvider } from '@/chat/events';
 import { API_URL } from '@/config';
 import { pendingLink } from '@/features/app-links';
+import { ReminderKeeper } from '@/features/events';
+import { GuestEntry } from '@/features/events-live';
+import { clearReminders } from '@/features/session-reminders';
 import { LanguageChoice } from '@/features/language-choice';
 import { SignIn } from '@/features/sign-in';
 import {
@@ -70,6 +73,30 @@ function Gate() {
   const { session, status } = useSession();
   const link = useSyncExternalStore(pendingLink.subscribe, pendingLink.get);
 
+  // Signed out: the phone stops reminding of that person's sessions (M32).
+  useEffect(() => {
+    if (status === 'signedOut') void clearReminders().catch(() => undefined);
+  }, [status]);
+
+  // A conference's guest link (M32). Signed in already: that account goes to the event.
+  useEffect(() => {
+    if (link?.kind === 'guestEntry' && status === 'signedIn') {
+      pendingLink.set({ kind: 'screen', route: `/events/${encodeURIComponent(link.slug)}` });
+    }
+  }, [link, status]);
+  if (link?.kind === 'guestEntry') {
+    if (status === 'signedOut') {
+      return (
+        <GuestEntry slug={link.slug} code={link.code} onCancel={() => pendingLink.set(null)} />
+      );
+    }
+    return (
+      <Screen>
+        <Body muted>{t('loading')}</Body>
+      </Screen>
+    );
+  }
+
   // A link from an email with a one-time token (M18b): its own screen, signed in or not.
   if (link && link.kind !== 'screen' && status !== 'loading') {
     const done = () => pendingLink.set(null);
@@ -81,14 +108,7 @@ function Gate() {
   }
 
   // The tabs, and over them the screens opened from a tab; the phone's back button returns.
-  if (status === 'signedIn') {
-    return (
-      <ChatEventsProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-        <OpenLink />
-      </ChatEventsProvider>
-    );
-  }
+  if (status === 'signedIn') return <SignedIn />;
   if (status === 'signedOut') return <Visitor />;
   if (status === 'unreachable') {
     return (
@@ -109,6 +129,58 @@ function Gate() {
     <Screen>
       <Body muted>{t('loading')}</Body>
     </Screen>
+  );
+}
+
+/**
+ * A conference guest (M32) is signed in, but the server refuses them everything except their
+ * event's live part: they get the open pages as a visitor does, and go straight to the event.
+ */
+function SignedIn() {
+  const t = useTranslations('mobile');
+  const { session, request } = useSession();
+  const router = useRouter();
+  const ready = Boolean(useRootNavigationState()?.key);
+  const [me, setMe] = useState<{ guest: { number: number; eventSlug: string } | null } | null>(
+    null,
+  );
+  useEffect(() => {
+    let active = true;
+    request<{ guest: { number: number; eventSlug: string } | null }>('/api/v1/me')
+      .then((result) => active && setMe(result))
+      // Unknown, as when there is no connection: the member's screens say so themselves.
+      .catch(() => active && setMe({ guest: null }));
+    return () => {
+      active = false;
+    };
+  }, [request]);
+  const guest = me?.guest;
+  useEffect(() => {
+    if (ready && guest) router.replace(`/events/${encodeURIComponent(guest.eventSlug)}` as Href);
+  }, [ready, guest, router]);
+  if (!me) {
+    return (
+      <Screen>
+        <Body muted>{t('loading')}</Body>
+      </Screen>
+    );
+  }
+  if (guest) {
+    return (
+      <GuestProvider
+        toSignIn={() => void session.signOut()}
+        conference={{ slug: guest.eventSlug, number: guest.number }}
+      >
+        <Stack screenOptions={{ headerShown: false }} />
+      </GuestProvider>
+    );
+  }
+  return (
+    <ChatEventsProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+      <OpenLink />
+      <ReminderKeeper />
+    </ChatEventsProvider>
   );
 }
 

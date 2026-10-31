@@ -37,8 +37,7 @@ import { RATE_LIMITS, RateLimit } from '../../common/decorators/rate-limit.decor
 import { hitUserLimit } from '../../common/guards/user-rate-limit';
 import { Meta, type RequestMeta } from '../../common/request-meta';
 import { RateLimitStore } from '../../infra/rate-limit/rate-limit.store';
-import { setSessionCookies } from '../auth/auth.cookies';
-import { appTokens } from '../auth/auth.controller';
+import { appTokens, setSessionCookies } from '../auth';
 import { ConferenceStream } from './conference-stream';
 import {
   ConferenceQueryDto,

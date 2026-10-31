@@ -9,8 +9,7 @@ import { APP_CONFIG } from '../../config/config.module';
 import { type Env } from '../../config/env.schema';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AuditService } from '../audit';
-import { SessionsService as AuthSessions } from '../auth';
-import { type IssuedTokens } from '../auth/sessions.service';
+import { SessionsService as AuthSessions, type IssuedTokens } from '../auth';
 import { AttendanceService } from './attendance.service';
 import {
   feedbackOpen,

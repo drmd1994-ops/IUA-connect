@@ -1,5 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { nullableNumber, nullableString } from '../../common/dto/nullable-string';
 
 const locale = z.enum(['he', 'en']);
 
@@ -33,7 +34,7 @@ export class LiveQuestionDto extends createZodDto(
     status: z.enum(['PENDING', 'VISIBLE', 'ANSWERED', 'HIDDEN']),
     upvotes: z.number().int(),
     /** Empty for an anonymous question, and for a guest (see guestNumber). */
-    authorName: z.string().nullable(),
+    authorName: nullableString(),
     guestNumber: z.number().int().nullable(),
     upvoted: z.boolean(),
   }),
@@ -91,7 +92,7 @@ export class LiveSettingsDto extends createZodDto(
 export class FeedbackSummaryDto extends createZodDto(
   z.strictObject({
     count: z.number().int(),
-    average: z.number().nullable(),
+    average: nullableNumber(),
     comments: z.array(z.string()),
   }),
 ) {}
@@ -122,7 +123,7 @@ export class GuestEntryAdminDto extends createZodDto(
     from: z.iso.datetime().nullable(),
     until: z.iso.datetime().nullable(),
     /** The address behind the QR code. */
-    link: z.string().nullable(),
+    link: nullableString(),
     guests: z.number().int(),
   }),
 ) {}
