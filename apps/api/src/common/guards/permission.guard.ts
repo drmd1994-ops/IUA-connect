@@ -12,6 +12,7 @@ import {
   IS_PUBLIC_KEY,
   ANY_PERMISSIONS_KEY,
   ANY_SCOPED_PERMISSIONS_KEY,
+  GUEST_ALLOWED_KEY,
   PERMISSIONS_KEY,
   SCOPED_PERMISSIONS_KEY,
 } from '../decorators/access.decorators';
@@ -28,6 +29,8 @@ import { holdsAnywhere } from '../auth/scope';
  * - @RequireScopedPermission / @RequireAnyScopedPermission → as the two above, but a permission
  *   held inside an organisation counts too; the handler checks whose thing it is (M16);
  * - none of these            → 403. Such a route is also caught by the route-declaration test.
+ *
+ * A conference guest (M32) is refused everywhere that isn't @Public or @GuestAllowed.
  */
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -86,6 +89,12 @@ export class PermissionGuard implements CanActivate {
     const { principal } = request;
     if (!principal) {
       throw new AppException('UNAUTHENTICATED');
+    }
+    if (
+      principal.guestEventId &&
+      !this.reflector.getAllAndOverride<boolean>(GUEST_ALLOWED_KEY, targets)
+    ) {
+      throw new AppException('FORBIDDEN');
     }
     if (required?.length && !required.every((key) => principal.permissions.has(key))) {
       throw new AppException('FORBIDDEN');

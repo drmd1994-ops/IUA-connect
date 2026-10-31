@@ -3,6 +3,15 @@ import { AccessModule } from '../access';
 import { AuthModule } from '../auth';
 import { FilesModule } from '../files';
 import { NotificationsModule } from '../notifications';
+import { ConferenceJobs } from './conference.job';
+import { ConferenceStream } from './conference-stream';
+import {
+  ConferenceAdminController,
+  ConferenceChairController,
+  ConferenceController,
+  GuestEntryController,
+} from './conference.controller';
+import { ConferenceService } from './conference.service';
 import { EventsAdminController } from './events-admin.controller';
 import { EventsAdminService } from './events-admin.service';
 import { EventsPublicController } from './events-public.controller';
@@ -35,6 +44,10 @@ import { SessionsService } from './sessions.service';
     EventCheckInController,
     MyScheduleController,
     EventRegistrationController,
+    ConferenceAdminController,
+    ConferenceChairController,
+    ConferenceController,
+    GuestEntryController,
     EventsPublicController,
   ],
   providers: [
@@ -48,6 +61,9 @@ import { SessionsService } from './sessions.service';
     EventMailer,
     EventOwnerGuard,
     EventRemindersJob,
+    ConferenceService,
+    ConferenceStream,
+    ConferenceJobs,
   ],
   exports: [EventsAdminService, EventsPublicService],
 })

@@ -157,7 +157,7 @@ export class AuthController {
    */
   @Post('app/refresh')
   @Public()
-  @RateLimit(RATE_LIMITS.signInPerIp)
+  @RateLimit(RATE_LIMITS.sessionRefreshPerIp)
   @HttpCode(200)
   @ApiOkResponse({ type: TokenDto })
   async appRefresh(@Body() body: AppRefreshDto, @Meta() meta: RequestMeta): Promise<TokenDto> {
@@ -202,6 +202,7 @@ export class AuthController {
   /** Rotates the refresh cookie and returns a new access token. Needs the CSRF header. */
   @Post('refresh')
   @Public()
+  @RateLimit(RATE_LIMITS.sessionRefreshPerIp)
   @HttpCode(200)
   @ApiCookieAuth()
   @ApiOkResponse({ type: TokenDto })
