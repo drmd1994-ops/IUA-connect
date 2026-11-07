@@ -3,6 +3,7 @@ import { type PermissionKey } from '@medconnect/shared';
 
 export const IS_PUBLIC_KEY = 'iua:isPublic';
 export const IS_AUTHENTICATED_KEY = 'iua:isAuthenticated';
+export const GUEST_ALLOWED_KEY = 'iua:guestAllowed';
 export const PERMISSIONS_KEY = 'iua:permissions';
 export const ANY_PERMISSIONS_KEY = 'iua:anyPermissions';
 export const SCOPED_PERMISSIONS_KEY = 'iua:scopedPermissions';
@@ -36,3 +37,10 @@ export const RequireScopedPermission = (...permissions: [PermissionKey, ...Permi
   SetMetadata(SCOPED_PERMISSIONS_KEY, permissions);
 export const RequireAnyScopedPermission = (...permissions: [PermissionKey, ...PermissionKey[]]) =>
   SetMetadata(ANY_SCOPED_PERMISSIONS_KEY, permissions);
+
+/**
+ * A conference guest (M32) reaches only routes with this, besides public ones: a guest is signed
+ * in, so without it every @Authenticated route would be open to them. Deny by default, like the
+ * rest. Add it only to what a guest needs in order to take part in the event they came for.
+ */
+export const GuestAllowed = () => SetMetadata(GUEST_ALLOWED_KEY, true);

@@ -25,6 +25,36 @@ export const RateLimit = (...rules: RateLimitRule[]) => SetMetadata(RATE_LIMIT_K
 
 export const RATE_LIMITS = {
   global: { name: 'global', limit: 300, windowSec: 60, by: 'ip' },
+  // A conference (M32 plan §4): every phone in a hall shares one address. Only on the few routes
+  // a person in the hall needs. Sign-in keeps its own limits.
+  conferenceHall: {
+    name: 'conference-hall',
+    limit: 6000,
+    windowSec: 60,
+    by: 'ip',
+    replacesGlobal: true,
+  },
+  guestEntryPerIp: {
+    name: 'guest-entry-ip',
+    limit: 600,
+    windowSec: 60,
+    by: 'ip',
+    replacesGlobal: true,
+  },
+  sessionRefreshPerIp: {
+    name: 'session-refresh-ip',
+    limit: 1000,
+    windowSec: 60,
+    by: 'ip',
+    replacesGlobal: true,
+  },
+  conferenceVotesPerUser: { name: 'conference-votes-user', limit: 60, windowSec: 60, by: 'user' },
+  conferenceQuestionsPerUser: {
+    name: 'conference-questions-user',
+    limit: 5,
+    windowSec: 60,
+    by: 'user',
+  },
   signInPerAccount: { name: 'signin-account', limit: 5, windowSec: 60, by: 'account' },
   signInPerIp: { name: 'signin-ip', limit: 20, windowSec: 60, by: 'ip' },
   accountCreationPerIp: { name: 'account-email-ip', limit: 5, windowSec: 3600, by: 'ip' },

@@ -25,6 +25,8 @@ export interface Principal {
   verified: boolean;
   /** Holds a role that requires MFA but has no confirmed factor yet: must enrol first. */
   mfaEnrollmentRequired: boolean;
+  /** A conference guest (M32): the one event they may take part in. See GuestAllowed. */
+  guestEventId?: string | null;
 }
 
 export interface RequestWithPrincipal {

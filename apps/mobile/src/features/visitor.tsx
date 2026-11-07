@@ -27,18 +27,27 @@ interface Guest {
   guest: boolean;
   /** Back to the sign-in screen. */
   toSignIn: () => void;
+  /**
+   * A conference guest (M32): signed in, yet they see the open pages like a visitor, since the
+   * server refuses them everything else, and the live part of the event they came for.
+   */
+  conference?: { slug: string; number: number } | undefined;
 }
 const GuestContext = createContext<Guest>({ guest: false, toSignIn: () => undefined });
 
 export function GuestProvider({
   toSignIn,
+  conference,
   children,
 }: {
   toSignIn: () => void;
+  conference?: Guest['conference'];
   children: ReactNode;
 }) {
   return (
-    <GuestContext.Provider value={{ guest: true, toSignIn }}>{children}</GuestContext.Provider>
+    <GuestContext.Provider value={{ guest: true, toSignIn, conference }}>
+      {children}
+    </GuestContext.Provider>
   );
 }
 
@@ -50,12 +59,25 @@ export function useGuest(): Guest {
 export function GuestHome() {
   const t = useTranslations();
   const router = useRouter();
-  const { toSignIn } = useGuest();
+  const { toSignIn, conference } = useGuest();
   return (
     <Screen>
       <Title>{t('mobile.home.title')}</Title>
-      <Body>{t('mobile.guest.intro')}</Body>
-      <Button label={t('mobile.signIn.submit')} onPress={toSignIn} />
+      {conference ? (
+        <>
+          <Body>{t('events.live.guestName', { number: conference.number })}</Body>
+          <Button
+            label={t('events.guest.toConference')}
+            onPress={() => router.push(`/events/${encodeURIComponent(conference.slug)}`)}
+          />
+          <Button label={t('events.guest.leave')} variant="secondary" onPress={toSignIn} />
+        </>
+      ) : (
+        <>
+          <Body>{t('mobile.guest.intro')}</Body>
+          <Button label={t('mobile.signIn.submit')} onPress={toSignIn} />
+        </>
+      )}
       <Card>
         <Heading>{t('mobile.home.more')}</Heading>
         <Button

@@ -173,6 +173,16 @@ export class Session {
     return send();
   }
 
+  /** The conference guest entry (M32): a guest with no details for this phone. */
+  async enterAsGuest(slug: string, code: string): Promise<void> {
+    const body = await this.post(`/api/v1/events/${encodeURIComponent(slug)}/guest-entry`, {
+      code,
+      client: 'app',
+      deviceName: this.options.deviceName,
+    });
+    await this.accept(body);
+  }
+
   private async renew(): Promise<boolean> {
     const refreshToken = await this.options.store.get(REFRESH_KEY);
     if (!refreshToken) {

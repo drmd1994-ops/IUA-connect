@@ -8,7 +8,8 @@ import { appRoute } from './notifications-model';
 export type LinkTarget =
   | { kind: 'screen'; route: string }
   | { kind: 'verifyEmail'; token: string }
-  | { kind: 'resetPassword'; token: string };
+  | { kind: 'resetPassword'; token: string }
+  | { kind: 'guestEntry'; slug: string; code: string };
 
 const LOCALE = /^\/(he|en)(?=\/|$)/;
 
@@ -30,6 +31,15 @@ export function linkTarget(link: string, site: string): LinkTarget | null {
   const token = url.searchParams.get('token');
   if (path === '/verify-email') return token ? { kind: 'verifyEmail', token } : null;
   if (path === '/reset-password') return token ? { kind: 'resetPassword', token } : null;
+  const join = /^\/events\/([^/]+)\/join\/?$/.exec(path);
+  const code = url.searchParams.get('code');
+  if (join && code) {
+    try {
+      return { kind: 'guestEntry', slug: decodeURIComponent(join[1] ?? ''), code };
+    } catch {
+      return null;
+    }
+  }
   // A site link the app has no screen for opens the app's home.
   return { kind: 'screen', route: appRoute(path) ?? '/' };
 }

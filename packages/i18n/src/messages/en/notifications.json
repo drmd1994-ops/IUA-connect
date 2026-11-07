@@ -55,6 +55,7 @@
     "eventCancelled": "“{title}” was cancelled.",
     "eventChanged": "The time or place of “{title}” changed.",
     "eventReminder": "Reminder: “{title}” takes place {when}.",
+    "sessionReminder": "Starting soon: “{title}”, {place}.",
     "membershipApplicationReceived": "We received your membership application ({typeName}).",
     "membershipDirectorApproved": "Your department director approved your application ({typeName}). It now waits for the organisation.",
     "membershipApproved": "Your membership was approved ({typeName}).",

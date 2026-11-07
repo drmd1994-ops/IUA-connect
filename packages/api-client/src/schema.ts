@@ -1636,6 +1636,294 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/events/{eventId}/sessions/{sessionId}/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConferenceAdminController_staff"];
+        put: operations["ConferenceAdminController_setStaff"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/guest-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConferenceAdminController_guestEntry"];
+        put: operations["ConferenceAdminController_setGuestEntry"];
+        post?: never;
+        delete: operations["ConferenceAdminController_closeGuestEntry"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/events/{eventId}/demonstration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceAdminController_demonstration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/polls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceChairController_createPoll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/polls/{pollId}/open": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceChairController_openPoll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/polls/{pollId}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceChairController_closePoll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/polls/{pollId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["ConferenceChairController_removePoll"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["ConferenceChairController_settings"];
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/questions/{questionId}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ConferenceChairController_questionStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConferenceChairController_feedback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/chair/attendance-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConferenceChairController_attendanceCode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/live/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConferenceController_events"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/live": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConferenceController_live"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/polls/{pollId}/vote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceController_vote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceController_ask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/questions/{questionId}/upvote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ConferenceController_upvote"];
+        post?: never;
+        delete: operations["ConferenceController_removeUpvote"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/sessions/{sessionId}/feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConferenceController_feedback"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/events/{slug}/guest-entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GuestEntryController_enter"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -5374,6 +5662,10 @@ export interface components {
                 id: string;
                 mfa: boolean;
             };
+            guest: {
+                number: number;
+                eventSlug: string;
+            } | null;
         };
         UpdateMeDto: {
             /** @enum {string} */
@@ -7148,6 +7440,116 @@ export interface components {
         };
         ScheduleInputDto: {
             sessionIds: string[];
+        };
+        SessionStaffDto: {
+            chairs: {
+                /** Format: uuid */
+                userId: string;
+                email: string;
+            }[];
+            moderators: {
+                /** Format: uuid */
+                userId: string;
+                email: string;
+            }[];
+        };
+        SessionStaffInputDto: {
+            chairs: string[];
+            moderators: string[];
+        };
+        GuestEntryAdminDto: {
+            available: boolean;
+            open: boolean;
+            from: string | null;
+            until: string | null;
+            link: string | null;
+            guests: number;
+        };
+        GuestEntryInputDto: {
+            /** Format: date-time */
+            from: string;
+            /** Format: date-time */
+            until: string;
+        };
+        PollInputDto: {
+            question: string;
+            options: string[];
+        };
+        LiveSettingsDto: {
+            moderateQuestions?: boolean;
+            allowAnonymousQuestions?: boolean;
+        };
+        QuestionStatusDto: {
+            /** @enum {string} */
+            status: "VISIBLE" | "ANSWERED" | "HIDDEN";
+        };
+        FeedbackSummaryDto: {
+            count: number;
+            average: number | null;
+            comments: string[];
+        };
+        LiveSessionDto: {
+            /** Format: uuid */
+            sessionId: string;
+            moderateQuestions: boolean;
+            allowAnonymousQuestions: boolean;
+            questionsOpen: boolean;
+            feedbackOpen: boolean;
+            feedbackGiven: boolean;
+            canChair: boolean;
+            canModerate: boolean;
+            polls: {
+                /** Format: uuid */
+                id: string;
+                question: string;
+                /** @enum {string} */
+                status: "DRAFT" | "OPEN" | "CLOSED";
+                options: {
+                    /** Format: uuid */
+                    id: string;
+                    text: string;
+                    votes: number | null;
+                }[];
+                total: number | null;
+                voted: boolean;
+            }[];
+            questions: {
+                /** Format: uuid */
+                id: string;
+                text: string;
+                /** @enum {string} */
+                status: "PENDING" | "VISIBLE" | "ANSWERED" | "HIDDEN";
+                upvotes: number;
+                authorName: string | null;
+                guestNumber: number | null;
+                upvoted: boolean;
+            }[];
+        };
+        VoteDto: {
+            /** Format: uuid */
+            optionId: string;
+        };
+        QuestionInputDto: {
+            text: string;
+            /** @default false */
+            anonymous: boolean;
+        };
+        FeedbackInputDto: {
+            rating: number;
+            comment?: string;
+        };
+        EnterAsGuestDto: {
+            code: string;
+            /** @constant */
+            client?: "app";
+            deviceName?: string;
+        };
+        EnterAsGuestResultDto: {
+            accessToken: string;
+            expiresIn: number;
+            refreshToken?: string;
+            sessionExpiresAt?: string;
+            number: number;
         };
         PublicEventListDto: {
             items: {
@@ -14077,6 +14479,514 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MyRegistrationDto"];
+                };
+            };
+        };
+    };
+    ConferenceAdminController_staff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionStaffDto"];
+                };
+            };
+        };
+    };
+    ConferenceAdminController_setStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionStaffInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionStaffDto"];
+                };
+            };
+        };
+    };
+    ConferenceAdminController_guestEntry: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestEntryAdminDto"];
+                };
+            };
+        };
+    };
+    ConferenceAdminController_setGuestEntry: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuestEntryInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestEntryAdminDto"];
+                };
+            };
+        };
+    };
+    ConferenceAdminController_closeGuestEntry: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestEntryAdminDto"];
+                };
+            };
+        };
+    };
+    ConferenceAdminController_demonstration: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GuestEntryAdminDto"];
+                };
+            };
+        };
+    };
+    ConferenceChairController_createPoll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PollInputDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceChairController_openPoll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                pollId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceChairController_closePoll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                pollId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceChairController_removePoll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                pollId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceChairController_settings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LiveSettingsDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceChairController_questionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                questionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuestionStatusDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceChairController_feedback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeedbackSummaryDto"];
+                };
+            };
+        };
+    };
+    ConferenceChairController_attendanceCode: {
+        parameters: {
+            query?: {
+                locale?: "he" | "en";
+            };
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInCodeDto"];
+                };
+            };
+        };
+    };
+    ConferenceController_events: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Server-sent events; each one is a JSON object with a "type". */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceController_live: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LiveSessionDto"];
+                };
+            };
+        };
+    };
+    ConferenceController_vote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                pollId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceController_ask: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuestionInputDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceController_upvote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                questionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceController_removeUpvote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+                questionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ConferenceController_feedback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeedbackInputDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    GuestEntryController_enter: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EnterAsGuestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnterAsGuestResultDto"];
                 };
             };
         };

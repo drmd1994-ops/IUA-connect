@@ -6,6 +6,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/features/auth/auth-context';
+import { NowAndNext } from './now-and-next';
 import { PageFrame } from '@/features/auth/require-sign-in';
 import { StoredImage, formatSize, useFileUrl } from '@/features/content/files';
 import { Markdown } from '@/features/content/markdown';
@@ -23,7 +24,7 @@ const link = 'font-semibold text-primary underline underline-offset-4';
 export function EventPage({ slug }: { slug: string }) {
   const t = useTranslations();
   const locale = useLocale() as 'he' | 'en';
-  const { api, call, status } = useAuth();
+  const { api, call, status, me } = useAuth();
   const [event, setEvent] = useState<Event | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [registration, setRegistration] = useState<Registration | null>(null);
@@ -37,7 +38,8 @@ export function EventPage({ slug }: { slug: string }) {
     Promise.all([
       call(() => api.GET('/api/v1/events/{slug}', { params: path })),
       call(() => api.GET('/api/v1/events/{slug}/sessions', { params: path })),
-      status === 'signedIn'
+      // A conference guest has no registration; asking would only be refused.
+      status === 'signedIn' && !me?.guest
         ? call(() => api.GET('/api/v1/events/{slug}/registration', { params: { path: { slug } } }))
         : null,
     ])
@@ -52,7 +54,7 @@ export function EventPage({ slug }: { slug: string }) {
     return () => {
       active = false;
     };
-  }, [api, call, status, slug, locale, version]);
+  }, [api, call, status, me?.guest, slug, locale, version]);
 
   if (error !== null) {
     return (
@@ -108,6 +110,7 @@ function EventView({
   const t = useTranslations();
   const locale = useLocale();
   const { range } = useEventTime();
+  const { me } = useAuth();
   const [downloadError, setDownloadError] = useState<unknown>(null);
   const dir = event.locale === 'he' ? 'rtl' : 'ltr';
   const mapUrl =
@@ -205,7 +208,15 @@ function EventView({
         </p>
       )}
 
-      <RegistrationPanel event={event} registration={registration} onChanged={onChanged} />
+      {!me?.guest && (
+        <RegistrationPanel event={event} registration={registration} onChanged={onChanged} />
+      )}
+      <NowAndNext
+        slug={event.slug}
+        event={event}
+        sessions={sessions}
+        chosen={registration?.sessionIds ?? []}
+      />
       <Programme
         event={event}
         sessions={sessions}
@@ -428,6 +439,12 @@ function Programme({
                 <p className="font-semibold" lang={session.locale}>
                   {session.title}
                 </p>
+                <Link
+                  href={`/events/${encodeURIComponent(event.slug)}/sessions/${session.id}`}
+                  className={link}
+                >
+                  {t('events.live.openSession')}
+                </Link>
                 {session.description && (
                   <p className="mt-1 whitespace-pre-line" lang={session.locale}>
                     {session.description}

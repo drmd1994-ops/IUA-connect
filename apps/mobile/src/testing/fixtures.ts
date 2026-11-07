@@ -227,6 +227,7 @@ export const me: S['MeDto'] = {
   mfaEnabled: false,
   mfaEnrollmentRequired: false,
   session: { id: 's-1', mfa: false },
+  guest: null,
 };
 
 export const membership: S['MyMembershipDto'] = {

@@ -124,6 +124,8 @@ export class MeDto extends createZodDto(
     /** Holds a role that requires MFA but hasn't enrolled: the UI must send them to setup. */
     mfaEnrollmentRequired: z.boolean(),
     session: z.strictObject({ id: z.uuid(), mfa: z.boolean() }),
+    /** A conference guest (M32), who reaches only that event's live part. */
+    guest: z.strictObject({ number: z.number().int(), eventSlug: z.string() }).nullable(),
   }),
 ) {}
 

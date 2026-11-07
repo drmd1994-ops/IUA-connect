@@ -6,12 +6,23 @@
  */
 
 export type Scanned =
-  { kind: 'checkIn'; slug: string; token: string } | { kind: 'card'; token: string };
+  | { kind: 'checkIn'; slug: string; token: string }
+  | { kind: 'card'; token: string }
+  | { kind: 'event'; slug: string };
 
 export function parseScan(text: string): Scanned | null {
   const match = /^https?:\/\/[^/?#]+(\/[^?#]*)?(?:\?([^#]*))?/i.exec(text.trim());
   if (!match) return null;
   const path = (match[1] ?? '').replace(/^\/(he|en)(?=\/)/, '');
+  // The conference's guest code (M32): someone signed in simply goes to the event.
+  const join = /^\/events\/([^/]+)\/join\/?$/.exec(path);
+  if (join) {
+    try {
+      return { kind: 'event', slug: decodeURIComponent(join[1] ?? '') };
+    } catch {
+      return null;
+    }
+  }
   const token = new URLSearchParams(match[2] ?? '').get('t');
   if (!token) return null;
   const checkIn = /^\/events\/([^/]+)\/check-in\/?$/.exec(path);

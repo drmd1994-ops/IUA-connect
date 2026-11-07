@@ -15,6 +15,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { errorMessage } from '@/lib/api-errors';
 import { fromIsraelLocal, toIsraelLocal } from '@/lib/israel-time';
 import { EventAttendance, EventRegistrations } from './event-people';
+import { EventConference } from './event-conference';
 import { EventSessions } from './event-sessions';
 import { MarkdownEditor } from './markdown-editor';
 import { OwnerField, OwnerLine, PLATFORM, firstOwner, ownerInput } from './owners';
@@ -570,6 +571,7 @@ function EditorForm({ initial }: { initial: Item | null }) {
           <EventSessions event={item} />
           <EventRegistrations eventId={item.id} version={item.version} />
           <EventAttendance event={item} />
+          <EventConference event={item} />
         </>
       )}
     </div>

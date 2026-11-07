@@ -283,6 +283,16 @@
     "scanManyStudies": "These files come from more than one scan. Send one scan at a time.",
     "scanTooLarge": "The scan is too large. A scan can be up to 200 MB and 2,000 files.",
     "scansTooMany": "Up to 3 scans can be added.",
-    "unknownScan": "One of the scans isn’t available."
+    "unknownScan": "One of the scans isn’t available.",
+    "pollNotOpen": "This poll is not open.",
+    "pollWrongState": "This poll has already moved on.",
+    "pollAlreadyVoted": "You have already voted in this poll.",
+    "questionsClosed": "This session is not taking questions now.",
+    "anonymousNotAllowed": "This session does not take anonymous questions.",
+    "feedbackClosed": "Feedback on this session is not open now.",
+    "feedbackAlreadyGiven": "You have already given feedback on this session.",
+    "guestEntryClosed": "This entry is closed, or its code is not valid.",
+    "personNotFound": "No account was found for one of these addresses.",
+    "notTheDemoConference": "This works only for the demo's conference."
   }
 }

@@ -141,6 +141,7 @@ Fictional people on the reserved `demo.test` domain. They all share one demo pas
 | `applicant.rejected@demo.test`                                | Application the director didn't approve, with the reason            |
 | `editor@demo.test`                                            | Content editor: writes news, education items and exam questions     |
 | `events@demo.test`                                            | Event admin: creates events, sees registrations and attendance (M5) |
+| `chair@demo.test`, `moderator@demo.test`                      | The made-up conference's chair and moderator (M32)                  |
 | `admin2@demo.test`                                            | A second admin, so a message to members can be approved (M7)        |
 | `super@demo.test`                                             | Super admin: gives and removes roles, changes the settings (M8)     |
 | `verifier@demo.test`                                          | Physician verifier: checks requests to be verified (M17)            |
