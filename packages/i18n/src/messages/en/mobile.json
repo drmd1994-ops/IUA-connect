@@ -7,6 +7,11 @@
     "text": "The app could not reach Med Connect at {address}. In the demo, the phone must be on the same Wi-Fi as the computer that runs it.",
     "retry": "Try again"
   },
+  "crashed": {
+    "title": "Something went wrong on this screen",
+    "text": "The app stopped this screen instead of closing. Please send a screenshot of this page, so the fault can be found.",
+    "retry": "Back to the app"
+  },
   "signIn": {
     "title": "Sign in",
     "intro": "Use the same email and password as on the Med Connect site.",
