@@ -1,4 +1,10 @@
-import { type Href, Stack, useRootNavigationState, useRouter } from 'expo-router';
+import {
+  type ErrorBoundaryProps,
+  type Href,
+  Stack,
+  useRootNavigationState,
+  useRouter,
+} from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -18,6 +24,7 @@ import {
 import { I18nProvider } from '@/i18n/i18n-provider';
 import { AppLock } from '@/lock/app-lock';
 import { SessionProvider, useSession } from '@/session/session-provider';
+import { Crashed } from '@/ui/crashed';
 import { Body, Button, Notice, Screen, Title } from '@/ui/kit';
 
 /** The app's frame: language, the session, and the lock, around every screen. */
@@ -30,6 +37,21 @@ export default function RootLayout() {
             <Gate />
           </AppLock>
         </SessionProvider>
+      </I18nProvider>
+      <StatusBar style="dark" />
+    </SafeAreaProvider>
+  );
+}
+
+/**
+ * A screen that broke while drawing. Without this the phone closes the app and says nothing; here
+ * it says what broke, so that a screenshot tells where to look.
+ */
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  return (
+    <SafeAreaProvider>
+      <I18nProvider>
+        <Crashed error={error} retry={retry} />
       </I18nProvider>
       <StatusBar style="dark" />
     </SafeAreaProvider>
