@@ -17,14 +17,18 @@ export function useLocalName() {
   );
 }
 
-/** A list the forms and filters choose from. Empty until it arrives; a failure leaves it empty. */
+/**
+ * A list the forms and filters choose from. Empty until it arrives; a failure leaves it empty.
+ * These lists may be kept by the phone for five minutes, and an answer the phone revalidates can
+ * come back with no body at all: anything that is not a list is read as no answer.
+ */
 function useList<T>(path: string): T[] {
   const { request } = useSession();
   const [items, setItems] = useState<T[]>([]);
   useEffect(() => {
     let active = true;
-    request<{ items: T[] }>(path)
-      .then((result) => active && setItems(result.items))
+    request<{ items?: unknown }>(path)
+      .then((result) => active && Array.isArray(result.items) && setItems(result.items as T[]))
       .catch(() => undefined);
     return () => {
       active = false;
