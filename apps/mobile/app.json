@@ -34,6 +34,7 @@
           "faceIDPermission": "Allow Med Connect to use Face ID to unlock the app."
         }
       ],
+      "./plugins/with-ios-no-push",
       "expo-notifications",
       [
         "expo-camera",

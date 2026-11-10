@@ -55,6 +55,10 @@
     "signOutEverywhereHint": "Ends every session of your account: this phone, other phones and browsers.",
     "version": "Version {version}"
   },
+  "screenshot": {
+    "title": "Screenshots are blocked",
+    "body": "Screenshots of Med Connect come out blank, to keep what is shared in the app private."
+  },
   "lock": {
     "title": "Unlock Med Connect",
     "prompt": "Unlock Med Connect",
