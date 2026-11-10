@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { Passkey, type PasskeyCreateRequest, type PasskeyGetRequest } from 'react-native-passkey';
 
 /**
@@ -16,6 +17,9 @@ export class PasskeyProblem extends Error {
 }
 
 export function passkeysSupported(): boolean {
+  // An iPhone uses the site's passkeys only when Apple's associated domains name the app, which
+  // needs a paid Apple account (M37 plan §2, item 4). Until then the app doesn't offer them there.
+  if (Platform.OS === 'ios') return false;
   try {
     return Passkey.isSupported();
   } catch {

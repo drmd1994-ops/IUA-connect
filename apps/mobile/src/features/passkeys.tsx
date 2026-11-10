@@ -1,7 +1,7 @@
 import { type components } from '@medconnect/api-client';
 import { semantic } from '@medconnect/ui-tokens';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useFormatter, useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
 import { PasskeyProblem, makePasskey, passkeysSupported } from '@/session/passkey';
@@ -123,7 +123,7 @@ export function PasskeysCard({
           />
         </>
       ) : (
-        <Body muted>{m('unsupported')}</Body>
+        <Body muted>{m(Platform.OS === 'ios' ? 'iphone' : 'unsupported')}</Body>
       )}
     </Card>
   );

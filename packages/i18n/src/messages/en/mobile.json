@@ -132,6 +132,7 @@
   "passkeys": {
     "intro": "A passkey signs you in without a password, with your fingerprint, face or the phone’s screen lock. It also counts as two-step verification. A passkey made on the site works here too, if it is synced to this phone.",
     "unsupported": "This phone can’t use passkeys. They need a screen lock and Google Play services. Sign in with your password.",
+    "iphone": "Passkeys don’t work in the app on an iPhone yet. Sign in with your password; passkeys work on the site.",
     "none": "This phone has no passkey for Med Connect. Sign in with your password, then add one under Security."
   },
   "scan": {

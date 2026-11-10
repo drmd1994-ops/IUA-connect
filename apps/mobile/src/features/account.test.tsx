@@ -1,8 +1,9 @@
 import { fireEvent, screen } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 import { allText, draw, settle } from '@/testing/draw';
 import { everything } from '@/testing/fixtures';
 import { Refuse, callsTo, world } from '@/testing/world';
-import { SecurityScreen } from './account';
+import { ProfileScreen, SecurityScreen } from './account';
 
 async function changePassword(current: string, next: string) {
   await fireEvent.changeText(screen.getByLabelText('Current password'), current);
@@ -170,5 +171,38 @@ describe('passkeys on the security screen (M18b)', () => {
     } finally {
       Passkey.isSupported.mockReturnValue(true);
     }
+  });
+
+  it('on an iPhone, says passkeys work on the site, instead of the button (M37)', async () => {
+    world.routes = everything;
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    try {
+      const drawn = await draw(<SecurityScreen />);
+      expect(allText(drawn)).toContain('Passkeys don’t work in the app on an iPhone yet.');
+      expect(allText(drawn)).not.toContain('Google Play');
+      expect(screen.queryByLabelText('Add a passkey')).toBeNull();
+    } finally {
+      jest.restoreAllMocks();
+    }
+  });
+});
+
+describe('the profile photo (M37)', () => {
+  const { launchImageLibraryAsync } = jest.requireMock('expo-image-picker') as {
+    launchImageLibraryAsync: jest.Mock;
+  };
+
+  it('asks the picker for a photo the server accepts, also from an iPhone', async () => {
+    world.routes = everything;
+    await draw(<ProfileScreen />);
+    await fireEvent.press(screen.getByLabelText('Choose a photo'));
+    await settle();
+    expect(launchImageLibraryAsync).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaTypes: ['images'],
+        preferredAssetRepresentationMode: 'compatible',
+        shouldDownloadFromNetwork: true,
+      }),
+    );
   });
 });

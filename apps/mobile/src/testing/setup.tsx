@@ -112,6 +112,8 @@ jest.mock('expo-image-picker', () => ({
   launchImageLibraryAsync: jest.fn(async () => ({ canceled: true, assets: [] })),
   launchCameraAsync: jest.fn(async () => ({ canceled: true, assets: [] })),
   requestCameraPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  UIImagePickerPreferredAssetRepresentationMode: { Compatible: 'compatible' },
+  VideoExportPreset: { H264_1280x720: 6 },
 }));
 jest.mock('expo-document-picker', () => ({
   getDocumentAsync: jest.fn(async () => ({ canceled: true, assets: [] })),

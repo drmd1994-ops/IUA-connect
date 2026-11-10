@@ -18,7 +18,8 @@ const translated = [
 ].join('|');
 
 module.exports = {
-  preset: 'jest-expo',
+  // The screens were written for Android; tests of what differs on an iPhone set it themselves (M37).
+  preset: 'jest-expo/android',
   testMatch: ['<rootDir>/src/**/*.test.tsx'],
   moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
   setupFilesAfterEnv: ['<rootDir>/src/testing/setup.tsx'],
