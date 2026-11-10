@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "Allow Med Connect to use the camera to read a code, and to take a picture you send in chat.",
+    "NSPhotoLibraryUsageDescription": "Allow Med Connect to open the pictures and videos you choose to send.",
+    "NSFaceIDUsageDescription": "Allow Med Connect to use Face ID to unlock the app."
+  }
+}

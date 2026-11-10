@@ -18,6 +18,10 @@
     "ios": {
       "bundleIdentifier": "test.demo.medconnect"
     },
+    "locales": {
+      "he": "./locales/he.json",
+      "en": "./locales/en.json"
+    },
     "extra": {
       "supportsRTL": true
     },
@@ -40,6 +44,7 @@
         "expo-camera",
         {
           "cameraPermission": "Allow Med Connect to use the camera to read a code, and to take a picture you send in chat.",
+          "microphonePermission": false,
           "recordAudioAndroid": false
         }
       ],

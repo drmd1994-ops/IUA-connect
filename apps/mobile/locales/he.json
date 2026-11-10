@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "לאפשר למד קונקט להשתמש במצלמה כדי לקרוא קוד ולצלם תמונה לשליחה בצ׳אט.",
+    "NSPhotoLibraryUsageDescription": "לאפשר למד קונקט לפתוח את התמונות והסרטונים שבחרת לשלוח.",
+    "NSFaceIDUsageDescription": "לאפשר למד קונקט להשתמש ב־Face ID כדי לפתוח את האפליקציה."
+  }
+}
