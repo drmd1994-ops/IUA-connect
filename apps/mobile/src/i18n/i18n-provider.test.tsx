@@ -14,7 +14,7 @@ describe('the language iOS is told (M37)', () => {
   });
   afterEach(() => jest.restoreAllMocks());
 
-  it('on an iPhone, tells iOS the language chosen in the app, for its own prompts', async () => {
+  it('on an iPhone, tells iOS the language chosen in the app, so text and prompts follow it', async () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
     kept.set('iua.locale', 'he');
     await render(<I18nProvider>{null}</I18nProvider>);

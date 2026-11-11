@@ -120,7 +120,6 @@ Answered so far on 2026-11-10:
 Checked with a throwaway XCUITest in the iPhone 17 simulator (iOS 26.5): sign in as a demo member, then Home, News, Events, Chat and Me.
 
 - **Fixed: Hebrew never turned right to left on an English iPhone.** expo-localization set the direction from the phone's language on every launch. A plugin (`with-ios-app-direction`) removes its iOS setting, and the app's own choice applies from the next start, as on Android.
-- **Fixed: iOS's own prompts followed the phone's language, not the app's.** The app now tells iOS its language (`AppleLanguages`), so the Hebrew permission texts show when Hebrew is chosen.
-- **Open: in Hebrew, a heading or label that fills the width still sits on the left,** while rows, buttons and links are mirrored. An explicit `textAlign` didn't move it either. Android is not affected. To look into before the iPhone step.
+- **Fixed: Hebrew text sat on the left, and iOS's own prompts stayed in English, on an English iPhone.** iOS lays text out by the app's language as iOS knows it. The app now tells iOS its language (`AppleLanguages`), and from the next start headings, labels and the permission texts follow Hebrew. Checked twice from a freshly started Metro; an earlier run that still showed the text on the left was served an older bundle.
 - **Not a bug: the simulator sometimes drops the first letters typed by a test;** the test types again.
 - **A build inside a folder iCloud syncs can't be signed** (see the mobile README).
