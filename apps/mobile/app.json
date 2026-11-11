@@ -32,6 +32,7 @@
       "./plugins/with-secure-screen",
       "expo-secure-store",
       "expo-localization",
+      "./plugins/with-ios-app-direction",
       [
         "expo-local-authentication",
         {

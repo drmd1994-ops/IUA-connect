@@ -114,3 +114,13 @@ Answered so far on 2026-11-10:
 - **Screenshots are blocked on the iPhone too,** as on Android (§2, item 5), with **a small module of our own**, not a library.
 - **The tools:** the iOS simulator and CocoaPods may be installed on this Mac.
 - **Video from an iPhone:** the app converts it to MP4 before sending; the server is unchanged.
+
+## 11. Found in the simulator (2026-11-11)
+
+Checked with a throwaway XCUITest in the iPhone 17 simulator (iOS 26.5): sign in as a demo member, then Home, News, Events, Chat and Me.
+
+- **Fixed: Hebrew never turned right to left on an English iPhone.** expo-localization set the direction from the phone's language on every launch. A plugin (`with-ios-app-direction`) removes its iOS setting, and the app's own choice applies from the next start, as on Android.
+- **Fixed: iOS's own prompts followed the phone's language, not the app's.** The app now tells iOS its language (`AppleLanguages`), so the Hebrew permission texts show when Hebrew is chosen.
+- **Open: in Hebrew, a heading or label that fills the width still sits on the left,** while rows, buttons and links are mirrored. An explicit `textAlign` didn't move it either. Android is not affected. To look into before the iPhone step.
+- **Not a bug: the simulator sometimes drops the first letters typed by a test;** the test types again.
+- **A build inside a folder iCloud syncs can't be signed** (see the mobile README).
