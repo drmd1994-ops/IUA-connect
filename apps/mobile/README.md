@@ -68,6 +68,41 @@ The tunnel above gets a new address each time. The demo also has a **named tunne
 
 An **.apk** (the app as a file that installs on an Android phone, without Expo Go) is built on GitHub by the workflow "Demo APK": push a branch named `apk/...`, or start the workflow from the Actions page, and download `iua-connect-demo-apk` from the finished run. The server's address is built into the .apk from the repository variables `DEMO_API_URL` and `DEMO_WEB_URL`, so the .apk works only while this computer, `pnpm dev` and the fixed tunnel are running. It is signed with a debug key: it installs on a phone, and can't go to an app store.
 
+## See it in the iPhone simulator (Mac, M37)
+
+You need a Mac with Xcode, its iOS simulator (Xcode → Settings → Components, or `xcodebuild -downloadPlatform iOS`, about 8 GB) and CocoaPods (`brew install cocoapods`). No Apple account.
+
+1. **Keep the project out of iCloud.** If the Mac's Desktop and Documents are synced to iCloud Drive, a build there fails at signing ("resource fork, Finder information, or similar detritus not allowed"): iCloud marks every file. Work from a folder iCloud doesn't sync, for example a second working copy of the same repository:
+
+   ```sh
+   git worktree add ~/Developer/med-connect <branch>
+   cd ~/Developer/med-connect && pnpm install && pnpm exec turbo run build --filter='@medconnect/mobile^...'
+   ```
+
+2. **Tell the app where the server is.** The simulator shares the Mac's network, so `apps/mobile/.env` holds `http://localhost:4000` and `http://localhost:3001` (see `.env.example`), with `EXPO_PUBLIC_USE_RN_FETCH=1`.
+3. **Start the site and the server** (`pnpm dev`, in the folder that has the root `.env`).
+4. **Make the iOS project and build it** (the first build takes several minutes):
+
+   ```sh
+   cd apps/mobile
+   CI=1 pnpm exec expo prebuild --platform ios --clean
+   git checkout package.json   # prebuild rewrites the "android" script; keep ours
+   cd ios
+   xcodebuild -workspace MedConnect.xcworkspace -scheme MedConnect -configuration Debug \
+     -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build
+   ```
+
+5. **Start the app's own server** in `apps/mobile`: `pnpm exec expo start --port 8081`.
+6. **Install and open it:**
+
+   ```sh
+   open -a Simulator
+   xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/MedConnect.app
+   xcrun simctl launch booted test.demo.medconnect
+   ```
+
+What differs on an iPhone: passkeys are not offered in the app (they work on the site); push is left out, so a free Apple ID can sign the app; screenshots and recordings of the app come out blank, which only a real iPhone shows (the simulator's own screenshots get past it).
+
 ## What to try in this first step
 
 - **Sign in,** close the app completely, and open it again: you should still be signed in, after the phone's fingerprint or face check.
