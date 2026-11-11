@@ -39,6 +39,13 @@ test('an administrator adds a passkey, then signs in with it alone', async ({ pa
   // Sign out, then sign in with the passkey alone: no email, no password.
   await page.getByRole('button', { name: /Account menu/ }).click();
   await page.getByRole('button', { name: 'Sign out' }).click();
+  // Wait for the sign-out to land before loading the sign-in page, or it finds a session.
+  await expect(page.getByRole('button', { name: /Account menu/ })).toBeHidden();
+  // The sign-in page also offers passkeys in the email field's suggestions, and the virtual
+  // authenticator answers that by itself; turn the suggestions off so the button is what signs in.
+  await page.addInitScript(() => {
+    PublicKeyCredential.isConditionalMediationAvailable = async () => false;
+  });
   await page.goto('/en/login');
   await page.getByRole('button', { name: 'Sign in with a passkey' }).click();
   await expectSignedIn(page, email);
@@ -76,6 +83,13 @@ test('the passkey sign-in works in Hebrew and renames in place', async ({ page }
 
   await page.getByRole('button', { name: /תפריט החשבון/ }).click();
   await page.getByRole('button', { name: 'יציאה' }).click();
+  // Wait for the sign-out to land before loading the sign-in page, or it finds a session.
+  await expect(page.getByRole('button', { name: /תפריט החשבון/ })).toBeHidden();
+  // The sign-in page also offers passkeys in the email field's suggestions, and the virtual
+  // authenticator answers that by itself; turn the suggestions off so the button is what signs in.
+  await page.addInitScript(() => {
+    PublicKeyCredential.isConditionalMediationAvailable = async () => false;
+  });
   await page.goto('/he/login');
   await page.getByRole('button', { name: 'כניסה עם מפתח גישה' }).click();
   await expectSignedIn(page, email);
