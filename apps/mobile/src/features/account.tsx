@@ -9,6 +9,7 @@ import { Linking, StyleSheet, Text, View } from 'react-native';
 import { useFormatter, useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
 import { useLocale } from '@/i18n/i18n-provider';
+import { PICKER_OPTIONS } from '@/picker';
 import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Card, Field, Heading, Notice, Screen, Title, Toggle } from '@/ui/kit';
 import { Choices, Tag } from '@/ui/parts';
@@ -273,8 +274,8 @@ function PhotoCard({
   const choose = () =>
     act(async () => {
       const result = await ImagePicker.launchImageLibraryAsync({
+        ...PICKER_OPTIONS,
         mediaTypes: ['images'],
-        quality: 0.9,
       });
       const asset = result.canceled ? null : result.assets[0];
       if (!asset) return null;

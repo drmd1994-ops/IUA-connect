@@ -1,6 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
 import { type Browser, type Page, expect, test } from '@playwright/test';
-import { addVirtualAuthenticator, createAdmin, signIn, uniqueEmail } from './helpers';
+import {
+  addVirtualAuthenticator,
+  createAdmin,
+  expectSignedIn,
+  signIn,
+  uniqueEmail,
+} from './helpers';
 
 /**
  * M32 exit test (docs/plans/M32-conference-mode.md §6): the manager starts the demo's conference;
@@ -75,6 +81,8 @@ test('guest comes in with no details, votes and asks; the chair runs the session
   // The chair opens a poll, and it reaches the guest by itself.
   const chair = await newPage(browser);
   await signIn(chair, 'en', CHAIR.email, CHAIR.password);
+  // Wait for the sign-in to land (it sets the refresh cookie) before loading another page.
+  await expectSignedIn(chair, CHAIR.email);
   await chair.goto(sessionPath);
   await expect(chair.getByRole('heading', { name: "The chair's controls" })).toBeVisible();
   await chair.getByRole('button', { name: 'Open the poll' }).first().click();

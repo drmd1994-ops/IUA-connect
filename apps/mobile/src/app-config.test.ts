@@ -18,3 +18,29 @@ describe("the app's plugins", () => {
     }
   });
 });
+
+// The texts iOS shows when it asks for a permission (M37). Android writes its own, in the phone's
+// language, so these files hold iOS texts only and Android is unchanged.
+describe("the iPhone's permission texts", () => {
+  const read = (locale: string) =>
+    JSON.parse(readFileSync(new URL(`../locales/${locale}.json`, import.meta.url), 'utf8')) as {
+      ios?: Record<string, string>;
+    };
+
+  it('are for iOS only, the same ones in Hebrew and English', () => {
+    const he = read('he');
+    const en = read('en');
+    expect(Object.keys(he)).toEqual(['ios']);
+    expect(Object.keys(en)).toEqual(['ios']);
+    expect(Object.keys(he.ios ?? {}).sort()).toEqual(Object.keys(en.ios ?? {}).sort());
+  });
+
+  it('cover every permission text the app asks for', () => {
+    const en = read('en').ios ?? {};
+    expect(Object.keys(en).sort()).toEqual([
+      'NSCameraUsageDescription',
+      'NSFaceIDUsageDescription',
+      'NSPhotoLibraryUsageDescription',
+    ]);
+  });
+});

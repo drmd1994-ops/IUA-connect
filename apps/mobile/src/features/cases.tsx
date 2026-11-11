@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
+import { PICKER_OPTIONS } from '@/picker';
 import { useSession } from '@/session/session-provider';
 import { Back, Body, Button, Card, Field, Heading, Notice, Screen, Title, Toggle } from '@/ui/kit';
 import { Choices, Picture } from '@/ui/parts';
@@ -581,8 +582,8 @@ export function WriteCaseScreen({ id }: { id?: string }) {
     setError(null);
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
+        ...PICKER_OPTIONS,
         mediaTypes: ['images'],
-        quality: 0.9,
       });
       const asset = result.canceled ? null : result.assets[0];
       if (!asset) return;

@@ -1,7 +1,7 @@
 import { type Locale, directionOf, getMessages, isLocale } from '@medconnect/i18n';
 import * as Localization from 'expo-localization';
 import { type ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { I18nManager } from 'react-native';
+import { I18nManager, Platform, Settings } from 'react-native';
 import { IntlProvider } from 'use-intl';
 import { secureStore } from '@/session/secure-store';
 import { startingLocale } from './locale';
@@ -54,7 +54,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     I18nManager.allowRTL(true);
     // Takes effect the next time the app starts.
     if (I18nManager.isRTL !== wantsRtl) I18nManager.forceRTL(wantsRtl);
-  }, [ready, wantsRtl]);
+    // iOS lays text out, and speaks to the person, in the app's language as iOS knows it, which is
+    // the phone's unless the app says otherwise. Without this, Hebrew headings and labels sat on the
+    // left on an English iPhone, and its permission prompts (locales/) stayed in English (M37).
+    // Also from the next start, like the direction.
+    if (Platform.OS === 'ios') Settings.set({ AppleLanguages: [locale] });
+  }, [ready, wantsRtl, locale]);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);

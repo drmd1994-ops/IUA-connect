@@ -26,6 +26,7 @@ import {
 } from '@/features/visitor';
 import { I18nProvider } from '@/i18n/i18n-provider';
 import { AppLock } from '@/lock/app-lock';
+import { ScreenshotNotice } from '@/privacy/screenshot-notice';
 import { SessionProvider, useSession } from '@/session/session-provider';
 import { Crashed } from '@/ui/crashed';
 import { Body, Button, Notice, Screen, Title } from '@/ui/kit';
@@ -35,6 +36,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <I18nProvider>
+        <ScreenshotNotice />
         <SessionProvider>
           <AppLock>
             <Gate />

@@ -20,6 +20,7 @@ import { Linking, Pressable, StyleSheet, Text, TextInput, View } from 'react-nat
 import { useTranslations } from 'use-intl';
 import { errorMessage } from '@/errors';
 import { useFileUrl, useSignFile } from '@/features/files';
+import { PICKER_OPTIONS } from '@/picker';
 import { useSession } from '@/session/session-provider';
 import { Button, Notice, Toggle } from '@/ui/kit';
 import { FileLink } from '@/ui/parts';
@@ -304,8 +305,8 @@ export function Composer({
         if (!permission.granted) return setProblem(m('noCamera'));
       }
       const options: ImagePicker.ImagePickerOptions = {
+        ...PICKER_OPTIONS,
         mediaTypes: source === 'camera' ? ['images'] : ['images', 'videos'],
-        quality: 0.9,
       };
       const result =
         source === 'camera'
